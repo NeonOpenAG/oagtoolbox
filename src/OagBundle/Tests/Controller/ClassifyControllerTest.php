@@ -51,7 +51,7 @@ class ClassifyControllerTest extends WebTestCase {
   }
 
   private function getAssets($client) {
-    $files = glob($client->getContainer()->getParameter('oag_test_assets_directory') . '/*.{pdf,rtf,txt,docx}');
+    $files = glob($client->getContainer()->getParameter('oag_test_assets_directory') . '/*.{pdf,rtf,txt,docx}', GLOB_BRACE);
     return $files;
   }
 
