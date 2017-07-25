@@ -1,11 +1,3 @@
-
-
-
-
-
-
-
-
 /app/bootstrap.php.cache
 /app/cache/*
 !app/cache/.gitkeep
@@ -29,3 +21,4 @@ web/bundles/
 /web/uploads/
 web/xml
 /.web-server-pid
+web/test-coverage/
