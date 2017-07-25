@@ -12,3 +12,5 @@ parameters:
             uri: http://gis.foundationcenter.org/OpenAgCoder/extract_codes.php
     oagfiles_directory: '%kernel.project_dir%/web/uploads/oagfiles'
     oagxml_directory: '%kernel.project_dir%/web/xml/oagfiles'
+    vocabulary: '99'
+    vocabulary_uri: 'http://gis.foundationcenter.org/OpenAgCoder/'
