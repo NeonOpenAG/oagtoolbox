@@ -131,11 +131,6 @@ class DefaultControllerTest extends WebTestCase {
     $entityMock->setMimeType($mimetype);
 
     return $entityMock;
-//    $doc = new OagFile();
-//    $doc->setId($id);
-//    $doc->setDocumentName($name);
-//    $doc->setMimeType($mimetype);
-//    return $doc;
   }
 
 }

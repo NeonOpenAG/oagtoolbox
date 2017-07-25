@@ -27,9 +27,8 @@ class ClassifyControllerTest extends WebTestCase {
 
     // Upload.
     $buttonCrawlerNode = $crawler->selectButton('Upload');
-    // print_r($buttonCrawlerNode);
 
-    $files = glob($client->getContainer()->getParameter('oag_test_assets_directory') . '/*');
+    $files = $this->getAssets($client);
     foreach ($files as $file) {
       $mimetype = mime_content_type($file);
       $document = new UploadedFile($file, basename($file), $mimetype);
@@ -44,11 +43,16 @@ class ClassifyControllerTest extends WebTestCase {
   public function testIndex() {
     $client = static::createClient();
 
-    $files = glob($client->getContainer()->getParameter('oag_test_assets_directory') . '/*');
+    $files = $this->getAssets($client);
     foreach ($files as $file) {
       $oagfile = $this->em->getRepository(OagFile::class)->findOneBy(array('documentName' => basename($file)));
       $crawler = $client->request('GET', '/classify/' . $oagfile->getId());
     }
+  }
+
+  private function getAssets($client) {
+    $files = glob($client->getContainer()->getParameter('oag_test_assets_directory') . '/*.{pdf,rtf,txt,docx}');
+    return $files;
   }
 
 }

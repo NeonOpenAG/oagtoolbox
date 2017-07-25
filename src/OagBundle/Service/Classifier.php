@@ -40,8 +40,8 @@ class Classifier extends AbstractOagService {
   }
 
   public function getFixtureData() {
-    $kernel = $container->getService('kernel');
-    $path = $kernel->locateResource('@OagBundle/Resources/fixtures/before_enrichment_activities.classifier');
+    $kernel = $this->getContainer()->get('kernel');
+    $path = $kernel->locateResource('@OagBundle/Resources/fixtures/before_enrichment_activities.classifier.json');
     $contents = file_get_contents($path);
 
     return $contents;
