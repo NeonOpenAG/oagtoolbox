@@ -104,6 +104,35 @@ class Classifier extends AbstractOagService {
     return array_merge($response, $json);
   }
 
+  public function getSector($json) {
+    // TODO consider confidence, ideally configurably
+    $vocabulary = 'placeholder, make configurable';
+    
+    /*
+     * Favoured this over SimpleXML as this does not require a starting base
+     * of XML to build on, which could quickly have become a nightmare with
+     * escaping considered.
+     * TODO discuss this
+     */
+     $writer = new \XMLWriter();
+     $writer->openMemory();
+     $writer->setIndent(TRUE); // TODO discuss this
+     $writer->startElement('sector');
+       $writer->writeAttribute('code', $json->code);
+       $writer->writeAttribute('vocabulary', $vocabulary);
+       $writer->startElement('narrative');
+         // the classifier may be assumed to only work for English for now
+         $writer->writeAttribute('xml:lang', 'en');
+         $writer->text($json->description);
+       $writer->endElement();
+       $writer->startElement('narrative');
+         $writer->writeAttribute('xml:lang', 'en');
+         $writer->text('Tagged by an automatic classifier');
+       $writer->endElement();
+     $writer->endElement();
+     return $writer->outputMemory();
+  }
+
   public function getName() {
     return 'classifier';
   }
