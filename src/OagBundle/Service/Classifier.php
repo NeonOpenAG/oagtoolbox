@@ -106,20 +106,24 @@ class Classifier extends AbstractOagService {
 
   public function getSector($json) {
     // TODO consider confidence, ideally configurably
-    $vocabulary = 'placeholder, make configurable';
+
+    $vocabulary = $this->getContainer()->getParameter('vocabulary');
+    $vocabularyUri = $this->getContainer()->getParameter('vocabulary_uri');
     
     /*
      * Favoured this over SimpleXML as this does not require a starting base
      * of XML to build on, which could quickly have become a nightmare with
      * escaping considered.
-     * TODO discuss this
      */
      $writer = new \XMLWriter();
      $writer->openMemory();
-     $writer->setIndent(TRUE); // TODO discuss this
+     $writer->setIndent(TRUE);
      $writer->startElement('sector');
        $writer->writeAttribute('code', $json->code);
        $writer->writeAttribute('vocabulary', $vocabulary);
+       if (strlen($vocabularyUri) > 0) {
+         $writer->writeAttribute('vocabulary-uri', $vocabularyUri);
+       }
        $writer->startElement('narrative');
          // the classifier may be assumed to only work for English for now
          $writer->writeAttribute('xml:lang', 'en');
