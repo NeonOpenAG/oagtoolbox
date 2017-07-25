@@ -127,23 +127,27 @@ class ClassifyController extends Controller {
    */
   public function sectorAction(Request $request) {
     $classifier = $this->get(Classifier::class);
+
     $defaultData = array();
     $options = array();
-    $formBuilder = $this->createFormBuilder($defaultData, $options);
-    $formBuilder->add('json', TextareaType::class);
-    $formBuilder->add('submit', SubmitType::class, array( 'label' => 'Convert to Sector'));
+    $form = $this->createFormBuilder($defaultData, $options)
+      ->add('json', TextareaType::class)
+      ->add('submit', SubmitType::class, array( 'label' => 'Convert to Sector'))
+      ->getForm();
+
+    $form->handleRequest($request);
+
     $response = array(
-      'form' => $formBuilder->getForm()->createView()
+      'form' => $form->createView()
     );
-    if ($request->isMethod("POST")) {
-      $form = $this->createFormBuilder(null)->getForm();
-      $form->handleRequest($request);
-      
-      $data = $form->getExtraData();
-      $rawJson = $data['json'];
+
+    if ($form->isSubmitted()) {
+      $rawJson = $form->getData()['json'];
+
       if(strlen($rawJson) === 0) {
         $this->addFlash("warn", "No json was entered!");
       }
+
       $json = json_decode($rawJson);
       $response['xml'] = $classifier->getSector($json);
     }
