@@ -1,7 +1,7 @@
 oagtoolbox
 ==========
 
-A Symfony project created on July 5, 2017, 5:34 pm.
+[![Build Status](https://travis-ci.org/NeonOpenAG/oagtoolbox.svg?branch=master)](https://travis-ci.org/NeonOpenAG/oagtoolbox)
 
 Install
 -------
