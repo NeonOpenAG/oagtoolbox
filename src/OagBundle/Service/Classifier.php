@@ -9,6 +9,8 @@ use OagBundle\Service\TextExtractor\TextPlain;
 
 class Classifier extends AbstractOagService {
 
+  const LIBXML_OPTIONS = LIBXML_BIGLINES & LIBXML_PARSEHUGE;
+
   public function processUri($sometext) {
     return $this->processString();
   }
@@ -95,40 +97,63 @@ class Classifier extends AbstractOagService {
     return array_merge($response, $json);
   }
 
-  public function getSector($json) {
-    // TODO consider confidence, ideally configurably
+  public function extractSectors($response) {
+    // flatten the response to put it in the form $activityId => $arrayOfSectors
+    $sectors = array();
+    foreach ($response['data'] as $part) {
+      foreach ($part as $activityId => $descriptions) {
+        if (!array_key_exists($activityId, $sectors)) {
+          $sectors[$activityId] = array();
+        }
+        $sectors[$activityId] = array_merge($sectors[$activityId], $descriptions);
+      }
+    }
+    return $sectors;
+  }
 
-    $vocabulary = $this->getContainer()->getParameter('vocabulary');
-    $vocabularyUri = $this->getContainer()->getParameter('vocabulary_uri');
-    
-    /*
-     * Favoured this over SimpleXML as this does not require a starting base
-     * of XML to build on, which could quickly have become a nightmare with
-     * escaping considered.
-     */
-     $writer = new \XMLWriter();
-     $writer->openMemory();
-     $writer->setIndent(TRUE);
-     $writer->startElement('sector');
-       $writer->writeAttribute('code', $json->code);
-       $writer->writeAttribute('vocabulary', $vocabulary);
-       if (strlen($vocabularyUri) > 0) {
-         $writer->writeAttribute('vocabulary-uri', $vocabularyUri);
-       }
-       $writer->startElement('narrative');
-         // the classifier may be assumed to only work for English for now
-         $writer->writeAttribute('xml:lang', 'en');
-         $writer->text($json->description);
-       $writer->endElement();
-       $writer->startElement('narrative');
-         $writer->writeAttribute('xml:lang', 'en');
-         $writer->text('Tagged by an automatic classifier');
-       $writer->endElement();
-     $writer->endElement();
-     return $writer->outputMemory();
+  public function insertSectors($xmlActivities, $sectors) {
+    // TODO consider whether sectors are already present
+    // TODO confidence should likely be considered in this function
+    $root = new \SimpleXMLElement($xmlActivities, self::LIBXML_OPTIONS);
+
+    // just fetch these once
+    $vocab = $this->getContainer()->getParameter('vocabulary');
+    $vocabUri = $this->getContainer()->getParameter('vocabulary_uri');
+
+    foreach ($sectors as $id => $descriptions) {
+      // find the activity with the relevent id
+      $activity = $root->xpath("/iati-activities/iati-activity[iati-identifier='$id']");
+
+      if (count(activity < 1)) {
+        continue;
+      }
+      $activity = $activity[0];
+
+      // add each sector
+      foreach ($descriptions as $desc) {
+        $sector = $activity->addChild('sector');
+        $sector->addAttribute('code', $desc->code);
+        $sector->addAttribute('vocabulary', $vocab);
+
+        if (strlen($vocabUri) > 0) {
+          $sector->addAttribute('vocabulary-uri', $vocabUri);
+        }
+
+        // narrative text content is set this way to let simplexml escape it
+        // see https://stackoverflow.com/a/555039
+        $sector->narrative[] = $desc->description;
+        $sector->narrative[0]->addAttribute('xml:lang', 'en');
+
+        $sector->narrative[] = 'Classified automatically';
+        $sector->narrative[1]->addAttribute('xml:lang', 'en');
+      }
+    }
+
+    return $root->asXML();
   }
 
   public function getName() {
     return 'classifier';
   }
+
 }

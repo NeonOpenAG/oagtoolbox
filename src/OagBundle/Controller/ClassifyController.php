@@ -114,17 +114,18 @@ class ClassifyController extends Controller {
   }
 
   /**
-   * @Route("/sector")
+   * @Route("/merge-sectors")
    * @Template
    */
-  public function sectorAction(Request $request) {
+  public function mergeSectorsAction(Request $request) {
     $classifier = $this->get(Classifier::class);
 
     $defaultData = array();
     $options = array();
     $form = $this->createFormBuilder($defaultData, $options)
+      ->add('xml', TextareaType::class)
       ->add('json', TextareaType::class)
-      ->add('submit', SubmitType::class, array( 'label' => 'Convert to Sector'))
+      ->add('submit', SubmitType::class, array( 'label' => 'Merge Sectors'))
       ->getForm();
 
     $form->handleRequest($request);
@@ -134,6 +135,7 @@ class ClassifyController extends Controller {
     );
 
     if ($form->isSubmitted()) {
+      $rawXML = $form->getData()['xml'];
       $rawJson = $form->getData()['json'];
 
       if(strlen($rawJson) === 0) {
@@ -141,8 +143,71 @@ class ClassifyController extends Controller {
       }
 
       $json = json_decode($rawJson);
-      $response['xml'] = $classifier->getSector($json);
+      $sectors = $classifier->extractSectors($response);
+      $newXML = $classifier->insertSectors($rawXML, $sectors);
+      $response['processed'] = $newXML;
     }
+
+    return $response;
+  }
+
+  /**
+   * @Route("/sectors")
+   * @Template
+   */
+  public function sectorsAction(Request $request) {
+    // TODO consider splitting this into services where appropriate
+
+    // provides an interface for merging in sectors, will eventually replace mergeSectors
+    $classifier = $this->get(Classifier::class);
+
+    // TODO let this take a specific XML file as input
+    $kernel = $this->get('kernel');
+    $file = $kernel->locateResource('@OagBundle/Resources/fixtures/before_enrichment_activities.xml');
+    $xml = file_get_contents($file);
+
+    $root = new \SimpleXMLElement($xml, LIBXML_BIGLINES & LIBXML_PARSEHUGE);
+
+    $response = $classifier->getFixtureData();
+    $allNewSectors = $classifier->extractSectors($response);
+
+    $names = array();
+    $allCurrentSectors = array();
+    foreach ($root->xpath('/iati-activities/iati-activity') as $activity) {
+      $id = (string)$activity->xpath('./iati-identifier')[0];
+
+      // TODO other languages
+      $nameElements = $activity->xpath('./title/narrative'); 
+      if (count($nameElements) < 1) {
+        $name = '';
+      } else {
+        $name = (string)$nameElements[0];
+      }
+
+      $currentSectors = array();
+      foreach ($activity->xpath('./sector') as $currentSector) {
+        $description = (string)$currentSector->xpath('./narrative[1]')[0];
+        $code = (string)$currentSector['code'];
+
+        $currentSectors[] = array(
+          'description' => $description,
+          'code' => $code
+        );
+      }
+
+      $names[$id] = $name;
+      $allCurrentSectors[$id] = $currentSectors;
+      if (!array_key_exists($id, $allNewSectors)) {
+        $allNewSectors[$id] = array();
+      }
+    }
+
+    $response = array(
+      'names' => $names,
+      'currentSectors' => $allCurrentSectors,
+      'newSectors' => $allNewSectors
+    );
+
     return $response;
   }
 

@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+  <style>
+    td, th, table {
+      border: 2px solid black;
+    }
+  </style>
+{% endblock %}
+
+{% block body %}
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Current Sectors</th>
+        <th>New Sectors</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for id, name in names %}
+        <tr>
+          <td>{{ id }}</td>
+          <td>{{ name }}</td>
+          <td>
+            <ul>
+              {% for sector in currentSectors[id] %}
+                <li>{{ sector.description }} <em>({{ sector.code }})</em></li>
+              {% endfor %}
+          </td>
+          <td>
+            <ul>
+              {% for sector in newSectors[id] %}
+                <li style='opacity: {{ sector.confidence }}'>{{ sector.description }} <em>({{ sector.code }})</em></li>
+              {% endfor %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
