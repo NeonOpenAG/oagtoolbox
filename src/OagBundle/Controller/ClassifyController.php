@@ -164,7 +164,7 @@ class ClassifyController extends Controller {
    * @Template
    */
   public function sectorsAction(Request $request) {
-    // TODO split this into services where appropriate
+    // TODO consider splitting this into services where appropriate
 
     // provides an interface for merging in sectors, will eventually replace mergeSectors
     $classifier = $this->get(Classifier::class);
@@ -193,8 +193,14 @@ class ClassifyController extends Controller {
       }
 
       $currentSectors = array();
-      foreach ($activity->xpath('./sector/narrative[1]') as $currentSector) {
-        $currentSectors[] = (string)$currentSector;
+      foreach ($activity->xpath('./sector') as $currentSector) {
+        $description = (string)$currentSector->xpath('./narrative[1]')[0];
+        $code = (string)$currentSector['code'];
+
+        $currentSectors[] = array(
+          'description' => $description,
+          'code' => $code
+        );
       }
 
       $names[$id] = $name;

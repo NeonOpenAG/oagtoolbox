@@ -26,7 +26,7 @@
           <td>
             <ul>
               {% for sector in currentSectors[id] %}
-                <li>{{ sector }}</em></li>
+                <li>{{ sector.description }} <em>({{ sector.code }})</em></li>
               {% endfor %}
           </td>
           <td>
