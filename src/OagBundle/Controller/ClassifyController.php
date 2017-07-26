@@ -122,10 +122,10 @@ class ClassifyController extends Controller {
   }
 
   /**
-   * @Route("/sector")
+   * @Route("/merge-sectors")
    * @Template
    */
-  public function sectorAction(Request $request) {
+  public function mergeSectorsAction(Request $request) {
     $classifier = $this->get(Classifier::class);
 
     $defaultData = array();
@@ -133,7 +133,7 @@ class ClassifyController extends Controller {
     $form = $this->createFormBuilder($defaultData, $options)
       ->add('xml', TextareaType::class)
       ->add('json', TextareaType::class)
-      ->add('submit', SubmitType::class, array( 'label' => 'Add Sectors'))
+      ->add('submit', SubmitType::class, array( 'label' => 'Merge Sectors'))
       ->getForm();
 
     $form->handleRequest($request);

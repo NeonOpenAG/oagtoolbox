@@ -98,10 +98,7 @@ class Classifier extends AbstractOagService {
   }
 
   public function insertSectors($xmlActivities, $sectors) {
-    // TODO adjust the parameter data types as appropriate depending on how we
-    // can expect the data to be stored; eliminate the loops where possible
-    // when done. At the moment, $sectors is the "data" section of the response
-    // and $xmlActivities is the raw XML in the IATI file.
+    // TODO consider whether sectors are already present
     // TODO confidence should likely be considered in this function
     $root = new \SimpleXMLElement($xmlActivities, self::LIBXML_OPTIONS);
 
@@ -141,7 +138,6 @@ class Classifier extends AbstractOagService {
       }
     }
 
-    // TODO there is no formatting; is this an issue?
     return $root->asXML();
   }
 
