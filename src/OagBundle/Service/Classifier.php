@@ -40,20 +40,11 @@ class Classifier extends AbstractOagService {
   }
 
   public function getFixtureData() {
-    $fixture = array(
-      'success' => true,
-      'duration' => 4.584875984758,
-      'data' => array(
-        array(
-          'XM-DAC-1234-Project1' => array(
-            'code' => 'c_541',
-            'confidence' => 0.98738467746633,
-            'decription' => 'apples'
-          )
-        )
-      )
-    );
-    return $fixture;
+    $kernel = $this->getContainer()->get('kernel');
+    $path = $kernel->locateResource('@OagBundle/Resources/fixtures/before_enrichment_activities.classifier.json');
+    $contents = file_get_contents($path);
+
+    return $contents;
   }
 
   public function processString($contents) {
