@@ -14,6 +14,7 @@
 
     <testsuites>
         <testsuite name="Project Test Suite">
+            <file>src/OagBundle/Tests/SystemSetupTest.php</file>
             <directory>src/*Bundle/Tests</directory>
         </testsuite>
     </testsuites>
@@ -22,6 +23,7 @@
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory>src</directory>
             <exclude>
+                <file>src/OagBundle/Tests/Controller/Abstract*.php</file>
                 <directory>src/*Bundle/Entity</directory>
                 <directory>src/*Bundle/Form</directory>
                 <directory>src/*Bundle/Tests</directory>

@@ -11,50 +11,13 @@ use OagBundle\Entity\OagFile;
 /**
  * ./vendor/bin/simple-phpunit -c phpunit.xml --coverage-html web/test-coverage
  */
-class DefaultControllerTest extends WebTestCase {
+class DefaultControllerTest extends AbstractControllerTest {
+
 
   /**
-   * @var \Doctrine\ORM\EntityManager
+   * @var Array
    */
-  private $em;
-
-  /**
-   * @var \Doctrine\Common\Persistence\ObjectManager
-   */
-  private $objectManager;
-
-  /**
-   * {@inheritDoc}
-   */
-  protected function setUp() {
-    self::bootKernel();
-
-    $this->em = static::$kernel->getContainer()
-      ->get('doctrine')
-      ->getManager();
-
-    $docs = array();
-    $docs[] = $this->createOagFile(1, 'animalfarm.pdf', 'application/pdf');
-    $docs[] = $this->createOagFile(2, 'animalfarm.rtf', 'text/rtf');
-    $docs[] = $this->createOagFile(3, 'animalfarm.txt', 'text/plain');
-    $docs[] = $this->createOagFile(4, 'basic_iati_unordered_valid.xlsx', 'application/octet-stream');
-    $docs[] = $this->createOagFile(5, 'after_enrichment_activities.xml', 'text/xml');
-
-    $documentRepository = $this->createMock(ObjectRepository::class);
-    // use getMock() on PHPUnit 5.3 or below
-    // $employeeRepository = $this->getMock(ObjectRepository::class);
-    $documentRepository->expects($this->any())
-      ->method('findAll')
-      ->willReturn($docs);
-
-    // Last, mock the EntityManager to return the mock of the repository
-    $this->objectManager = $this->createMock(ObjectManager::class);
-    // use getMock() on PHPUnit 5.3 or below
-    // $objectManager = $this->getMock(ObjectManager::class);
-    $this->objectManager->expects($this->any())
-      ->method('getRepository')
-      ->willReturn($documentRepository);
-  }
+  protected $filelist = ['animalfarm.pdf', 'animalfarm.rtf', 'animalfarm.txt', 'basic_iati_unordered_valid.xlsx', 'after_enrichment_activities.xml'];
 
   public function testIndex() {
     $client = static::createClient();
@@ -68,7 +31,7 @@ class DefaultControllerTest extends WebTestCase {
   }
 
   public function testConfirmDelete() {
-    $repository = $this->objectManager->getRepository(OagFile::class);
+    $repository = $this->em->getRepository(OagFile::class);
     $ids = array();
     $oagfiles = $repository->findAll();
     foreach ($oagfiles as $oagfile) {
@@ -93,7 +56,6 @@ class DefaultControllerTest extends WebTestCase {
     }
 
     $client = static::createClient();
-
     $crawler = $client->request('GET', '/delete/' . implode('+', $ids));
   }
 
@@ -101,10 +63,7 @@ class DefaultControllerTest extends WebTestCase {
     $client = static::createClient();
     $crawler = $client->request('GET', '/upload');
 
-    // Upload.
     $buttonCrawlerNode = $crawler->selectButton('Upload');
-    // print_r($buttonCrawlerNode);
-
     $file = $client->getContainer()->getParameter('oag_test_assets_directory') . '/after_enrichment_activities.xml';
     $document = new UploadedFile($file, basename($file), 'text/html');
 
@@ -120,17 +79,6 @@ class DefaultControllerTest extends WebTestCase {
       array('documentName' => basename($file))
     );
     $this->assertNotNull($oagfile, 'Uploaded file not found in DB');
-  }
-
-  private function createOagFile($id, $name, $mimetype) {
-    $entityMock = $this->createMock(OagFile::class, array('getId'));
-    $entityMock->expects($this->any())
-      ->method('getId')
-      ->will($this->returnValue($id));
-    $entityMock->setDocumentName($name);
-    $entityMock->setMimeType($mimetype);
-
-    return $entityMock;
   }
 
 }
