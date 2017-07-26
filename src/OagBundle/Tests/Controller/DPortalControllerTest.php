@@ -4,7 +4,6 @@ namespace OagBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use OagBundle\Entity\OagFile;
-use OagBundle\Service\DPortal;
 
 class DPortalControllerTest extends AbstractControllerTest {
 
