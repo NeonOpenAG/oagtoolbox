@@ -40,20 +40,11 @@ class Classifier extends AbstractOagService {
   }
 
   public function getFixtureData() {
-    $fixture = array(
-      'success' => true,
-      'duration' => 4.584875984758,
-      'data' => array(
-        array(
-          'XM-DAC-1234-Project1' => array(
-            'code' => 'c_541',
-            'confidence' => 0.98738467746633,
-            'decription' => 'apples'
-          )
-        )
-      )
-    );
-    return $fixture;
+    $kernel = $this->getContainer()->get('kernel');
+    $path = $kernel->locateResource('@OagBundle/Resources/fixtures/before_enrichment_activities.classifier.json');
+    $contents = file_get_contents($path);
+
+    return $contents;
   }
 
   public function processString($contents) {
@@ -102,6 +93,39 @@ class Classifier extends AbstractOagService {
       $this->getContainer()->get('logger')->error('Classifier failed to process: ' . $data);
     }
     return array_merge($response, $json);
+  }
+
+  public function getSector($json) {
+    // TODO consider confidence, ideally configurably
+
+    $vocabulary = $this->getContainer()->getParameter('vocabulary');
+    $vocabularyUri = $this->getContainer()->getParameter('vocabulary_uri');
+    
+    /*
+     * Favoured this over SimpleXML as this does not require a starting base
+     * of XML to build on, which could quickly have become a nightmare with
+     * escaping considered.
+     */
+     $writer = new \XMLWriter();
+     $writer->openMemory();
+     $writer->setIndent(TRUE);
+     $writer->startElement('sector');
+       $writer->writeAttribute('code', $json->code);
+       $writer->writeAttribute('vocabulary', $vocabulary);
+       if (strlen($vocabularyUri) > 0) {
+         $writer->writeAttribute('vocabulary-uri', $vocabularyUri);
+       }
+       $writer->startElement('narrative');
+         // the classifier may be assumed to only work for English for now
+         $writer->writeAttribute('xml:lang', 'en');
+         $writer->text($json->description);
+       $writer->endElement();
+       $writer->startElement('narrative');
+         $writer->writeAttribute('xml:lang', 'en');
+         $writer->text('Tagged by an automatic classifier');
+       $writer->endElement();
+     $writer->endElement();
+     return $writer->outputMemory();
   }
 
   public function getName() {

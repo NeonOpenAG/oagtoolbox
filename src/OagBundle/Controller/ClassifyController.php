@@ -14,6 +14,8 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use OagBundle\Service\TextExtractor\PDFExtractor;
 use OagBundle\Service\TextExtractor\RTFExtractor;
 use PhpOffice\PhpWord\Shared\ZipArchive;
@@ -32,20 +34,10 @@ class ClassifyController extends Controller {
     $messages = [];
     $classifier = $this->get(Classifier::class);
 
-    $avaiable = false;
-    if ($classifier->isAvailable()) {
-      $messages[] = 'Classifier is avaialable';
-    }
-    else {
-      $messages[] = 'Classifier is down, returning fixture data.';
-      return $classifier->getFixture();
-    }
-
-    $repository = $this->getDoctrine()->getRepository(OagFile::class);
+    $repository = $this->container->get('doctrine')->getRepository(OagFile::class);
     $oagfile = $repository->find($fileid);
     if (!$oagfile) {
-      // TODO throw 404
-      throw new \RuntimeException('OAG file not found: ' . $fileid);
+      throw $this->createNotFoundException(sprintf('The document %d does not exist', $fileid));
     }
     // TODO - for bigger files we might need send as Uri
     $path = $this->getParameter('oagfiles_directory') . '/' . $oagfile->getDocumentName();
@@ -68,24 +60,25 @@ class ClassifyController extends Controller {
         $decoder->decode();
         file_put_contents($sourceFile, $decoder->output());
         break;
-      case 'text/plain':
       case 'application/txt':
       case 'browser/internal':
       case 'text/anytext':
       case 'widetext/plain':
       case 'widetext/paragraph':
+      case 'text/plain':
         // txt
         $sourceFile = $path;
         break;
+      case 'text/html':
       case 'application/xml':
         // xml
         $sourceFile = $path;
         $isXml = true;
         break;
       case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-      case 'application/zip':
       case 'application/msword':
       case 'application/doc':
+      case 'application/zip':
         // docx
         // phpword can't save to txt directly
         $tmpRtfFile = dirname($sourceFile) . '/' . basename($sourceFile, '.txt') . '.rtf';
@@ -94,10 +87,10 @@ class ClassifyController extends Controller {
         $objWriter->save($tmpRtfFile);
         // Now let the switch fall through to decode rtf
         $path = $tmpRtfFile;
-      case 'text/rtf':
       case 'application/rtf':
       case 'application/x-rtf':
       case 'text/richtext':
+      case 'text/rtf':
         // rtf
         $decoder = new RTFExtractor();
         $decoder->setFilename($path);
@@ -113,10 +106,44 @@ class ClassifyController extends Controller {
     }
     $json = $classifier->processString($contents);
 
-    return array(
+    $data = array(
       'messages' => $messages,
       'response' => $json,
     );
+    return $data;
+  }
+
+  /**
+   * @Route("/sector")
+   * @Template
+   */
+  public function sectorAction(Request $request) {
+    $classifier = $this->get(Classifier::class);
+
+    $defaultData = array();
+    $options = array();
+    $form = $this->createFormBuilder($defaultData, $options)
+      ->add('json', TextareaType::class)
+      ->add('submit', SubmitType::class, array( 'label' => 'Convert to Sector'))
+      ->getForm();
+
+    $form->handleRequest($request);
+
+    $response = array(
+      'form' => $form->createView()
+    );
+
+    if ($form->isSubmitted()) {
+      $rawJson = $form->getData()['json'];
+
+      if(strlen($rawJson) === 0) {
+        $this->addFlash("warn", "No json was entered!");
+      }
+
+      $json = json_decode($rawJson);
+      $response['xml'] = $classifier->getSector($json);
+    }
+    return $response;
   }
 
 }
