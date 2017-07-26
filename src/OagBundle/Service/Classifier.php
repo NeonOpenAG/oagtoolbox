@@ -9,6 +9,8 @@ use OagBundle\Service\TextExtractor\TextPlain;
 
 class Classifier extends AbstractOagService {
 
+  const LIBXML_OPTIONS = LIBXML_BIGLINES & LIBXML_PARSEHUGE;
+
   public function processUri($sometext) {
     return $this->processString();
   }
@@ -40,8 +42,8 @@ class Classifier extends AbstractOagService {
   }
 
   public function getFixtureData() {
-    $kernel = $container->getService('kernel');
-    $path = $kernel->locateResource('@OagBundle/Resources/fixtures/before_enrichment_activities.classifier');
+    $kernel = $this->getContainer()->get('kernel');
+    $path = $kernel->locateResource('@OagBundle/Resources/fixtures/before_enrichment_activities.classifier.json');
     $contents = file_get_contents($path);
 
     return $contents;
@@ -95,40 +97,51 @@ class Classifier extends AbstractOagService {
     return array_merge($response, $json);
   }
 
-  public function getSector($json) {
-    // TODO consider confidence, ideally configurably
+  public function insertSectors($xmlActivities, $sectors) {
+    // TODO adjust the parameter data types as appropriate depending on how we
+    // can expect the data to be stored; eliminate the loops where possible
+    // when done. At the moment, $sectors is the "data" section of the response
+    // and $xmlActivities is the raw XML in the IATI file.
+    // TODO confidence should likely be considered in this function
+    $root = new \SimpleXMLElement($xmlActivities, self::LIBXML_OPTIONS);
 
-    $vocabulary = $this->getContainer()->getParameter('vocabulary');
-    $vocabularyUri = $this->getContainer()->getParameter('vocabulary_uri');
-    
-    /*
-     * Favoured this over SimpleXML as this does not require a starting base
-     * of XML to build on, which could quickly have become a nightmare with
-     * escaping considered.
-     */
-     $writer = new \XMLWriter();
-     $writer->openMemory();
-     $writer->setIndent(TRUE);
-     $writer->startElement('sector');
-       $writer->writeAttribute('code', $json->code);
-       $writer->writeAttribute('vocabulary', $vocabulary);
-       if (strlen($vocabularyUri) > 0) {
-         $writer->writeAttribute('vocabulary-uri', $vocabularyUri);
-       }
-       $writer->startElement('narrative');
-         // the classifier may be assumed to only work for English for now
-         $writer->writeAttribute('xml:lang', 'en');
-         $writer->text($json->description);
-       $writer->endElement();
-       $writer->startElement('narrative');
-         $writer->writeAttribute('xml:lang', 'en');
-         $writer->text('Tagged by an automatic classifier');
-       $writer->endElement();
-     $writer->endElement();
-     return $writer->outputMemory();
+    // just fetch these once
+    $vocab = $this->getContainer()->getParameter('vocabulary');
+    $vocabUri = $this->getContainer()->getParameter('vocabulary_uri');
+
+    // for every activity in the file we got sectors for
+    foreach ($sectors as $part) {
+      foreach ($part as $activityId => $descriptions) {
+        // find the activity with the relevent id
+        // TODO is escaping needed?
+        foreach ($root->xpath("/iati-activities/iati-activity[iati-identifier='$activityId']") as $activity) {
+          // add each sector
+          foreach ($descriptions as $desc) {
+            $sector = $activity->addChild('sector');
+            // TODO check escaping, see http://php.net/manual/en/simplexmlelement.addchild.php#112204
+            $sector->addAttribute('code', $desc->code);
+            $sector->addAttribute('vocabulary', $vocab);
+
+            if (strlen($vocabUri) > 0) {
+              $sector->addAttribute('vocabulary-uri', $vocabUri);
+            }
+
+            $descNarrative = $sector->addChild('narrative', $desc->description);
+            $descNarrative->addAttribute('xml:lang', 'en');
+
+            // TODO consider making configurable
+            $explnNarrative = $sector->addChild('narrative', 'Classified automatically');
+            $explnNarrative->addAttribute('xml:lang', 'en');
+          }
+        }
+      }
+    }
+
+    return $root->asXML();
   }
 
   public function getName() {
     return 'classifier';
   }
+
 }

@@ -6,8 +6,8 @@
     {{ form_widget(form) }}
     {{ form_end(form) }}
 
-    {% if xml is defined %}
-      <pre>{{ xml }}</pre>
+    {% if processed is defined %}
+      <pre>{{ processed }}</pre>
     {% endif %}
 
 {% endblock %}

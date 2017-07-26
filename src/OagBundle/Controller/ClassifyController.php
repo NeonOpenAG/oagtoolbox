@@ -40,7 +40,7 @@ class ClassifyController extends Controller {
     }
     else {
       $messages[] = 'Classifier is down, returning fixture data.';
-      return $classifier->getFixture();
+      return $classifier->getFixtureData();
     }
 
     $repository = $this->getDoctrine()->getRepository(OagFile::class);
@@ -131,17 +131,20 @@ class ClassifyController extends Controller {
     $defaultData = array();
     $options = array();
     $form = $this->createFormBuilder($defaultData, $options)
+      ->add('xml', TextareaType::class)
       ->add('json', TextareaType::class)
-      ->add('submit', SubmitType::class, array( 'label' => 'Convert to Sector'))
+      ->add('submit', SubmitType::class, array( 'label' => 'Add Sectors'))
       ->getForm();
 
     $form->handleRequest($request);
+    $preSectors = $classifier->getFixtureData();
 
     $response = array(
       'form' => $form->createView()
     );
 
     if ($form->isSubmitted()) {
+      $rawXML = $form->getData()['xml'];
       $rawJson = $form->getData()['json'];
 
       if(strlen($rawJson) === 0) {
@@ -149,8 +152,10 @@ class ClassifyController extends Controller {
       }
 
       $json = json_decode($rawJson);
-      $response['xml'] = $classifier->getSector($json);
+      $newXML = $classifier->insertSectors($rawXML, $json->data);
+      $response['processed'] = $newXML;
     }
+
     return $response;
   }
 
