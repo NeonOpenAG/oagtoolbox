@@ -113,12 +113,15 @@ class Classifier extends AbstractOagService {
     foreach ($sectors as $part) {
       foreach ($part as $activityId => $descriptions) {
         // find the activity with the relevent id
-        // TODO is escaping needed?
-        foreach ($root->xpath("/iati-activities/iati-activity[iati-identifier='$activityId']") as $activity) {
+        foreach ($root->xpath('/iati-activities/iati-activity') as $activity) {
+          // check if this is the right activity
+          if ($activity->xpath('iati-identifier')[0] != $activityId) {
+            continue;
+          }
+
           // add each sector
           foreach ($descriptions as $desc) {
             $sector = $activity->addChild('sector');
-            // TODO check escaping, see http://php.net/manual/en/simplexmlelement.addchild.php#112204
             $sector->addAttribute('code', $desc->code);
             $sector->addAttribute('vocabulary', $vocab);
 
@@ -126,17 +129,19 @@ class Classifier extends AbstractOagService {
               $sector->addAttribute('vocabulary-uri', $vocabUri);
             }
 
-            $descNarrative = $sector->addChild('narrative', $desc->description);
-            $descNarrative->addAttribute('xml:lang', 'en');
+            // narrative text content is set this way to let simplexml escape it
+            // see https://stackoverflow.com/a/555039
+            $sector->narrative[] = $desc->description;
+            $sector->narrative[0]->addAttribute('xml:lang', 'en');
 
-            // TODO consider making configurable
-            $explnNarrative = $sector->addChild('narrative', 'Classified automatically');
-            $explnNarrative->addAttribute('xml:lang', 'en');
+            $sector->narrative[] = 'Classified automatically';
+            $sector->narrative[1]->addAttribute('xml:lang', 'en');
           }
         }
       }
     }
 
+    // TODO there is no formatting; is this an issue?
     return $root->asXML();
   }
 
