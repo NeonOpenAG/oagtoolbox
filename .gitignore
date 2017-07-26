@@ -4,6 +4,7 @@
 /app/config/parameters.ini
 /app/config/parameters.yml
 app/sqlite.db
+app/test.db
 /build/
 nbproject/
 /phpunit.xml
