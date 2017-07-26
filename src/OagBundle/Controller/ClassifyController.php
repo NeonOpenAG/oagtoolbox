@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use OagBundle\Service\Classifier;
+use OagBundle\Service\ActivityService;
 use Symfony\Component\HttpFoundation\Request;
 use OagBundle\Entity\OagFile;
 use OagBundle\Form\OagFileType;
@@ -164,47 +165,26 @@ class ClassifyController extends Controller {
    * @Template
    */
   public function sectorsAction(Request $request) {
+    // provides an interface for merging in sectors, will eventually replace mergeSectors
     // TODO consider splitting this into services where appropriate
 
-    // provides an interface for merging in sectors, will eventually replace mergeSectors
     $classifier = $this->get(Classifier::class);
-
-    // TODO let this take a specific XML file as input
-    $kernel = $this->get('kernel');
-    $file = $kernel->locateResource('@OagBundle/Resources/fixtures/before_enrichment_activities.xml');
-    $xml = file_get_contents($file);
-
-    $root = new \SimpleXMLElement($xml, LIBXML_BIGLINES & LIBXML_PARSEHUGE);
+    $srvActivity = $this->get(ActivityService::class);
 
     $response = $classifier->getFixtureData();
     $allNewSectors = $classifier->extractSectors($response);
 
+    // TODO let this take a specific XML file as input
+    $root = $srvActivity->getFixtureData();
+
     $names = array();
     $allCurrentSectors = array();
-    foreach ($root->xpath('/iati-activities/iati-activity') as $activity) {
-      $id = (string)$activity->xpath('./iati-identifier')[0];
+    foreach ($srvActivity->getActivities($root) as $activity) {
+      // populate arrays with activity information
+      $id = $srvActivity->getActivityId($activity);
+      $names[$id] = $srvActivity->getActivityName($activity);
+      $allCurrentSectors[$id] = $srvActivity->getActivitySectors($activity);
 
-      // TODO other languages
-      $nameElements = $activity->xpath('./title/narrative'); 
-      if (count($nameElements) < 1) {
-        $name = '';
-      } else {
-        $name = (string)$nameElements[0];
-      }
-
-      $currentSectors = array();
-      foreach ($activity->xpath('./sector') as $currentSector) {
-        $description = (string)$currentSector->xpath('./narrative[1]')[0];
-        $code = (string)$currentSector['code'];
-
-        $currentSectors[] = array(
-          'description' => $description,
-          'code' => $code
-        );
-      }
-
-      $names[$id] = $name;
-      $allCurrentSectors[$id] = $currentSectors;
       if (!array_key_exists($id, $allNewSectors)) {
         $allNewSectors[$id] = array();
       }

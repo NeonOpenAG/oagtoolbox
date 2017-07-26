@@ -111,6 +111,13 @@ class Classifier extends AbstractOagService {
     return $sectors;
   }
 
+  /**
+   * This is for the old sector merging interface, which is deprecated in favour
+   * of the newer table-based one with checkboxes.
+   *
+   * At the time that a function is created to selectively merge specifc
+   * sectors, this function should be removed.
+   */
   public function insertSectors($xmlActivities, $sectors) {
     // TODO consider whether sectors are already present
     // TODO confidence should likely be considered in this function
