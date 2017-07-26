@@ -6,53 +6,32 @@ use Doctrine\ORM\EntityManager;
 use OagBundle\Entity\OagFile;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use OagBundle\Service\Classifier;
+use OagBundle\Controller\ClassifyController;
 
-class ClassifyControllerTest extends WebTestCase {
+class ClassifyControllerTest extends AbstractControllerTest {
 
   /**
-   * @var EntityManager
+   * @var Array
    */
-  private $em;
-
-  public function setUp() {
-    self::bootKernel();
-
-    $this->em = static::$kernel->getContainer()
-      ->get('doctrine')
-      ->getManager();
-
-    // Upload a file
-    $client = static::createClient();
-    $crawler = $client->request('GET', '/upload');
-
-    // Upload.
-    $buttonCrawlerNode = $crawler->selectButton('Upload');
-
-    $files = $this->getAssets($client);
-    foreach ($files as $file) {
-      $mimetype = mime_content_type($file);
-      $document = new UploadedFile($file, basename($file), $mimetype);
-
-      $form = $buttonCrawlerNode->form(array(
-        'oag_file[documentName]' => $document,
-      ));
-      $client->submit($form);
-    }
-  }
+  protected $filelist = ['animalfarm.txt', 'animalfarm.pdf', 'animalfarm.rtf', 'animalfarm.docx', 'after_enrichment_activities.xml'];
 
   public function testIndex() {
     $client = static::createClient();
-
-    $files = $this->getAssets($client);
-    foreach ($files as $file) {
-      $oagfile = $this->em->getRepository(OagFile::class)->findOneBy(array('documentName' => basename($file)));
+    foreach ($this->filelist as $file) {
+      $oagfile = $this->em->getRepository(OagFile::class)
+        ->findOneBy(array('documentName' => $file));
       $crawler = $client->request('GET', '/classify/' . $oagfile->getId());
+      $code = $client->getResponse()->getStatusCode();
+      $this->assertTrue($code >= 200 && $code <= 399);
     }
   }
 
-  private function getAssets($client) {
-    $files = glob($client->getContainer()->getParameter('oag_test_assets_directory') . '/*.{pdf,rtf,txt,docx}', GLOB_BRACE);
-    return $files;
+  public function testIndex404() {
+    $client = static::createClient();
+
+    $crawler = $client->request('GET', '/classify/9999999');
+    $this->assertTrue($client->getResponse()->isNotFound());
   }
 
 }

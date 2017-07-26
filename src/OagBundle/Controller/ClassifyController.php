@@ -32,20 +32,10 @@ class ClassifyController extends Controller {
     $messages = [];
     $classifier = $this->get(Classifier::class);
 
-    $avaiable = false;
-    if ($classifier->isAvailable()) {
-      $messages[] = 'Classifier is avaialable';
-    }
-    else {
-      $messages[] = 'Classifier is down, returning fixture data.';
-      return $classifier->getFixture();
-    }
-
-    $repository = $this->getDoctrine()->getRepository(OagFile::class);
+    $repository = $this->container->get('doctrine')->getRepository(OagFile::class);
     $oagfile = $repository->find($fileid);
     if (!$oagfile) {
-      // TODO throw 404
-      throw new \RuntimeException('OAG file not found: ' . $fileid);
+      throw $this->createNotFoundException(sprintf('The document %d does not exist', $fileid));
     }
     // TODO - for bigger files we might need send as Uri
     $path = $this->getParameter('oagfiles_directory') . '/' . $oagfile->getDocumentName();
@@ -68,24 +58,25 @@ class ClassifyController extends Controller {
         $decoder->decode();
         file_put_contents($sourceFile, $decoder->output());
         break;
-      case 'text/plain':
       case 'application/txt':
       case 'browser/internal':
       case 'text/anytext':
       case 'widetext/plain':
       case 'widetext/paragraph':
+      case 'text/plain':
         // txt
         $sourceFile = $path;
         break;
+      case 'text/html':
       case 'application/xml':
         // xml
         $sourceFile = $path;
         $isXml = true;
         break;
       case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-      case 'application/zip':
       case 'application/msword':
       case 'application/doc':
+      case 'application/zip':
         // docx
         // phpword can't save to txt directly
         $tmpRtfFile = dirname($sourceFile) . '/' . basename($sourceFile, '.txt') . '.rtf';
@@ -94,10 +85,10 @@ class ClassifyController extends Controller {
         $objWriter->save($tmpRtfFile);
         // Now let the switch fall through to decode rtf
         $path = $tmpRtfFile;
-      case 'text/rtf':
       case 'application/rtf':
       case 'application/x-rtf':
       case 'text/richtext':
+      case 'text/rtf':
         // rtf
         $decoder = new RTFExtractor();
         $decoder->setFilename($path);
@@ -113,10 +104,11 @@ class ClassifyController extends Controller {
     }
     $json = $classifier->processString($contents);
 
-    return array(
+    $data = array(
       'messages' => $messages,
       'response' => $json,
     );
+    return $data;
   }
 
 }
