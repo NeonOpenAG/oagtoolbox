@@ -16,16 +16,6 @@ class DPortalControllerTest extends AbstractControllerTest {
   public function testIndex()
   {
     $client = static::createClient();
-    $dportal = $this->getMockBuilder(DPortal::class)
-      ->disableOriginalConstructor()
-      ->getMock();
-    $dportal->expects($this->any())
-      ->method('visualise');
-    $dportal->expects($this->any())
-      ->method('isAvailable')
-      ->willReturn(true);
-
-    $client->getContainer()->set(DPortal::class, $dportal);
 
     $uploadDir = $this->container->getParameter('oagfiles_directory');
     $xmldir = $this->container->getParameter('oagxml_directory');
