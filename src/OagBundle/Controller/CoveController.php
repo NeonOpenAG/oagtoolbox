@@ -29,21 +29,12 @@ class CoveController extends Controller {
     $cove = $this->get(Cove::class);
     $srvOagFile = $this->get(OagFileService::class);
 
-    $avaiable = false;
-    if ($cove->isAvailable()) {
-      $messages[] = 'CoVE is avaialable';
-    }
-    else {
-      $messages[] = 'CoVE is down, returning fixture data.';
-      // TODO Ant Fixture data please
-    }
-
     $repository = $this->getDoctrine()->getRepository(OagFile::class);
     $oagfile = $repository->find($fileid);
     if (!$oagfile) {
-      // TODO throw 404
-      throw new \RuntimeException('OAG file not found: ' . $fileid);
+      throw $this->createNotFoundException(sprintf('The document %d does not exist', $fileid));
     }
+    $this->get('logger')->debug(sprintf('Processing %s using CoVE', $oagfile->getDocumentName()));
     // TODO - for bigger files we might need send as Uri
     $path = $this->getParameter('oagfiles_directory') . '/' . $oagfile->getDocumentName();
     $contents = file_get_contents($path);
