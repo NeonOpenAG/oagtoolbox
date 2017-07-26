@@ -97,6 +97,20 @@ class Classifier extends AbstractOagService {
     return array_merge($response, $json);
   }
 
+  public function extractSectors($response) {
+    // flatten the response to put it in the form $activityId => $arrayOfSectors
+    $sectors = array();
+    foreach ($response->data as $part) {
+      foreach ($part as $activityId => $descriptions) {
+        if (!array_key_exists($sectors, $activityId)) {
+          $sectors[$activityId] = array();
+        }
+        $sectors[$activityId] = array_merge($sectors[$activityId], $descriptions);
+      }
+    }
+    return $sectors;
+  }
+
   public function insertSectors($xmlActivities, $sectors) {
     // TODO consider whether sectors are already present
     // TODO confidence should likely be considered in this function
@@ -106,35 +120,32 @@ class Classifier extends AbstractOagService {
     $vocab = $this->getContainer()->getParameter('vocabulary');
     $vocabUri = $this->getContainer()->getParameter('vocabulary_uri');
 
-    // for every activity in the file we got sectors for
-    foreach ($sectors as $part) {
-      foreach ($part as $activityId => $descriptions) {
-        // find the activity with the relevent id
-        foreach ($root->xpath('/iati-activities/iati-activity') as $activity) {
-          // check if this is the right activity
-          if ($activity->xpath('iati-identifier')[0] != $activityId) {
-            continue;
-          }
+    foreach ($sectors as $id => $descriptions) {
+      // find the activity with the relevent id
+      $activity = $root->xpath("/iati-activities/iati-activity[iati-identifier='$id'");
 
-          // add each sector
-          foreach ($descriptions as $desc) {
-            $sector = $activity->addChild('sector');
-            $sector->addAttribute('code', $desc->code);
-            $sector->addAttribute('vocabulary', $vocab);
+      if (count(activity < 1)) {
+        continue;
+      }
+      $activity = $activity[0];
 
-            if (strlen($vocabUri) > 0) {
-              $sector->addAttribute('vocabulary-uri', $vocabUri);
-            }
+      // add each sector
+      foreach ($descriptions as $desc) {
+        $sector = $activity->addChild('sector');
+        $sector->addAttribute('code', $desc->code);
+        $sector->addAttribute('vocabulary', $vocab);
 
-            // narrative text content is set this way to let simplexml escape it
-            // see https://stackoverflow.com/a/555039
-            $sector->narrative[] = $desc->description;
-            $sector->narrative[0]->addAttribute('xml:lang', 'en');
-
-            $sector->narrative[] = 'Classified automatically';
-            $sector->narrative[1]->addAttribute('xml:lang', 'en');
-          }
+        if (strlen($vocabUri) > 0) {
+          $sector->addAttribute('vocabulary-uri', $vocabUri);
         }
+
+        // narrative text content is set this way to let simplexml escape it
+        // see https://stackoverflow.com/a/555039
+        $sector->narrative[] = $desc->description;
+        $sector->narrative[0]->addAttribute('xml:lang', 'en');
+
+        $sector->narrative[] = 'Classified automatically';
+        $sector->narrative[1]->addAttribute('xml:lang', 'en');
       }
     }
 

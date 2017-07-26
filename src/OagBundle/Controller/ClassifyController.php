@@ -137,7 +137,6 @@ class ClassifyController extends Controller {
       ->getForm();
 
     $form->handleRequest($request);
-    $preSectors = $classifier->getFixtureData();
 
     $response = array(
       'form' => $form->createView()
@@ -152,7 +151,8 @@ class ClassifyController extends Controller {
       }
 
       $json = json_decode($rawJson);
-      $newXML = $classifier->insertSectors($rawXML, $json->data);
+      $sectors = $classifier->extractSectors($response);
+      $newXML = $classifier->insertSectors($rawXML, $sectors);
       $response['processed'] = $newXML;
     }
 
