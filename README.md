@@ -19,3 +19,8 @@ To run in apache you'll need some permissions foo
     HTTPDUSER=$(ps axo user,comm | grep -E '[a]pache|[h]ttpd|[_]www|[w]ww-data|[n]ginx' | grep -v root | head -1 | cut -d\  -f1)
     sudo setfacl -dR -m u:"$HTTPDUSER":rwX -m u:$(whoami):rwX var app/*.db web/*/oagfiles
     sudo setfacl -R -m u:"$HTTPDUSER":rwX -m u:$(whoami):rwX var app/*.db web/*/oagfiles
+
+Tests
+-----
+
+    ./vendor/bin/simple-phpunit -c phpunit.xml --coverage-html web/test-coverage
