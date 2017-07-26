@@ -14,6 +14,8 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use OagBundle\Service\TextExtractor\PDFExtractor;
 use OagBundle\Service\TextExtractor\RTFExtractor;
 use PhpOffice\PhpWord\Shared\ZipArchive;
@@ -109,6 +111,39 @@ class ClassifyController extends Controller {
       'response' => $json,
     );
     return $data;
+  }
+
+  /**
+   * @Route("/sector")
+   * @Template
+   */
+  public function sectorAction(Request $request) {
+    $classifier = $this->get(Classifier::class);
+
+    $defaultData = array();
+    $options = array();
+    $form = $this->createFormBuilder($defaultData, $options)
+      ->add('json', TextareaType::class)
+      ->add('submit', SubmitType::class, array( 'label' => 'Convert to Sector'))
+      ->getForm();
+
+    $form->handleRequest($request);
+
+    $response = array(
+      'form' => $form->createView()
+    );
+
+    if ($form->isSubmitted()) {
+      $rawJson = $form->getData()['json'];
+
+      if(strlen($rawJson) === 0) {
+        $this->addFlash("warn", "No json was entered!");
+      }
+
+      $json = json_decode($rawJson);
+      $response['xml'] = $classifier->getSector($json);
+    }
+    return $response;
   }
 
 }
