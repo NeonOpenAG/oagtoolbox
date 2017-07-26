@@ -159,4 +159,58 @@ class ClassifyController extends Controller {
     return $response;
   }
 
+  /**
+   * @Route("/sectors")
+   * @Template
+   */
+  public function sectorsAction(Request $request) {
+    // TODO split this into services where appropriate
+
+    // provides an interface for merging in sectors, will eventually replace mergeSectors
+    $classifier = $this->get(Classifier::class);
+
+    // TODO let this take a specific XML file as input
+    $kernel = $this->get('kernel');
+    $file = $kernel->locateResource('@OagBundle/Resources/fixtures/before_enrichment_activities.xml');
+    $xml = file_get_contents($file);
+
+    $root = new \SimpleXMLElement($xml, LIBXML_BIGLINES & LIBXML_PARSEHUGE);
+
+    $response = $classifier->getFixtureData();
+    $allNewSectors = $classifier->extractSectors($response);
+
+    $names = array();
+    $allCurrentSectors = array();
+    foreach ($root->xpath('/iati-activities/iati-activity') as $activity) {
+      $id = (string)$activity->xpath('./iati-identifier')[0];
+
+      // TODO other languages
+      $nameElements = $activity->xpath('./title/narrative'); 
+      if (count($nameElements) < 1) {
+        $name = '';
+      } else {
+        $name = (string)$nameElements[0];
+      }
+
+      $currentSectors = array();
+      foreach ($activity->xpath('./sector/narrative[1]') as $currentSector) {
+        $currentSectors[] = (string)$currentSector;
+      }
+
+      $names[$id] = $name;
+      $allCurrentSectors[$id] = $currentSectors;
+      if (!array_key_exists($id, $allNewSectors)) {
+        $allNewSectors[$id] = array();
+      }
+    }
+
+    $response = array(
+      'names' => $names,
+      'currentSectors' => $allCurrentSectors,
+      'newSectors' => $allNewSectors
+    );
+
+    return $response;
+  }
+
 }

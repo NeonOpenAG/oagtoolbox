@@ -45,8 +45,8 @@ class Classifier extends AbstractOagService {
     $kernel = $this->getContainer()->get('kernel');
     $path = $kernel->locateResource('@OagBundle/Resources/fixtures/before_enrichment_activities.classifier.json');
     $contents = file_get_contents($path);
-
-    return $contents;
+    $response = json_decode($contents, true);
+    return $response;
   }
 
   public function processString($contents) {
@@ -100,9 +100,9 @@ class Classifier extends AbstractOagService {
   public function extractSectors($response) {
     // flatten the response to put it in the form $activityId => $arrayOfSectors
     $sectors = array();
-    foreach ($response->data as $part) {
+    foreach ($response['data'] as $part) {
       foreach ($part as $activityId => $descriptions) {
-        if (!array_key_exists($sectors, $activityId)) {
+        if (!array_key_exists($activityId, $sectors)) {
           $sectors[$activityId] = array();
         }
         $sectors[$activityId] = array_merge($sectors[$activityId], $descriptions);
@@ -122,7 +122,7 @@ class Classifier extends AbstractOagService {
 
     foreach ($sectors as $id => $descriptions) {
       // find the activity with the relevent id
-      $activity = $root->xpath("/iati-activities/iati-activity[iati-identifier='$id'");
+      $activity = $root->xpath("/iati-activities/iati-activity[iati-identifier='$id']");
 
       if (count(activity < 1)) {
         continue;
