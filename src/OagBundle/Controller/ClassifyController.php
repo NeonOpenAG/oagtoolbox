@@ -195,7 +195,7 @@ class ClassifyController extends Controller {
         'expanded' => true,
         'multiple' => true,
         'choices' => $currentChoices,
-        'data' => array_values($currentChoices)
+        'data' => array_values($currentChoices) // default to ticked
       ));
 
       $newChoices = array();
@@ -209,11 +209,15 @@ class ClassifyController extends Controller {
       ));
     }
 
+    $sectorsForm->add('submit', SubmitType::class);
+    $finForm = $sectorsForm->getForm();
+    $finForm->handleRequest($request);
+
     $response = array(
       'names' => $names,
       'currentSectors' => $allCurrentSectors,
       'newSectors' => $allNewSectors,
-      'form' => $sectorsForm->getForm()->createView()
+      'form' => $finForm->createView()
     );
 
     return $response;
