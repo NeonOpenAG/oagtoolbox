@@ -256,7 +256,7 @@ class ClassifyController extends Controller {
         foreach ($allCurrentSectors[$id] as $sector) {
           // if status has changed
           if (!in_array($sector['code'], $revCurrent)) {
-            $srvActivity->removeActivitySector($activity, $sector['code']);
+            $srvActivity->removeActivitySector($activity, $sector['code'], $sector['vocabulary']);
           }
         }
 

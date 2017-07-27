@@ -53,10 +53,12 @@ class ActivityService extends AbstractService {
     foreach ($activity->xpath('./sector') as $currentSector) {
       $description = (string)$currentSector->xpath('./narrative[1]')[0];
       $code = (string)$currentSector['code'];
+      $vocabulary = (string)$currentSector['vocabulary'];
 
       $currentSectors[] = array(
         'description' => $description,
-        'code' => $code
+        'code' => $code,
+        'vocabulary' => $vocabulary
       );
     }
     return $currentSectors;
@@ -86,9 +88,8 @@ class ActivityService extends AbstractService {
     $sector->narrative[1]->addAttribute('xml:lang', 'en');
   }
 
-  public function removeActivitySector(&$activity, $code) {
-    // TODO require vocabulary as well, as codes could overlap
-    $sector = $activity->xpath("./sector[@code='$code']");
+  public function removeActivitySector(&$activity, $code, $vocabulary) {
+    $sector = $activity->xpath("./sector[@code='$code' and @vocabulary='$vocabulary']");
 
     if (count($sector) < 1) {
       return;
