@@ -13,10 +13,6 @@ use OagBundle\Entity\OagFile;
  */
 class DefaultControllerTest extends AbstractControllerTest {
 
-  /**
-   * @var \Doctrine\ORM\EntityManager
-   */
-  private $em;
 
   /**
    * @var Array
