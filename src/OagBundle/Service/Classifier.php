@@ -130,7 +130,7 @@ class Classifier extends AbstractOagService {
       // find the activity with the relevent id
       $activity = $root->xpath("/iati-activities/iati-activity[iati-identifier='$id']");
 
-      if (count(activity < 1)) {
+      if (count($activity) < 1) {
         continue;
       }
       $activity = $activity[0];

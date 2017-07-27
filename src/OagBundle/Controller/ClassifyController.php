@@ -146,7 +146,7 @@ class ClassifyController extends Controller {
       }
 
       $json = json_decode($rawJson);
-      $sectors = $classifier->extractSectors($response);
+      $sectors = $classifier->extractSectors($json);
       $newXML = $classifier->insertSectors($rawXML, $sectors);
       $response['processed'] = $newXML;
     }
