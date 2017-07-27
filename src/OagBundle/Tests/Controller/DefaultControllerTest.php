@@ -13,6 +13,10 @@ use OagBundle\Entity\OagFile;
  */
 class DefaultControllerTest extends AbstractControllerTest {
 
+  /**
+   * @var \Doctrine\ORM\EntityManager
+   */
+  private $em;
 
   /**
    * @var Array
@@ -64,6 +68,7 @@ class DefaultControllerTest extends AbstractControllerTest {
     $crawler = $client->request('GET', '/upload');
 
     $buttonCrawlerNode = $crawler->selectButton('Upload');
+
     $file = $client->getContainer()->getParameter('oag_test_assets_directory') . '/after_enrichment_activities.xml';
     $document = new UploadedFile($file, basename($file), 'text/html');
 
