@@ -47,5 +47,5 @@
     </tbody>
   </table>
   {{ form_widget(form.submit, { 'label': 'Fix Sectors' }) }}
-  {{ form_end(form) }}
+  {{ form_end(form, { 'render_rest': false }) }}
 {% endblock %}
