@@ -245,6 +245,8 @@ class ClassifyController extends Controller {
 
     // handle merging as a response
     if ($finForm->isSubmitted() && $finForm->isValid()) {
+      $this->addFlash('notice', 'Sector changes have been applied successfully.');
+
       $data = $finForm->getData();
 
       foreach ($srvActivity->getActivities($root) as $activity) {

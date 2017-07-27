@@ -81,7 +81,7 @@ class ActivityService extends AbstractService {
 
     // narrative text content is set this way to let simplexml escape it
     // see https://stackoverflow.com/a/555039
-    $sector->narrative[] = $desc->description;
+    $sector->narrative[] = $description;
     $sector->narrative[0]->addAttribute('xml:lang', 'en'); 
 
     $sector->narrative[] = $reason;
