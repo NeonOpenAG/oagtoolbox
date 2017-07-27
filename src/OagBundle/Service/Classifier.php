@@ -45,7 +45,7 @@ class Classifier extends AbstractOagService {
     $kernel = $this->getContainer()->get('kernel');
     $path = $kernel->locateResource('@OagBundle/Resources/fixtures/before_enrichment_activities.classifier.json');
     $contents = file_get_contents($path);
-    return json_decode($contents);
+    return $contents;
   }
 
   public function processString($contents) {
