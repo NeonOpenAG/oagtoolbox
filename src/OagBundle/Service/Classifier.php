@@ -45,8 +45,7 @@ class Classifier extends AbstractOagService {
     $kernel = $this->getContainer()->get('kernel');
     $path = $kernel->locateResource('@OagBundle/Resources/fixtures/before_enrichment_activities.classifier.json');
     $contents = file_get_contents($path);
-
-    return $contents;
+    return json_decode($contents);
   }
 
   public function processString($contents) {
@@ -100,7 +99,7 @@ class Classifier extends AbstractOagService {
   public function extractSectors($response) {
     // flatten the response to put it in the form $activityId => $arrayOfSectors
     $sectors = array();
-    foreach ($response['data'] as $part) {
+    foreach ($response->data as $part) {
       foreach ($part as $activityId => $descriptions) {
         if (!array_key_exists($activityId, $sectors)) {
           $sectors[$activityId] = array();

@@ -117,6 +117,8 @@ class ClassifyController extends Controller {
   /**
    * @Route("/merge-sectors")
    * @Template
+   *
+   * Deprecated. See Classifier->insertSectors for more information.
    */
   public function mergeSectorsAction(Request $request) {
     $classifier = $this->get(Classifier::class);
@@ -155,11 +157,11 @@ class ClassifyController extends Controller {
   /**
    * @Route("/sectors")
    * @Template
+   *
+   * Provides an interface for merging in sectors. Will replace mergeSectors
+   * (above) when complete.
    */
   public function sectorsAction(Request $request) {
-    // provides an interface for merging in sectors, will eventually replace mergeSectors
-    // TODO consider splitting this into services where appropriate
-
     $classifier = $this->get(Classifier::class);
     $srvActivity = $this->get(ActivityService::class);
 
@@ -168,6 +170,10 @@ class ClassifyController extends Controller {
 
     // TODO let this take a specific XML file as input
     $root = $srvActivity->getFixtureData();
+
+    // TODO create sane defaults as you go
+    $defaultData = array();
+    $sectorsForm = $this->createFormBuilder($defaultData);
 
     $names = array();
     $allCurrentSectors = array();
@@ -180,12 +186,33 @@ class ClassifyController extends Controller {
       if (!array_key_exists($id, $allNewSectors)) {
         $allNewSectors[$id] = array();
       }
+
+      $currentChoices = array();
+      foreach ($allCurrentSectors[$id] as $sector) {
+        $currentChoices[$sector['description']] = $sector['code'];
+      }
+      $sectorsForm->add('current' . $id, ChoiceType::class, array(
+        'expanded' => true,
+        'multiple' => true,
+        'choices' => $currentChoices
+      ));
+
+      $newChoices = array();
+      foreach ($allNewSectors[$id] as $sector) {
+        $newChoices[$sector->description] = $sector->code;
+      }
+      $sectorsForm->add('new' . $id, ChoiceType::class, array(
+        'expanded' => true,
+        'multiple' => true,
+        'choices' => $newChoices
+      ));
     }
 
     $response = array(
       'names' => $names,
       'currentSectors' => $allCurrentSectors,
-      'newSectors' => $allNewSectors
+      'newSectors' => $allNewSectors,
+      'form' => $sectorsForm->getForm()->createView()
     );
 
     return $response;

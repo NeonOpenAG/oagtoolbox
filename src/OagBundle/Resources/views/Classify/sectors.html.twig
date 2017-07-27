@@ -9,6 +9,7 @@
 {% endblock %}
 
 {% block body %}
+  {{ form_start(form) }}
   <table>
     <thead>
       <tr>
@@ -26,17 +27,24 @@
           <td>
             <ul>
               {% for sector in currentSectors[id] %}
-                <li>{{ sector.description }} <em>({{ sector.code }})</em></li>
+                <li>
+                  {{ form_widget(form['current' ~ id][loop.index0]) }}
+                  {{ sector.description }} <em>({{ sector.code }})</em>
+                </li>
               {% endfor %}
           </td>
           <td>
             <ul>
               {% for sector in newSectors[id] %}
-                <li style='opacity: {{ sector.confidence }}'>{{ sector.description }} <em>({{ sector.code }})</em></li>
+                <li style='opacity: {{ sector.confidence }}'>
+                  {{ form_widget(form['new' ~ id][loop.index0]) }}
+                  {{ sector.description }} <em>({{ sector.code }})</em>
+                </li>
               {% endfor %}
           </td>
         </tr>
       {% endfor %}
     </tbody>
   </table>
+  {{ form_end(form) }}
 {% endblock %}
