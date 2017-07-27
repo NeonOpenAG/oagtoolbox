@@ -9,8 +9,6 @@ use OagBundle\Service\TextExtractor\TextPlain;
 
 class Classifier extends AbstractOagService {
 
-  const LIBXML_OPTIONS = LIBXML_BIGLINES & LIBXML_PARSEHUGE;
-
   public function processUri($sometext) {
     return $this->processString();
   }
