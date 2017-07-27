@@ -194,7 +194,8 @@ class ClassifyController extends Controller {
       $sectorsForm->add('current' . $id, ChoiceType::class, array(
         'expanded' => true,
         'multiple' => true,
-        'choices' => $currentChoices
+        'choices' => $currentChoices,
+        'data' => array_values($currentChoices)
       ));
 
       $newChoices = array();
