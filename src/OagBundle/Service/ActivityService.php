@@ -26,7 +26,7 @@ class ActivityService extends AbstractService {
     $kernel = $this->getContainer()->get('kernel');
     $file = $kernel->locateResource('@OagBundle/Resources/fixtures/before_enrichment_activities.xml');
     $xml = file_get_contents($file);
-    return $this->parseXML($xml);
+    return $xml;
   }
 
   public function getActivities($root) {

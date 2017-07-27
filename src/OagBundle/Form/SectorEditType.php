@@ -31,7 +31,7 @@ class SectorEditType extends AbstractType {
 
       $newChoices = array();
       foreach ($newSectors as $sector) {
-        $newChoices[$sector->description] = $sector->code;
+        $newChoices[$sector['description']] = $sector['code'];
       }
       $builder->add('new' . $id, ChoiceType::class, array(
         'expanded' => true,

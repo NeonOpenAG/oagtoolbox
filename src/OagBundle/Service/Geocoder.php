@@ -5,15 +5,22 @@ namespace OagBundle\Service;
 class Geocoder extends AbstractAutoService {
 
   public function processUri($sometext) {
-    return $this->processString();
+    // TODO implement non-fixture process
+    return json_decode($json, true);
   }
 
   public function processString($sometext) {
+    // TODO implement non-fixture process
     $uri = $this->getUri();
 
     $json = $this->getFixtureData();
 
-    return $json;
+    return json_decode($json, true);
+  }
+
+  public function processXML($contents) {
+    // TODO implement non-fixture process
+    return json_decode($json, true);
   }
 
   public function getName() {

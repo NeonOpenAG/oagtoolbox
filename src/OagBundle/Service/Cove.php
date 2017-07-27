@@ -13,7 +13,7 @@ class Cove extends AbstractAutoService {
 
   public function processString($text) {
     if (!$this->isAvailable()) {
-      return $this->getFixtureData();
+      return json_encode($this->getFixtureData(), true);
     }
 
     $descriptorspec = array(
@@ -52,6 +52,11 @@ class Cove extends AbstractAutoService {
       // TODO Better exception handling.
       throw new \RuntimeException('CoVE Failed to start');
     }
+  }
+
+  public function processXML($contents) {
+    // TODO - implement fetching this result from CoVE
+    return json_encode($this->getFixtureData(), true);
   }
 
   public function getFixtureData() {

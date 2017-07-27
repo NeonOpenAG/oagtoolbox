@@ -104,7 +104,7 @@ class ClassifyController extends Controller {
 
     $contents = file_get_contents($sourceFile);
     if ($isXml) {
-      // hit the XML endpoint...
+      // TODO hit the XML endpoint...
     }
     $json = $classifier->processString($contents);
 
@@ -147,7 +147,7 @@ class ClassifyController extends Controller {
         $this->addFlash("warn", "No json was entered!");
       }
 
-      $json = json_decode($rawJson);
+      $json = json_decode($rawJson, true);
       $sectors = $classifier->extractSectors($json);
 
       $root = $srvActivity->parseXML($rawXML);
@@ -162,8 +162,8 @@ class ClassifyController extends Controller {
         foreach ($sectors[$id] as $sector) {
           $srvActivity->addActivitySector(
             $activity,
-            $sector->code,
-            $sector->description
+            $sector['code'],
+            $sector['description']
           );
         }
       }
@@ -186,11 +186,13 @@ class ClassifyController extends Controller {
     $classifier = $this->get(Classifier::class);
     $srvActivity = $this->get(ActivityService::class);
 
-    $response = $classifier->getFixtureData();
+    // TODO let this take a specific XML file as input
+    $xml = $srvActivity->getFixtureData();
+
+    $response = $classifier->processXML($xml);
     $allNewSectors = $classifier->extractSectors($response);
 
-    // TODO let this take a specific XML file as input
-    $root = $srvActivity->getFixtureData();
+    $root = $srvActivity->parseXML($xml);
 
     $names = array();
     $allCurrentSectors = array();
@@ -232,11 +234,11 @@ class ClassifyController extends Controller {
 
         foreach ($allNewSectors[$id] as $sector) {
           // if status has changed
-          if (in_array($sector->code, $revNew)) {
+          if (in_array($sector['code'], $revNew)) {
             $srvActivity->addActivitySector(
               $activity,
-              $sector->code,
-              $sector->description
+              $sector['code'],
+              $sector['description']
             );
           }
         }

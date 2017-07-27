@@ -10,7 +10,8 @@ use OagBundle\Service\TextExtractor\TextPlain;
 class Classifier extends AbstractOagService {
 
   public function processUri($sometext) {
-    return $this->processString();
+    // TODO implement non-fixture process
+    return json_decode($this->getFixtureData(), true);
   }
 
   public function isAvailable() {
@@ -46,9 +47,16 @@ class Classifier extends AbstractOagService {
     return $contents;
   }
 
+  public function processXML($contents) {
+    // TODO implement non-fixture process
+    return json_decode($this->getFixtureData(), true);
+  }
+
   public function processString($contents) {
     if (!$this->isAvailable()) {
-      return $this->getFixtureData();
+      // TODO use correct fixture data, the current is not representative of
+      // output where just a string is processed
+      return json_decode($this->getFixtureData(), true);
     }
 
     $uri = $this->getUri();
@@ -97,7 +105,7 @@ class Classifier extends AbstractOagService {
   public function extractSectors($response) {
     // flatten the response to put it in the form $activityId => $arrayOfSectors
     $sectors = array();
-    foreach ($response->data as $part) {
+    foreach ($response['data'] as $part) {
       foreach ($part as $activityId => $descriptions) {
         if (!array_key_exists($activityId, $sectors)) {
           $sectors[$activityId] = array();
