@@ -10,6 +10,7 @@ use OagBundle\Service\ActivityService;
 use Symfony\Component\HttpFoundation\Request;
 use OagBundle\Entity\OagFile;
 use OagBundle\Form\OagFileType;
+use OagBundle\Form\SectorEditType;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
@@ -182,8 +183,6 @@ class ClassifyController extends Controller {
    * (above) when complete.
    */
   public function sectorsAction(Request $request) {
-    // TODO refactor this 100-line behemoth
-
     $classifier = $this->get(Classifier::class);
     $srvActivity = $this->get(ActivityService::class);
 
@@ -192,9 +191,6 @@ class ClassifyController extends Controller {
 
     // TODO let this take a specific XML file as input
     $root = $srvActivity->getFixtureData();
-
-    $defaultData = array();
-    $sectorsForm = $this->createFormBuilder($defaultData);
 
     $names = array();
     $allCurrentSectors = array();
@@ -207,47 +203,19 @@ class ClassifyController extends Controller {
       if (!array_key_exists($id, $allNewSectors)) {
         $allNewSectors[$id] = array();
       }
-
-      // build the checkbox forms
-      $currentChoices = array();
-      foreach ($allCurrentSectors[$id] as $sector) {
-        $currentChoices[$sector['description']] = $sector['code'];
-      }
-      $sectorsForm->add('current' . $id, ChoiceType::class, array(
-        'expanded' => true,
-        'multiple' => true,
-        'choices' => $currentChoices,
-        'data' => array_values($currentChoices) // default to ticked
-      ));
-
-      $newChoices = array();
-      foreach ($allNewSectors[$id] as $sector) {
-        // TODO don't show duplicate sectors (those already in file)
-        $newChoices[$sector->description] = $sector->code;
-      }
-      $sectorsForm->add('new' . $id, ChoiceType::class, array(
-        'expanded' => true,
-        'multiple' => true,
-        'choices' => $newChoices
-      ));
     }
 
-    $sectorsForm->add('submit', SubmitType::class);
-    $finForm = $sectorsForm->getForm();
-    $finForm->handleRequest($request);
-
-    $response = array(
-      'names' => $names,
+    $sectorsForm = $this->createForm(SectorEditType::class, null, array(
       'currentSectors' => $allCurrentSectors,
-      'newSectors' => $allNewSectors,
-      'form' => $finForm->createView()
-    );
+      'newSectors' => $allNewSectors
+    ));
+    $sectorsForm->handleRequest($request);
 
     // handle merging as a response
-    if ($finForm->isSubmitted() && $finForm->isValid()) {
+    if ($sectorsForm->isSubmitted() && $sectorsForm->isValid()) {
       $this->addFlash('notice', 'Sector changes have been applied successfully.');
 
-      $data = $finForm->getData();
+      $data = $sectorsForm->getData();
 
       foreach ($srvActivity->getActivities($root) as $activity) {
         $id = $srvActivity->getActivityId($activity);
@@ -274,6 +242,13 @@ class ClassifyController extends Controller {
         }
       }
     }
+
+    $response = array(
+      'names' => $names,
+      'currentSectors' => $allCurrentSectors,
+      'newSectors' => $allNewSectors,
+      'form' => $sectorsForm->createView()
+    );
 
     return $response;
   }

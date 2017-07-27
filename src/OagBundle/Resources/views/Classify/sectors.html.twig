@@ -32,6 +32,7 @@
                   {{ sector.description }} <em>({{ sector.code }})</em>
                 </li>
               {% endfor %}
+              {% do form['current' ~ id].setRendered %}
           </td>
           <td>
             <ul>
@@ -41,11 +42,12 @@
                   {{ sector.description }} <em>({{ sector.code }})</em>
                 </li>
               {% endfor %}
+              {% do form['new' ~ id].setRendered %}
           </td>
         </tr>
       {% endfor %}
     </tbody>
   </table>
   {{ form_widget(form.submit, { 'label': 'Fix Sectors' }) }}
-  {{ form_end(form, { 'render_rest': false }) }}
+  {{ form_end(form) }}
 {% endblock %}
