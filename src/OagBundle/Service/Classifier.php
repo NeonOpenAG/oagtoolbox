@@ -110,54 +110,6 @@ class Classifier extends AbstractOagService {
     return $sectors;
   }
 
-  /**
-   * This is for the old sector merging interface, which is deprecated in favour
-   * of the newer table-based one with checkboxes.
-   *
-   * At the time that a function is created to selectively merge specifc
-   * sectors, this function should be removed.
-   */
-  public function insertSectors($xmlActivities, $sectors) {
-    // TODO consider whether sectors are already present
-    // TODO confidence should likely be considered in this function
-    $root = new \SimpleXMLElement($xmlActivities, self::LIBXML_OPTIONS);
-
-    // just fetch these once
-    $vocab = $this->getContainer()->getParameter('vocabulary');
-    $vocabUri = $this->getContainer()->getParameter('vocabulary_uri');
-
-    foreach ($sectors as $id => $descriptions) {
-      // find the activity with the relevent id
-      $activity = $root->xpath("/iati-activities/iati-activity[iati-identifier='$id']");
-
-      if (count($activity) < 1) {
-        continue;
-      }
-      $activity = $activity[0];
-
-      // add each sector
-      foreach ($descriptions as $desc) {
-        $sector = $activity->addChild('sector');
-        $sector->addAttribute('code', $desc->code);
-        $sector->addAttribute('vocabulary', $vocab);
-
-        if (strlen($vocabUri) > 0) {
-          $sector->addAttribute('vocabulary-uri', $vocabUri);
-        }
-
-        // narrative text content is set this way to let simplexml escape it
-        // see https://stackoverflow.com/a/555039
-        $sector->narrative[] = $desc->description;
-        $sector->narrative[0]->addAttribute('xml:lang', 'en');
-
-        $sector->narrative[] = 'Classified automatically';
-        $sector->narrative[1]->addAttribute('xml:lang', 'en');
-      }
-    }
-
-    return $root->asXML();
-  }
-
   public function getName() {
     return 'classifier';
   }

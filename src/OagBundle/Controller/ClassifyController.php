@@ -118,10 +118,11 @@ class ClassifyController extends Controller {
    * @Route("/merge-sectors")
    * @Template
    *
-   * Deprecated. See Classifier->insertSectors for more information.
+   * Deprecated. Will be replaced by sectorsAction when fully functional.
    */
   public function mergeSectorsAction(Request $request) {
     $classifier = $this->get(Classifier::class);
+    $srvActivity = $this->get(ActivityService::class);
 
     $defaultData = array();
     $options = array();
@@ -147,7 +148,26 @@ class ClassifyController extends Controller {
 
       $json = json_decode($rawJson);
       $sectors = $classifier->extractSectors($json);
-      $newXML = $classifier->insertSectors($rawXML, $sectors);
+
+      $root = $srvActivity->parseXML($rawXML);
+
+      foreach ($srvActivity->getActivities($root) as $activity) {
+        $id = $srvActivity->getActivityId($activity);
+
+        if (!array_key_exists($id, $sectors)) {
+          continue;
+        }
+
+        foreach ($sectors[$id] as $sector) {
+          $srvActivity->addActivitySector(
+            $activity,
+            $sector->code,
+            $sector->description
+          );
+        }
+      }
+
+      $newXML = $srvActivity->toXML($root);
       $response['processed'] = $newXML;
     }
 
@@ -162,6 +182,8 @@ class ClassifyController extends Controller {
    * (above) when complete.
    */
   public function sectorsAction(Request $request) {
+    // TODO refactor this 100-line behemoth
+
     $classifier = $this->get(Classifier::class);
     $srvActivity = $this->get(ActivityService::class);
 
@@ -171,7 +193,6 @@ class ClassifyController extends Controller {
     // TODO let this take a specific XML file as input
     $root = $srvActivity->getFixtureData();
 
-    // TODO create sane defaults as you go
     $defaultData = array();
     $sectorsForm = $this->createFormBuilder($defaultData);
 
@@ -187,6 +208,7 @@ class ClassifyController extends Controller {
         $allNewSectors[$id] = array();
       }
 
+      // build the checkbox forms
       $currentChoices = array();
       foreach ($allCurrentSectors[$id] as $sector) {
         $currentChoices[$sector['description']] = $sector['code'];
@@ -200,6 +222,7 @@ class ClassifyController extends Controller {
 
       $newChoices = array();
       foreach ($allNewSectors[$id] as $sector) {
+        // TODO don't show duplicate sectors (those already in file)
         $newChoices[$sector->description] = $sector->code;
       }
       $sectorsForm->add('new' . $id, ChoiceType::class, array(
@@ -219,6 +242,36 @@ class ClassifyController extends Controller {
       'newSectors' => $allNewSectors,
       'form' => $finForm->createView()
     );
+
+    // handle merging as a response
+    if ($finForm->isSubmitted() && $finForm->isValid()) {
+      $data = $finForm->getData();
+
+      foreach ($srvActivity->getActivities($root) as $activity) {
+        $id = $srvActivity->getActivityId($activity);
+
+        $revCurrent = $data['current' . $id];
+        $revNew = $data['new' . $id];
+
+        foreach ($allCurrentSectors[$id] as $sector) {
+          // if status has changed
+          if (!in_array($sector['code'], $revCurrent)) {
+            $srvActivity->removeActivitySector($activity, $sector['code']);
+          }
+        }
+
+        foreach ($allNewSectors[$id] as $sector) {
+          // if status has changed
+          if (in_array($sector->code, $revNew)) {
+            $srvActivity->addActivitySector(
+              $activity,
+              $sector->code,
+              $sector->description
+            );
+          }
+        }
+      }
+    }
 
     return $response;
   }

@@ -4,7 +4,9 @@ namespace OagBundle\Service;
 
 /**
  * A service for manipulating and getting data from IATI Activity files after
- * they have been parsed into a SimpleXMLElement object.
+ * they have been parsed into a SimpleXMLElement object. This also acts as a
+ * nice abstraction away from the SimpleXMLElement, in an effort to make
+ * dealing with it more predictable.
  */
 class ActivityService extends AbstractService {
 
@@ -14,6 +16,10 @@ class ActivityService extends AbstractService {
     // helper function to allow for centralised changing of libxml options
     // where appropriate
     return new \SimpleXMLElement($string, self::LIBXML_OPTIONS);
+  }
+
+  public function toXML($root) {
+    return $root->asXML();
   }
 
   public function getFixtureData() {
@@ -54,6 +60,42 @@ class ActivityService extends AbstractService {
       );
     }
     return $currentSectors;
+  }
+
+  public function addActivitySector(&$activity, $code, $description, $reason=null) {
+    if (is_null($reason)) {
+      $reason = 'Classified automatically';
+    }
+
+    $vocab = $this->getContainer()->getParameter('vocabulary');
+    $vocabUri = $this->getContainer()->getParameter('vocabulary_uri');
+
+    $sector = $activity->addChild('sector');
+    $sector->addAttribute('code', $code);
+    $sector->addAttribute('vocabulary', $vocab);
+    if (strlen($vocabUri) > 0) {
+      $sector->addAttribute('vocabulary-uri', $vocabUri);
+    }
+
+    // narrative text content is set this way to let simplexml escape it
+    // see https://stackoverflow.com/a/555039
+    $sector->narrative[] = $desc->description;
+    $sector->narrative[0]->addAttribute('xml:lang', 'en'); 
+
+    $sector->narrative[] = $reason;
+    $sector->narrative[1]->addAttribute('xml:lang', 'en');
+  }
+
+  public function removeActivitySector(&$activity, $code) {
+    // TODO require vocabulary as well, as codes could overlap
+    $sector = $activity->xpath("./sector[@code='$code']");
+
+    if (count($sector) < 1) {
+      return;
+    }
+
+    $sector = $sector[0];
+    unset($sector[0]);
   }
 
 }
