@@ -50,7 +50,14 @@
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
         ],
         "post-install-cmd": [
-            "@symfony-scripts"
+            "@symfony-scripts",
+            "cp app/config/parameters.yml.sqlite app/config/parameters.yml",
+            "mkdir -p web/uploads/tests web/xml/tests",
+            "rm -f app/test.db",
+            "php bin/console doctrine:database:create",
+            "php bin/console doctrine:schema:create",
+            "php bin/console doctrine:database:create --env=test",
+            "php bin/console doctrine:schema:create --env=test"
         ],
         "post-update-cmd": [
             "@symfony-scripts"
