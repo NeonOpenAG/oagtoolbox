@@ -35,4 +35,14 @@ class Geocoder extends AbstractAutoService {
     return $contents;
   }
 
+  public function extractLocations($json) {
+    $locations = array();
+    foreach ($json as $projectObject) {
+      $id = $projectObject['project_id'];
+      $projLocations = $projectObject['locations'];
+      $locations[$id] = $projLocations;
+    }
+    return $locations;
+  }
+
 }
