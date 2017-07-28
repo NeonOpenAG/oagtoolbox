@@ -143,33 +143,33 @@ class ClassifyController extends Controller {
       $rawXML = $form->getData()['xml'];
       $rawJson = $form->getData()['json'];
 
-      if(strlen($rawJson) === 0) {
-        $this->addFlash("warn", "No json was entered!");
-      }
+      if(strlen($rawXML) === 0 || strlen($rawJson) === 0) {
+        $this->addFlash("warn", "Please fill in both fields.");
+      } else {
+        $json = json_decode($rawJson, true);
+        $sectors = $classifier->extractSectors($json);
 
-      $json = json_decode($rawJson, true);
-      $sectors = $classifier->extractSectors($json);
+        $root = $srvActivity->parseXML($rawXML);
 
-      $root = $srvActivity->parseXML($rawXML);
+        foreach ($srvActivity->getActivities($root) as $activity) {
+          $id = $srvActivity->getActivityId($activity);
 
-      foreach ($srvActivity->getActivities($root) as $activity) {
-        $id = $srvActivity->getActivityId($activity);
+          if (!array_key_exists($id, $sectors)) {
+            continue;
+          }
 
-        if (!array_key_exists($id, $sectors)) {
-          continue;
+          foreach ($sectors[$id] as $sector) {
+            $srvActivity->addActivitySector(
+              $activity,
+              $sector['code'],
+              $sector['description']
+            );
+          }
         }
 
-        foreach ($sectors[$id] as $sector) {
-          $srvActivity->addActivitySector(
-            $activity,
-            $sector['code'],
-            $sector['description']
-          );
-        }
+        $newXML = $srvActivity->toXML($root);
+        $response['processed'] = $newXML;
       }
-
-      $newXML = $srvActivity->toXML($root);
-      $response['processed'] = $newXML;
     }
 
     return $response;
