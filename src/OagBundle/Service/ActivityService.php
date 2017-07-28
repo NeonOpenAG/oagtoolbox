@@ -99,4 +99,53 @@ class ActivityService extends AbstractService {
     unset($sector[0]);
   }
 
+  public function addActivityLocation(&$activity, $json) {
+    // $location is the JSON assoc-array describing a location as returned by
+    // the Geocoder API
+
+    // TODO what is "rollback"?
+
+    $location = $activity->addChild('location');
+
+    $name = $location->addChild('name');
+    $name->narrative[] = $json['name'];
+
+    $locId = $location->addChild('location-id');
+    //$locId->addAttribute('vocabulary', TODO what is this);
+    $locId->addAttribute('code', $json['id']);
+
+    if ($json['geometry']['type'] === 'Point') {
+      $point = $location->addChild('point');
+      $point->addAttribute('srsName', 'http://www.opengis.net/def/crs/EPSG/0/4326');
+      $point->pos[] = implode(' ', $json['geometry']['coordinates']);
+    } else {
+      // TODO what other possibilites are there?
+    }
+
+    $featDeg = $location->addChild('feature-designation');
+    $featDeg->addAttribute('code', $json['featureDesignation']['code']);
+
+    // TODO is $json['type'] relevant?
+    
+    $actDescript = $location->addChild('activity-description');
+    $actDescript->narrative[] = $json['activityDescription'];
+
+    $locClass = $location->addChild('location-class');
+    $locClass->addAttribute('code', $json['locationClass']['code']);
+
+    $exactness = $location->addChild('exactness');
+    $exactness->addAttribute('code', $json['exactness']['code']);
+
+    // TODO is $json['country'] relevant?
+
+    // TODO check that this isn't dynamic - assuming not, as it is not an array
+    $admin1 = $location->addChild('administrative');
+    $admin1->addAttribute('code', $json['admin1']['code']);
+    //$admin1->addAttribute('vocabulary', TODO what should this be? it is essential)
+
+    $admin2 = $location->addChild('administrative');
+    $admin2->addAttribute('code', $json['admin2']['code']);
+    //$admin1->addAttribute('vocabulary', TODO what should this be? it is essential)
+  }
+
 }
