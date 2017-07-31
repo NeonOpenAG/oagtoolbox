@@ -9,45 +9,6 @@
 {% endblock %}
 
 {% block body %}
-  {{ form_start(form) }}
-  <table>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Current Sectors</th>
-        <th>New Sectors</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for id, name in names %}
-        <tr>
-          <td>{{ id }}</td>
-          <td>{{ name }}</td>
-          <td>
-            <ul>
-              {% for sector in currentSectors[id] %}
-                <li>
-                  {{ form_widget(form['current' ~ id][loop.index0]) }}
-                  {{ sector.description }} <em>({{ sector.code }})</em>
-                </li>
-              {% endfor %}
-              {% do form['current' ~ id].setRendered %}
-          </td>
-          <td>
-            <ul>
-              {% for sector in newSectors[id] %}
-                <li style='opacity: {{ sector.confidence }}'>
-                  {{ form_widget(form['new' ~ id][loop.index0]) }}
-                  {{ sector.description }} <em>({{ sector.code }})</em>
-                </li>
-              {% endfor %}
-              {% do form['new' ~ id].setRendered %}
-          </td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  {{ form_widget(form.submit, { 'label': 'Fix Sectors' }) }}
-  {{ form_end(form) }}
+  {% form_theme form 'OagBundle::form/mergeActivity.html.twig' %}
+  {{ form(form) }}
 {% endblock %}
