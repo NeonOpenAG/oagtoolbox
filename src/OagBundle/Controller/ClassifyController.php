@@ -9,8 +9,8 @@ use OagBundle\Service\Classifier;
 use OagBundle\Service\ActivityService;
 use Symfony\Component\HttpFoundation\Request;
 use OagBundle\Entity\OagFile;
+use OagBundle\Form\MergeActivityType;
 use OagBundle\Form\OagFileType;
-use OagBundle\Form\SectorEditType;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
@@ -196,6 +196,8 @@ class ClassifyController extends Controller {
 
     $names = array();
     $allCurrentSectors = array();
+    $mergeCur = array();
+    $mergeNew = array();
     foreach ($srvActivity->getActivities($root) as $activity) {
       // populate arrays with activity information
       $id = $srvActivity->getActivityId($activity);
@@ -205,11 +207,21 @@ class ClassifyController extends Controller {
       if (!array_key_exists($id, $allNewSectors)) {
         $allNewSectors[$id] = array();
       }
+
+      $mergeCur[$id] = array();
+      $mergeNew[$id] = array();
+      foreach ($allCurrentSectors[$id] as $currentSector) {
+        $mergeCur[$id][$currentSector['description']] = $currentSector['code'];
+      }
+      foreach ($allNewSectors[$id] as $newSector) {
+        $mergeNew[$id][$newSector['description']] = $newSector['code'];
+      }
     }
 
-    $sectorsForm = $this->createForm(SectorEditType::class, null, array(
-      'currentSectors' => $allCurrentSectors,
-      'newSectors' => $allNewSectors
+    $sectorsForm = $this->createForm(MergeActivityType::class, null, array(
+      'ids' => $names,
+      'current' => $mergeCur,
+      'new' => $mergeNew
     ));
     $sectorsForm->handleRequest($request);
 
