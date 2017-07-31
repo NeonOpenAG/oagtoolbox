@@ -99,11 +99,27 @@ class ActivityService extends AbstractService {
     unset($sector[0]);
   }
 
+  public function getActivityLocations($activity) {
+    $currentLocations = array();
+    foreach ($activity->xpath('./location') as $currentLocation) {
+      $description = (string)$currentLocation->xpath('./name/narrative[1]')[0];
+      $code = (string)$currentLocation->xpath('location-id')[0]['code'];
+
+      $currentLocations[] = array(
+        'description' => $description,
+        'code' => $code,
+        // 'vocabulary' => TODO how should this be implemented?
+      );
+    }
+    return $currentLocations;
+  }
+
   public function addActivityLocation(&$activity, $json) {
     // $location is the JSON assoc-array describing a location as returned by
     // the Geocoder API
 
     // TODO what is "rollback"?
+    // TODO should we check if it already exists?
 
     $location = $activity->addChild('location');
 
@@ -146,6 +162,17 @@ class ActivityService extends AbstractService {
     $admin2 = $location->addChild('administrative');
     $admin2->addAttribute('code', $json['admin2']['code']);
     //$admin1->addAttribute('vocabulary', TODO what should this be? it is essential)
+  }
+
+  public function removeActivityLocation(&$activity, $code) { // TODO $vocabulary
+    $location = $activity->xpath("./location/location-id[@code='$code']/..");
+
+    if (count($location) < 1) {
+      return;
+    }
+
+    $location = $location[0];
+    unset($location[0]);
   }
 
 }

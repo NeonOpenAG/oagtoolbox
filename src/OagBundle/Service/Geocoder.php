@@ -6,7 +6,7 @@ class Geocoder extends AbstractAutoService {
 
   public function processUri($sometext) {
     // TODO implement non-fixture process
-    return json_decode($json, true);
+    return json_decode($this->getFixtureData(), true);
   }
 
   public function processString($sometext) {
@@ -20,7 +20,7 @@ class Geocoder extends AbstractAutoService {
 
   public function processXML($contents) {
     // TODO implement non-fixture process
-    return json_decode($json, true);
+    return json_decode($this->getFixtureData(), true);
   }
 
   public function getName() {

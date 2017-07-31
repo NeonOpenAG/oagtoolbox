@@ -9,6 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\Request;
 
+use OagBundle\Form\MergeActivityType;
 use OagBundle\Service\ActivityService;
 use OagBundle\Service\Geocoder;
 
@@ -71,6 +72,97 @@ class GeocodeController extends Controller
         $response['processed'] = $newXML;
       }
     }
+
+    return $response;
+  }
+
+  /**
+   * @Route("/locations")
+   * @Template
+   *
+   * Provides an interface for merging in locations. Will replace mergeLocations
+   * (above) when complete.
+   */
+  public function locationsAction(Request $request) {
+    $geocoder = $this->get(Geocoder::class);
+    $srvActivity = $this->get(ActivityService::class);
+
+    // TODO let this take a specific XML file as input
+    $xml = $srvActivity->getFixtureData();
+
+    $response = $geocoder->processXML($xml);
+    $allNewLocations = $geocoder->extractLocations($response);
+
+    $root = $srvActivity->parseXML($xml);
+
+    $names = array();
+    $allCurrentLocations = array();
+    $mergeCur = array();
+    $mergeNew = array();
+    foreach ($srvActivity->getActivities($root) as $activity) {
+      // populate arrays with activity information
+      $id = $srvActivity->getActivityId($activity);
+      $names[$id] = $srvActivity->getActivityName($activity);
+      $allCurrentLocations[$id] = $srvActivity->getActivityLocations($activity);
+
+      if (!array_key_exists($id, $allNewLocations)) {
+        $allNewLocations[$id] = array();
+      }
+
+      $mergeCur[$id] = array();
+      $mergeNew[$id] = array();
+      foreach ($allCurrentLocations[$id] as $currentLocation) {
+        $mergeCur[$id][$currentLocation['description']] = $currentLocation['code'];
+      }
+      foreach ($allNewLocations[$id] as $newLocation) {
+        $mergeNew[$id][$newLocation['name']] = $newLocation['id'];
+      }
+    }
+
+    $locationsForm = $this->createForm(MergeActivityType::class, null, array(
+      'ids' => $names,
+      'current' => $mergeCur,
+      'new' => $mergeNew
+    ));
+    $locationsForm->handleRequest($request);
+
+    // handle merging as a response
+    if ($locationsForm->isSubmitted() && $locationsForm->isValid()) {
+      $this->addFlash('notice', 'Location changes have been applied successfully.');
+
+      $data = $locationsForm->getData();
+
+      foreach ($srvActivity->getActivities($root) as $activity) {
+        $id = $srvActivity->getActivityId($activity);
+
+        $revCurrent = $data['current' . $id];
+        $revNew = $data['new' . $id];
+
+        foreach ($allCurrentLocations[$id] as $location) {
+          // if status has changed
+          if (!in_array($location['code'], $revCurrent)) {
+            $srvActivity->removeActivityLocation($activity, $location['code']);
+          }
+        }
+
+        foreach ($allNewLocations[$id] as $location) {
+          // if status has changed
+          if (in_array($location['id'], $revNew)) {
+            $srvActivity->addActivityLocation(
+              $activity,
+              $location
+            );
+          }
+        }
+      }
+    }
+
+    $response = array(
+      'names' => $names,
+      'currentLocations' => $allCurrentLocations,
+      'newLocations' => $allNewLocations,
+      'form' => $locationsForm->createView()
+    );
 
     return $response;
   }
