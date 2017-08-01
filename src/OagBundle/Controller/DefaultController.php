@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use OagBundle\Service\Cove;
 use Symfony\Component\HttpFoundation\Request;
 use OagBundle\Entity\OagFile;
+use OagBundle\Service\ActivityService;
 use OagBundle\Service\OagFileService;
 use OagBundle\Form\OagFileType;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -192,6 +193,25 @@ class DefaultController extends Controller {
 
     return array(
       'form' => $form->createView(),
+    );
+  }
+
+  /**
+   * @Route("/activities")
+   * @Template
+   *
+   * TODO - link to a file in the database instead of using fixtures
+   */
+  public function activitiesAction() {
+    $srvActivity = $this->get(ActivityService::class);
+    $root = $srvActivity->parseXML($srvActivity->getFixtureData());
+    $simple = $srvActivity->toArray($root);
+
+    $files = array();
+    $files['non-fixture file name goes here'] = $simple;
+
+    return array(
+      'files' => $files
     );
   }
 

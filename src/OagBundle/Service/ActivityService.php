@@ -22,6 +22,20 @@ class ActivityService extends AbstractService {
     return $root->asXML();
   }
 
+  public function toArray($root) {
+    // gets a simplified representation of the data that we can deserialise at the moment
+    $activities = array();
+    foreach ($this->getActivities($root) as $activity) {
+      $simpActivity = array();
+      $simpActivity['id'] = $this->getActivityId($activity);
+      $simpActivity['name'] = $this->getActivityName($activity);
+      $simpActivity['sectors'] = $this->getActivitySectors($activity);
+      $simpActivity['locations'] = $this->getActivityLocations($activity);
+      $activities[] = $simpActivity;
+    }
+    return $activities;
+  }
+
   public function getFixtureData() {
     $kernel = $this->getContainer()->get('kernel');
     $file = $kernel->locateResource('@OagBundle/Resources/fixtures/before_enrichment_activities.xml');

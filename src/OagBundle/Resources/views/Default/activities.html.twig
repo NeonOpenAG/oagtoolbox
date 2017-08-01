@@ -1,0 +1,30 @@
+{% extends 'OagBundle::Default/index.html.twig' %}
+
+{% block body %}
+  <ul>
+    {% for fileName, activities in files %}
+      <li>
+	<h1>{{ fileName }}</h1>
+	<ul>
+	  {% for activity in activities %}
+	    <li>
+	      <h2>{{ activity.name }} <em>({{ activity.id }})</h2>
+	      <h3>Sectors</h3>
+	      <ul>
+		{% for sector in activity.sectors %}
+		  <li>{{ sector.description }}</li>
+		{% endfor %}
+	      </ul>
+	      <h3>Locations</h3>
+	      <ul>
+		{% for location in activity.locations %}
+		  <li>{{ location.description }}</li>
+		{% endfor %}
+	      </ul>
+	    </li>
+	  {% endfor %}
+	</ul>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}
