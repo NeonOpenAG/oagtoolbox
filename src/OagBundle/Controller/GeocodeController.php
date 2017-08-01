@@ -89,15 +89,15 @@ class GeocodeController extends Controller
 
     // TODO let this take a specific XML file as input
     $xml = $srvActivity->getFixtureData();
-
-    $response = $geocoder->processXML($xml);
-    $allNewLocations = $geocoder->extractLocations($response);
-
     $root = $srvActivity->parseXML($xml);
 
-    $names = array();
-    $allCurrentLocations = array();
-    $mergeCur = array();
+    $response = $geocoder->processXML($xml);
+    $allNewLocations = $geocoder->extractLocations($response); // suggested
+
+
+    $names = array(); // $activity id => $activity name
+    $allCurrentLocations = array(); // in XML now
+    $mergeCur = array(); // to create checkboxes
     $mergeNew = array();
     foreach ($srvActivity->getActivities($root) as $activity) {
       // populate arrays with activity information
@@ -109,14 +109,8 @@ class GeocodeController extends Controller
         $allNewLocations[$id] = array();
       }
 
-      $mergeCur[$id] = array();
-      $mergeNew[$id] = array();
-      foreach ($allCurrentLocations[$id] as $currentLocation) {
-        $mergeCur[$id][$currentLocation['description']] = $currentLocation['code'];
-      }
-      foreach ($allNewLocations[$id] as $newLocation) {
-        $mergeNew[$id][$newLocation['name']] = $newLocation['id'];
-      }
+      $mergeCur[$id] = array_column($allCurrentLocations[$id], 'code', 'description');
+      $mergeNew[$id] = array_column($allNewLocations[$id], 'id', 'name');
     }
 
     $locationsForm = $this->createForm(MergeActivityType::class, null, array(
@@ -158,9 +152,6 @@ class GeocodeController extends Controller
     }
 
     $response = array(
-      'names' => $names,
-      'currentLocations' => $allCurrentLocations,
-      'newLocations' => $allNewLocations,
       'form' => $locationsForm->createView()
     );
 

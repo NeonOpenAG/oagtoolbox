@@ -18,8 +18,8 @@ class MergeActivityType extends AbstractType {
     $allNew = $options['new'];
 
     foreach (array_keys($ids) as $id) {
-      $cur = $allCur[$id];
-      $new = $allNew[$id];
+      $cur = array_key_exists($id, $allCur) ? $allCur[$id] : array();
+      $new = array_key_exists($id, $allNew) ? $allNew[$id] : array();
 
       $builder->add('current' . $id, ChoiceType::class, array(
         'expanded' => true,

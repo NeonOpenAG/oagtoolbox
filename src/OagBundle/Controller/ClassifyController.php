@@ -188,15 +188,15 @@ class ClassifyController extends Controller {
 
     // TODO let this take a specific XML file as input
     $xml = $srvActivity->getFixtureData();
-
-    $response = $classifier->processXML($xml);
-    $allNewSectors = $classifier->extractSectors($response);
-
     $root = $srvActivity->parseXML($xml);
 
-    $names = array();
-    $allCurrentSectors = array();
-    $mergeCur = array();
+    $response = $classifier->processXML($xml);
+    $allNewSectors = $classifier->extractSectors($response); // suggested
+
+
+    $names = array(); // $id => $name
+    $allCurrentSectors = array(); // in XML now
+    $mergeCur = array(); // to create checkboxes
     $mergeNew = array();
     foreach ($srvActivity->getActivities($root) as $activity) {
       // populate arrays with activity information
@@ -208,14 +208,8 @@ class ClassifyController extends Controller {
         $allNewSectors[$id] = array();
       }
 
-      $mergeCur[$id] = array();
-      $mergeNew[$id] = array();
-      foreach ($allCurrentSectors[$id] as $currentSector) {
-        $mergeCur[$id][$currentSector['description']] = $currentSector['code'];
-      }
-      foreach ($allNewSectors[$id] as $newSector) {
-        $mergeNew[$id][$newSector['description']] = $newSector['code'];
-      }
+      $mergeCur[$id] = array_column($allCurrentSectors[$id], 'code', 'description');
+      $mergeNew[$id] = array_column($allNewSectors[$id], 'code', 'description');
     }
 
     $sectorsForm = $this->createForm(MergeActivityType::class, null, array(
@@ -258,9 +252,6 @@ class ClassifyController extends Controller {
     }
 
     $response = array(
-      'names' => $names,
-      'currentSectors' => $allCurrentSectors,
-      'newSectors' => $allNewSectors,
       'form' => $sectorsForm->createView()
     );
 
