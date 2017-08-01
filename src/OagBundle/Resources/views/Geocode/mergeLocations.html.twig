@@ -1,0 +1,13 @@
+{% extends 'OagBundle::Default/index.html.twig' %}
+
+{% block body %}
+
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    {{ form_end(form) }}
+
+    {% if processed is defined %}
+      <pre>{{ processed }}</pre>
+    {% endif %}
+
+{% endblock %}

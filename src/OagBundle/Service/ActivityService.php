@@ -4,7 +4,9 @@ namespace OagBundle\Service;
 
 /**
  * A service for manipulating and getting data from IATI Activity files after
- * they have been parsed into a SimpleXMLElement object.
+ * they have been parsed into a SimpleXMLElement object. This also acts as a
+ * nice abstraction away from the SimpleXMLElement, in an effort to make
+ * dealing with it more predictable.
  */
 class ActivityService extends AbstractService {
 
@@ -16,11 +18,15 @@ class ActivityService extends AbstractService {
     return new \SimpleXMLElement($string, self::LIBXML_OPTIONS);
   }
 
+  public function toXML($root) {
+    return $root->asXML();
+  }
+
   public function getFixtureData() {
     $kernel = $this->getContainer()->get('kernel');
     $file = $kernel->locateResource('@OagBundle/Resources/fixtures/before_enrichment_activities.xml');
     $xml = file_get_contents($file);
-    return $this->parseXML($xml);
+    return $xml;
   }
 
   public function getActivities($root) {
@@ -47,13 +53,126 @@ class ActivityService extends AbstractService {
     foreach ($activity->xpath('./sector') as $currentSector) {
       $description = (string)$currentSector->xpath('./narrative[1]')[0];
       $code = (string)$currentSector['code'];
+      $vocabulary = (string)$currentSector['vocabulary'];
 
       $currentSectors[] = array(
         'description' => $description,
-        'code' => $code
+        'code' => $code,
+        'vocabulary' => $vocabulary
       );
     }
     return $currentSectors;
+  }
+
+  public function addActivitySector(&$activity, $code, $description, $reason=null) {
+    if (is_null($reason)) {
+      $reason = 'Classified automatically';
+    }
+
+    $vocab = $this->getContainer()->getParameter('vocabulary');
+    $vocabUri = $this->getContainer()->getParameter('vocabulary_uri');
+
+    $sector = $activity->addChild('sector');
+    $sector->addAttribute('code', $code);
+    $sector->addAttribute('vocabulary', $vocab);
+    if (strlen($vocabUri) > 0) {
+      $sector->addAttribute('vocabulary-uri', $vocabUri);
+    }
+
+    // narrative text content is set this way to let simplexml escape it
+    // see https://stackoverflow.com/a/555039
+    $sector->narrative[] = $description;
+    $sector->narrative[0]->addAttribute('xml:lang', 'en'); 
+
+    $sector->narrative[] = $reason;
+    $sector->narrative[1]->addAttribute('xml:lang', 'en');
+  }
+
+  public function removeActivitySector(&$activity, $code, $vocabulary) {
+    $sector = $activity->xpath("./sector[@code='$code' and @vocabulary='$vocabulary']");
+
+    if (count($sector) < 1) {
+      return;
+    }
+
+    $sector = $sector[0];
+    unset($sector[0]);
+  }
+
+  public function getActivityLocations($activity) {
+    $currentLocations = array();
+    foreach ($activity->xpath('./location') as $currentLocation) {
+      $description = (string)$currentLocation->xpath('./name/narrative[1]')[0];
+      $code = (string)$currentLocation->xpath('location-id')[0]['code'];
+
+      $currentLocations[] = array(
+        'description' => $description,
+        'code' => $code,
+        // 'vocabulary' => TODO how should this be implemented?
+      );
+    }
+    return $currentLocations;
+  }
+
+  public function addActivityLocation(&$activity, $json) {
+    // $location is the JSON assoc-array describing a location as returned by
+    // the Geocoder API
+
+    // TODO what is "rollback"?
+    // TODO should we check if it already exists?
+
+    $location = $activity->addChild('location');
+
+    $name = $location->addChild('name');
+    $name->narrative[] = $json['name'];
+
+    $locId = $location->addChild('location-id');
+    //$locId->addAttribute('vocabulary', TODO what is this);
+    $locId->addAttribute('code', $json['id']);
+
+    if ($json['geometry']['type'] === 'Point') {
+      $point = $location->addChild('point');
+      $point->addAttribute('srsName', 'http://www.opengis.net/def/crs/EPSG/0/4326');
+      $point->pos[] = implode(' ', $json['geometry']['coordinates']);
+    } else {
+      // TODO what other possibilites are there?
+    }
+
+    $featDeg = $location->addChild('feature-designation');
+    $featDeg->addAttribute('code', $json['featureDesignation']['code']);
+
+    // TODO is $json['type'] relevant?
+    
+    $actDescript = $location->addChild('activity-description');
+    $actDescript->narrative[] = $json['activityDescription'];
+
+    $locClass = $location->addChild('location-class');
+    $locClass->addAttribute('code', $json['locationClass']['code']);
+
+    $exactness = $location->addChild('exactness');
+    $exactness->addAttribute('code', $json['exactness']['code']);
+
+    // TODO is $json['country'] relevant?
+
+    // TODO check that this isn't dynamic - assuming not, as it is not an array
+    $admin1 = $location->addChild('administrative');
+    $admin1->addAttribute('code', $json['admin1']['code']);
+    //$admin1->addAttribute('vocabulary', TODO what should this be? it is essential)
+
+    $admin2 = $location->addChild('administrative');
+    $admin2->addAttribute('code', $json['admin2']['code']);
+    //$admin1->addAttribute('vocabulary', TODO what should this be? it is essential)
+  }
+
+  public function removeActivityLocation(&$activity, $code) { // TODO $vocabulary
+    $location = $activity->xpath("./location/location-id[@code='$code']/..");
+
+    if (count($location) < 1) {
+      return;
+    }
+
+    $location = $location[0];
+    unset($location[0]);
   }
 
 }

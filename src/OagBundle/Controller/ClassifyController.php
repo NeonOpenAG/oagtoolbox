@@ -9,6 +9,7 @@ use OagBundle\Service\Classifier;
 use OagBundle\Service\ActivityService;
 use Symfony\Component\HttpFoundation\Request;
 use OagBundle\Entity\OagFile;
+use OagBundle\Form\MergeActivityType;
 use OagBundle\Form\OagFileType;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -103,7 +104,7 @@ class ClassifyController extends Controller {
 
     $contents = file_get_contents($sourceFile);
     if ($isXml) {
-      // hit the XML endpoint...
+      // TODO hit the XML endpoint...
     }
     $json = $classifier->processString($contents);
 
@@ -118,10 +119,11 @@ class ClassifyController extends Controller {
    * @Route("/merge-sectors")
    * @Template
    *
-   * Deprecated. See Classifier->insertSectors for more information.
+   * Deprecated. Will be replaced by sectorsAction when fully functional.
    */
   public function mergeSectorsAction(Request $request) {
     $classifier = $this->get(Classifier::class);
+    $srvActivity = $this->get(ActivityService::class);
 
     $defaultData = array();
     $options = array();
@@ -141,14 +143,33 @@ class ClassifyController extends Controller {
       $rawXML = $form->getData()['xml'];
       $rawJson = $form->getData()['json'];
 
-      if(strlen($rawJson) === 0) {
-        $this->addFlash("warn", "No json was entered!");
-      }
+      if(strlen($rawXML) === 0 || strlen($rawJson) === 0) {
+        $this->addFlash("warn", "Please fill in both fields.");
+      } else {
+        $json = json_decode($rawJson, true);
+        $sectors = $classifier->extractSectors($json);
 
-      $json = json_decode($rawJson);
-      $sectors = $classifier->extractSectors($json);
-      $newXML = $classifier->insertSectors($rawXML, $sectors);
-      $response['processed'] = $newXML;
+        $root = $srvActivity->parseXML($rawXML);
+
+        foreach ($srvActivity->getActivities($root) as $activity) {
+          $id = $srvActivity->getActivityId($activity);
+
+          if (!array_key_exists($id, $sectors)) {
+            continue;
+          }
+
+          foreach ($sectors[$id] as $sector) {
+            $srvActivity->addActivitySector(
+              $activity,
+              $sector['code'],
+              $sector['description']
+            );
+          }
+        }
+
+        $newXML = $srvActivity->toXML($root);
+        $response['processed'] = $newXML;
+      }
     }
 
     return $response;
@@ -165,18 +186,18 @@ class ClassifyController extends Controller {
     $classifier = $this->get(Classifier::class);
     $srvActivity = $this->get(ActivityService::class);
 
-    $response = $classifier->getFixtureData();
-    $allNewSectors = $classifier->extractSectors($response);
-
     // TODO let this take a specific XML file as input
-    $root = $srvActivity->getFixtureData();
+    $xml = $srvActivity->getFixtureData();
+    $root = $srvActivity->parseXML($xml);
 
-    // TODO create sane defaults as you go
-    $defaultData = array();
-    $sectorsForm = $this->createFormBuilder($defaultData);
+    $response = $classifier->processXML($xml);
+    $allNewSectors = $classifier->extractSectors($response); // suggested
 
-    $names = array();
-    $allCurrentSectors = array();
+
+    $names = array(); // $id => $name
+    $allCurrentSectors = array(); // in XML now
+    $mergeCur = array(); // to create checkboxes
+    $mergeNew = array();
     foreach ($srvActivity->getActivities($root) as $activity) {
       // populate arrays with activity information
       $id = $srvActivity->getActivityId($activity);
@@ -187,32 +208,51 @@ class ClassifyController extends Controller {
         $allNewSectors[$id] = array();
       }
 
-      $currentChoices = array();
-      foreach ($allCurrentSectors[$id] as $sector) {
-        $currentChoices[$sector['description']] = $sector['code'];
-      }
-      $sectorsForm->add('current' . $id, ChoiceType::class, array(
-        'expanded' => true,
-        'multiple' => true,
-        'choices' => $currentChoices
-      ));
+      $mergeCur[$id] = array_column($allCurrentSectors[$id], 'code', 'description');
+      $mergeNew[$id] = array_column($allNewSectors[$id], 'code', 'description');
+    }
 
-      $newChoices = array();
-      foreach ($allNewSectors[$id] as $sector) {
-        $newChoices[$sector->description] = $sector->code;
+    $sectorsForm = $this->createForm(MergeActivityType::class, null, array(
+      'ids' => $names,
+      'current' => $mergeCur,
+      'new' => $mergeNew
+    ));
+    $sectorsForm->handleRequest($request);
+
+    // handle merging as a response
+    if ($sectorsForm->isSubmitted() && $sectorsForm->isValid()) {
+      $this->addFlash('notice', 'Sector changes have been applied successfully.');
+
+      $data = $sectorsForm->getData();
+
+      foreach ($srvActivity->getActivities($root) as $activity) {
+        $id = $srvActivity->getActivityId($activity);
+
+        $revCurrent = $data['current' . $id];
+        $revNew = $data['new' . $id];
+
+        foreach ($allCurrentSectors[$id] as $sector) {
+          // if status has changed
+          if (!in_array($sector['code'], $revCurrent)) {
+            $srvActivity->removeActivitySector($activity, $sector['code'], $sector['vocabulary']);
+          }
+        }
+
+        foreach ($allNewSectors[$id] as $sector) {
+          // if status has changed
+          if (in_array($sector['code'], $revNew)) {
+            $srvActivity->addActivitySector(
+              $activity,
+              $sector['code'],
+              $sector['description']
+            );
+          }
+        }
       }
-      $sectorsForm->add('new' . $id, ChoiceType::class, array(
-        'expanded' => true,
-        'multiple' => true,
-        'choices' => $newChoices
-      ));
     }
 
     $response = array(
-      'names' => $names,
-      'currentSectors' => $allCurrentSectors,
-      'newSectors' => $allNewSectors,
-      'form' => $sectorsForm->getForm()->createView()
+      'form' => $sectorsForm->createView()
     );
 
     return $response;
