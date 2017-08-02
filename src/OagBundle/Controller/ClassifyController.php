@@ -193,7 +193,6 @@ class ClassifyController extends Controller {
     $response = $classifier->processXML($xml);
     $allNewSectors = $classifier->extractSectors($response); // suggested
 
-
     $names = array(); // $id => $name
     $allCurrentSectors = array(); // in XML now
     $mergeCur = array(); // to create checkboxes

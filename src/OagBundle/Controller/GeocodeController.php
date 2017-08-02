@@ -94,7 +94,6 @@ class GeocodeController extends Controller
     $response = $geocoder->processXML($xml);
     $allNewLocations = $geocoder->extractLocations($response); // suggested
 
-
     $names = array(); // $activity id => $activity name
     $allCurrentLocations = array(); // in XML now
     $mergeCur = array(); // to create checkboxes

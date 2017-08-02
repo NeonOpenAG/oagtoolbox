@@ -205,7 +205,7 @@ class DefaultController extends Controller {
   public function activitiesAction() {
     $srvActivity = $this->get(ActivityService::class);
     $root = $srvActivity->parseXML($srvActivity->getFixtureData());
-    $simple = $srvActivity->toArray($root);
+    $simple = $srvActivity->summariseToArray($root);
 
     $files = array();
     $files['non-fixture file name goes here'] = $simple;

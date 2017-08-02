@@ -22,7 +22,7 @@ class ActivityService extends AbstractService {
     return $root->asXML();
   }
 
-  public function toArray($root) {
+  public function summariseToArray($root) {
     // gets a simplified representation of the data that we can deserialise at the moment
     $activities = array();
     foreach ($this->getActivities($root) as $activity) {
