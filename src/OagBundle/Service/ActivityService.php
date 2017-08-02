@@ -65,12 +65,14 @@ class ActivityService extends AbstractService {
   }
 
   public function addActivitySector(&$activity, $code, $description, $reason=null) {
+    // TODO should we check if it already exists?
+
     if (is_null($reason)) {
       $reason = 'Classified automatically';
     }
 
-    $vocab = $this->getContainer()->getParameter('vocabulary');
-    $vocabUri = $this->getContainer()->getParameter('vocabulary_uri');
+    $vocab = $this->getContainer()->getParameter('classifier')['vocabulary'];
+    $vocabUri = $this->getContainer()->getParameter('classifier')['vocabulary_uri'];
 
     $sector = $activity->addChild('sector');
     $sector->addAttribute('code', $code);
@@ -127,7 +129,7 @@ class ActivityService extends AbstractService {
     $name->narrative[] = $json['name'];
 
     $locId = $location->addChild('location-id');
-    //$locId->addAttribute('vocabulary', TODO what is this);
+    $locId->addAttribute('vocabulary', $this->getContainer()->getParameter('geocoder')['id_vocabulary']);
     $locId->addAttribute('code', $json['id']);
 
     if ($json['geometry']['type'] === 'Point') {
@@ -157,11 +159,13 @@ class ActivityService extends AbstractService {
     // TODO check that this isn't dynamic - assuming not, as it is not an array
     $admin1 = $location->addChild('administrative');
     $admin1->addAttribute('code', $json['admin1']['code']);
-    //$admin1->addAttribute('vocabulary', TODO what should this be? it is essential)
+    $admin1->addAttribute('level', "1");
+    $admin1->addAttribute('vocabulary', $this->getContainer()->getParameter('geocoder')['admin_1_vocabulary']);
 
     $admin2 = $location->addChild('administrative');
     $admin2->addAttribute('code', $json['admin2']['code']);
-    //$admin1->addAttribute('vocabulary', TODO what should this be? it is essential)
+    $admin2->addAttribute('level', "2");
+    $admin2->addAttribute('vocabulary', $this->getContainer()->getParameter('geocoder')['admin_2_vocabulary']);
   }
 
   public function removeActivityLocation(&$activity, $code) { // TODO $vocabulary
