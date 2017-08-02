@@ -200,7 +200,7 @@ class ClassifyController extends Controller {
     foreach ($srvActivity->getActivities($root) as $activity) {
       // populate arrays with activity information
       $id = $srvActivity->getActivityId($activity);
-      $names[$id] = $srvActivity->getActivityName($activity);
+      $names[$id] = $srvActivity->getActivityTitle($activity);
       $allCurrentSectors[$id] = $srvActivity->getActivitySectors($activity);
 
       if (!array_key_exists($id, $allNewSectors)) {

@@ -101,7 +101,7 @@ class GeocodeController extends Controller
     foreach ($srvActivity->getActivities($root) as $activity) {
       // populate arrays with activity information
       $id = $srvActivity->getActivityId($activity);
-      $names[$id] = $srvActivity->getActivityName($activity);
+      $names[$id] = $srvActivity->getActivityTitle($activity);
       $allCurrentLocations[$id] = $srvActivity->getActivityLocations($activity);
 
       if (!array_key_exists($id, $allNewLocations)) {

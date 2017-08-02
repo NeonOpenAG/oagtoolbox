@@ -28,7 +28,7 @@ class ActivityService extends AbstractService {
     foreach ($this->getActivities($root) as $activity) {
       $simpActivity = array();
       $simpActivity['id'] = $this->getActivityId($activity);
-      $simpActivity['name'] = $this->getActivityName($activity);
+      $simpActivity['name'] = $this->getActivityTitle($activity);
       $simpActivity['sectors'] = $this->getActivitySectors($activity);
       $simpActivity['locations'] = $this->getActivityLocations($activity);
       $activities[] = $simpActivity;
@@ -51,15 +51,27 @@ class ActivityService extends AbstractService {
     return (string)$activity->xpath('./iati-identifier')[0];
   }
 
-  public function getActivityName($activity) {
-    // TODO other languages
-    $nameElements = $activity->xpath('./title/narrative'); 
-    if (count($nameElements) < 1) {
-      $name = '';
-    } else {
-      $name = (string)$nameElements[0];
+  public function getActivityTitle($activity) {
+    $preference = array(
+      './title/narrative[not(@xml:lang)]',
+      './title/narrative[@xml:lang="en"]', // TODO make this configurable
+      './title/narrative'
+    );
+
+    foreach ($preference as $path) {
+      $finds = $activity->xpath($path);
+      foreach ($finds as $found) {
+        // we found a narrative of this type
+        $name = (string)$found;
+        if (strlen($name) == 0) {
+          // some activities have empty narratives, for reasons unknown
+          continue;
+        }
+        return $name;
+      }
     }
-    return $name;
+
+    return 'Unnamed';
   }
 
   public function getActivitySectors($activity) {
