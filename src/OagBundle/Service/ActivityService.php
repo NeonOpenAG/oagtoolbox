@@ -106,11 +106,12 @@ class ActivityService extends AbstractService {
     foreach ($activity->xpath('./location') as $currentLocation) {
       $description = (string)$currentLocation->xpath('./name/narrative[1]')[0];
       $code = (string)$currentLocation->xpath('location-id')[0]['code'];
+      $vocabulary = (string)$currentLocation->xpath('location-id')[0]['vocabulary'];
 
       $currentLocations[] = array(
         'description' => $description,
         'code' => $code,
-        // 'vocabulary' => TODO how should this be implemented?
+        'vocabulary' => $vocabulary
       );
     }
     return $currentLocations;
