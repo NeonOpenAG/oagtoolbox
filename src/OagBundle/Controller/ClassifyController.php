@@ -13,6 +13,7 @@ use OagBundle\Form\MergeActivityType;
 use OagBundle\Form\OagFileType;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\Response;
 
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -209,7 +210,14 @@ class ClassifyController extends Controller {
       }
 
       $mergeCur[$id] = array_column($allCurrentSectors[$id], 'code', 'description');
-      $mergeNew[$id] = array_column($allNewSectors[$id], 'code', 'description');
+      $mergeNew[$id] = array();
+      foreach ($allNewSectors[$id] as $newSector) {
+        $desc = $newSector['description'];
+        $conf = round((floatval($newSector['confidence']) * 100));
+        $code = $newSector['code'];
+        $label = "$desc ($conf% confident)";
+        $mergeNew[$id][$label] = $code;
+      }
     }
 
     $sectorsForm = $this->createForm(MergeActivityType::class, null, array(
@@ -249,6 +257,18 @@ class ClassifyController extends Controller {
           }
         }
       }
+
+      // download generated XML
+      $modifiedXML = $srvActivity->toXML($root);
+      $response = new Response($modifiedXML);
+
+      $disposition = $response->headers->makeDisposition(
+        ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+        'modified.xml'
+      );
+
+      $response->headers->set('Content-Disposition', $disposition);
+      return $response;
     }
 
     $response = array(
