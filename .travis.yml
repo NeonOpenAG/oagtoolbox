@@ -11,7 +11,7 @@ env:
 before-install:
 - composer self-update
 install:
-- composer install -y
+- composer install -n
 script:
 - "./vendor/bin/simple-phpunit -c phpunit.xml"
 deploy:
