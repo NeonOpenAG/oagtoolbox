@@ -63,8 +63,9 @@
         ],
         "post-update-cmd": [
             "@symfony-scripts",
-            "/usr/bin/setfacl -dR -m u:www-data:rwX -m u:$(whoami):rwX var app/*.db web/*/oagfiles",
-            "/usr/bin/setfacl  -R -m u:www-data:rwX -m u:$(whoami):rwX var app/*.db web/*/oagfiles"
+            "mkdir -p web/xml web/uploads",
+            "if [ ! -z \"$OAGPASS\" ]; then echo \"$OAGPASS\" | sudo -S /usr/bin/setfacl -dR -m u:www-data:rwX -m u:$(whoami):rwX var app/*.db web/xml web/uploads; else sudo /usr/bin/setfacl -dR -m u:www-data:rwX -m u:$(whoami):rwX var app/*.db web/xml web/uploads; fi",
+            "if [ ! -z \"$OAGPASS\" ]; then echo \"$OAGPASS\" | sudo -S /usr/bin/setfacl -R -m u:www-data:rwX -m u:$(whoami):rwX var app/*.db web/xml web/uploads; else sudo /usr/bin/setfacl -dR -m u:www-data:rwX -m u:$(whoami):rwX var app/*.db web/xml web/uploads; fi"
         ]
     },
     "config": {
