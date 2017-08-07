@@ -17,5 +17,8 @@ script:
 deploy:
     provider: script
     script: wget http://ci.openag.org.uk/app.php?branch=$TRAVIS_BRANCH
+    on:
+        tags: true
+        all_branches: true
 notifications:
   email: tobias@neontribe.co.uk
