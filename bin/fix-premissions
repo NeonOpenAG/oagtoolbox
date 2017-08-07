@@ -1,0 +1,11 @@
+#!/bin/bash
+
+REALPATH=$1
+ROOT=$(realpath $REALPATH)
+echo $REALPATH
+echo $ROOT
+exit
+HTTPDUSER=$(ps axo user,comm | grep -E '[a]pache|[h]ttpd|[_]www|[w]ww-data|[n]ginx' | grep -v root | head -1 | cut -d\  -f1)
+
+setfacl -dR -m u:"$HTTPDUSER":rwX -m u:$(whoami):rwX $ROOT/var $ROOT/app/*.db $ROOT/web/*/oagfiles
+setfacl  -R -m u:"$HTTPDUSER":rwX -m u:$(whoami):rwX $ROOT/var $ROOT/app/*.db $ROOT/web/*/oagfiles

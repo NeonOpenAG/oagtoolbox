@@ -6,19 +6,10 @@ oagtoolbox
 Install
 -------
 
-    sudo apt install php7.0-sqlite pecl
-    sudo pecl install runkit
+To run a standard lamp stack, you'll need to enter a sudo password at the end of the composer install.  This is to fix the permissions on the cache, var and upload folder.
 
+    sudo apt install php7.0-sqlite pecl realpath
     composer install
-    cp app/config/parameters.yml.sqlite app/config/parameters.yml
-    ./bin/console doctrine:schema:create
-    ./bin/console server:start
-
-To run in apache you'll need some permissions foo
-
-    HTTPDUSER=$(ps axo user,comm | grep -E '[a]pache|[h]ttpd|[_]www|[w]ww-data|[n]ginx' | grep -v root | head -1 | cut -d\  -f1)
-    sudo setfacl -dR -m u:"$HTTPDUSER":rwX -m u:$(whoami):rwX var app/*.db web/*/oagfiles
-    sudo setfacl -R -m u:"$HTTPDUSER":rwX -m u:$(whoami):rwX var app/*.db web/*/oagfiles
 
 Tests
 -----

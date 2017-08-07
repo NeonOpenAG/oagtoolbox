@@ -57,10 +57,14 @@
             "php bin/console doctrine:database:create",
             "php bin/console doctrine:schema:create",
             "php bin/console doctrine:database:create --env=test",
-            "php bin/console doctrine:schema:create --env=test"
+            "php bin/console doctrine:schema:create --env=test",
+            "/usr/bin/setfacl -dR -m u:www-data:rwX -m u:$(whoami):rwX var app/*.db web/*/oagfiles",
+            "/usr/bin/setfacl  -R -m u:www-data:rwX -m u:$(whoami):rwX var app/*.db web/*/oagfiles"
         ],
         "post-update-cmd": [
-            "@symfony-scripts"
+            "@symfony-scripts",
+            "/usr/bin/setfacl -dR -m u:www-data:rwX -m u:$(whoami):rwX var app/*.db web/*/oagfiles",
+            "/usr/bin/setfacl  -R -m u:www-data:rwX -m u:$(whoami):rwX var app/*.db web/*/oagfiles"
         ]
     },
     "config": {
