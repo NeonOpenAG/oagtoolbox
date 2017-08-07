@@ -16,7 +16,7 @@ script:
 - "./vendor/bin/simple-phpunit -c phpunit.xml"
 deploy:
     provider: script
-    script: wget http://ci.openag.org.uk/app.php?branch=$TRAVIS_BRANCH
+    script: wget -O /dev/null http://ci.openag.org.uk/app.php?branch=$TRAVIS_BRANCH
     on:
         all_branches: true
 notifications:
