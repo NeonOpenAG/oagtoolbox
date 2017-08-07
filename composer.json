@@ -58,14 +58,15 @@
             "php bin/console doctrine:schema:create",
             "php bin/console doctrine:database:create --env=test",
             "php bin/console doctrine:schema:create --env=test",
-            "/usr/bin/setfacl -dR -m u:www-data:rwX -m u:$(whoami):rwX var app/*.db web/*/oagfiles",
-            "/usr/bin/setfacl  -R -m u:www-data:rwX -m u:$(whoami):rwX var app/*.db web/*/oagfiles"
+            "mkdir -p web/xml web/uploads",
+            "if [ -e /usr/bin/setfacl ] && [ ! -z \"$OAGPASS\" ]; then echo \"$OAGPASS\" | sudo -S /usr/bin/setfacl -dR -m u:www-data:rwX -m u:$(whoami):rwX var app/*.db web/xml web/uploads; else sudo /usr/bin/setfacl -dR -m u:www-data:rwX -m u:$(whoami):rwX var app/*.db web/xml web/uploads; fi",
+            "if [ -e /usr/bin/setfacl ] && [ ! -z \"$OAGPASS\" ]; then echo \"$OAGPASS\" | sudo -S /usr/bin/setfacl -R -m u:www-data:rwX -m u:$(whoami):rwX var app/*.db web/xml web/uploads; else sudo /usr/bin/setfacl -dR -m u:www-data:rwX -m u:$(whoami):rwX var app/*.db web/xml web/uploads; fi"
         ],
         "post-update-cmd": [
             "@symfony-scripts",
             "mkdir -p web/xml web/uploads",
-            "if [ ! -z \"$OAGPASS\" ]; then echo \"$OAGPASS\" | sudo -S /usr/bin/setfacl -dR -m u:www-data:rwX -m u:$(whoami):rwX var app/*.db web/xml web/uploads; else sudo /usr/bin/setfacl -dR -m u:www-data:rwX -m u:$(whoami):rwX var app/*.db web/xml web/uploads; fi",
-            "if [ ! -z \"$OAGPASS\" ]; then echo \"$OAGPASS\" | sudo -S /usr/bin/setfacl -R -m u:www-data:rwX -m u:$(whoami):rwX var app/*.db web/xml web/uploads; else sudo /usr/bin/setfacl -dR -m u:www-data:rwX -m u:$(whoami):rwX var app/*.db web/xml web/uploads; fi"
+            "if [ -e /usr/bin/setfacl ] && [ ! -z \"$OAGPASS\" ]; then echo \"$OAGPASS\" | sudo -S /usr/bin/setfacl -dR -m u:www-data:rwX -m u:$(whoami):rwX var app/*.db web/xml web/uploads; else sudo /usr/bin/setfacl -dR -m u:www-data:rwX -m u:$(whoami):rwX var app/*.db web/xml web/uploads; fi",
+            "if [ -e /usr/bin/setfacl ] && [ ! -z \"$OAGPASS\" ]; then echo \"$OAGPASS\" | sudo -S /usr/bin/setfacl -R -m u:www-data:rwX -m u:$(whoami):rwX var app/*.db web/xml web/uploads; else sudo /usr/bin/setfacl -dR -m u:www-data:rwX -m u:$(whoami):rwX var app/*.db web/xml web/uploads; fi"
         ]
     },
     "config": {
