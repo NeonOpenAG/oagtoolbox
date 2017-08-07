@@ -41,6 +41,9 @@ class OagExtension extends \Twig_Extension {
     'widetext/paragraph',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     'application/zip',
+    'text/xml',
+    'text/html',
+    'application/xml',
   );
 
   public function getFilters() {

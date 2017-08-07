@@ -5,6 +5,7 @@ namespace OagBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use OagBundle\Service\Classifier;
 use OagBundle\Service\ActivityService;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,6 +14,7 @@ use OagBundle\Form\MergeActivityType;
 use OagBundle\Form\OagFileType;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\Response;
 
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -176,18 +178,19 @@ class ClassifyController extends Controller {
   }
 
   /**
-   * @Route("/sectors")
+   * @Route("/sectors/{id}")
+   * @ParamConverter("file", class="OagBundle:OagFile")
    * @Template
    *
    * Provides an interface for merging in sectors. Will replace mergeSectors
    * (above) when complete.
    */
-  public function sectorsAction(Request $request) {
+  public function sectorsAction(Request $request, OagFile $file) {
     $classifier = $this->get(Classifier::class);
     $srvActivity = $this->get(ActivityService::class);
 
-    // TODO let this take a specific XML file as input
-    $xml = $srvActivity->getFixtureData();
+    $path = $this->getParameter('oagfiles_directory') . '/' . $file->getDocumentName();
+    $xml = file_get_contents($path);
     $root = $srvActivity->parseXML($xml);
 
     $response = $classifier->processXML($xml);
@@ -208,7 +211,14 @@ class ClassifyController extends Controller {
       }
 
       $mergeCur[$id] = array_column($allCurrentSectors[$id], 'code', 'description');
-      $mergeNew[$id] = array_column($allNewSectors[$id], 'code', 'description');
+      $mergeNew[$id] = array();
+      foreach ($allNewSectors[$id] as $newSector) {
+        $desc = $newSector['description'];
+        $conf = round((floatval($newSector['confidence']) * 100));
+        $code = $newSector['code'];
+        $label = "$desc ($conf% confident)";
+        $mergeNew[$id][$label] = $code;
+      }
     }
 
     $sectorsForm = $this->createForm(MergeActivityType::class, null, array(
@@ -248,6 +258,18 @@ class ClassifyController extends Controller {
           }
         }
       }
+
+      // download generated XML
+      $modifiedXML = $srvActivity->toXML($root);
+      $response = new Response($modifiedXML);
+
+      $disposition = $response->headers->makeDisposition(
+        ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+        'modified.xml'
+      );
+
+      $response->headers->set('Content-Disposition', $disposition);
+      return $response;
     }
 
     $response = array(

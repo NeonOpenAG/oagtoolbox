@@ -12,5 +12,10 @@ parameters:
             uri: http://gis.foundationcenter.org/OpenAgCoder/extract_codes.php
     oagfiles_directory: '%kernel.project_dir%/web/uploads/oagfiles'
     oagxml_directory: '%kernel.project_dir%/web/xml/oagfiles'
-    vocabulary: '99'
-    vocabulary_uri: 'http://gis.foundationcenter.org/OpenAgCoder/'
+    classifier:
+        vocabulary: '99'
+        vocabulary_uri: 'http://gis.foundationcenter.org/OpenAgCoder/'
+    geocoder:
+        id_vocabulary: 'G1'
+        admin_1_vocabulary: 'PLACEHOLDER'
+        admin_2_vocabulary: 'PLACEHOLDER'
