@@ -49,7 +49,31 @@ class Classifier extends AbstractOagService {
 
   public function processXML($contents) {
     // TODO implement non-fixture process
-    return json_decode($this->getFixtureData(), true);
+    // return json_decode($this->getFixtureData(), true);
+    return $this->dumbProcessXML($contents);
+  }
+
+  public function dumbProcessXML($contents) {
+    // treat XML as raw text
+    $srvActivity = $this->getContainer()->get(ActivityService::class);
+    $root = $srvActivity->parseXML($contents);
+    $activities = $srvActivity->getActivities($root);
+
+    $approx = $this->processString($contents);
+    $approxData = $approx['data'];
+
+    // pretend that the global sectors are specific to each actiivty ID
+    // following this, the result is compatible with the fixture data
+    $specifData = array();
+    foreach ($activities as $activity) {
+      $id = $srvActivity->getActivityId($activity);
+      $part = array();
+      $part[$id] = $approxData;
+      $specifData[] = $part;
+    }
+
+    $approx['data'] = $specifData;
+    return $approx;
   }
 
   public function processString($contents) {

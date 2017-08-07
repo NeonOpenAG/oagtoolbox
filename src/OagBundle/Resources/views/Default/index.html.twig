@@ -42,7 +42,7 @@
                 </td>
                 <td>
                     {% if file['mimetype'] | isClassifiable %}
-                        <a href="{{ path('oag_classify_index', { 'fileid': id }) }}">Classifier</a>
+                        <a href="{{ path('oag_classify_sectors', { 'id': id }) }}">Classifier</a>
                     {% endif %}
                 </td>
                 <td>
