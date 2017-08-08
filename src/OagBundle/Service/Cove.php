@@ -29,13 +29,16 @@ class Cove extends AbstractAutoService {
     $process = proc_open($cmd, $descriptorspec, $pipes);
 
     if (is_resource($process)) {
+      $this->getContainer()->get('logger')->debug(sprintf('Writting %d bytes of data', strlen($text)));
       fwrite($pipes[0], $text);
       fclose($pipes[0]);
 
       $xml = stream_get_contents($pipes[1]);
+      $this->getContainer()->get('logger')->debug(sprintf('Got %d bytes of data', strlen($xml)));
       fclose($pipes[1]);
 
       $err = stream_get_contents($pipes[2]);
+      $this->getContainer()->get('logger')->debug(sprintf('Got %d bytes of error', strlen($err)));
       fclose($pipes[2]);
 
       $return_value = proc_close($process);

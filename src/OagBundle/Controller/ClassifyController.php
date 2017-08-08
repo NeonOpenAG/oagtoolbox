@@ -31,17 +31,17 @@ use PhpOffice\PhpWord\Shared\ZipArchive;
 class ClassifyController extends Controller {
 
   /**
-   * @Route("/{fileid}", requirements={"fileid": "\d+"})
+   * @Route("/{id}", requirements={"id": "\d+"})
    * @Template
    */
-  public function indexAction($fileid) {
+  public function indexAction($id) {
     $messages = [];
     $classifier = $this->get(Classifier::class);
 
     $repository = $this->container->get('doctrine')->getRepository(OagFile::class);
-    $oagfile = $repository->find($fileid);
+    $oagfile = $repository->find($id);
     if (!$oagfile) {
-      throw $this->createNotFoundException(sprintf('The document %d does not exist', $fileid));
+      throw $this->createNotFoundException(sprintf('The document %d does not exist', $id));
     }
     // TODO - for bigger files we might need send as Uri
     $path = $this->getParameter('oagfiles_directory') . '/' . $oagfile->getDocumentName();
