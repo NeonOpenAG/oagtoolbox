@@ -60,7 +60,7 @@ class DefaultController extends Controller {
         $data['file'] = $oagfile->getDocumentName();
         $data['mimetype'] = $oagfile->getMimeType();
 
-        $filename = $srvOagFile->getXMLFileName($oagfile);
+                $filename = $srvOagFile->getXMLFileName($oagfile);
         $xmlfile = $xmldir . '/' . $oagfile->getDocumentName();
         if (file_exists($xmlfile)) {
           $data['xml'] = $xmlfile;
