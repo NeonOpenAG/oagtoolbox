@@ -32,6 +32,8 @@ use PhpOffice\PhpWord\Shared\ZipArchive;
 class ClassifyController extends Controller {
 
     /**
+     * Reads a document and attempts to pass it through the classifier.
+     *
      * @Route("/{id}", requirements={"id": "\d+"})
      * @Template
      */
@@ -224,6 +226,9 @@ class ClassifyController extends Controller {
      * (above) when complete.
      */
     public function sectorsAction(Request $request, OagFile $file) {
+        /**
+         * var \OagBundle\Service\Classifier
+         */
         $classifier = $this->get(Classifier::class);
         $srvActivity = $this->get(ActivityService::class);
 
@@ -258,6 +263,7 @@ class ClassifyController extends Controller {
                 $mergeNew[$id][$label] = $code;
             }
         }
+
 
         $sectorsForm = $this->createForm(MergeActivityType::class, null, array(
             'ids' => $names,

@@ -9,6 +9,7 @@
 {% endblock %}
 
 {% block body %}
-  {% form_theme form 'OagBundle::form/mergeActivity.html.twig' %}
+    <div><a href='{{ path('oag_classify_sectors', { 'id': id }) }}'>+ Add enhancing document</a></div>
+    {% form_theme form 'OagBundle::form/mergeActivity.html.twig' %}
   {{ form(form) }}
 {% endblock %}
