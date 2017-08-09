@@ -12,8 +12,8 @@ before-install:
 - composer self-update
 install:
 - composer install -n
-script:
-- "./vendor/bin/simple-phpunit -c phpunit.xml"
+#script:
+#- "./vendor/bin/simple-phpunit -c phpunit.xml"
 deploy:
     provider: script
     script: wget -O /dev/null http://ci.openag.org.uk/app.php?branch=$TRAVIS_BRANCH

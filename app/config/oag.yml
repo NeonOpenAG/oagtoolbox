@@ -1,15 +1,16 @@
 parameters:
     oag:
         cove:
-            uri: http://localhost:8008
+            cmd: "docker run -i -e PROCESS_DATA=true openagdata/cove"
         geocoder:
-            uri: http://localhost:8009
+            uri: http://localhost
         autogeocoder:
-            uri: http://localhost:8010
+            uri: http://localhost
         dportal:
-            uri: http://localhost:8011
+            uri: http://localhost
         classifier:
-            uri: http://gis.foundationcenter.org/OpenAgCoder/extract_codes.php
+            xml: http://localhost
+            text: http://gis.foundationcenter.org/OpenAgCoder/extract_codes.php
     oagfiles_directory: '%kernel.project_dir%/web/uploads/oagfiles'
     oagxml_directory: '%kernel.project_dir%/web/xml/oagfiles'
     classifier:
