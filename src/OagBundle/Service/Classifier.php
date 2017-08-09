@@ -15,16 +15,8 @@ class Classifier extends AbstractOagService {
     }
 
     public function isAvailable() {
-        $uri = $this->getUri();
-//
-//    $request = curl_init();
-//    curl_setopt($request, CURLOPT_URL, $uri);
-//    curl_exec($request);
-//
-//    $responseCode = curl_getinfo($request, CURLINFO_HTTP_CODE);
-//    curl_close($request);
-//    return ($responseCode >= 200 && $responseCode <= 209);
-//
+        $uri = $this->getUri('xml');
+
         // The classifier is VERY slow to respond, use a port check instead.
         // TODO Does this work with https
         $parts = parse_url($uri);

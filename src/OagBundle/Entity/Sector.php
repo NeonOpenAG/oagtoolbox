@@ -52,30 +52,6 @@ class Sector
     }
 
     /**
-     * Set oagFile
-     *
-     * @param OagFile $oagFile
-     *
-     * @return OagFile
-     */
-    public function setOagFile($oagFile)
-    {
-        $this->oagFile = $oagFile;
-
-        return $this;
-    }
-
-    /**
-     * Get oagFile
-     *
-     * @return OagFile
-     */
-    public function getOagFile()
-    {
-        return $this->oagFile;
-    }
-
-    /**
      * Set code
      *
      * @param string $code
