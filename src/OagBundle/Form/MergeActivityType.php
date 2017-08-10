@@ -11,7 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class MergeActivityType extends AbstractType {
-  
+
   public function buildForm(FormBuilderInterface $builder, array $options) {
     $ids = $options['ids'];
     $allCur = $options['current'];
@@ -43,11 +43,16 @@ class MergeActivityType extends AbstractType {
   }
 
   public function configureOptions(OptionsResolver $resolver) {
-    $resolver->setDefaults(array(
-      'ids' => array(),
-      'current' => array(),
-      'new' => array()
-    ));
-  }
+        $resolver->setDefaults(
+            array(
+                'ids' => array(),
+                'current' => array(),
+                'new' => array(),
+            'attr' => array(
+                'class' => 'pure-table pure-table-bordered'
+                )
+            )
+        );
+    }
 
 }

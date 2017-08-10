@@ -313,11 +313,47 @@ class ClassifyController extends Controller {
             return $response;
         }
 
+        // Get documents that have classifications
+        // TODO skip XML documents
+        /*
+          $documentNames = [];
+          $counts = [];
+          $ids = [];
+          $includes = [];
+          $allfiles = $this->getDoctrine()
+          ->getManager()
+          ->getRepository('OagBundle:OagFile')
+          ->findAll();
+          foreach ($allfiles as $_file) {
+          if (count($_file->getActivities()) > 0) {
+          $documentNames[] = $_file->getDocumentName();
+          $counts[] = count($_file->getActivities());
+          $ids[] = $_file->getId();
+          $includes = '';
+          }
+          }
+
+          $mergeForm = $this->createForm(MergeActivityType::class, null, array(
+          'ids' => $ids,
+          'names' => $documentNames,
+          'counts' => $counts,
+          'includes' => $includes,
+          ));
+          $mergeForm->handleRequest($request);
+
+          // handle merging as a response
+          if ($mergeForm->isSubmitted() && $mergeForm->isValid()) {
+
+          }
+         */
+
         $response = array(
-            'form' => $sectorsForm->createView()
+            'form' => $sectorsForm->createView(),
+            'enhancementFiles' => $enhancementFiles,
         );
 
         return $response;
     }
+
 
 }
