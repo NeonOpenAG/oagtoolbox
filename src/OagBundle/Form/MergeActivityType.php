@@ -39,7 +39,6 @@ class MergeActivityType extends AbstractType {
             foreach ($documents as $key => $activites) {
                 $_activities = array();
                 foreach ($activites as $activity) {
-                    dump($activity);
                     $description = $activity->getSector()->getDescription();
                     $confidence = $activity->getConfidence();
                     $label = sprintf("%s (%d%%)", $description, $confidence * 100);
