@@ -161,64 +161,6 @@ class ClassifyController extends Controller {
     }
 
     /**
-     * @Route("/merge-sectors")
-     * @Template
-     *
-     * Deprecated. Will be replaced by sectorsAction when fully functional.
-     */
-    public function mergeSectorsAction(Request $request) {
-        $classifier = $this->get(Classifier::class);
-        $srvActivity = $this->get(ActivityService::class);
-
-        $defaultData = array();
-        $options = array();
-        $form = $this->createFormBuilder($defaultData, $options)
-            ->add('xml', TextareaType::class)
-            ->add('json', TextareaType::class)
-            ->add('submit', SubmitType::class, array('label' => 'Merge Sectors'))
-            ->getForm();
-
-        $form->handleRequest($request);
-
-        $response = array(
-            'form' => $form->createView()
-        );
-
-        if ($form->isSubmitted()) {
-            $rawXML = $form->getData()['xml'];
-            $rawJson = $form->getData()['json'];
-
-            if (strlen($rawXML) === 0 || strlen($rawJson) === 0) {
-                $this->addFlash("warn", "Please fill in both fields.");
-            } else {
-                $json = json_decode($rawJson, true);
-                $sectors = $classifier->extractSectors($json);
-
-                $root = $srvActivity->parseXML($rawXML);
-
-                foreach ($srvActivity->getActivities($root) as $activity) {
-                    $id = $srvActivity->getActivityId($activity);
-
-                    if (!array_key_exists($id, $sectors)) {
-                        continue;
-                    }
-
-                    foreach ($sectors[$id] as $sector) {
-                        $srvActivity->addActivitySector(
-                            $activity, $sector['code'], $sector['description']
-                        );
-                    }
-                }
-
-                $newXML = $srvActivity->toXML($root);
-                $response['processed'] = $newXML;
-            }
-        }
-
-        return $response;
-    }
-
-    /**
      * @Route("/sectors/{id}")
      * @ParamConverter("file", class="OagBundle:OagFile")
      * @Template
