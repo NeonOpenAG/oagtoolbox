@@ -7,13 +7,12 @@ use OagBundle\Entity\OagFile;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Sector
+ * Code
  *
  * @ORM\Table(name="sector")
- * @ORM\Entity(repositoryClass="OagBundle\Repository\SectorRepository")
+ * @ORM\Entity(repositoryClass="OagBundle\Repository\CodeRepository")
  */
-class Sector
-{
+class Code {
     /**
      * @var int
      *
@@ -56,7 +55,7 @@ class Sector
      *
      * @param string $code
      *
-     * @return Sector
+     * @return Code
      */
     public function setCode($code)
     {
@@ -80,7 +79,7 @@ class Sector
      *
      * @param string $description
      *
-     * @return Sector
+     * @return Code
      */
     public function setDescription($description)
     {

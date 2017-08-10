@@ -51,14 +51,14 @@ class Classifier extends AbstractOagService {
             return json_decode($this->getFixtureData(), true);
         }
 
-        $cache = new FilesystemCache();
-        $cachename = 'OagClassifier.' . md5($contents);
-        if ($cache->has($cachename)) {
-            $data = $cache->get('$cachename');
-            $response = array('status' => 2);
-            $this->getContainer()->get('logger')->info('Returning cached data ' . $data);
-        } else {
-            $oag = $this->getContainer()->getParameter('oag');
+//        $cache = new FilesystemCache();
+//        $cachename = 'OagClassifier.' . md5($contents);
+//        if ($cache->has($cachename)) {
+//            $data = $cache->get('$cachename');
+//            $response = array('status' => 2);
+//            $this->getContainer()->get('logger')->info('Returning cached data ' . $data);
+//        } else {
+        $oag = $this->getContainer()->getParameter('oag');
             $uri = $oag['classifier']['text'];
             $request = curl_init();
             curl_setopt($request, CURLOPT_URL, $uri);
@@ -82,14 +82,14 @@ class Classifier extends AbstractOagService {
 
             $data = curl_exec($request);
 
-            $cache->set($cachename, $data);
-            $responseCode = curl_getinfo($request, CURLINFO_HTTP_CODE);
+    //            $cache->set($cachename, $data);
+        $responseCode = curl_getinfo($request, CURLINFO_HTTP_CODE);
             curl_close($request);
 
             $response = array(
                 'status' => ($responseCode >= 200 && $responseCode <= 209) ? 0 : 1,
             );
-        }
+    //        }
 
         $json = json_decode($data, true);
         if (!is_array($json)) {

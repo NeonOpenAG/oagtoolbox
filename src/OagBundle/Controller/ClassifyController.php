@@ -7,7 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use OagBundle\Service\Classifier;
-use OagBundle\Entity\Sector;
+use OagBundle\Entity\Code;
 use OagBundle\Entity\Activity;
 use OagBundle\Service\ActivityService;
 use Symfony\Component\HttpFoundation\Request;
@@ -118,9 +118,8 @@ class ClassifyController extends Controller {
 
         // Clear sectors from the file
         $oagfile->clearActivities();
-        $sectorrepo = $this->container->get('doctrine')->getRepository(Sector::class);
+        $sectorrepo = $this->container->get('doctrine')->getRepository(Code::class);
         $activityrepo = $this->container->get('doctrine')->getRepository(Activity::class);
-
 
         // TODO if $row['status'] == 0
         foreach ($json['data'] as $row) {
@@ -133,18 +132,18 @@ class ClassifyController extends Controller {
             if (!$sector) {
                 $this->container->get('logger')
                     ->info(sprintf('Creating new sector %s (%s)', $code, $description));
-                $sector = new Sector();
+                $sector = new Code();
                 $sector->setCode($code);
                 $sector->setDescription($description);
                 $em->persist($sector);
             }
 
-            $activity = $activityrepo->findOneBySector($sector);
+            $activity = $activityrepo->findOneByCode($sector);
             if ($activity && $oagfile->hasActivity($activity)) {
                 $activity->setConfidence($confidence);
             } else {
                 $activity = new \OagBundle\Entity\Activity();
-                $activity->setSector($sector);
+                $activity->setCode($sector);
                 $activity->setConfidence($confidence);
             }
             $em->persist($activity);

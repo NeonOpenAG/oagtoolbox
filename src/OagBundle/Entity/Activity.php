@@ -3,7 +3,7 @@
 namespace OagBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use OagBundle\Entity\Sector;
+use OagBundle\Entity\Code;
 
 /**
  * Activity
@@ -30,12 +30,12 @@ class Activity
     private $confidence;
 
   /**
-   * @ORM\ManyToOne(targetEntity="\OagBundle\Entity\Sector", inversedBy="activities")
+   * @ORM\ManyToOne(targetEntity="\OagBundle\Entity\Code", inversedBy="activities")
    * @ORM\JoinColumn(name="sector_id", referencedColumnName="id")
    */
-  private $sector;
+  private $code;
 
-  /**
+    /**
      * Get id
      *
      * @return int
@@ -69,13 +69,13 @@ class Activity
         return $this->confidence;
     }
 
-  public function getSector() {
-    return $this->sector;
-  }
+  public function getCode() {
+        return $this->code;
+    }
 
-  public function setSector(Sector $sector) {
-    $this->sector = $sector;
-  }
+  public function setCode(Code $code) {
+        $this->code = $code;
+    }
 
 }
 
