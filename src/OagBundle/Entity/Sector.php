@@ -3,17 +3,15 @@
 namespace OagBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use OagBundle\Entity\OagFile;
-use Doctrine\Common\Collections\ArrayCollection;
+use OagBundle\Entity\Code;
 
 /**
  * Sector
  *
- * @ORM\Table(name="sector")
+ * @ORM\Table(name="activity")
  * @ORM\Entity(repositoryClass="OagBundle\Repository\SectorRepository")
  */
-class Sector
-{
+class Sector {
     /**
      * @var int
      *
@@ -23,25 +21,20 @@ class Sector
      */
     private $id;
 
-  /**
-   * @var string
-   *
-   * @ORM\Column(name="code", type="string", length=32, unique=true)
-   */
-    private $code;
-
     /**
      * @var string
      *
-     * @ORM\Column(name="description", type="string", length=255)
+     * @ORM\Column(name="confidence", type="decimal", precision=17, scale=14)
      */
-    private $description;
-
-  public function __construct() {
-    $this->oagFile = new ArrayCollection();
-  }
+    private $confidence;
 
   /**
+   * @ORM\ManyToOne(targetEntity="\OagBundle\Entity\Code", inversedBy="activities")
+   * @ORM\JoinColumn(name="sector_id", referencedColumnName="id")
+   */
+  private $code;
+
+    /**
      * Get id
      *
      * @return int
@@ -52,51 +45,35 @@ class Sector
     }
 
     /**
-     * Set code
+     * Set confidence
      *
-     * @param string $code
+     * @param string $confidence
      *
      * @return Sector
      */
-    public function setCode($code)
+    public function setConfidence($confidence)
     {
-        $this->code = $code;
+        $this->confidence = $confidence;
 
         return $this;
     }
 
     /**
-     * Get code
+     * Get confidence
      *
      * @return string
      */
-    public function getCode()
+    public function getConfidence()
     {
+        return $this->confidence;
+    }
+
+  public function getCode() {
         return $this->code;
     }
 
-    /**
-     * Set description
-     *
-     * @param string $description
-     *
-     * @return Sector
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * Get description
-     *
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description;
+  public function setCode(Code $code) {
+        $this->code = $code;
     }
 
 }

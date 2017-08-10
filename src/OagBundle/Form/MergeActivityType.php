@@ -39,10 +39,10 @@ class MergeActivityType extends AbstractType {
             foreach ($documents as $key => $activites) {
                 $_activities = array();
                 foreach ($activites as $activity) {
-                    $description = $activity->getSector()->getDescription();
+                    $description = $activity->getCode()->getDescription();
                     $confidence = $activity->getConfidence();
                     $label = sprintf("%s (%d%%)", $description, $confidence * 100);
-                    $_activities[$label] = $activity->getSector()->getCode();
+                    $_activities[$label] = $activity->getCode()->getCode();
                 }
                 $safeKey = 'addon_' . $id . '_' . $count++;
                 $builder->add($safeKey, ChoiceType::class, array(

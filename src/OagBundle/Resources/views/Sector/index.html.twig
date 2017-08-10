@@ -11,10 +11,10 @@
             </tr>
         </thead>
         <tbody>
-            {% for row in activities %}
+            {% for row in sectors %}
                 <tr>
-                    <td>{{ row.getSector.getCode }}</td>
-                    <td>{{ row.getSector.getDescription }}</td>
+                    <td>{{ row.getCode.getCode }}</td>
+                    <td>{{ row.getCode.getDescription }}</td>
                     <td>{{ row.getConfidence }}</td>
                 </tr>
             {% endfor %}
