@@ -56,7 +56,7 @@ doctrine:
         #     e.g. database_path: "%kernel.project_dir%/var/data/data.sqlite"
         #   2. Uncomment database_path in parameters.yml.dist
         #   3. Uncomment next line:
-        #path: '%database_path%'
+        # path: '%database_path%'
         driver: pdo_sqlite
         path: '%kernel.project_dir%/app/sqlite.db'
 

@@ -1,82 +1,88 @@
 <?php
-// src/OagBundle/Service/Geocoder.php
-namespace OagBundle\Service;
 
+// src/OagBundle/Service/Geocoder.php
+
+namespace OagBundle\Service;
 
 class Cove extends AbstractAutoService {
 
-  public function processUri($uri) {
-    // TODO - fetch file, cache it, check content type, decode and then pass to cove line at a time
-    $data = file_get_contents($uri);
-    return $this->autocodeXml($data);
-  }
-
-  public function processString($text) {
-    if (!$this->isAvailable()) {
-      return json_encode($this->getFixtureData(), true);
+    public function processUri($uri) {
+        // TODO - fetch file, cache it, check content type, decode and then pass to cove line at a time
+        $data = file_get_contents($uri);
+        return $this->autocodeXml($data);
     }
 
-    $descriptorspec = array(
-      0 => array("pipe", "r"),
-      1 => array("pipe", "w"),
-      2 => array("pipe", "w"),
-    );
-    $cmd = "docker run -i -e PROCESS_DATA=true openagdata/cove";
-    $this->getContainer()->get('logger')->debug(
-      sprintf('Command: %s', $cmd)
-    );
+    public function processString($text) {
+        if (!$this->isAvailable()) {
+            return json_encode($this->getFixtureData(), true);
+        }
 
-    $process = proc_open($cmd, $descriptorspec, $pipes);
+        $descriptorspec = array(
+            0 => array("pipe", "r"),
+            1 => array("pipe", "w"),
+            2 => array("pipe", "w"),
+        );
 
-    if (is_resource($process)) {
-      fwrite($pipes[0], $text);
-      fclose($pipes[0]);
+        $oag = $this->getContainer()->getParameter('oag');
+        $cmd = $oag['cove']['cmd'];
+        $cmd = "docker run -i -e PROCESS_DATA=true openagdata/cove";
+        $this->getContainer()->get('logger')->debug(
+            sprintf('Command: %s', $cmd)
+        );
 
-      $xml = stream_get_contents($pipes[1]);
-      fclose($pipes[1]);
+        $process = proc_open($cmd, $descriptorspec, $pipes);
 
-      $err = stream_get_contents($pipes[2]);
-      fclose($pipes[2]);
+        if (is_resource($process)) {
+            $this->getContainer()->get('logger')->debug(sprintf('Writting %d bytes of data', strlen($text)));
+            fwrite($pipes[0], $text);
+            fclose($pipes[0]);
 
-      $return_value = proc_close($process);
+            $xml = stream_get_contents($pipes[1]);
+            $this->getContainer()->get('logger')->debug(sprintf('Got %d bytes of data', strlen($xml)));
+            fclose($pipes[1]);
 
-      $data = array(
-        'xml' => $xml,
-        'err' => explode("\n", $err),
-        'status' => $return_value,
-      );
+            $err = stream_get_contents($pipes[2]);
+            $this->getContainer()->get('logger')->debug(sprintf('Got %d bytes of error', strlen($err)));
+            fclose($pipes[2]);
 
-      return $data;
+            $return_value = proc_close($process);
+
+            $data = array(
+                'xml' => $xml,
+                'err' => explode("\n", $err),
+                'status' => $return_value,
+            );
+
+            return $data;
+        } else {
+            // TODO Better exception handling.
+            throw new \RuntimeException('CoVE Failed to start');
+        }
     }
-    else {
-      // TODO Better exception handling.
-      throw new \RuntimeException('CoVE Failed to start');
+
+    public function processXML($contents) {
+        // TODO - implement fetching this result from CoVE
+        return json_encode($this->getFixtureData(), true);
     }
-  }
 
-  public function processXML($contents) {
-    // TODO - implement fetching this result from CoVE
-    return json_encode($this->getFixtureData(), true);
-  }
+    public function getFixtureData() {
+        // TODO - load from file, can we make this an asset?
+        // https://symfony.com/doc/current/best_practices/web-assets.html
+        $json = array(
+            'xml' => '',
+            'errors' => array(
+                'err1',
+                'err2',
+                'err3',
+                'err4',
+            ),
+        );
 
-  public function getFixtureData() {
-    // TODO - load from file, can we make this an asset?
-    // https://symfony.com/doc/current/best_practices/web-assets.html
-    $json = array(
-      'xml' => '',
-      'errors' => array(
-        'err1',
-        'err2',
-        'err3',
-        'err4',
-      ),
-    );
+        return json_encode($json);
+    }
 
-    return json_encode($json);
-  }
-
-  public function getName() {
-    return 'cove';
-  }
+    public function getName() {
+        return 'cove';
+    }
 
 }

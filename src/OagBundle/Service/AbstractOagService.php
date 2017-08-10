@@ -6,13 +6,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 abstract class AbstractOagService extends AbstractService {
 
-  public function getUri() {
-    $oag = $this->getContainer()->getParameter('oag');
+  public function getUri($key = 'uri') {
+        $oag = $this->getContainer()->getParameter('oag');
 
     $name = $this->getName();
-    $uri = $oag[$name]['uri'];
+    $uri = $oag[$name][$key];
 
-    return $uri;
+        return $uri;
   }
 
   public function isAvailable() {

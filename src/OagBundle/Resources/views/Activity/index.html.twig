@@ -1,0 +1,24 @@
+{% extends 'OagBundle::Default/index.html.twig' %}
+
+{% block body %}
+
+    <table class="pure-table pure-table-bordered">
+        <thead>
+            <tr>
+                <th>AGROVOC Code</th>
+                <th>Descroption</th>
+                <th>Confidence</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in activities %}
+                <tr>
+                    <td>{{ row.getSector.getCode }}</td>
+                    <td>{{ row.getSector.getDescription }}</td>
+                    <td>{{ row.getConfidence }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

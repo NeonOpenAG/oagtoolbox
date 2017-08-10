@@ -25,7 +25,9 @@
                 <th>Process with ...</th>
                 <th>Process with ...</th>
                 <th>Download IATI XML ...</th>
+                <th>Enhance</th>
                 <th>Visualise</th>
+                <th>Activity #</th>
             </tr>
         </thead>
         <tbody>
@@ -42,7 +44,7 @@
                 </td>
                 <td>
                     {% if file['mimetype'] | isClassifiable %}
-                        <a href="{{ path('oag_classify_sectors', { 'id': id }) }}">Classifier</a>
+                        <a href="{{ path('oag_classify_index', { 'id': id }) }}">Classifier</a>
                     {% endif %}
                 </td>
                 <td>
@@ -50,16 +52,27 @@
                         <a href="{{ asset('xml')}}/oagfiles/{{ file['file'] }}">XML</a>
                     {% endif %}
                 </td>
-                {# TODO I guess there is a sy3 way of doping this using form builder #}
+                <td>
+                    {% if file['xml'] is defined %}
+                        <a href="{{ path('oag_classify_sectors', { 'id': id }) }}">Enhance</a>
+                    {% endif %}
+                </td>
                 <td>
                     {% if file['xml'] is defined %}
                         <a href="{{ path('oag_dportal_index', { 'fileid': id }) }}" target="dportal">D-Portal</a>
                     {% endif %}
                 </td>
-            </tr>
+                <td>
+                    {% if file['acount'] > 0 %}
+                        <a href="{{ path('oag_activity_index', { 'id': id }) }}">{{ file['acount'] }}</a>
+                    {% endif %}
+                </td>
+                </tr>
         {% endfor %}
         <tr>
             <td><button type="submit">Delete</button></td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>

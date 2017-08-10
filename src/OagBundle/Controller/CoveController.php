@@ -55,7 +55,6 @@ class CoveController extends Controller {
     $pretty_json = json_encode($json, JSON_PRETTY_PRINT);
     return array(
       'messages' => $messages,
-      'available' => $avaiable,
       'path' => $oagfile->getDocumentName(),
       'xml' => $xmlfile,
       'err' => $err,
