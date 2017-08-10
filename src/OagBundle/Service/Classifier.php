@@ -6,6 +6,7 @@ use OagBundle\Service\TextExtractor\ApplicationOctetStream;
 use OagBundle\Service\TextExtractor\ApplicationPdf;
 use OagBundle\Service\TextExtractor\ApplicationXml;
 use OagBundle\Service\TextExtractor\TextPlain;
+use Symfony\Component\Cache\Simple\FilesystemCache;
 
 class Classifier extends AbstractOagService {
 
@@ -40,31 +41,7 @@ class Classifier extends AbstractOagService {
 
     public function processXML($contents) {
         // TODO implement non-fixture process
-        // return json_decode($this->getFixtureData(), true);
-        return $this->dumbProcessXML($contents);
-    }
-
-    public function dumbProcessXML($contents) {
-        // treat XML as raw text
-        $srvActivity = $this->getContainer()->get(ActivityService::class);
-        $root = $srvActivity->parseXML($contents);
-        $activities = $srvActivity->getActivities($root);
-
-        $approx = $this->processString($contents);
-        $approxData = $approx['data'];
-
-        // pretend that the global sectors are specific to each actiivty ID
-        // following this, the result is compatible with the fixture data
-        $specifData = array();
-        foreach ($activities as $activity) {
-            $id = $srvActivity->getActivityId($activity);
-            $part = array();
-            $part[$id] = $approxData;
-            $specifData[] = $part;
-        }
-
-        $approx['data'] = $specifData;
-        return $approx;
+        return json_decode($this->getFixtureData(), true);
     }
 
     public function processString($contents) {
@@ -74,35 +51,45 @@ class Classifier extends AbstractOagService {
             return json_decode($this->getFixtureData(), true);
         }
 
-        $oag = $this->getContainer()->getParameter('oag');
-        $uri = $oag['classifier']['text'];
-        $request = curl_init();
-        curl_setopt($request, CURLOPT_URL, $uri);
-        curl_setopt($request, CURLOPT_POST, true);
-        curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
-//    curl_setopt($request, CURLOPT_VERBOSE, true);
-//    curl_setopt($request, CURLOPT_HEADER, true);
-        $this->getContainer()->get('logger')->info('Accessing classifer at ' . $uri);
+        $cache = new FilesystemCache();
+        $cachename = 'OagClassifier.' . md5($contents);
+        if ($cache->has($cachename)) {
+            $data = $cache->get('$cachename');
+            $response = array('status' => 2);
+            $this->getContainer()->get('logger')->info('Returning cached data ' . $data);
+        } else {
+            $oag = $this->getContainer()->getParameter('oag');
+            $uri = $oag['classifier']['text'];
+            $request = curl_init();
+            curl_setopt($request, CURLOPT_URL, $uri);
+            curl_setopt($request, CURLOPT_POST, true);
+            curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
+            //    curl_setopt($request, CURLOPT_VERBOSE, true);
+            //    curl_setopt($request, CURLOPT_HEADER, true);
+            $this->getContainer()->get('logger')->info('Accessing classifer at ' . $uri);
 
-        $payload = array(
-            'text1' => $contents,
-            'limit' => 0,
-            'anchor' => 0,
-            'ext' => 'fc',
-            'threshold' => 'low',
-            'rollup' => 'true',
-            'chunk' => 'True',
-        );
+            $payload = array(
+                'text1' => $contents,
+                'limit' => 0,
+                'anchor' => 0,
+                'ext' => 'fc',
+                'threshold' => 'low',
+                'rollup' => 'true',
+                'chunk' => 'True',
+            );
 
-        curl_setopt($request, CURLOPT_POSTFIELDS, http_build_query($payload));
+            curl_setopt($request, CURLOPT_POSTFIELDS, http_build_query($payload));
 
-        $data = curl_exec($request);
-        $responseCode = curl_getinfo($request, CURLINFO_HTTP_CODE);
-        curl_close($request);
+            $data = curl_exec($request);
 
-        $response = array(
-            'status' => ($responseCode >= 200 && $responseCode <= 209) ? 0 : 1,
-        );
+            $cache->set($cachename, $data);
+            $responseCode = curl_getinfo($request, CURLINFO_HTTP_CODE);
+            curl_close($request);
+
+            $response = array(
+                'status' => ($responseCode >= 200 && $responseCode <= 209) ? 0 : 1,
+            );
+        }
 
         $json = json_decode($data, true);
         if (!is_array($json)) {

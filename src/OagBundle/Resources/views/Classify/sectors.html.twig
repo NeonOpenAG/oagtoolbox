@@ -1,20 +1,14 @@
 {% extends 'OagBundle::Default/index.html.twig' %}
 
 {% block body %}
-    <table class="pure-table pure-table-bordered">
-        <thead>
-            <tr>
-                <th colspan='2'>Add file for enhancement</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for row in enhancementFiles %}
-            <td>{{ row['name'] }}</td>
-            <td>{{ row['count'] }}</td>
-        {% endfor %}
-        </tbody>
-</table>
-
-{% form_theme form 'OagBundle::form/mergeActivity.html.twig' %}
-  {{ form(form) }}
+    <h2>Add documents to enhance content</h2>
+    <div style='margin-bottom: 20px; display: inline-block'>
+        {% form_theme enhancementForm 'OagBundle::form/listEnhancementDocs.html.twig' %}
+        {{ form(enhancementForm) }}
+    </div>
+    <h2>Activities</h2>
+    <div style='margin-bottom: 20px; display: inline-block'>
+            {% form_theme sectorsForm 'OagBundle::form/mergeActivity.html.twig' %}
+        {{ form(sectorsForm) }}
+    </div>
 {% endblock %}

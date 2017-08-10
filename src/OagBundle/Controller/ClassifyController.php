@@ -13,6 +13,7 @@ use OagBundle\Service\ActivityService;
 use Symfony\Component\HttpFoundation\Request;
 use OagBundle\Entity\OagFile;
 use OagBundle\Form\MergeActivityType;
+use OagBundle\Form\ListEnhancementDocsType;
 use OagBundle\Form\OagFileType;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -226,9 +227,38 @@ class ClassifyController extends Controller {
      * (above) when complete.
      */
     public function sectorsAction(Request $request, OagFile $file) {
-        /**
-         * var \OagBundle\Service\Classifier
-         */
+
+        // Get documents that have classifications
+        $documentNames = [];
+        $allfiles = $this->getDoctrine()
+            ->getManager()
+            ->getRepository('OagBundle:OagFile')
+            ->findAll();
+        foreach ($allfiles as $_file) {
+            if (count($_file->getActivities()) > 0) {
+                $documentNames[$_file->getId()] = sprintf(
+                    "%s (%d)", $_file->getDocumentName(), count($_file->getActivities())
+                );
+            }
+        }
+
+        $mergeForm = $this->createForm(ListEnhancementDocsType::class, null, array(
+            'documentNames' => $documentNames,
+        ));
+        $mergeForm->handleRequest($request);
+
+        $documents = [];
+        if ($mergeForm->isSubmitted() && $mergeForm->isValid()) {
+            $data = $mergeForm->getData();
+            foreach ($data as $id => $state) {
+                if ($state) {
+                    $oagFile = $this->getDoctrine()->getRepository(OagFile::class)->find($id);
+                    $documents[$oagFile->getDocumentName()] = $oagFile->getActivities();
+                }
+            }
+        }
+
+        // Load and display XML doc
         $classifier = $this->get(Classifier::class);
         $srvActivity = $this->get(ActivityService::class);
 
@@ -259,17 +289,18 @@ class ClassifyController extends Controller {
                 $desc = $newSector['description'];
                 $conf = round((floatval($newSector['confidence']) * 100));
                 $code = $newSector['code'];
-                $label = "$desc ($conf% confident)";
+                $label = "$desc ($conf%)";
                 $mergeNew[$id][$label] = $code;
             }
         }
 
 
-        $sectorsForm = $this->createForm(MergeActivityType::class, null, array(
+        $sectorsForm = $this->createForm(MergeActivityType::class, null, array_merge(array(
             'ids' => $names,
             'current' => $mergeCur,
-            'new' => $mergeNew
-        ));
+            'new' => $mergeNew,
+            'documents' => $documents,
+        )));
         $sectorsForm->handleRequest($request);
 
         // handle merging as a response
@@ -313,43 +344,10 @@ class ClassifyController extends Controller {
             return $response;
         }
 
-        // Get documents that have classifications
-        // TODO skip XML documents
-        /*
-          $documentNames = [];
-          $counts = [];
-          $ids = [];
-          $includes = [];
-          $allfiles = $this->getDoctrine()
-          ->getManager()
-          ->getRepository('OagBundle:OagFile')
-          ->findAll();
-          foreach ($allfiles as $_file) {
-          if (count($_file->getActivities()) > 0) {
-          $documentNames[] = $_file->getDocumentName();
-          $counts[] = count($_file->getActivities());
-          $ids[] = $_file->getId();
-          $includes = '';
-          }
-          }
-
-          $mergeForm = $this->createForm(MergeActivityType::class, null, array(
-          'ids' => $ids,
-          'names' => $documentNames,
-          'counts' => $counts,
-          'includes' => $includes,
-          ));
-          $mergeForm->handleRequest($request);
-
-          // handle merging as a response
-          if ($mergeForm->isSubmitted() && $mergeForm->isValid()) {
-
-          }
-         */
 
         $response = array(
-            'form' => $sectorsForm->createView(),
-            'enhancementFiles' => $enhancementFiles,
+            'sectorsForm' => $sectorsForm->createView(),
+            'enhancementForm' => $mergeForm->createView(),
         );
 
         return $response;
