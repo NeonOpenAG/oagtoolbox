@@ -3,7 +3,7 @@
 namespace OagBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use OagBundle\Entity\Activity;
+use OagBundle\Entity\Sector;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -24,7 +24,7 @@ class OagFile {
   private $id;
 
   /**
-   * @ORM\ManyToMany(targetEntity="OagBundle\Entity\Activity")
+   * @ORM\ManyToMany(targetEntity="OagBundle\Entity\Sector")
    */
   protected $activities;
 
@@ -100,45 +100,45 @@ class OagFile {
   }
 
   /**
-   * Get Activities
+   * Get Sectors
    *
    * @return string
    */
-  public function getActivities() {
-    return $this->activities;
+  public function getSectors() {
+        return $this->activities;
   }
 
   /**
-   * @param \OagBundle\Entity\Activity $activity
+   * @param \OagBundle\Entity\Sector $activity
    * @return bool
    */
-  public function hasActivity(Activity $activity) {
-    return $this->getActivities()->contains($activity);
-  }
+  public function hasSector(Sector $activity) {
+        return $this->getSectors()->contains($activity);
+    }
 
   /**
-   * @param \OagBundle\Entity\Activity $activity
+   * @param \OagBundle\Entity\Sector $activity
    */
-  public function addActivity(Activity $activity) {
-    if (!$this->hasActivity($activity)) {
-      $this->activities->add($activity);
+  public function addSector(Sector $activity) {
+        if (!$this->hasSector($activity)) {
+            $this->activities->add($activity);
     }
   }
 
   /**
-   * @param \OagBundle\Entity\Activity $activity
+   * @param \OagBundle\Entity\Sector $activity
    */
-  public function removeActivity(Activity $activity) {
-    if (!$this->hasActivity($activity)) {
-      $this->activities->removeElement($activity);
+  public function removeSector(Sector $activity) {
+        if (!$this->hasSector($activity)) {
+            $this->activities->removeElement($activity);
     }
   }
 
   /**
    * Remove all sectors.
    */
-  public function clearActivities() {
-    $this->activities->clear();
+  public function clearSectors() {
+        $this->activities->clear();
   }
 
 }

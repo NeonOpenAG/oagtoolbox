@@ -64,7 +64,7 @@ class DefaultController extends Controller {
                     $data['xml'] = $xmlfile;
                 }
 
-                $activies = $oagfile->getActivities();
+                $activies = $oagfile->getSectors();
                 $data['acount'] = count($activies);
 
                 $files[$oagfile->getId()] = $data;

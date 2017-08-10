@@ -6,13 +6,12 @@ use Doctrine\ORM\Mapping as ORM;
 use OagBundle\Entity\Code;
 
 /**
- * Activity
+ * Sector
  *
  * @ORM\Table(name="activity")
- * @ORM\Entity(repositoryClass="OagBundle\Repository\ActivityRepository")
+ * @ORM\Entity(repositoryClass="OagBundle\Repository\SectorRepository")
  */
-class Activity
-{
+class Sector {
     /**
      * @var int
      *
@@ -50,7 +49,7 @@ class Activity
      *
      * @param string $confidence
      *
-     * @return Activity
+     * @return Sector
      */
     public function setConfidence($confidence)
     {

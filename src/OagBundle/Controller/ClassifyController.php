@@ -8,7 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use OagBundle\Service\Classifier;
 use OagBundle\Entity\Code;
-use OagBundle\Entity\Activity;
+use OagBundle\Entity\Sector;
 use OagBundle\Service\ActivityService;
 use Symfony\Component\HttpFoundation\Request;
 use OagBundle\Entity\OagFile;
@@ -117,9 +117,9 @@ class ClassifyController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         // Clear sectors from the file
-        $oagfile->clearActivities();
-        $sectorrepo = $this->container->get('doctrine')->getRepository(Code::class);
-        $activityrepo = $this->container->get('doctrine')->getRepository(Activity::class);
+        $oagfile->clearSectors();
+        $coderepo = $this->container->get('doctrine')->getRepository(Code::class);
+        $sectorrepo = $this->container->get('doctrine')->getRepository(Sector::class);
 
         // TODO if $row['status'] == 0
         foreach ($json['data'] as $row) {
@@ -127,27 +127,27 @@ class ClassifyController extends Controller {
             $description = $row['description'];
             $confidence = $row['confidence'];
 
-            // Check that the sector exists in the system
-            $sector = $sectorrepo->findOneByCode($code);
-            if (!$sector) {
+            // Check that the code exists in the system
+            $_code = $coderepo->findOneByCode($code);
+            if (!$_code) {
                 $this->container->get('logger')
-                    ->info(sprintf('Creating new sector %s (%s)', $code, $description));
-                $sector = new Code();
-                $sector->setCode($code);
-                $sector->setDescription($description);
-                $em->persist($sector);
+                    ->info(sprintf('Creating new code %s (%s)', $code, $description));
+                $_code = new Code();
+                $_code->setCode($code);
+                $_code->setDescription($description);
+                $em->persist($_code);
             }
 
-            $activity = $activityrepo->findOneByCode($sector);
-            if ($activity && $oagfile->hasActivity($activity)) {
-                $activity->setConfidence($confidence);
+            $sector = $sectorrepo->findOneByCode($_code);
+            if ($sector && $oagfile->hasSector($sector)) {
+                $sector->setConfidence($confidence);
             } else {
-                $activity = new \OagBundle\Entity\Activity();
-                $activity->setCode($sector);
-                $activity->setConfidence($confidence);
+                $sector = new \OagBundle\Entity\Sector();
+                $sector->setCode($_code);
+                $sector->setConfidence($confidence);
             }
-            $em->persist($activity);
-            $oagfile->addActivity($activity);
+            $em->persist($sector);
+            $oagfile->addSector($sector);
         }
         $em->persist($oagfile);
         $em->flush();
@@ -176,9 +176,9 @@ class ClassifyController extends Controller {
             ->getRepository('OagBundle:OagFile')
             ->findAll();
         foreach ($allfiles as $_file) {
-            if (count($_file->getActivities()) > 0) {
+            if (count($_file->getSectors()) > 0) {
                 $documentNames[$_file->getId()] = sprintf(
-                    "%s (%d)", $_file->getDocumentName(), count($_file->getActivities())
+                    "%s (%d)", $_file->getDocumentName(), count($_file->getSectors())
                 );
             }
         }
@@ -194,7 +194,7 @@ class ClassifyController extends Controller {
             foreach ($data as $id => $state) {
                 if ($state) {
                     $oagFile = $this->getDoctrine()->getRepository(OagFile::class)->find($id);
-                    $documents[$oagFile->getDocumentName()] = $oagFile->getActivities();
+                    $documents[$oagFile->getDocumentName()] = $oagFile->getSectors();
                 }
             }
         }
