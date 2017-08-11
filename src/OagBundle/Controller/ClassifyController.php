@@ -160,9 +160,29 @@ class ClassifyController extends Controller {
     }
 
     /**
+     * List all activities in a document
+     *
+     * @Route("/activity/{id}")
+     * @ParamConverter("file", class="OagBundle:OagFile")
+     *
+     * Provides an interface for merging in sectors. Will replace mergeSectors
+     * (above) when complete.
+     */
+    public function activityAction(Request $request, OagFile $file) {
+        // Load XML document
+        $path = $this->getParameter('oagfiles_directory') . '/' . $file->getDocumentName();
+        $xml = file_get_contents($path);
+        $root = $srvActivity->parseXML($xml);
+        // Extract each activity
+        $srvActivities = $this->get(ActivityService::class);
+        $activities = $srvActivities->summariseToArray($root);
+        // Render them
+        return array('activities' => $activities);
+    }
+
+    /**
      * @Route("/sectors/{id}")
      * @ParamConverter("file", class="OagBundle:OagFile")
-     * @Template
      *
      * Provides an interface for merging in sectors. Will replace mergeSectors
      * (above) when complete.
@@ -249,40 +269,43 @@ class ClassifyController extends Controller {
             $this->addFlash('notice', 'Sector changes have been applied successfully.');
 
             $data = $sectorsForm->getData();
+            dump($data);
 
             foreach ($srvActivity->getActivities($root) as $activity) {
-                $id = $srvActivity->getActivityId($activity);
-
-                $revCurrent = $data['current' . $id];
-                $revNew = $data['new' . $id];
-
-                foreach ($allCurrentSectors[$id] as $sector) {
-                    // if status has changed
-                    if (!in_array($sector['code'], $revCurrent)) {
-                        $srvActivity->removeActivitySector($activity, $sector['code'], $sector['vocabulary']);
-                    }
-                }
-
-                foreach ($allNewSectors[$id] as $sector) {
-                    // if status has changed
-                    if (in_array($sector['code'], $revNew)) {
-                        $srvActivity->addActivitySector(
-                            $activity, $sector['code'], $sector['description']
-                        );
-                    }
-                }
+                dump($activity);
+//                $id = $srvActivity->getActivityId($activity);
+//
+//                $revCurrent = $data['current' . $id];
+//                $revNew = $data['new' . $id];
+//
+//                foreach ($allCurrentSectors[$id] as $sector) {
+//                    // if status has changed
+//                    if (!in_array($sector['code'], $revCurrent)) {
+//                        $srvActivity->removeActivitySector($activity, $sector['code'], $sector['vocabulary']);
+//                    }
+//                }
+//
+//                foreach ($allNewSectors[$id] as $sector) {
+//                    // if status has changed
+//                    if (in_array($sector['code'], $revNew)) {
+//                        $srvActivity->addActivitySector(
+//                            $activity, $sector['code'], $sector['description']
+//                        );
+//                    }
+//                }
+//            }
+//
+//            // download generated XML
+//            $modifiedXML = $srvActivity->toXML($root);
+//            $response = new Response($modifiedXML);
+//
+//            $disposition = $response->headers->makeDisposition(
+//                ResponseHeaderBag::DISPOSITION_ATTACHMENT, 'modified.xml'
+//            );
+//
+//            $response->headers->set('Content-Disposition', $disposition);
+//            return $response;
             }
-
-            // download generated XML
-            $modifiedXML = $srvActivity->toXML($root);
-            $response = new Response($modifiedXML);
-
-            $disposition = $response->headers->makeDisposition(
-                ResponseHeaderBag::DISPOSITION_ATTACHMENT, 'modified.xml'
-            );
-
-            $response->headers->set('Content-Disposition', $disposition);
-            return $response;
         }
 
 
