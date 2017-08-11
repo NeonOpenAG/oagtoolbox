@@ -15,17 +15,17 @@ namespace OagBundle\Service\TextExtractor;
  */
 abstract class AbstractExtractor {
 
-  protected $path;
-  protected $output;
+    protected $path;
+    protected $output;
 
-  public function setFilename($path) {
-    $this->path = $path;
-  }
+    public function setFilename($path) {
+        $this->path = $path;
+    }
 
-  abstract function decode();
+    abstract function decode();
 
-  public function output() {
-    return $this->output;
-  }
+    public function output() {
+        return $this->output;
+    }
 
 }

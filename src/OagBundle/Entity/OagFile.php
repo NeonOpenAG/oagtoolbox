@@ -14,131 +14,159 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class OagFile {
 
-  /**
-   * @var int
-   *
-   * @ORM\Column(name="id", type="integer")
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="AUTO")
-   */
-  private $id;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
 
-  /**
-   * @ORM\ManyToMany(targetEntity="OagBundle\Entity\Sector")
-   */
-  protected $activities;
+    /**
+     * @ORM\ManyToMany(targetEntity="OagFile", mappedBy="enhancingDocuments")
+     * */
+    private $iatiParents;
 
-  /**
-   * @var string
-   *
-   * @ORM\Column(name="documentName", type="string", length=1024)
-   */
-  private $documentName;
+    /**
+     * @ORM\ManyToMany(targetEntity="OagFile", inversedBy="iatiParents")
+     * */
+    private $enhancingDocuments;
 
-  /**
-   * @var string
-   *
-   * @ORM\Column(name="mimeType", type="string", length=1024)
-   */
-  private $mimeType;
+    /**
+     * @ORM\ManyToMany(targetEntity="OagBundle\Entity\Sector")
+     */
+    protected $sectors;
 
-  public function __construct() {
-    $this->activities = new ArrayCollection();
-  }
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="documentName", type="string", length=1024)
+     */
+    private $documentName;
 
-  /**
-   * Get id
-   *
-   * @return int
-   */
-  public function getId() {
-    return $this->id;
-  }
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="mimeType", type="string", length=1024)
+     */
+    private $mimeType;
 
-  /**
-   * Set path
-   *
-   * @param string $path
-   *
-   * @return OagFile
-   */
-  public function setDocumentName($documentName) {
-    $this->documentName = $documentName;
+    public function __construct() {
+        $this->sectors = new ArrayCollection();
+        $this->iatiParents = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->enhancingDocuments = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
-    return $this;
-  }
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId() {
+        return $this->id;
+    }
 
-  /**
-   * Get path
-   *
-   * @return string
-   */
-  public function getDocumentName() {
-    return $this->documentName;
-  }
+    /**
+     * Set path
+     *
+     * @param string $path
+     *
+     * @return OagFile
+     */
+    public function setDocumentName($documentName) {
+        $this->documentName = $documentName;
 
-  /**
-   * Set path
-   *
-   * @param string $path
-   *
-   * @return OagFile
-   */
-  public function setMimeType($mimeType) {
-    $this->mimeType = $mimeType;
+        return $this;
+    }
 
-    return $this;
-  }
+    /**
+     * Get path
+     *
+     * @return string
+     */
+    public function getDocumentName() {
+        return $this->documentName;
+    }
 
-  /**
-   * Get path
-   *
-   * @return string
-   */
-  public function getMimeType() {
-    return $this->mimeType;
-  }
+    /**
+     * Set path
+     *
+     * @param string $path
+     *
+     * @return OagFile
+     */
+    public function setMimeType($mimeType) {
+        $this->mimeType = $mimeType;
 
-  /**
-   * Get Sectors
-   *
-   * @return string
-   */
-  public function getSectors() {
-        return $this->activities;
-  }
+        return $this;
+    }
 
-  /**
-   * @param \OagBundle\Entity\Sector $activity
-   * @return bool
-   */
-  public function hasSector(Sector $activity) {
+    /**
+     * Get path
+     *
+     * @return string
+     */
+    public function getMimeType() {
+        return $this->mimeType;
+    }
+
+    /**
+     * Get Sectors
+     *
+     * @return string
+     */
+    public function getSectors() {
+        return $this->sectors;
+    }
+
+    /**
+     * @param \OagBundle\Entity\Sector $activity
+     * @return bool
+     */
+    public function hasSector(Sector $activity) {
         return $this->getSectors()->contains($activity);
     }
 
-  /**
-   * @param \OagBundle\Entity\Sector $activity
-   */
-  public function addSector(Sector $activity) {
+    /**
+     * @param \OagBundle\Entity\Sector $activity
+     */
+    public function addSector(Sector $activity) {
         if (!$this->hasSector($activity)) {
-            $this->activities->add($activity);
+            $this->sectors->add($activity);
+        }
     }
-  }
 
-  /**
-   * @param \OagBundle\Entity\Sector $activity
-   */
-  public function removeSector(Sector $activity) {
+    /**
+     * @param \OagBundle\Entity\Sector $activity
+     */
+    public function removeSector(Sector $activity) {
         if (!$this->hasSector($activity)) {
-            $this->activities->removeElement($activity);
+            $this->sectors->removeElement($activity);
+        }
     }
-  }
 
-  /**
-   * Remove all sectors.
-   */
-  public function clearSectors() {
-        $this->activities->clear();
-  }
+    /**
+     * Remove all sectors.
+     */
+    public function clearSectors() {
+        $this->sectors->clear();
+    }
+
+    public function getIatiParents() {
+        return $this->iatiParents;
+    }
+
+    public function getEnhancingDocuments() {
+        return $this->enhancingDocuments;
+    }
+
+    public function setIatiParents(ArrayCollection $iatiParents) {
+        $this->iatiParents = $iatiParents;
+    }
+
+    public function setEnhancingDocuments(ArrayCollection $enhancingDocuments) {
+        $this->enhancingDocuments = $enhancingDocuments;
+    }
 
 }

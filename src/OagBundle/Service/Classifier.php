@@ -59,37 +59,37 @@ class Classifier extends AbstractOagService {
 //            $this->getContainer()->get('logger')->info('Returning cached data ' . $data);
 //        } else {
         $oag = $this->getContainer()->getParameter('oag');
-            $uri = $oag['classifier']['text'];
-            $request = curl_init();
-            curl_setopt($request, CURLOPT_URL, $uri);
-            curl_setopt($request, CURLOPT_POST, true);
-            curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
-            //    curl_setopt($request, CURLOPT_VERBOSE, true);
-            //    curl_setopt($request, CURLOPT_HEADER, true);
-            $this->getContainer()->get('logger')->info('Accessing classifer at ' . $uri);
+        $uri = $oag['classifier']['text'];
+        $request = curl_init();
+        curl_setopt($request, CURLOPT_URL, $uri);
+        curl_setopt($request, CURLOPT_POST, true);
+        curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
+        //    curl_setopt($request, CURLOPT_VERBOSE, true);
+        //    curl_setopt($request, CURLOPT_HEADER, true);
+        $this->getContainer()->get('logger')->info('Accessing classifer at ' . $uri);
 
-            $payload = array(
-                'text1' => $contents,
-                'limit' => 0,
-                'anchor' => 0,
-                'ext' => 'fc',
-                'threshold' => 'low',
-                'rollup' => 'true',
-                'chunk' => 'True',
-            );
+        $payload = array(
+            'text1' => $contents,
+            'limit' => 0,
+            'anchor' => 0,
+            'ext' => 'fc',
+            'threshold' => 'low',
+            'rollup' => 'true',
+            'chunk' => 'True',
+        );
 
-            curl_setopt($request, CURLOPT_POSTFIELDS, http_build_query($payload));
+        curl_setopt($request, CURLOPT_POSTFIELDS, http_build_query($payload));
 
-            $data = curl_exec($request);
+        $data = curl_exec($request);
 
-    //            $cache->set($cachename, $data);
+        //            $cache->set($cachename, $data);
         $responseCode = curl_getinfo($request, CURLINFO_HTTP_CODE);
-            curl_close($request);
+        curl_close($request);
 
-            $response = array(
-                'status' => ($responseCode >= 200 && $responseCode <= 209) ? 0 : 1,
-            );
-    //        }
+        $response = array(
+            'status' => ($responseCode >= 200 && $responseCode <= 209) ? 0 : 1,
+        );
+        //        }
 
         $json = json_decode($data, true);
         if (!is_array($json)) {

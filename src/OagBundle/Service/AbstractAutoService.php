@@ -6,10 +6,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 abstract class AbstractAutoService extends AbstractOagService {
 
-  abstract function processUri($sometext);
+    abstract function processUri($sometext);
 
-  abstract function processString($sometext);
+    abstract function processString($sometext);
 
-  abstract function processXML($somexml);
-
+    abstract function processXML($somexml);
 }

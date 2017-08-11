@@ -25,14 +25,14 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
  */
 class OagFileType extends AbstractType {
 
-  public function buildForm(FormBuilderInterface $builder, array $options) {
-    $builder->add('documentName', FileType::class, array('label' => 'Locate on filesystem '));
-  }
+    public function buildForm(FormBuilderInterface $builder, array $options) {
+        $builder->add('documentName', FileType::class, array('label' => 'Locate on filesystem '));
+    }
 
-  public function configureOptions(OptionsResolver $resolver) {
-    $resolver->setDefaults(array(
-      'data_class' => OagFile::class,
-    ));
-  }
+    public function configureOptions(OptionsResolver $resolver) {
+        $resolver->setDefaults(array(
+            'data_class' => OagFile::class,
+        ));
+    }
 
 }

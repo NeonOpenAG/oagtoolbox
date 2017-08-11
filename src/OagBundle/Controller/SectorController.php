@@ -14,6 +14,7 @@ use OagBundle\Entity\OagFile;
  * @Template
  */
 class SectorController extends Controller {
+
     /**
      * @Route("/{id}", requirements={"id": "\d+"})
      * @ParamConverter("file", class="OagBundle:OagFile")

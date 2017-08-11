@@ -317,5 +317,4 @@ class ClassifyController extends Controller {
         return $response;
     }
 
-
 }

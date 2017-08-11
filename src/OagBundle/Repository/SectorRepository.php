@@ -9,4 +9,5 @@ namespace OagBundle\Repository;
  * repository methods below.
  */
 class SectorRepository extends \Doctrine\ORM\EntityRepository {
+
 }

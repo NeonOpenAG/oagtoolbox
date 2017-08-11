@@ -13,6 +13,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity(repositoryClass="OagBundle\Repository\CodeRepository")
  */
 class Code {
+
     /**
      * @var int
      *
@@ -22,11 +23,11 @@ class Code {
      */
     private $id;
 
-  /**
-   * @var string
-   *
-   * @ORM\Column(name="code", type="string", length=32, unique=true)
-   */
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="code", type="string", length=32, unique=true)
+     */
     private $code;
 
     /**
@@ -36,17 +37,16 @@ class Code {
      */
     private $description;
 
-  public function __construct() {
-    $this->oagFile = new ArrayCollection();
-  }
+    public function __construct() {
+        $this->oagFile = new ArrayCollection();
+    }
 
-  /**
+    /**
      * Get id
      *
      * @return int
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -57,8 +57,7 @@ class Code {
      *
      * @return Code
      */
-    public function setCode($code)
-    {
+    public function setCode($code) {
         $this->code = $code;
 
         return $this;
@@ -69,8 +68,7 @@ class Code {
      *
      * @return string
      */
-    public function getCode()
-    {
+    public function getCode() {
         return $this->code;
     }
 
@@ -81,8 +79,7 @@ class Code {
      *
      * @return Code
      */
-    public function setDescription($description)
-    {
+    public function setDescription($description) {
         $this->description = $description;
 
         return $this;
@@ -93,10 +90,8 @@ class Code {
      *
      * @return string
      */
-    public function getDescription()
-    {
+    public function getDescription() {
         return $this->description;
     }
 
 }
-

@@ -12,11 +12,11 @@
     <div>
         <ul>
             {% for id, file in files %}
-            <li>{{ file }}</li>
-            {% endfor %}
+                <li>{{ file }}</li>
+                {% endfor %}
         </ul>
     </div>
 
-            <a href='{{ path('oag_default_delete', { 'ids': ids }) }}'>DELETE</a> <a href='{{ path('oag_default_index') }}'>Cancel</a>
+                <a href='{{ path('oag_default_delete', { 'ids': ids }) }}'>DELETE</a> <a href='{{ path('oag_default_index') }}'>Cancel</a>
 
 {% endblock %}

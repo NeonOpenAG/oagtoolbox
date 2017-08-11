@@ -12,6 +12,7 @@ use OagBundle\Entity\Code;
  * @ORM\Entity(repositoryClass="OagBundle\Repository\SectorRepository")
  */
 class Sector {
+
     /**
      * @var int
      *
@@ -28,19 +29,18 @@ class Sector {
      */
     private $confidence;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="\OagBundle\Entity\Code", inversedBy="activities")
-   * @ORM\JoinColumn(name="sector_id", referencedColumnName="id")
-   */
-  private $code;
+    /**
+     * @ORM\ManyToOne(targetEntity="\OagBundle\Entity\Code", inversedBy="activities")
+     * @ORM\JoinColumn(name="sector_id", referencedColumnName="id")
+     */
+    private $code;
 
     /**
      * Get id
      *
      * @return int
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -51,8 +51,7 @@ class Sector {
      *
      * @return Sector
      */
-    public function setConfidence($confidence)
-    {
+    public function setConfidence($confidence) {
         $this->confidence = $confidence;
 
         return $this;
@@ -63,18 +62,16 @@ class Sector {
      *
      * @return string
      */
-    public function getConfidence()
-    {
+    public function getConfidence() {
         return $this->confidence;
     }
 
-  public function getCode() {
+    public function getCode() {
         return $this->code;
     }
 
-  public function setCode(Code $code) {
+    public function setCode(Code $code) {
         $this->code = $code;
     }
 
 }
-
