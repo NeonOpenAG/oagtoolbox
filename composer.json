@@ -34,7 +34,8 @@
         "twig/twig": "^1.0||^2.0",
         "asika/pdf2text": "1.*",
         "phpoffice/phpword": "v0.13.*",
-        "league/flysystem-ziparchive": "1.0.3"
+        "league/flysystem-ziparchive": "1.0.3",
+        "doctrine/doctrine-fixtures-bundle": "*"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",
@@ -57,7 +58,8 @@
             "php bin/console doctrine:database:create",
             "php bin/console doctrine:schema:create",
             "php bin/console doctrine:database:create --env=test",
-            "php bin/console doctrine:schema:create --env=test"
+            "php bin/console doctrine:schema:create --env=test",
+            "php bin/console doctrine:fixtures:load --fixtures=src/OagBundle/Resources/Seeds/LoadTypeData.php --append"
         ],
         "post-update-cmd": [
             "@symfony-scripts"

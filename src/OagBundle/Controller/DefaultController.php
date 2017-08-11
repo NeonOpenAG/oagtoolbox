@@ -24,6 +24,32 @@ class DefaultController extends Controller {
      * @Template
      */
     public function indexAction() {
+        $repository = $this->getDoctrine()->getRepository(OagFile::class);
+        $srvOagFile = $this->get(OagFileService::class);
+
+        // Fetch all files.
+        $files = array();
+        $oagfiles = $repository->findAll();
+
+        $data = [];
+        foreach ($files as $file) {
+            $name = $file->getDocumentName();
+            // Fetch supporting docs for this document.
+            $docs = [];
+            foreach ($file->getEnhancingDocuments() as $doc) {
+                $docs[] = ['id' => $doc->getId(), 'name' => $doc->getName()];
+            }
+            $data[$name] = ['id' => $file->getId(), 'docs' => $docs];
+        }
+
+        return $data;
+    }
+
+    /**
+     * @Route("/old")
+     * @Template
+     */
+    public function indexOldAction() {
 
         // TODO - Can we amalgamate these two?
         $em = $this->getDoctrine()->getManager();

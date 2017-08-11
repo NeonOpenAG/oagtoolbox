@@ -4,7 +4,9 @@ namespace OagBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use OagBundle\Entity\Sector;
+use OagBundle\Entity\FileType;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints\Range;
 
 /**
  * OagFile
@@ -44,6 +46,18 @@ class OagFile {
      * @ORM\Column(name="documentName", type="string", length=1024)
      */
     private $documentName;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="type", type="integer")
+     * @Range(
+     *      min = 1,
+     *      max = 7,
+     *      minMessage = "Invalid type specified",
+     *      maxMessage = "Unsupported type.")
+     */
+    private $fileType;
 
     /**
      * @var string
@@ -153,20 +167,58 @@ class OagFile {
         $this->sectors->clear();
     }
 
+    /**
+     * Get parent documents
+     *
+     * @return ArrayCollection
+     */
     public function getIatiParents() {
         return $this->iatiParents;
     }
 
+    /**
+     * Get enhancing documents
+     *
+     * @return ArrayCollection
+     */
     public function getEnhancingDocuments() {
         return $this->enhancingDocuments;
     }
 
+    /**
+     * Set IATI parents array
+     *
+     * @param ArrayCollection $iatiParents
+     */
     public function setIatiParents(ArrayCollection $iatiParents) {
         $this->iatiParents = $iatiParents;
     }
 
+    /**
+     * Set enhancements array
+     *
+     * @param ArrayCollection $iatiParents
+     */
     public function setEnhancingDocuments(ArrayCollection $enhancingDocuments) {
         $this->enhancingDocuments = $enhancingDocuments;
+    }
+
+    /**
+     * Get file type
+     *
+     * @return integer
+     */
+    public function getFileType() {
+        return $this->fileType;
+    }
+
+    /**
+     * Set file type
+     *
+     * @param integer $fileType
+     */
+    public function setFileType($fileType) {
+        $this->fileType = $fileType;
     }
 
 }

@@ -1,0 +1,39 @@
+Updating 458a89c..bdd6be9
+Fast-forward
+ .travis.yml                                        |   7 +-
+ cove/locale/es/LC_MESSAGES/django.po               | 181 ++++++++-
+ cove_360/locale/es/LC_MESSAGES/django.po           |  76 ++--
+ cove_360/tests_functional.py                       |  10 +-
+ .../{2.01 => 2.02}/iati-activities-schema.xsd      | 450 ++++++++++++++++++++-
+ .../iati_schemas/{2.01 => 2.02}/iati-common.xsd    |   4 +-
+ .../{2.01 => 2.02}/iati-organisations-schema.xsd   | 311 +++++++++++++-
+ cove_iati/iati_schemas/{2.01 => 2.02}/xml.xsd      |   0
+ cove_iati/lib/iati_utils.py                        |   4 +-
+ cove_iati/settings.py                              |   2 +-
+ cove_iati/tests_functional.py                      |  10 +-
+ cove_ocds/lib/api.py                               |   2 +-
+ cove_ocds/locale/es/LC_MESSAGES/django.po          | 374 +++++++++--------
+ cove_ocds/settings.py                              |   2 +-
+ cove_ocds/tests.py                                 |  27 +-
+ cove_ocds/tests_functional.py                      |  10 +-
+ requirements_dev.txt                               |   2 +-
+ 17 files changed, 1212 insertions(+), 260 deletions(-)
+ rename cove_iati/iati_schemas/{2.01 => 2.02}/iati-activities-schema.xsd (82%)
+ rename cove_iati/iati_schemas/{2.01 => 2.02}/iati-common.xsd (99%)
+ rename cove_iati/iati_schemas/{2.01 => 2.02}/iati-organisations-schema.xsd (63%)
+ rename cove_iati/iati_schemas/{2.01 => 2.02}/xml.xsd (100%)
+Operations to perform:
+  Synchronize unmigrated apps: staticfiles, bootstrap3, cove_iati, humanize, messages, cove
+  Apply all migrations: contenttypes, admin, input, auth, sessions
+Synchronizing apps without migrations:
+  Creating tables...
+    Running deferred SQL...
+  Installing custom SQL...
+Running migrations:
+  No migrations to apply.
+processing file django.po in /opt/cove/cove/locale/es/LC_MESSAGES
+processing file django.po in /opt/cove/cove/locale/en/LC_MESSAGES
+processing file django.po in /opt/cove/cove_ocds/locale/es/LC_MESSAGES
+processing file django.po in /opt/cove/cove_ocds/locale/en/LC_MESSAGES
+processing file django.po in /opt/cove/cove_360/locale/es/LC_MESSAGES
+processing file django.po in /opt/cove/cove_360/locale/en/LC_MESSAGES
