@@ -1,0 +1,23 @@
+{% extends 'OagBundle::Default/index.html.twig' %}
+
+{% block title %}Enhancement Document: {{ name }}{% endblock %}
+
+{% block h1 %}{{ name }}{% endblock %}
+
+{% block body %}
+    <h2>Mime type: {{ mimetype }}</h2>
+
+    {% if sectors|length > 0 %}
+        <h2>Sectors</h2>
+        {% for sector in sectors %}
+            <li>{{ sector.code.description }}</li>
+        {% endfor %}
+    {% else %}
+    <h2>No sectors associated</h2>
+    {% endif %}
+    <div>
+        <a href='{{ path('oag_oagfile_classify', { 'id': id }) }}'>{% if sectors|length > 0 %}Re-{% endif %}Classify</a>
+        |
+        <a href='{{ path('oag_oagfile_geocode', { 'id': id }) }}'>{% if sectors|length > 0 %}Re-{% endif %}Geocode</a>
+    </div>
+{% endblock %}

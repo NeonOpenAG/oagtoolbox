@@ -1,0 +1,31 @@
+{% extends 'OagBundle::Default/index.html.twig' %}
+
+{% block title %}Classify results: {{ name }}{% endblock %}
+
+{% block h1 %}{{ name }}{% endblock %}
+
+{% block body %}
+    {% if sectors|length > 0 %}
+        <h2>Sectors</h2>
+        <table class="pure-table pure-table-bordered">
+            <thead>
+                <tr>
+                    <th>AGROVOC Code</th>
+                    <th>Descroption</th>
+                    <th>Confidence</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in sectors %}
+                    <tr>
+                        <td>{{ row['code'] }}</td>
+                        <td>{{ row['description'] }}</td>
+                        <td>{{ row['confidence'] }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <h2>No sectors associated</h2>
+    {% endif %}
+{% endblock %}
