@@ -16,6 +16,10 @@ use Symfony\Component\Validator\Constraints\Range;
  */
 class OagFile {
 
+    const OAGFILE_IATI_DOCUMENT = 1;
+    const OAGFILE_IATI_SOURCE_DOCUMENT = 2;
+    const OAGFILE_IATI_ENHANCEMENT_DOCUMENT = 4;
+
     /**
      * @var int
      *
@@ -201,6 +205,26 @@ class OagFile {
      */
     public function setEnhancingDocuments(ArrayCollection $enhancingDocuments) {
         $this->enhancingDocuments = $enhancingDocuments;
+    }
+
+    public function addEnhancingDocument(OagFile $file) {
+        if (!$this->hasEnhancingDocument($file)) {
+            $this->getEnhancingDocuments()->add($file);
+        }
+    }
+
+    public function removeEnhancingDocument(OagFile $file) {
+        if ($this->hasEnhancingDocument($file)) {
+            $this->getEnhancingDocuments()->remove($file);
+        }
+    }
+
+    public function hasEnhancingDocument(OagFile $file) {
+        return $this->getEnhancingDocuments()->contains($file);
+    }
+
+    public function clearEnhancingDocuments() {
+        $this->getEnhancingDocuments()->clear();
     }
 
     /**

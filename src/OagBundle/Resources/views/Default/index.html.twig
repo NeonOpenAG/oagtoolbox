@@ -1,0 +1,70 @@
+{# This inherrites from /app/Resources/views/base.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
+    <link href="{{ asset('bundles/oag/css/main.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block title %}Tool POCs{% endblock %}
+
+{% block h1 %}Open Ag Toolbox{% endblock %}
+
+{% block menu %}
+    <a class='home-link' href="{{ path('oag_default_index') }}">Home</a> | <a class='upload-link' href="{{ path('oag_default_upload') }}">Upload file</a>
+{% endblock %}
+
+{% block body %}
+
+    <h2>IATI Documents</h2>
+
+    <ul>
+        {% for iatidoc in iatidocs %}
+            <li>
+                <a href="{{ path('oag_oagfile_iati', { 'id': iatidoc['id'] }) }}">{{ iatidoc['name'] }}</a>
+                <ul>
+                    {% for doc in iatidoc['docs'] %}
+                        <li>
+                            <a href="{{ path('oag_oagfile_enhancement', { 'id': doc['id'] }) }}">{{ doc['name'] }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <h2>Unvalidated IATI Documents</h2>
+
+    <ul>
+        {% for sourceDoc in sourceDocs %}
+            <li>
+                <a href="{{ path('oag_oagfile_source', { 'id': sourceDoc['id'] }) }}">{{ sourceDoc['name'] }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <h2>Enhancement Documents</h2>
+
+    <ul>
+        {% for enhancingDoc in enhancingDocs %}
+            <li>
+                <a href="{{ path('oag_oagfile_enhancement', { 'id': enhancingDoc['id'] }) }}">{{ enhancingDoc['name'] }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript" src="{{ asset('bundles/oag/js/main.js') }}"></script>
+    <script>
+        $(function () {
+            $(document).tooltip();
+
+            $("#select-all-delete").click(function () {
+                var checkBoxes = $(".cbox-del");
+                checkBoxes.prop("checked", !checkBoxes.prop("checked"));
+            });
+        });
+    </script>
+{% endblock %}
