@@ -11,12 +11,7 @@
     <div>
         {% if form is defined and form is not null %}
             {{ form_start(form) }}
-            <div>
-                {{ form_row(form.documentName) }}
-            </div>
-            <div>
-                {{ form_row(form.submit, { 'label': 'Upload' }) }}
-            </div>
+            {{ form_widget(form) }}
             {{ form_end(form) }}
 
         {% else %}

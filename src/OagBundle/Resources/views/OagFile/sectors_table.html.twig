@@ -1,0 +1,19 @@
+<h2>Sectors</h2>
+<table class="pure-table pure-table-bordered">
+    <thead>
+        <tr>
+            <th>AGROVOC Code</th>
+            <th>Descroption</th>
+            <th>Confidence</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for sector in sectors %}
+            <tr>
+                <td>{{ sector['code'] }}</td>
+                <td>{{ sector['description'] }}</td>
+                <td>{{ sector['confidence'] }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

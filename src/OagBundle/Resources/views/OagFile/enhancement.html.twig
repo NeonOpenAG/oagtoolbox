@@ -8,10 +8,7 @@
     <h2>Mime type: {{ mimetype }}</h2>
 
     {% if sectors|length > 0 %}
-        <h2>Sectors</h2>
-        {% for sector in sectors %}
-            <li>{{ sector.code.description }}</li>
-        {% endfor %}
+        {{ include('OagBundle::OagFile/sectors_table.html.twig', { 'sectors': sectors }) }}
     {% else %}
     <h2>No sectors associated</h2>
     {% endif %}

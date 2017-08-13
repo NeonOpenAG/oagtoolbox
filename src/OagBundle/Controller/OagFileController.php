@@ -5,6 +5,7 @@ namespace OagBundle\Controller;
 use OagBundle\Entity\OagFile;
 use OagBundle\Service\ActivityService;
 use OagBundle\Service\Classifier;
+use OagBundle\Service\Geocoder;
 use OagBundle\Entity\Code;
 use OagBundle\Entity\Sector;
 use OagBundle\Service\TextExtractor\TextifyService;
@@ -29,6 +30,7 @@ class OagFileController extends Controller
         $data = [];
         $srvActivity = $this->get(ActivityService::class);
 
+        $data['id'] = $file->getId();
         $data['name'] = $file->getDocumentName();
         $data['mimetype'] = $file->getMimeType();
 
@@ -67,8 +69,20 @@ class OagFileController extends Controller
         $data['id'] = $file->getId();
         $data['name'] = $file->getDocumentName();
         $data['mimetype'] = $file->getMimeType();
-        $data['sectors'] = $file->getSectors();
         $data['text'] = $srvActivity->stripOagFile($file);
+
+        // Now loop through sectors flattening them (so we can re-use the xectors table template)
+        $sectors = $file->getSectors();
+        $_sectors = [];
+        foreach ($sectors as $sector) {
+            $_sectors[] = [
+                'id' => $sector->getId(),
+                'confidence' => $sector->getConfidence(),
+                'code' => $sector->getCode()->getCode(),
+                'description' => $sector->getCode()->getDescription(),
+            ];
+        }
+        $data['sectors'] = $_sectors;
 
         return $data;
     }
@@ -125,7 +139,12 @@ class OagFileController extends Controller
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
     public function geocodeAction(Request $request, OagFile $file) {
-
+        $srvGeocoder = $this->get(Geocoder::class);
+        $json = $srvGeocoder->processOagFile($file);
+        return [
+            'name' => $file->getDocumentName(),
+            'json' => $json,
+        ];
     }
 
 }

@@ -109,6 +109,7 @@ class Classifier extends AbstractOagService {
     }
 
     public function processOagFile(OagFile $file) {
+        // TODO Swap this to use the texitfy service
         $path = $this
                 ->getContainer()
                 ->getParameter('oagfiles_directory') . '/' . $file->getDocumentName();

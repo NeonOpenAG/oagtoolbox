@@ -2,6 +2,8 @@
 
 namespace OagBundle\Service;
 
+use OagBundle\Entity\OagFile;
+
 class Geocoder extends AbstractAutoService {
 
     public function processUri($sometext) {
@@ -43,6 +45,10 @@ class Geocoder extends AbstractAutoService {
             $locations[$id] = $projLocations;
         }
         return $locations;
+    }
+
+    public function processOagFile(OagFile $file) {
+        return $this->getFixtureData();
     }
 
 }
