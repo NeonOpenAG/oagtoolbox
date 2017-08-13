@@ -24,6 +24,62 @@ class DefaultController extends Controller {
      * @Template
      */
     public function indexAction() {
+        $repository = $this->getDoctrine()->getRepository(OagFile::class);
+        $srvOagFile = $this->get(OagFileService::class);
+
+        // Fetch IATI files.
+        $oagfiles = $repository->findByFileType(OagFile::OAGFILE_IATI_DOCUMENT);
+        $iatidocs = [];
+        foreach ($oagfiles as $file) {
+            $name = $file->getDocumentName();
+            $id = $file->getId();
+            // Fetch supporting docs for this document.
+            $docs = [];
+            foreach ($file->getEnhancingDocuments() as $doc) {
+                $docs[] = ['id' => $doc->getId(), 'name' => $doc->getDocumentName()];
+            }
+            $iatidocs[$id] = ['id' => $id, 'name' => $name, 'docs' => $docs];
+        }
+
+        // Fetch source documents
+        $sourceDocs = $this->loadOagFileByType(OagFile::OAGFILE_IATI_SOURCE_DOCUMENT);
+
+        // Fetch enhancing documents
+        $enhancingDocs = $this->loadOagFileByType(OagFile::OAGFILE_IATI_ENHANCEMENT_DOCUMENT);
+
+        $sourcedocs = $data = [
+            'iatidocs' => $iatidocs,
+            'sourceDocs' => $sourceDocs,
+            'enhancingDocs' => $enhancingDocs,
+        ];
+        return $data;
+    }
+
+    /**
+     * Load oag files by file type.
+     */
+    private function loadOagFileByType($type) {
+        $repository = $this->getDoctrine()->getRepository(OagFile::class);
+        $oagfiles = $repository->findByFileType($type);
+        $files = [];
+
+        foreach ($oagfiles as $file) {
+            $name = $file->getDocumentName();
+            $id = $file->getId();
+            $files[$id] = ['id' => $id, 'name' => $name];
+        }
+
+        return $files;
+    }
+
+    ///////////////
+    // OLD STUFF //
+    ///////////////
+    /**
+     * @Route("/old")
+     * @Template
+     */
+    public function indexOldAction() {
 
         // TODO - Can we amalgamate these two?
         $em = $this->getDoctrine()->getManager();

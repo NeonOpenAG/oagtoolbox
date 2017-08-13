@@ -3,3 +3,9 @@ body {
     font-family: sans-serif;
     margin: 15px;
 }
+
+.associated-files .docname {
+    width: 100px;
+    display: inline-block;
+    color: green;
+}

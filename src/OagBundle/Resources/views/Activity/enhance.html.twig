@@ -1,0 +1,16 @@
+{% extends 'OagBundle::Default/index.html.twig' %}
+
+{% block title %}OagBundle:Activity:enhance{% endblock %}
+
+{% block body %}
+    <h1>Welcome to the Activity:enhance page</h1>
+
+    <ul>
+        <li>Show existing sectors as checked checkboxes</li>
+        <li>Show classifier results for this (activity|document)?, not sure which check with Kat/Harry</li>
+        <li>Show a block of sectors as checkboxes for each $file->getEnhancingDocuments()</li>
+    </ul>
+
+    <p>Submit merges to new XML and overwites the existing IATI XML document identified by route param ID.</p>
+    <p>Any smart ideas about versioning welcome</p>
+{% endblock %}

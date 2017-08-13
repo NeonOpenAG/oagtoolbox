@@ -12,11 +12,8 @@ use OagBundle\Entity\OagFile;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 /**
  * Description of OagFileType
@@ -27,6 +24,15 @@ class OagFileType extends AbstractType {
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder->add('documentName', FileType::class, array('label' => 'Locate on filesystem '));
+        $builder->add('fileType', ChoiceType::class, array(
+            'label' => 'Type ',
+            'choices' => array(
+                'IATI document' => OagFile::OAGFILE_IATI_DOCUMENT,
+                'IATI source document' => OagFile::OAGFILE_IATI_SOURCE_DOCUMENT,
+                'Enhancement document' => OagFile::OAGFILE_IATI_ENHANCEMENT_DOCUMENT,
+            ),
+            )
+        );
     }
 
     public function configureOptions(OptionsResolver $resolver) {
