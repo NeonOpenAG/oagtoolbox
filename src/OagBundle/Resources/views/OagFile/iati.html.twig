@@ -1,0 +1,43 @@
+{% extends 'OagBundle::Default/index.html.twig' %}
+
+{% block title %}IATI Document: {{ name }}{% endblock %}
+
+{% block h1 %}{{ name }}{% endblock %}
+
+{% block menu %}
+    {{ parent() }}
+    <a class='attach-enhacingdoc-link' href="#">Attach new file</a>
+    |
+    <a class='save-xml-link' href="#">Save XML</a>
+    |
+    <a class='view-xml-link' href="#">View raw XML</a>
+{% endblock %}
+
+{% block body %}
+    <h2>Already in the document</h2>
+    <ul>
+        {% for activity in activities %}
+            <li><a href='{{ path('oag_activity_enhance', { 'id': id, 'iati_activity_id': activity['id'] }) }}'>{{ activity['name'] }}</a></li>
+            <ul>
+                {% for sector in activity['sectors'] %}
+                    <li>{{ sector['description'] }}</li>
+                {% endfor %}
+            </ul>
+        {% endfor %}
+    </ul>
+        <h2>Associated files</h2>
+        <div class='associated-files'>
+            {% if enhancingDocuments|length > 0 %}
+                <ul>
+                    {% for doc in enhancingDocuments %}
+                        <li><span class='docname'>{{ doc.documentName }}</span>
+                            <a href="{{ path('oag_oagfile_enhancement', { 'id': doc.id }) }}">View</a> |
+                            <a href="#">Classify</a> |
+                            <a href="#">Geocode</a>
+                        {% endfor %}
+                </ul>
+        {% else %}
+            <h3>No assciated documents</h3>
+        {% endif %}
+    </div>
+{% endblock %}

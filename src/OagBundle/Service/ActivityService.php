@@ -15,7 +15,12 @@ class ActivityService extends AbstractService {
     public function parseXML($string) {
         // helper function to allow for centralised changing of libxml options
         // where appropriate
-        return new \SimpleXMLElement($string, self::LIBXML_OPTIONS);
+        try {
+            return new \SimpleXMLElement($string, self::LIBXML_OPTIONS);
+        } catch (\Exception $ex) {
+            $this->getContainer()->get('logger')->error('Failed to parse XML: ' . substr($string, 0, 30));
+        }
+        return false;
     }
 
     public function toXML($root) {
