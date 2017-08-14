@@ -17,7 +17,7 @@
     <h2>Already in the document</h2>
     <ul>
         {% for activity in activities %}
-            <li><a href='{{ path('oag_activity_enhance', { 'id': id, 'iati_activity_id': activity['id'] }) }}'>{{ activity['name'] }}</a></li>
+            <li><a href='{{ path('oag_activity_enhance', { 'id': id, 'iatiActivityId': activity['id'] }) }}'>{{ activity['name'] }}</a></li>
             <ul>
                 {% for sector in activity['sectors'] %}
                     <li>{{ sector['description'] }}</li>
