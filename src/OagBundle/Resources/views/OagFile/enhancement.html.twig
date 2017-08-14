@@ -10,7 +10,13 @@
     {% if sectors|length > 0 %}
         {{ include('OagBundle::OagFile/sectors_table.html.twig', { 'sectors': sectors }) }}
     {% else %}
-    <h2>No sectors associated</h2>
+        <h2>No sectors associated</h2>
+    {% endif %}
+
+    {% if geolocations|length > 0 %}
+        {{ include('OagBundle::OagFile/geolocations_table.html.twig', { 'geolocations': geolocations }) }}
+    {% else %}
+        <h2>No Geolocations associated</h2>
     {% endif %}
     <div>
         <a href='{{ path('oag_oagfile_classify', { 'id': id }) }}'>{% if sectors|length > 0 %}Re-{% endif %}Classify</a>
