@@ -12,6 +12,19 @@ class ActivityService extends AbstractService {
 
     const LIBXML_OPTIONS = LIBXML_BIGLINES & LIBXML_PARSEHUGE;
 
+    public function load($oagFile) {
+        # build path
+        $path = $this->getContainer()->getParameter('oagfiles_directory');
+        $path .= '/' . $oagFile->getDocumentName();
+
+        # load raw XML
+        $xml = file_get_contents($path);
+
+        # parse result
+        $root = $this->parseXML($xml);
+        return $root;
+    }
+
     public function parseXML($string) {
         // helper function to allow for centralised changing of libxml options
         // where appropriate
@@ -54,6 +67,15 @@ class ActivityService extends AbstractService {
 
     public function getActivityId($activity) {
         return (string) $activity->xpath('./iati-identifier')[0];
+    }
+
+    public function getActivityById($root, $id) {
+        foreach ($this->getActivities($root) as $activity) {
+            if ($this->getActivityId($activity) === $id) {
+                return $activity;
+            }
+        }
+        return NULL;
     }
 
     public function getActivityTitle($activity) {

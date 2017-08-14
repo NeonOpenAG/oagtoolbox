@@ -170,12 +170,12 @@ class ClassifyController extends Controller {
      */
     public function activityAction(Request $request, OagFile $file) {
         // Load XML document
-        $path = $this->getParameter('oagfiles_directory') . '/' . $file->getDocumentName();
-        $xml = file_get_contents($path);
-        $root = $srvActivity->parseXML($xml);
+        $root = $srvActivity->load($file);
+
         // Extract each activity
         $srvActivities = $this->get(ActivityService::class);
         $activities = $srvActivities->summariseToArray($root);
+
         // Render them
         return array('activities' => $activities);
     }
@@ -223,9 +223,7 @@ class ClassifyController extends Controller {
         $classifier = $this->get(Classifier::class);
         $srvActivity = $this->get(ActivityService::class);
 
-        $path = $this->getParameter('oagfiles_directory') . '/' . $file->getDocumentName();
-        $xml = file_get_contents($path);
-        $root = $srvActivity->parseXML($xml);
+        $root = $srvActivity->load($file);
 
         $response = $classifier->processXML($xml);
         $allNewSectors = $classifier->extractSectors($response); // suggested

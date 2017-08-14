@@ -34,10 +34,7 @@ class OagFileController extends Controller
         $data['name'] = $file->getDocumentName();
         $data['mimetype'] = $file->getMimeType();
 
-        $path = $this->getParameter('oagxml_directory') . '/' . $file->getDocumentName();
-        $xml = file_get_contents($path);
-
-        $root = $srvActivity->parseXML($xml);
+        $root = $srvActivity->load($file);
         $srvActivities = $this->get(ActivityService::class);
         $activities = $srvActivities->summariseToArray($root);
 
