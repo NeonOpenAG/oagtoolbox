@@ -9,6 +9,8 @@ use OagBundle\Service\Geocoder;
 use OagBundle\Entity\Code;
 use OagBundle\Entity\Sector;
 use OagBundle\Entity\Geolocation;
+use OagBundle\Service\OagFileService;
+use OagBundle\Service\Cove;
 use OagBundle\Service\TextExtractor\TextifyService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -57,9 +59,48 @@ class OagFileController extends Controller
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
     public function sourceAction(Request $request, OagFile $file) {
-        return $this->render('OagBundle:OagFile:source.html.twig', array(
-            // ...
-        ));
+        $cove = $this->get(Cove::class);
+        $srvOagFile = $this->get(OagFileService::class);
+
+        $this->get('logger')->debug(sprintf('Processing %s using CoVE', $file->getDocumentName()));
+        // TODO - for bigger files we might need send as Uri
+        $path = $this->getParameter('oagfiles_directory') . '/' . $file->getDocumentName();
+        $contents = file_get_contents($path);
+        $json = $cove->processString($contents);
+
+        $xml = $json['xml'];
+        $xmldir = $this->getParameter('oagxml_directory');
+        if (!is_dir($xmldir)) {
+            mkdir($xmldir, 0755, true);
+        }
+        $filename = $srvOagFile->getXMLFileName($file);
+        $xmlfile = $xmldir . '/' . $filename;
+        file_put_contents($xmlfile, $xml);
+
+        $oagFile = $this->getDoctrine()->getRepository(OagFile::class)->findOneByDocumentName($filename);
+        if (!$oagFile) {
+            $oagFile = new OagFile();
+            $oagFile->setDocumentName($filename);
+            $oagFile->setFileType(OagFile::OAGFILE_IATI_DOCUMENT);
+            $oagFile->setMimeType('application/xml');
+            $this->get('logger')->debug('Creating new OagFile ' . $filename);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($oagFile);
+            $em->flush();
+        }
+
+        $err = $json['err'] ?? [];
+        $status = $json['status'] ?? '';
+
+        $pretty_json = json_encode($json, JSON_PRETTY_PRINT);
+        return array(
+            'name' => $file->getDocumentName(),
+            'xml_path' => $xmlfile,
+            'xml_filename' => basename($xmlfile),
+            'err' => array_filter($err),
+            'status' => $status,
+            'id' => $file->getId(),
+        );
     }
 
     /**
