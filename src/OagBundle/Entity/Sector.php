@@ -36,6 +36,13 @@ class Sector {
     private $code;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="activityId", type="string", nullable=TRUE)
+     */
+    private $activityId;
+
+    /**
      * Get id
      *
      * @return int
@@ -72,6 +79,14 @@ class Sector {
 
     public function setCode(Code $code) {
         $this->code = $code;
+    }
+
+    public function getActivityId() {
+        return $this->activityId;
+    }
+
+    public function setActivityId($id) {
+        $this->activityId = $id;
     }
 
 }
