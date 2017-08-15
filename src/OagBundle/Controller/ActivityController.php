@@ -8,7 +8,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use OagBundle\Entity\OagFile;
+use OagBundle\Entity\Sector;
 use OagBundle\Service\ActivityService;
 
 /**
@@ -26,6 +28,7 @@ class ActivityController extends Controller
      */
     public function enhanceAction(Request $request, OagFile $file, $iatiActivityId) {
         $srvActivity = $this->get(ActivityService::class);
+        $sectorrepo = $this->container->get('doctrine')->getRepository(Sector::class);
 
         # find activity
         $root = $srvActivity->load($file);
@@ -56,7 +59,8 @@ class ActivityController extends Controller
             'expanded' => true,
             'multiple' => true,
             'choices' => array_reduce($suggested, function ($result, $item) {
-                $result[$item->getCode()] = $item->getId();
+                $label = $item->getCode()->getDescription();
+                $result[$label] = $item->getId();
                 return $result;
             }, array())
         ));
@@ -71,14 +75,49 @@ class ActivityController extends Controller
                 'multiple' => true,
                 'label' => $name,
                 'choices' => array_reduce($sectors->toArray(), function ($result, $item) {
-                    $result[$item->getCode()] = $item->getId();
+                    $label = $item->getCode()->getDescription();
+                    $result[$label] = $item->getId();
                     return $result;
                 }, array())
             ));
         }
 
+        $formBuilder->add('submit', SubmitType::class, array(
+            'label' => 'Merge'
+        ));
+
+        $form = $formBuilder->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isValid() && $form->isSubmitted()) {
+            $data = $form->getData();
+
+            foreach ($current as $sector) {
+                // has a pre-existing one been removed?
+                if (!in_array($sector['code'], $data['current'])) {
+                    $srvActivity->removeActivitySector($activity, $sector['code'], $sector['vocabulary']);
+                }
+            }
+
+            // everything else is to be added
+            $toAdd = $data['suggested'];
+            foreach ($file->getEnhancingDocuments() as $otherFile) {
+                $id = $otherFile->getId();
+                $toAdd = array_merge($toAdd, $data["enhanced_$id"]);
+            }
+
+            foreach ($toAdd as $sectorId) {
+                $sector = $sectorrepo->findOneById($sectorId);
+                $code = $sector->getCode()->getCode();
+                $description = $sector->getCode()->getDescription();
+                $srvActivity->addActivitySector($activity, $code, $description);
+            }
+
+            dump($activity->asXML());
+        }
+
         return array(
-            'form' => $formBuilder->getForm()->createView()
+            'form' => $form->createView()
         );
     }
 
