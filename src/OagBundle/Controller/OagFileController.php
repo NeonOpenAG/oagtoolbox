@@ -85,20 +85,72 @@ class OagFileController extends Controller
     }
 
     /**
-     * @Route("/classify/{id}")
+     * @Route("/classify/xml/{id}")
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
-    public function classifyAction(Request $request, OagFile $file) {
+    public function classifyXmlAction(Request $request, OagFile $file) {
         $srvClassifier = $this->get(Classifier::class);
-        $json = $srvClassifier->processOagFile($file);
+
+        $path = $this->container->getParameter('oagfiles_directory') . '/' . $file->getDocumentName();
+        $rawXml = file_get_contents($path);
+
+        $json = $srvClassifier->processXML($rawXml); 
 
         $file->clearSectors();
+
+        // TODO if $row['status'] == 0
+        foreach ($json['data'] as $part) {
+            foreach ($part as $activityId => $sectors) {
+                $this->persistSectors($sectors, $file, $activityId);
+            }
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($file);
+        $em->flush();
+
+        return ['name' => $file->getDocumentName(), 'sectors' => $json['data']];
+    }
+
+    /**
+     * @Route("/classify/text/{id}")
+     * @ParamConverter("file", class="OagBundle:OagFile")
+     */
+    public function classifyTextAction(Request $request, OagFile $file) {
+        $srvClassifier = $this->get(Classifier::class);
+        $srvTextify = $this->get(TextifyService::class);
+
+        $rawText = $srvTextify->stripOagFile($file);
+
+        if ($rawText === false) {
+            // textifier failed
+            throw \RuntimeException('Unsupported file type to strip text from');
+        }
+
+        $json = $srvClassifier->processString($rawText);
+        dump($json);
+
+        $file->clearSectors();
+
+        // TODO if $row['status'] == 0
+        $this->persistSectors($json['data'], $file);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($file);
+        $em->flush();
+
+        return ['name' => $file->getDocumentName(), 'sectors' => $json['data']];
+    }
+
+    /**
+     * Persists Oag sectors from API response to database.
+     */
+    private function persistSectors($sectors, $file, $activityId = null) {
         $em = $this->getDoctrine()->getManager();
         $coderepo = $this->container->get('doctrine')->getRepository(Code::class);
         $sectorrepo = $this->container->get('doctrine')->getRepository(Sector::class);
 
-        // TODO if $row['status'] == 0
-        foreach ($json['data'] as $row) {
+        foreach ($sectors as $row) {
             $code = $row['code'];
             $description = $row['description'];
             $confidence = $row['confidence'];
@@ -114,21 +166,16 @@ class OagFileController extends Controller
                 $em->persist($_code);
             }
 
-            $sector = $sectorrepo->findOneByCode($_code);
-            if ($sector && $file->hasSector($sector)) {
-                $sector->setConfidence($confidence);
-            } else {
-                $sector = new \OagBundle\Entity\Sector();
-                $sector->setCode($_code);
-                $sector->setConfidence($confidence);
+            $sector = new \OagBundle\Entity\Sector();
+            $sector->setCode($_code);
+            $sector->setConfidence($confidence);
+            if (!is_null($activityId)) {
+                $sector->setActivityId($activityId);
             }
+
             $em->persist($sector);
             $file->addSector($sector);
         }
-        $em->persist($file);
-        $em->flush();
-
-        return ['name' => $file->getDocumentName(), 'sectors' => $json['data']];
     }
 
     /**
