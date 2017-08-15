@@ -11,6 +11,12 @@
     <body>
         <h1>{% block h1 %}OAG Toolbox{% endblock %}</h1>
 
+        <div id="menu" style='padding-bottom: 30px'>
+            {% block menu %}
+                <a href="#">Home</a>
+            {% endblock %}
+        </div>
+
         {% for label, messages in app.flashes %}
             {% for message in messages %}
                 <div class="flash-{{ label }}">
@@ -18,12 +24,6 @@
                 </div>
             {% endfor %}
         {% endfor %}
-
-        <div id="menu" style='padding-bottom: 30px'>
-            {% block menu %}
-                <a href="#">Home</a>
-            {% endblock %}
-        </div>
 
         <div id="content">
         {% block body %}{% endblock %}

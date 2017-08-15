@@ -9,3 +9,42 @@ body {
     display: inline-block;
     color: green;
 }
+
+.hidden-row {
+    display: none;
+}
+
+.upload-form div {
+    margin-bottom: 15px;
+}
+
+.upload-form input {
+    margin-top: 10px;
+}
+
+.upload-form button {
+    margin-top: 10px;
+}
+
+.upload-form {
+    padding: 0px 10px 0px 10px;
+    margin: 15px 0px 0px 0px;
+    display: inline-block;
+    border: 2px groove;
+    width: 300px;
+}
+
+.flash-info {
+    background: green;
+    font-weight: bold;
+    color: white;
+    font-size: 110%;
+    padding: 3px;
+}
+.flash-error {
+    background: red;
+    font-weight: bold;
+    color: white;
+    font-size: 110%;
+    padding: 3px;
+}

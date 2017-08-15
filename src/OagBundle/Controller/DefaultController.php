@@ -23,7 +23,7 @@ class DefaultController extends Controller {
      * @Route("/")
      * @Template
      */
-    public function indexAction() {
+    public function indexAction(Request $request) {
         $repository = $this->getDoctrine()->getRepository(OagFile::class);
         $srvOagFile = $this->get(OagFileService::class);
 
@@ -47,10 +47,43 @@ class DefaultController extends Controller {
         // Fetch enhancing documents
         $enhancingDocs = $this->loadOagFileByType(OagFile::OAGFILE_IATI_ENHANCEMENT_DOCUMENT);
 
+        $em = $this->getDoctrine()->getManager();
+        $oagfile = new OagFile();
+        $oagfile->setFileType(OagFile::OAGFILE_IATI_SOURCE_DOCUMENT);
+        $sourceUploadForm = $this->createForm(OagFileType::class, $oagfile);
+        $sourceUploadForm->add('Upload', SubmitType::class, array(
+            'attr' => array('class' => 'submit'),
+        ));
+
+        // TODO Do something if the form is not valid
+        if ($request) {
+            $sourceUploadForm->handleRequest($request);
+
+            // TODO Check for too big files.
+            if ($sourceUploadForm->isSubmitted() && $sourceUploadForm->isValid()) {
+                $file = $oagfile->getDocumentName();
+                $tmpFile = $oagfile->getDocumentName();
+                $oagfile->setMimeType(mime_content_type($tmpFile->getPathname()));
+
+                $filename = $file->getClientOriginalName();
+
+                $file->move(
+                    $this->getParameter('oagfiles_directory'), $filename
+                );
+
+                $oagfile->setDocumentName($filename);
+                $em->persist($oagfile);
+                $em->flush();
+
+                return $this->redirect($this->generateUrl('oag_oagfile_source', ['id' => $oagfile->getId()]));
+            }
+        }
+
         $sourcedocs = $data = [
             'iatidocs' => $iatidocs,
             'sourceDocs' => $sourceDocs,
             'enhancingDocs' => $enhancingDocs,
+            'source_upload_form' => $sourceUploadForm->createView(),
         ];
         return $data;
     }

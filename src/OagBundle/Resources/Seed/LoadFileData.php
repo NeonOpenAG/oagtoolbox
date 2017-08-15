@@ -39,9 +39,9 @@ class LoadFileData implements FixtureInterface {
         $em->persist($file);
 
         $file = new OagFile();
-        $file->setDocumentName('basic_iati_unordered_valid.csv');
+        $file->setDocumentName('before_enrichment_activities.xml');
         $file->setFileType(OagFile::OAGFILE_IATI_SOURCE_DOCUMENT);
-        $file->setMimeType('text/plain');
+        $file->setMimeType('application/xml');
         $em->persist($file);
 
         $em->flush();

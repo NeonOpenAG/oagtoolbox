@@ -41,6 +41,20 @@
                 <a href="{{ path('oag_oagfile_source', { 'id': sourceDoc['id'] }) }}">{{ sourceDoc['name'] }}</a>
             </li>
         {% endfor %}
+        <div class="upload-form">
+            <h3>Import a new source document</h3>
+            <div>The imported document will be automatically processed with CoVE and added to the IATI document list above.</div>
+            <div>Currently only XML is supported.</div>
+            <div>
+                {{ form_start(source_upload_form) }}
+                {{ form_label(source_upload_form.documentName) }}
+                {{ form_errors(source_upload_form.documentName) }}
+                {{ form_widget(source_upload_form.documentName) }}
+
+                {{ form_widget(source_upload_form.fileType, { 'attr': {'class': 'hidden-row'} }) }}
+                {{ form_end(source_upload_form) }}
+            </div>
+        </div>
     </ul>
 
     <h2>Enhancement Documents</h2>
