@@ -7,6 +7,8 @@ use OagBundle\Entity\OagFile;
 use RuntimeException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("/dportal")
@@ -14,9 +16,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class DPortalController extends Controller {
 
     /**
-     * @Route("/{fileid}", requirements={"fileid": "\d+"})
+     * @Route("/{id}")
+     * @ParamConverter("file", class="OagBundle:OagFile")
      */
-    public function indexAction($fileid) {
+    public function indexAction(Request $request, OagFile $file) {
         $portal = $this->get(DPortal::class);
 
         $avaiable = false;
@@ -26,14 +29,7 @@ class DPortalController extends Controller {
             throw new RuntimeException('DPortal is not available in application scope');
         }
 
-        $repository = $this->getDoctrine()->getRepository(OagFile::class);
-        $oagfile = $repository->find($fileid);
-
-        if (!$oagfile) {
-            // TODO throw 404
-            throw new RuntimeException('OAG file not found: ' . $fileid);
-        }
-        $portal->visualise($oagfile);
+        $portal->visualise($file);
 
         return $this->redirect($this->getParameter('oag')['dportal']['uri']);
     }
