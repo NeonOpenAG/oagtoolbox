@@ -3,12 +3,12 @@
 namespace OagBundle\Controller;
 
 use OagBundle\Entity\OagFile;
+use OagBundle\Entity\Sector;
+use OagBundle\Entity\Geolocation;
+use OagBundle\Entity\SuggestedSector;
 use OagBundle\Service\ActivityService;
 use OagBundle\Service\Classifier;
 use OagBundle\Service\Geocoder;
-use OagBundle\Entity\Code;
-use OagBundle\Entity\Sector;
-use OagBundle\Entity\Geolocation;
 use OagBundle\Service\OagFileService;
 use OagBundle\Service\Cove;
 use OagBundle\Service\TextExtractor\TextifyService;
@@ -116,7 +116,7 @@ class OagFileController extends Controller
         $data['text'] = $srvActivity->stripOagFile($file);
 
         // Now loop through sectors flattening them (so we can re-use the xectors table template)
-        $sectors = $file->getSectors();
+        $sectors = $file->getSuggestedSectors();
         $_sectors = [];
         foreach ($sectors as $sector) {
             $_sectors[] = [
@@ -199,34 +199,49 @@ class OagFileController extends Controller
      */
     private function persistSectors($sectors, $file, $activityId = null) {
         $em = $this->getDoctrine()->getManager();
-        $coderepo = $this->container->get('doctrine')->getRepository(Code::class);
-        $sectorrepo = $this->container->get('doctrine')->getRepository(Sector::class);
+        $sectorRepo = $this->container->get('doctrine')->getRepository(Sector::class);
 
         foreach ($sectors as $row) {
             $code = $row['code'];
             $description = $row['description'];
             $confidence = $row['confidence'];
 
+            $vocab = $this->getParameter('classifier')['vocabulary'];
+            $vocabUri = $this->getParameter('classifier')['vocabulary_uri'];
+
+            $findBy = array(
+                'code' => $code,
+                'vocabulary' => $vocab
+            );
+
+            // if there is a vocab uri in the config, use it, if not, don't
+            if (strlen($vocabUri) > 0) {
+                $findBy['vocabulary_uri'] = $vocabUri;
+            } else {
+                $vocabUri = null;
+            }
+
             // Check that the code exists in the system
-            $_code = $coderepo->findOneByCode($code);
-            if (!$_code) {
+            $sector = $sectorRepo->findOneBy($findBy);
+            if (!$sector) {
                 $this->container->get('logger')
                     ->info(sprintf('Creating new code %s (%s)', $code, $description));
-                $_code = new Code();
-                $_code->setCode($code);
-                $_code->setDescription($description);
-                $em->persist($_code);
+                $sector = new Sector();
+                $sector->setCode($code);
+                $sector->setDescription($description);
+                $sector->setVocabulary($vocab, $vocabUri);
+                $em->persist($sector);
             }
 
-            $sector = new \OagBundle\Entity\Sector();
-            $sector->setCode($_code);
-            $sector->setConfidence($confidence);
+            $sugSector = new \OagBundle\Entity\SuggestedSector();
+            $sugSector->setSector($sector);
+            $sugSector->setConfidence($confidence);
             if (!is_null($activityId)) {
-                $sector->setActivityId($activityId);
+                $sugSector->setActivityId($activityId);
             }
 
-            $em->persist($sector);
-            $file->addSector($sector);
+            $em->persist($sugSector);
+            $file->addSuggestedSector($sugSector);
         }
     }
 

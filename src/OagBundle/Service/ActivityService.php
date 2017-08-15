@@ -107,13 +107,16 @@ class ActivityService extends AbstractService {
             $description = (string) $currentSector->xpath('./narrative[1]')[0];
             $code = (string) $currentSector['code'];
             $vocabulary = (string) $currentSector['vocabulary'];
+            $vocabularyUri = (string) $currentSector['vocabulary-uri'] ?: null;
 
             $currentSectors[] = array(
                 'description' => $description,
                 'code' => $code,
-                'vocabulary' => $vocabulary
+                'vocabulary' => $vocabulary,
+                'vocabulary-uri' => $vocabularyUri,
             );
         }
+
         return $currentSectors;
     }
 

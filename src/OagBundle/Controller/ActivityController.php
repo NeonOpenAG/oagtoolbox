@@ -2,6 +2,9 @@
 
 namespace OagBundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use OagBundle\Entity\Change;
+use OagBundle\Entity\Sector;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -10,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use OagBundle\Entity\OagFile;
-use OagBundle\Entity\Sector;
+use OagBundle\Entity\SuggestedSector;
 use OagBundle\Service\ActivityService;
 
 /**
@@ -28,7 +31,7 @@ class ActivityController extends Controller
      */
     public function enhanceAction(Request $request, OagFile $file, $iatiActivityId) {
         $srvActivity = $this->get(ActivityService::class);
-        $sectorrepo = $this->container->get('doctrine')->getRepository(Sector::class);
+        $sugSectorRepo = $this->container->get('doctrine')->getRepository(SuggestedSector::class);
 
         # find activity
         $root = $srvActivity->load($file);
@@ -48,12 +51,12 @@ class ActivityController extends Controller
 
         # suggested sectors
         $suggested = array();
-        foreach ($file->getSectors() as $sector) {
+        foreach ($file->getSuggestedSectors() as $sugSector) {
             # if it's not from our activity, ignore it
-            if ($sector->getId() !== $iatiActivityId) {
+            if ($sugSector->getId() !== $iatiActivityId) {
                 continue;
             }
-            $suggested[] = $sector;
+            $suggested[] = $sugSector;
         }
         $formBuilder->add('suggested', ChoiceType::class, array(
             'expanded' => true,
@@ -67,7 +70,7 @@ class ActivityController extends Controller
 
         foreach ($file->getEnhancingDocuments() as $otherFile) {
             $name = $otherFile->getDocumentName();
-            $sectors = $otherFile->getSectors();
+            $sectors = $otherFile->getSuggestedSectors();
             $id = $otherFile->getId();
 
             $formBuilder->add("enhanced_$id", ChoiceType::class, array(
@@ -75,7 +78,7 @@ class ActivityController extends Controller
                 'multiple' => true,
                 'label' => $name,
                 'choices' => array_reduce($sectors->toArray(), function ($result, $item) {
-                    $label = $item->getCode()->getDescription();
+                    $label = $item->getSector()->getDescription();
                     $result[$label] = $item->getId();
                     return $result;
                 }, array())
@@ -92,28 +95,53 @@ class ActivityController extends Controller
         if ($form->isValid() && $form->isSubmitted()) {
             $data = $form->getData();
 
-            foreach ($current as $sector) {
+            $toRemove = array();
+            foreach ($current as $sugSector) {
                 // has a pre-existing one been removed?
-                if (!in_array($sector['code'], $data['current'])) {
-                    $srvActivity->removeActivitySector($activity, $sector['code'], $sector['vocabulary']);
+                if (!in_array($sugSector['code'], $data['current'])) {
+                    $toRemove[] = $sugSector;
+
+                    $sectorCode = $sugSector['code'];
+                    $sectorDescription = $sugSector['code'];
+                    $sectorVocab = $sugSector['vocabulary'];
+                    $sectorVocabUri = $sugSector['vocabulary-uri'];
+
+                    $dbSector = new Sector();
+                    $dbSector->setCode($sectorCode);
+                    $dbSector->setVocabulary($sectorVocab, $sectorVocabUri);
+                    $dbSector->setDescription($sectorDescription);
+
+                    $srvActivity->removeActivitySector($activity, $sectorCode, $sectorVocab);
                 }
             }
 
             // everything else is to be added
-            $toAdd = $data['suggested'];
+            $toAddIds = $data['suggested'];
             foreach ($file->getEnhancingDocuments() as $otherFile) {
                 $id = $otherFile->getId();
-                $toAdd = array_merge($toAdd, $data["enhanced_$id"]);
+                $toAdd = array_merge($toAddIds, $data["enhanced_$id"]);
             }
 
-            foreach ($toAdd as $sectorId) {
-                $sector = $sectorrepo->findOneById($sectorId);
-                $code = $sector->getCode()->getCode();
-                $description = $sector->getCode()->getDescription();
+            $toAdd = array();
+            foreach ($toAddIds as $sectorId) {
+                $sugSector = $sugSectorRepo->findOneById($sectorId);
+                $sector = $sugSector->getSector();
+                $toAdd[] = $sector;
+
+                $code = $sector->getCode();
+                $description = $sector->getDescription();
                 $srvActivity->addActivitySector($activity, $code, $description);
             }
 
-            dump($activity->asXML());
+            $stagedChange = new Change();
+            $stagedChange->setAddedSectors(new ArrayCollection($toAdd));
+            $stagedChange->setRemovedSectors(new ArrayCollection($toRemove));
+            $stagedChange->setActivityId($iatiActivityId);
+            $stagedChange->setTimestamp(new \DateTime("now"));
+            $stagedChange->setFile($file);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($stagedChange);
         }
 
         return array(

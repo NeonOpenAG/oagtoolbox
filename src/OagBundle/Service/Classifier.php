@@ -7,8 +7,8 @@ use OagBundle\Service\TextExtractor\ApplicationPdf;
 use OagBundle\Service\TextExtractor\ApplicationXml;
 use OagBundle\Service\TextExtractor\TextPlain;
 use OagBundle\Entity\OagFile;
-use OagBundle\Entity\Code;
 use OagBundle\Entity\Sector;
+use OagBundle\Entity\SuggestedSector;
 use Symfony\Component\Cache\Simple\FilesystemCache;
 
 class Classifier extends AbstractOagService {

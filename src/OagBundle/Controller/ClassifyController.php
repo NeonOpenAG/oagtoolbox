@@ -7,8 +7,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use OagBundle\Service\Classifier;
-use OagBundle\Entity\Code;
 use OagBundle\Entity\Sector;
+use OagBundle\Entity\SuggestedSector;
 use OagBundle\Service\ActivityService;
 use Symfony\Component\HttpFoundation\Request;
 use OagBundle\Entity\OagFile;
@@ -118,8 +118,8 @@ class ClassifyController extends Controller {
 
         // Clear sectors from the file
         $oagfile->clearSectors();
-        $coderepo = $this->container->get('doctrine')->getRepository(Code::class);
-        $sectorrepo = $this->container->get('doctrine')->getRepository(Sector::class);
+        $coderepo = $this->container->get('doctrine')->getRepository(Sector::class);
+        $sectorrepo = $this->container->get('doctrine')->getRepository(SuggestedSector::class);
 
         // TODO if $row['status'] == 0
         foreach ($json['data'] as $row) {
@@ -132,7 +132,7 @@ class ClassifyController extends Controller {
             if (!$_code) {
                 $this->container->get('logger')
                     ->info(sprintf('Creating new code %s (%s)', $code, $description));
-                $_code = new Code();
+                $_code = new Sector();
                 $_code->setCode($code);
                 $_code->setDescription($description);
                 $em->persist($_code);
@@ -142,8 +142,8 @@ class ClassifyController extends Controller {
             if ($sector && $oagfile->hasSector($sector)) {
                 $sector->setConfidence($confidence);
             } else {
-                $sector = new \OagBundle\Entity\Sector();
-                $sector->setCode($_code);
+                $sector = new \OagBundle\Entity\SuggestedSector();
+                $sector->setSector($_code);
                 $sector->setConfidence($confidence);
             }
             $em->persist($sector);

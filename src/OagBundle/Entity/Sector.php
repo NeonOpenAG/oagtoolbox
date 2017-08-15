@@ -3,12 +3,12 @@
 namespace OagBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use OagBundle\Entity\Code;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Sector
+ * Code
  *
- * @ORM\Table(name="activity")
+ * @ORM\Table(name="sector")
  * @ORM\Entity(repositoryClass="OagBundle\Repository\SectorRepository")
  */
 class Sector {
@@ -25,22 +25,34 @@ class Sector {
     /**
      * @var string
      *
-     * @ORM\Column(name="confidence", type="decimal", precision=17, scale=14)
-     */
-    private $confidence;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="\OagBundle\Entity\Code", inversedBy="activities")
-     * @ORM\JoinColumn(name="sector_id", referencedColumnName="id")
+     * @ORM\Column(name="code", type="string", length=32, unique=true)
      */
     private $code;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="activityId", type="string", nullable=TRUE)
+     * @ORM\Column(name="description", type="string", length=255)
      */
-    private $activityId;
+    private $description;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="vocabulary", type="string", nullable=FALSE)
+     */
+    private $vocabulary;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="vocabulary_uri", type="string", nullable=TRUE)
+     */
+    private $vocabulary_uri;
+
+    public function __construct() {
+        $this->oagFile = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -52,41 +64,72 @@ class Sector {
     }
 
     /**
-     * Set confidence
+     * Set code
      *
-     * @param string $confidence
+     * @param string $code
      *
      * @return Sector
      */
-    public function setConfidence($confidence) {
-        $this->confidence = $confidence;
+    public function setCode($code) {
+        $this->code = $code;
 
         return $this;
     }
 
     /**
-     * Get confidence
+     * Get code
      *
      * @return string
      */
-    public function getConfidence() {
-        return $this->confidence;
-    }
-
     public function getCode() {
         return $this->code;
     }
 
-    public function setCode(Code $code) {
-        $this->code = $code;
+    /**
+     * Set description
+     *
+     * @param string $description
+     *
+     * @return Sector
+     */
+    public function setDescription($description) {
+        $this->description = $description;
+
+        return $this;
     }
 
-    public function getActivityId() {
-        return $this->activityId;
+    /**
+     * Get description
+     *
+     * @return string
+     */
+    public function getDescription() {
+        return $this->description;
     }
 
-    public function setActivityId($id) {
-        $this->activityId = $id;
+    /**
+     * Sets the vocabulary and conditionally vocabulary_uri if invalid.
+     *
+     * @param string $vocab
+     * @param string $vocabUri
+     */
+    public function setVocabulary($vocab, $vocabUri = null) {
+        $this->vocabulary = $vocab;
+        if($vocab === "98" || $vocab === "99") {
+            if(is_null($vocabUri)) {
+                throw new \Exception("Invalid vocabUri provided.");
+            }
+
+            $this->vocabulary_uri = $vocabUri;
+        }
+    }
+
+    public function getVocabulary() {
+        return $this->vocabulary;
+    }
+
+    public function getVocabularyUri() {
+        return $this->vocabulary_uri;
     }
 
 }
