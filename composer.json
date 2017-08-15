@@ -59,7 +59,8 @@
             "php bin/console doctrine:schema:create",
             "php bin/console doctrine:database:create --env=test",
             "php bin/console doctrine:schema:create --env=test",
-            "php bin/console -n doctrine:fixtures:load --fixtures=src/OagBundle/Resources/Seed/LoadFileData.php"
+            "php bin/console -n doctrine:fixtures:load --fixtures=src/OagBundle/Resources/Seed/LoadFileData.php",
+            "php bin/console -n doctrine:fixtures:load --env=test --fixtures=src/OagBundle/Resources/Seed/LoadFileData.php"
         ],
         "post-update-cmd": [
             "@symfony-scripts"
