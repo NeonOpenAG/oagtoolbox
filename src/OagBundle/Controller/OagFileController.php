@@ -9,6 +9,8 @@ use OagBundle\Service\Geocoder;
 use OagBundle\Entity\Code;
 use OagBundle\Entity\Sector;
 use OagBundle\Entity\Geolocation;
+use OagBundle\Service\OagFileService;
+use OagBundle\Service\Cove;
 use OagBundle\Service\TextExtractor\TextifyService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -57,9 +59,51 @@ class OagFileController extends Controller
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
     public function sourceAction(Request $request, OagFile $file) {
-        return $this->render('OagBundle:OagFile:source.html.twig', array(
-            // ...
-        ));
+        $cove = $this->get(Cove::class);
+        $srvOagFile = $this->get(OagFileService::class);
+        $srvActivity = $this->get(ActivityService::class);
+
+        $this->get('logger')->debug(sprintf('Processing %s using CoVE', $file->getDocumentName()));
+        // TODO - for bigger files we might need send as Uri
+        $path = $this->getParameter('oagfiles_directory') . '/' . $file->getDocumentName();
+        $contents = file_get_contents($path);
+        $json = $cove->processString($contents);
+
+        $err = array_filter($json['err'] ?? []);
+        $status = $json['status'] ?? '';
+
+        // TODO Check status
+        foreach ($err as $line) {
+            $this->get('session')->getFlashBag()->add('error', $line);
+        }
+
+        $xml = $json['xml'];
+        if ($srvActivity->parseXML($xml)) {
+            $xmldir = $this->getParameter('oagxml_directory');
+            if (!is_dir($xmldir)) {
+                mkdir($xmldir, 0755, true);
+            }
+            $filename = $srvOagFile->getXMLFileName($file);
+            $xmlfile = $xmldir . '/' . $filename;
+            file_put_contents($xmlfile, $xml);
+
+            $oagFile = $this->getDoctrine()->getRepository(OagFile::class)->findOneByDocumentName($filename);
+            if (!$oagFile) {
+                $oagFile = new OagFile();
+                $this->get('logger')->debug('Creating new OagFile ' . $filename);
+            }
+            $oagFile->setDocumentName($filename);
+            $oagFile->setFileType(OagFile::OAGFILE_IATI_DOCUMENT);
+            $oagFile->setMimeType('application/xml');
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($oagFile);
+            $em->flush();
+            $this->get('session')->getFlashBag()->add('info', 'IATI File created/Updated.');
+        } else {
+            $this->get('session')->getFlashBag()->add('error', 'CoVE returned data that was not XML.');
+        }
+
+        return $this->redirectToRoute('oag_default_index');
     }
 
     /**

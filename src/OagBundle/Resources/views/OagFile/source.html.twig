@@ -1,13 +1,20 @@
 {% extends 'OagBundle::Default/index.html.twig' %}
 
-{% block title %}OagBundle:OagFile:source{% endblock %}
+{% block title %}Source file: {{ name }}{% endblock %}
+
+{% block h1 %}{{ name }}{% endblock %}
 
 {% block body %}
-    <h1>Welcome to the OagFile:source page</h1>
+    {% if err | length > 0 %}
+        <h2>Validation Errors</h2>
+        <ul>
+            {% for error in err %}
+                <li>{{ error }}</li>
+                {% endfor %}
+        </ul>
+    {% else %}
+        <h2>{{ name }} validated as a valid IATI Source</h2>
+        <div>A new IATI XML document called {{ xml_filename }} has been created for you.</div>
+    {% endif %}
 
-    <ul>
-        <li>Run source doc through cove</li>
-        <li>Create (overwrite?) IATI XML doc</li>
-        <li>Report results (Avtivity summary?) and Errors</li>
-    </ul>
 {% endblock %}
