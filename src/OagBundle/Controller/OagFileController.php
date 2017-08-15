@@ -83,22 +83,26 @@ class OagFileController extends Controller
             if (!is_dir($xmldir)) {
                 mkdir($xmldir, 0755, true);
             }
+
             $filename = $srvOagFile->getXMLFileName($file);
             $xmlfile = $xmldir . '/' . $filename;
-            file_put_contents($xmlfile, $xml);
-
-            $oagFile = $this->getDoctrine()->getRepository(OagFile::class)->findOneByDocumentName($filename);
-            if (!$oagFile) {
-                $oagFile = new OagFile();
-                $this->get('logger')->debug('Creating new OagFile ' . $filename);
+            if (!file_put_contents($xmlfile, $xml)) {
+                $this->get('session')->getFlashBag()->add('error', 'Unable to create XML file.');
+                $this->get('logger')->debug(sprintf('Unable to create XML file: %s', $xmlfile));
+                return $this->redirectToRoute('oag_default_index');
             }
-            $oagFile->setDocumentName($filename);
-            $oagFile->setFileType(OagFile::OAGFILE_IATI_DOCUMENT);
-            $oagFile->setMimeType('application/xml');
+            // else
+            if ($this->getParameter('unlink_files')) {
+                unlink($path);
+            }
+
+            $file->setDocumentName($filename);
+            $file->setFileType(OagFile::OAGFILE_IATI_DOCUMENT);
+            $file->setMimeType('application/xml');
             $em = $this->getDoctrine()->getManager();
-            $em->persist($oagFile);
+            $em->persist($file);
             $em->flush();
-            $this->get('session')->getFlashBag()->add('info', 'IATI File created/Updated.');
+            $this->get('session')->getFlashBag()->add('info', 'IATI File created/Updated\; ' . $xmlfile);
         } else {
             $this->get('session')->getFlashBag()->add('error', 'CoVE returned data that was not XML.');
         }
