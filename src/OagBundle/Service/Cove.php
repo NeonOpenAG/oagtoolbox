@@ -25,7 +25,6 @@ class Cove extends AbstractAutoService {
 
         $oag = $this->getContainer()->getParameter('oag');
         $cmd = $oag['cove']['cmd'];
-        $cmd = "docker run -i -e PROCESS_DATA=true openagdata/cove";
         $this->getContainer()->get('logger')->debug(
             sprintf('Command: %s', $cmd)
         );

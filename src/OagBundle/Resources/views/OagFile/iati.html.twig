@@ -6,11 +6,8 @@
 
 {% block menu %}
     {{ parent() }}
-    <a class='attach-enhacingdoc-link' href="#">Attach new file</a>
     |
-    <a class='save-xml-link' href="#">Save XML</a>
-    |
-    <a class='view-xml-link' href="#">View raw XML</a>
+    <a class='view-xml-link' href="{{ asset('xml')}}/{{ oagfiles_dir }}/{{ name }}">Raw XML</a>
 {% endblock %}
 
 {% block body %}

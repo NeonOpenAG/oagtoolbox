@@ -45,6 +45,11 @@ class OagFile {
     protected $sectors;
 
     /**
+     * @ORM\ManyToMany(targetEntity="OagBundle\Entity\Geolocation")
+     */
+    protected $geolocations;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="documentName", type="string", length=1024)
@@ -72,8 +77,9 @@ class OagFile {
 
     public function __construct() {
         $this->sectors = new ArrayCollection();
-        $this->iatiParents = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->enhancingDocuments = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->iatiParents = new ArrayCollection();
+        $this->enhancingDocuments = new ArrayCollection();
+        $this->geolocations = new ArrayCollection();
     }
 
     /**
@@ -162,6 +168,49 @@ class OagFile {
         if (!$this->hasSector($activity)) {
             $this->sectors->removeElement($activity);
         }
+    }
+
+    /**
+     * Get Geolocations
+     *
+     * @return string
+     */
+    public function getGeolocations() {
+        return $this->geolocations;
+    }
+
+    /**
+     * @param \OagBundle\Entity\Geolocation $geolocation
+     * @return bool
+     */
+    public function hasGeolocation(Geolocation $geolocation) {
+        return $this->getGeolocations()->contains($geolocation);
+    }
+
+    /**
+     * @param \OagBundle\Entity\Geolocation $geolocation
+     */
+    public function addGeolocation(Geolocation $geolocation) {
+        if (!$this->hasGeolocation($geolocation)) {
+            $this->geolocations->add($geolocation);
+        }
+    }
+
+    /**
+     * @param \OagBundle\Entity\Geolocation $geolocation
+     */
+    public function removeGeolocation(Geolocation $geolocation) {
+        if (!$this->hasGeolocation($geolocation)) {
+            $this->geolocations->removeElement($geolocation);
+        }
+    }
+
+    ///////////////////////////
+    /**
+     * Remove all sectors.
+     */
+    public function clearGeolocations() {
+        $this->geolocations->clear();
     }
 
     /**
