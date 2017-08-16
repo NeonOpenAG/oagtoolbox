@@ -249,6 +249,10 @@ class OagFileController extends Controller
 
         foreach ($sectors as $row) {
             $code = $row['code'];
+            if ($code === null) {
+                // We get a single array of nulls back if no match is found.
+                break;
+            }
             $description = $row['description'];
             $confidence = $row['confidence'];
 

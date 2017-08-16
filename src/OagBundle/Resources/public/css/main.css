@@ -5,9 +5,10 @@ body {
 }
 
 .associated-files .docname {
-    width: 100px;
+    margin-top: 5px;
+    width: 250px;
     display: inline-block;
-    color: green;
+    border-bottom: 1px dotted;
 }
 
 .hidden-row {
