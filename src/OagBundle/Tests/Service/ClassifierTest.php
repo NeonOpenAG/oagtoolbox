@@ -13,10 +13,10 @@ class ClassifierTest extends TestCase {
     $this->container = $kernel->getContainer();
   }
 
-  public function testGetTextFixtureData() {
+  public function testGetStringFixtureData() {
     $classifier = $this->container->get(Classifier::class);
     $classifier->setContainer($this->container);
-    $data = $classifier->getTextFixtureData();
+    $data = $classifier->getStringFixtureData();
 
     $json = json_decode($data, true);
 
