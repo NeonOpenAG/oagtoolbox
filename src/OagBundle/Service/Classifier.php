@@ -2,10 +2,9 @@
 
 namespace OagBundle\Service;
 
-use OagBundle\Service\TextExtractor\ApplicationOctetStream;
-use OagBundle\Service\TextExtractor\ApplicationPdf;
-use OagBundle\Service\TextExtractor\ApplicationXml;
-use OagBundle\Service\TextExtractor\TextPlain;
+use OagBundle\Service\TextExtractor\PDFExtractor;
+use OagBundle\Service\TextExtractor\RTFExtractor;
+use PhpOffice\PhpWord\IOFactory;
 use OagBundle\Entity\OagFile;
 use OagBundle\Entity\Sector;
 use OagBundle\Entity\SuggestedSector;
