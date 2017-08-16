@@ -180,7 +180,6 @@ class OagFileController extends Controller
         }
 
         $json = $srvClassifier->processString($rawText);
-        dump($json);
 
         $file->clearSectors();
 

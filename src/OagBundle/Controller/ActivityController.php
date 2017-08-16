@@ -54,7 +54,7 @@ class ActivityController extends Controller
         $suggested = array();
         foreach ($file->getSuggestedSectors() as $sugSector) {
             # if it's not from our activity, ignore it
-            if ($sugSector->getId() !== $iatiActivityId) {
+            if ($sugSector->getActivityId() !== $iatiActivityId) {
                 continue;
             }
             $suggested[] = $sugSector;
@@ -63,7 +63,7 @@ class ActivityController extends Controller
             'expanded' => true,
             'multiple' => true,
             'choices' => array_reduce($suggested, function ($result, $item) {
-                $label = $item->getCode()->getDescription();
+                $label = $item->getSector()->getDescription();
                 $result[$label] = $item->getId();
                 return $result;
             }, array())
@@ -146,7 +146,8 @@ class ActivityController extends Controller
         }
 
         return array(
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'id' => $file->getId()
         );
     }
 
