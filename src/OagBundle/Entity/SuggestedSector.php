@@ -30,7 +30,6 @@ class SuggestedSector {
 
     /**
      * @ORM\ManyToOne(targetEntity="\OagBundle\Entity\Sector")
-     * @ORM\JoinColumn(name="id", referencedColumnName="id")
      */
     private $sector;
 
