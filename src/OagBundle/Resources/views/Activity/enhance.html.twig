@@ -13,4 +13,10 @@
 
     <p>Submit merges to new XML and overwites the existing IATI XML document identified by route param ID.</p>
     <p>Any smart ideas about versioning welcome</p>
+
+    <p>
+        <a href='{{ path('oag_oagfile_classifyxml', { 'id': id  }) }}'>Classify</a>
+    </p>
+
+    {{ form(form) }}
 {% endblock %}

@@ -12,6 +12,15 @@ class ActivityService extends AbstractService {
 
     const LIBXML_OPTIONS = LIBXML_BIGLINES & LIBXML_PARSEHUGE;
 
+    public function load($oagFile) {
+        $srvOagFile = $this->getContainer()->get(OagFileService::class);
+
+        $contents = $srvOagFile->getContents($oagFile);
+        $root = $this->parseXML($contents);
+
+        return $root;
+    }
+
     public function parseXML($string) {
         // helper function to allow for centralised changing of libxml options
         // where appropriate
@@ -56,6 +65,15 @@ class ActivityService extends AbstractService {
         return (string) $activity->xpath('./iati-identifier')[0];
     }
 
+    public function getActivityById($root, $id) {
+        foreach ($this->getActivities($root) as $activity) {
+            if ($this->getActivityId($activity) === $id) {
+                return $activity;
+            }
+        }
+        return NULL;
+    }
+
     public function getActivityTitle($activity) {
         $preference = array(
             './title/narrative[not(@xml:lang)]',
@@ -85,13 +103,16 @@ class ActivityService extends AbstractService {
             $description = (string) $currentSector->xpath('./narrative[1]')[0];
             $code = (string) $currentSector['code'];
             $vocabulary = (string) $currentSector['vocabulary'];
+            $vocabularyUri = (string) $currentSector['vocabulary-uri'] ?: null;
 
             $currentSectors[] = array(
                 'description' => $description,
                 'code' => $code,
-                'vocabulary' => $vocabulary
+                'vocabulary' => $vocabulary,
+                'vocabulary-uri' => $vocabularyUri,
             );
         }
+
         return $currentSectors;
     }
 

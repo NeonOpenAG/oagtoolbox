@@ -3,7 +3,7 @@
 namespace OagBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use OagBundle\Entity\Sector;
+use OagBundle\Entity\SuggestedSector;
 use OagBundle\Entity\FileType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints\Range;
@@ -40,9 +40,9 @@ class OagFile {
     private $enhancingDocuments;
 
     /**
-     * @ORM\ManyToMany(targetEntity="OagBundle\Entity\Sector")
+     * @ORM\ManyToMany(targetEntity="OagBundle\Entity\SuggestedSector")
      */
-    protected $sectors;
+    protected $suggestedSectors;
 
     /**
      * @ORM\ManyToMany(targetEntity="OagBundle\Entity\Geolocation")
@@ -76,7 +76,7 @@ class OagFile {
     private $mimeType;
 
     public function __construct() {
-        $this->sectors = new ArrayCollection();
+        $this->suggestedSectors = new ArrayCollection();
         $this->iatiParents = new ArrayCollection();
         $this->enhancingDocuments = new ArrayCollection();
         $this->geolocations = new ArrayCollection();
@@ -138,35 +138,36 @@ class OagFile {
     /**
      * Get Sectors
      *
-     * @return string
+     * @return ArrayCollection
      */
-    public function getSectors() {
-        return $this->sectors;
+    public function getSuggestedSectors() {
+        return $this->suggestedSectors;
     }
 
     /**
-     * @param \OagBundle\Entity\Sector $activity
+     * @param \OagBundle\Entity\SuggestedSector $activity
+     *
      * @return bool
      */
-    public function hasSector(Sector $activity) {
-        return $this->getSectors()->contains($activity);
+    public function hasSuggestedSector(SuggestedSector $activity) {
+        return $this->getSuggestedSectors()->contains($activity);
     }
 
     /**
-     * @param \OagBundle\Entity\Sector $activity
+     * @param \OagBundle\Entity\SuggestedSector $activity
      */
-    public function addSector(Sector $activity) {
-        if (!$this->hasSector($activity)) {
-            $this->sectors->add($activity);
+    public function addSuggestedSector(SuggestedSector $activity) {
+        if (!$this->hasSuggestedSector($activity)) {
+            $this->suggestedSectors->add($activity);
         }
     }
 
     /**
-     * @param \OagBundle\Entity\Sector $activity
+     * @param \OagBundle\Entity\SuggestedSector $activity
      */
-    public function removeSector(Sector $activity) {
-        if (!$this->hasSector($activity)) {
-            $this->sectors->removeElement($activity);
+    public function removeSuggestedSector(SuggestedSector $activity) {
+        if (!$this->hasSuggestedSector($activity)) {
+            $this->suggestedSectors->removeElement($activity);
         }
     }
 
@@ -217,7 +218,7 @@ class OagFile {
      * Remove all sectors.
      */
     public function clearSectors() {
-        $this->sectors->clear();
+        $this->suggestedSectors->clear();
     }
 
     /**

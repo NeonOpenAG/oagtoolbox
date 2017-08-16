@@ -13,10 +13,21 @@ class ClassifierTest extends TestCase {
     $this->container = $kernel->getContainer();
   }
 
-  public function testGetFixtureData() {
+  public function testGetStringFixtureData() {
     $classifier = $this->container->get(Classifier::class);
     $classifier->setContainer($this->container);
-    $data = $classifier->getFixtureData();
+    $data = $classifier->getStringFixtureData();
+
+    $json = json_decode($data, true);
+
+    $this->assertNotNull($json, 'No JSON returned from classifier');
+    $this->assertTrue(count($json) >= 1);
+  }
+
+  public function testGetXMLFixtureData() {
+    $classifier = $this->container->get(Classifier::class);
+    $classifier->setContainer($this->container);
+    $data = $classifier->getXMLFixtureData();
 
     $json = json_decode($data, true);
 
