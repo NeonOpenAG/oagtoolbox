@@ -11,6 +11,8 @@ use OagBundle\Entity\Sector;
 use OagBundle\Entity\Geolocation;
 use OagBundle\Service\OagFileService;
 use OagBundle\Service\Cove;
+use OagBundle\Form\OagFileType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use OagBundle\Service\TextExtractor\TextifyService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -51,6 +53,47 @@ class OagFileController extends Controller
 
         $enhancementDocs = $file->getEnhancingDocuments();
         $data['enhancingDocuments'] = $enhancementDocs;
+
+        // New supporting docuemnt form
+        $em = $this->getDoctrine()->getManager();
+        $oagfile = new OagFile();
+        $oagfile->setFileType(OagFile::OAGFILE_IATI_ENHANCEMENT_DOCUMENT);
+        $enhancementFileUploadForm = $this->createForm(OagFileType::class, $oagfile);
+        $enhancementFileUploadForm->add('Upload', SubmitType::class, array(
+            'attr' => array('class' => 'submit'),
+        ));
+        $data['enhancement_upload_form'] = $enhancementFileUploadForm->createView();
+
+        if ($request) {
+            $enhancementFileUploadForm->handleRequest($request);
+
+            // TODO Check for too big files.
+            if ($enhancementFileUploadForm->isSubmitted() && $enhancementFileUploadForm->isValid()) {
+                $tmpFile = $oagfile->getDocumentName();
+
+                $oagfile->setMimeType(mime_content_type($tmpFile->getPathname()));
+                $filename = $tmpFile->getClientOriginalName();
+
+                // Clear existing oagfile with the same name (we don't currently do versioning)
+                $files = $em->getRepository('OagBundle:OagFile')
+                    ->findByDocumentName($filename);
+                foreach ($files as $_file) {
+                    $em->remove($_file);
+                }
+                $em->flush();
+
+                $tmpFile->move(
+                    $this->getParameter('oagfiles_directory'), $filename
+                );
+
+                $oagfile->setDocumentName($filename);
+                $file->addEnhancingDocument($oagfile);
+                $em->persist($oagfile);
+                $em->flush();
+
+                return $this->redirect($this->generateUrl('oag_oagfile_iati', ['id' => $file->getId()]));
+            }
+        }
 
         return $data;
     }

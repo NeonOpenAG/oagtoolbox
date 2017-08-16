@@ -29,12 +29,23 @@
                     {% for doc in enhancingDocuments %}
                         <li><span class='docname'>{{ doc.documentName }}</span>
                             <a href="{{ path('oag_oagfile_enhancement', { 'id': doc.id }) }}">View</a> |
-                            <a href="#">Classify</a> |
+                            <a href='{{ path('oag_oagfile_classify', { 'id': doc.id }) }}'>{% if doc.sectors|length > 0 %}Re-{% endif %}Classify</a> |
                             <a href="#">Geocode</a>
                         {% endfor %}
                 </ul>
         {% else %}
             <h3>No assciated documents</h3>
         {% endif %}
-    </div>
+        <div class="upload-form">
+            <h3>Import a new enhancement document</h3>
+            <div>The imported document will be automatically classified and added to this IATI document.</div>
+            {{ form_start(enhancement_upload_form) }}
+            {{ form_label(enhancement_upload_form.documentName) }}
+            {{ form_errors(enhancement_upload_form.documentName) }}
+            {{ form_widget(enhancement_upload_form.documentName) }}
+
+            {{ form_widget(enhancement_upload_form.fileType, { 'attr': {'class': 'hidden-row'} }) }}
+            {{ form_end(enhancement_upload_form) }}
+        </div>
+        </div>
 {% endblock %}

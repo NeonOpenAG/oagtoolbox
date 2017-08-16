@@ -61,13 +61,12 @@ class DefaultController extends Controller {
 
             // TODO Check for too big files.
             if ($sourceUploadForm->isSubmitted() && $sourceUploadForm->isValid()) {
-                $file = $oagfile->getDocumentName();
                 $tmpFile = $oagfile->getDocumentName();
                 $oagfile->setMimeType(mime_content_type($tmpFile->getPathname()));
 
-                $filename = $file->getClientOriginalName();
+                $filename = $tmpFile->getClientOriginalName();
 
-                $file->move(
+                $tmpFile->move(
                     $this->getParameter('oagfiles_directory'), $filename
                 );
 
@@ -99,7 +98,10 @@ class DefaultController extends Controller {
         foreach ($oagfiles as $file) {
             $name = $file->getDocumentName();
             $id = $file->getId();
-            $files[$id] = ['id' => $id, 'name' => $name];
+            $files[$id] = [
+                'id' => $id,
+                'name' => $name
+            ];
         }
 
         return $files;
