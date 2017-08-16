@@ -50,6 +50,7 @@ class OagExtension extends \Twig_Extension {
         return array(
             new \Twig_SimpleFilter('isCoveable', array($this, 'isCoveable')),
             new \Twig_SimpleFilter('isClassifiable', array($this, 'isClassifiable')),
+            new \Twig_SimpleFilter('formatSectorList', array($this, 'formatSectors')),
         );
     }
 
@@ -73,4 +74,12 @@ class OagExtension extends \Twig_Extension {
         return false;
     }
 
+    public function formatSectors($sectors) {
+        return array_reduce($sectors, function($reduction, $sector) {
+            $activityList = &$reduction[$sector->getActivityId()];
+            if(!$activityList) $activityList = [];
+            array_push($activityList, $sector);
+            return $reduction;
+        }, []);
+    }
 }

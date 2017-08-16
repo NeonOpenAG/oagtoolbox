@@ -8,6 +8,8 @@
     {{ parent() }}
     |
     <a class='view-xml-link' href="{{ asset('xml')}}/{{ oagfiles_dir }}/{{ name }}">Raw XML</a>
+    |
+    <a class='view-xml-link' href="{{ path('oag_oagfile_classifyxml', { 'id': id }) }}">Re-Classify</a>
 {% endblock %}
 
 {% block body %}
