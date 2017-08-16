@@ -38,9 +38,14 @@ class DPortal extends AbstractOagService {
         }
         $xmlfile = $xmldir . '/' . $srvOagFile->getXMLFileName($oagfile);
 
-        exec("openag start dportal");
-        exec("openag reset dportal");
-        exec("openag import dportal " . $xmlfile);
+        $start = exec("openag start dportal");
+        $this->getContainer()->get('logger')->info(sprintf('Started dportal: "%s"', $start));
+
+        $reset = exec("openag reset dportal");
+        $this->getContainer()->get('logger')->info(sprintf('Reset dportal: "%s"', $xmlfile));
+
+        $import = exec("openag import dportal " . $xmlfile);
+        $this->getContainer()->get('logger')->info(sprintf('Import dportal data: "%s"', $import));
     }
 
     public function getName() {

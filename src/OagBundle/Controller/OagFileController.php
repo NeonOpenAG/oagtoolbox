@@ -11,6 +11,8 @@ use OagBundle\Service\Classifier;
 use OagBundle\Service\Geocoder;
 use OagBundle\Service\OagFileService;
 use OagBundle\Service\Cove;
+use OagBundle\Form\OagFileType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use OagBundle\Service\TextExtractor\TextifyService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -43,10 +45,52 @@ class OagFileController extends Controller
         $srvActivities = $this->get(ActivityService::class);
         $activities = $srvActivities->summariseToArray($root);
 
+        $this->get('logger')->debug(sprintf('IATI Document %s has %d activites', count($activities), $file->getDocumentName()));
         $data['activities'] = $activities;
 
         $enhancementDocs = $file->getEnhancingDocuments();
         $data['enhancingDocuments'] = $enhancementDocs;
+
+        // New supporting docuemnt form
+        $em = $this->getDoctrine()->getManager();
+        $oagfile = new OagFile();
+        $oagfile->setFileType(OagFile::OAGFILE_IATI_ENHANCEMENT_DOCUMENT);
+        $enhancementFileUploadForm = $this->createForm(OagFileType::class, $oagfile);
+        $enhancementFileUploadForm->add('Upload', SubmitType::class, array(
+            'attr' => array('class' => 'submit'),
+        ));
+        $data['enhancement_upload_form'] = $enhancementFileUploadForm->createView();
+
+        if ($request) {
+            $enhancementFileUploadForm->handleRequest($request);
+
+            // TODO Check for too big files.
+            if ($enhancementFileUploadForm->isSubmitted() && $enhancementFileUploadForm->isValid()) {
+                $tmpFile = $oagfile->getDocumentName();
+
+                $oagfile->setMimeType(mime_content_type($tmpFile->getPathname()));
+                $filename = $tmpFile->getClientOriginalName();
+
+                // Clear existing oagfile with the same name (we don't currently do versioning)
+                $files = $em->getRepository('OagBundle:OagFile')
+                    ->findByDocumentName($filename);
+                foreach ($files as $_file) {
+                    $em->remove($_file);
+                }
+                $em->flush();
+
+                $tmpFile->move(
+                    $this->getParameter('oagfiles_directory'), $filename
+                );
+
+                $oagfile->setDocumentName($filename);
+                $file->addEnhancingDocument($oagfile);
+                $em->persist($oagfile);
+                $em->flush();
+
+                return $this->redirect($this->generateUrl('oag_oagfile_iati', ['id' => $file->getId()]));
+            }
+        }
 
         return $data;
     }
@@ -79,22 +123,26 @@ class OagFileController extends Controller
             if (!is_dir($xmldir)) {
                 mkdir($xmldir, 0755, true);
             }
+
             $filename = $srvOagFile->getXMLFileName($file);
             $xmlfile = $xmldir . '/' . $filename;
-            file_put_contents($xmlfile, $xml);
-
-            $oagFile = $this->getDoctrine()->getRepository(OagFile::class)->findOneByDocumentName($filename);
-            if (!$oagFile) {
-                $oagFile = new OagFile();
-                $this->get('logger')->debug('Creating new OagFile ' . $filename);
+            if (!file_put_contents($xmlfile, $xml)) {
+                $this->get('session')->getFlashBag()->add('error', 'Unable to create XML file.');
+                $this->get('logger')->debug(sprintf('Unable to create XML file: %s', $xmlfile));
+                return $this->redirectToRoute('oag_default_index');
             }
-            $oagFile->setDocumentName($filename);
-            $oagFile->setFileType(OagFile::OAGFILE_IATI_DOCUMENT);
-            $oagFile->setMimeType('application/xml');
+            // else
+            if ($this->getParameter('unlink_files')) {
+                unlink($path);
+            }
+
+            $file->setDocumentName($filename);
+            $file->setFileType(OagFile::OAGFILE_IATI_DOCUMENT);
+            $file->setMimeType('application/xml');
             $em = $this->getDoctrine()->getManager();
-            $em->persist($oagFile);
+            $em->persist($file);
             $em->flush();
-            $this->get('session')->getFlashBag()->add('info', 'IATI File created/Updated.');
+            $this->get('session')->getFlashBag()->add('info', 'IATI File created/Updated\; ' . $xmlfile);
         } else {
             $this->get('session')->getFlashBag()->add('error', 'CoVE returned data that was not XML.');
         }
