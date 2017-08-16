@@ -21,12 +21,12 @@
     <ul>
         {% for iatidoc in iatidocs %}
             <li>
-                <a href="{{ path('oag_dportal_index', { 'id': iatidoc['id'] }) }}" target="dportal">[Visualise]</a>
-                <a href="{{ path('oag_oagfile_iati', { 'id': iatidoc['id'] }) }}">{{ iatidoc['name'] }}</a>
+                <a href="{{ path('oag_dportal_index', { 'id': iatidoc.id }) }}" target="dportal">[Visualise]</a>
+                {{ include('OagBundle::Default/iatiFile.html.twig', { 'iatiDoc': iatidoc }) }}
                 <ul>
-                    {% for doc in iatidoc['docs'] %}
+                    {% for enhancingDoc in iatidoc.enhancingDocuments %}
                         <li>
-                            <a href="{{ path('oag_oagfile_enhancement', { 'id': doc['id'] }) }}">{{ doc['name'] }}</a>
+                            {{ include('OagBundle::Default/enhancementFile.html.twig', { 'enhancingDoc': enhancingDoc }) }}
                         </li>
                     {% endfor %}
                 </ul>
@@ -39,7 +39,7 @@
     <ul>
         {% for sourceDoc in sourceDocs %}
             <li>
-                <a href="{{ path('oag_oagfile_source', { 'id': sourceDoc['id'] }) }}">{{ sourceDoc['name'] }}</a>
+                {{ include('OagBundle::Default/sourceFile.html.twig', { 'sourceDoc': sourceDoc }) }}
             </li>
         {% endfor %}
         <div class="upload-form">
@@ -63,7 +63,7 @@
     <ul>
         {% for enhancingDoc in enhancingDocs %}
             <li>
-                <a href="{{ path('oag_oagfile_enhancement', { 'id': enhancingDoc['id'] }) }}">{{ enhancingDoc['name'] }}</a>
+                {{ include('OagBundle::Default/enhancementFile.html.twig', { 'enhancingDoc': enhancingDoc }) }}
             </li>
         {% endfor %}
     </ul>
