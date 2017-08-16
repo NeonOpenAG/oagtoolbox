@@ -129,6 +129,12 @@ class ActivityController extends Controller
             foreach ($toAddIds as $sectorId) {
                 $sugSector = $sugSectorRepo->findOneById($sectorId);
                 $sector = $sugSector->getSector();
+
+                if (in_array($sector, $toAdd)) {
+                    // no duplicates please
+                    continue;
+                }
+
                 $toAdd[] = $sector;
 
                 $code = $sector->getCode();
