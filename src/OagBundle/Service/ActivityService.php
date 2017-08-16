@@ -13,15 +13,11 @@ class ActivityService extends AbstractService {
     const LIBXML_OPTIONS = LIBXML_BIGLINES & LIBXML_PARSEHUGE;
 
     public function load($oagFile) {
-        # build path
-        $path = $this->getContainer()->getParameter('oagfiles_directory');
-        $path .= '/' . $oagFile->getDocumentName();
+        $srvOagFile = $this->getContainer()->get(OagFileService::class);
 
-        # load raw XML
-        $xml = file_get_contents($path);
+        $contents = $srvOagFile->getContents($oagFile);
+        $root = $this->parseXML($contents);
 
-        # parse result
-        $root = $this->parseXML($xml);
         return $root;
     }
 

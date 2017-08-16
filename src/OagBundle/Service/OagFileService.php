@@ -20,10 +20,17 @@ class OagFileService extends AbstractService {
     }
 
     public function getContents($oagFile) {
-        return file_get_contents($this->getPath($oagFile));
+        $contents = file_get_contents($this->getPath($oagFile));
+
+        if ($contents === false) {
+            throw \Exception('OagFile contents not found at path');
+        }
+
+        return $contents;
     }
 
     public function setContents($oagFile, $contents) {
+        // TODO check for/log errors
         return file_put_contents($this->getPath($oagFile), $contents);
     }
 
