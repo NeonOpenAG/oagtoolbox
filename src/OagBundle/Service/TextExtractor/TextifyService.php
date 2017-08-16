@@ -9,6 +9,7 @@
 namespace OagBundle\Service\TextExtractor;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use OagBundle\Service\OagFileService;
 
 /**
  * Description of TextifyService

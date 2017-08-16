@@ -15,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use OagBundle\Entity\OagFile;
 use OagBundle\Entity\SuggestedSector;
 use OagBundle\Service\ActivityService;
+use OagBundle\Service\OagFileService;
 
 /**
  * @Route("/activity")
@@ -31,6 +32,7 @@ class ActivityController extends Controller
      */
     public function enhanceAction(Request $request, OagFile $file, $iatiActivityId) {
         $srvActivity = $this->get(ActivityService::class);
+        $srvOagFile = $this->get(OagFileService::class);
         $sugSectorRepo = $this->container->get('doctrine')->getRepository(SuggestedSector::class);
         $em = $this->getDoctrine()->getManager();
 
@@ -101,7 +103,7 @@ class ActivityController extends Controller
                 // has a pre-existing one been removed?
                 if (!in_array($sugSector['code'], $data['current'])) {
                     $sectorCode = $sugSector['code'];
-                    $sectorDescription = $sugSector['code'];
+                    $sectorDescription = $sugSector['description'];
                     $sectorVocab = $sugSector['vocabulary'];
                     $sectorVocabUri = $sugSector['vocabulary-uri'];
 
@@ -143,6 +145,9 @@ class ActivityController extends Controller
 
             $em->persist($stagedChange);
             $em->flush();
+
+            $resultXML = $srvActivity->toXML($root);
+            $srvOagFile->setContents($file, $resultXML);
         }
 
         return array(

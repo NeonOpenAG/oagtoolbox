@@ -25,7 +25,7 @@ class Sector {
     /**
      * @var string
      *
-     * @ORM\Column(name="code", type="string", length=32, unique=true)
+     * @ORM\Column(name="code", type="string", length=32)
      */
     private $code;
 

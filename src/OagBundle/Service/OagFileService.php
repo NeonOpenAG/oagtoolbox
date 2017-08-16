@@ -23,4 +23,8 @@ class OagFileService extends AbstractService {
         return file_get_contents($this->getPath($oagFile));
     }
 
+    public function setContents($oagFile, $contents) {
+        return file_put_contents($this->getPath($oagFile), $contents);
+    }
+
 }
