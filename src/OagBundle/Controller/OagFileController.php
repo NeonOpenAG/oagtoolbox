@@ -46,6 +46,7 @@ class OagFileController extends Controller
         $srvActivities = $this->get(ActivityService::class);
         $activities = $srvActivities->summariseToArray($root);
 
+        $this->get('logger')->debug(sprintf('IATI Document %s has %d activites', count($activities), $file->getDocumentName()));
         $data['activities'] = $activities;
 
         $enhancementDocs = $file->getEnhancingDocuments();
