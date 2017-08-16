@@ -46,9 +46,9 @@ class ActivityController extends Controller
         $formBuilder->add('current', ChoiceType::class, array(
             'expanded' => true,
             'multiple' => true,
-            'choices' => array_column($current, 'code', 'description')
+            'choices' => array_column($current, 'code', 'description'),
+            'data' => array_column($current, 'code') // default to ticked
         ));
-
 
         # suggested sectors
         $suggested = array();
