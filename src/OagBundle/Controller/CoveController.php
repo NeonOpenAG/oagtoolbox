@@ -36,7 +36,7 @@ class CoveController extends Controller {
         }
         $this->get('logger')->debug(sprintf('Processing %s using CoVE', $oagfile->getDocumentName()));
         // TODO - for bigger files we might need send as Uri
-        $path = $this->getParameter('oagfiles_directory') . '/' . $oagfile->getDocumentName();
+        $path = $srvOagFile->getPath($oagfile);
         $contents = file_get_contents($path);
         $json = $cove->processString($contents);
 

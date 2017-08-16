@@ -62,8 +62,7 @@ class OagFileController extends Controller
 
         $this->get('logger')->debug(sprintf('Processing %s using CoVE', $file->getDocumentName()));
         // TODO - for bigger files we might need send as Uri
-        $path = $this->getParameter('oagfiles_directory') . '/' . $file->getDocumentName();
-        $contents = file_get_contents($path);
+        $contents = $srvOagFile->getContents($file);
         $json = $cove->processString($contents);
 
         $err = array_filter($json['err'] ?? []);
@@ -142,9 +141,9 @@ class OagFileController extends Controller
      */
     public function classifyXmlAction(Request $request, OagFile $file) {
         $srvClassifier = $this->get(Classifier::class);
+        $srvOagFile = $this->get(OagFileService::class);
 
-        $path = $this->container->getParameter('oagfiles_directory') . '/' . $file->getDocumentName();
-        $rawXml = file_get_contents($path);
+        $rawXml = $srvOagFile->getContents($file);
 
         $json = $srvClassifier->processXML($rawXml); 
 

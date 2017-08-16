@@ -41,6 +41,7 @@ class ClassifyController extends Controller {
     public function indexAction($id) {
         $messages = [];
         $classifier = $this->get(Classifier::class);
+        $srvOagFile = $this->get(OagFileService::class);
 
         $oagfilerepo = $this->container->get('doctrine')->getRepository(OagFile::class);
         $oagfile = $oagfilerepo->find($id);
@@ -48,7 +49,7 @@ class ClassifyController extends Controller {
             throw $this->createNotFoundException(sprintf('The document %d does not exist', $id));
         }
         // TODO - for bigger files we might need send as Uri
-        $path = $this->getParameter('oagfiles_directory') . '/' . $oagfile->getDocumentName();
+        $path = $srvOagFile->getPath($oagfile);
         $mimetype = mime_content_type($path);
         $messages[] = sprintf('File %s detected as %s', $path, $mimetype);
 
@@ -222,9 +223,9 @@ class ClassifyController extends Controller {
         // Load and display XML doc
         $classifier = $this->get(Classifier::class);
         $srvActivity = $this->get(ActivityService::class);
+        $srvOagFile = $this->get(ActivityService::class);
 
-        $path = $this->getParameter('oagfiles_directory') . '/' . $file->getDocumentName();
-        $xml = file_get_contents($path);
+        $xml = $srvOagFile->getContents($path);
 
         $root = $srvActivity->load($file);
 

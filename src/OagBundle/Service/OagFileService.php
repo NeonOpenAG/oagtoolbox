@@ -13,4 +13,14 @@ class OagFileService extends AbstractService {
         return $filename;
     }
 
+    public function getPath($oagFile) {
+        $path = $this->getContainer()->getParameter('oagfiles_directory');
+        $path .= '/' . $oagFile->getDocumentName();
+        return $path;
+    }
+
+    public function getContents($oagFile) {
+        return file_get_contents($this->getPath($oagFile));
+    }
+
 }
