@@ -2,6 +2,8 @@
 
 namespace OagBundle\Service;
 
+use OagBundle\Entity\OagFile;
+
 class OagFileService extends AbstractService {
 
     public function getXMLFileName($oagFile) {
@@ -11,8 +13,12 @@ class OagFileService extends AbstractService {
         return $name . '.' . date("Ymd_His") . '.xml';
     }
 
-    public function getPath($oagFile) {
-        $path = $this->getContainer()->getParameter('oagfiles_directory');
+    public function getPath(OagFile $oagFile) {
+        if ($oagFile->getFileType() == OagFile::OAGFILE_IATI_DOCUMENT) {
+            $path = $this->getContainer()->getParameter('oagxml_directory');
+        } else {
+            $path = $this->getContainer()->getParameter('oagfiles_directory');
+        }
         $path .= '/' . $oagFile->getDocumentName();
         return $path;
     }
