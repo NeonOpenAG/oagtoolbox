@@ -7,8 +7,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use OagBundle\Service\Classifier;
-use OagBundle\Entity\Code;
 use OagBundle\Entity\Sector;
+use OagBundle\Entity\SuggestedSector;
 use OagBundle\Service\ActivityService;
 use Symfony\Component\HttpFoundation\Request;
 use OagBundle\Entity\OagFile;
@@ -41,6 +41,7 @@ class ClassifyController extends Controller {
     public function indexAction($id) {
         $messages = [];
         $classifier = $this->get(Classifier::class);
+        $srvOagFile = $this->get(OagFileService::class);
 
         $oagfilerepo = $this->container->get('doctrine')->getRepository(OagFile::class);
         $oagfile = $oagfilerepo->find($id);
@@ -48,7 +49,7 @@ class ClassifyController extends Controller {
             throw $this->createNotFoundException(sprintf('The document %d does not exist', $id));
         }
         // TODO - for bigger files we might need send as Uri
-        $path = $this->getParameter('oagfiles_directory') . '/' . $oagfile->getDocumentName();
+        $path = $srvOagFile->getPath($oagfile);
         $mimetype = mime_content_type($path);
         $messages[] = sprintf('File %s detected as %s', $path, $mimetype);
 
@@ -118,8 +119,8 @@ class ClassifyController extends Controller {
 
         // Clear sectors from the file
         $oagfile->clearSectors();
-        $coderepo = $this->container->get('doctrine')->getRepository(Code::class);
-        $sectorrepo = $this->container->get('doctrine')->getRepository(Sector::class);
+        $coderepo = $this->container->get('doctrine')->getRepository(Sector::class);
+        $sectorrepo = $this->container->get('doctrine')->getRepository(SuggestedSector::class);
 
         // TODO if $row['status'] == 0
         foreach ($json['data'] as $row) {
@@ -132,7 +133,7 @@ class ClassifyController extends Controller {
             if (!$_code) {
                 $this->container->get('logger')
                     ->info(sprintf('Creating new code %s (%s)', $code, $description));
-                $_code = new Code();
+                $_code = new Sector();
                 $_code->setCode($code);
                 $_code->setDescription($description);
                 $em->persist($_code);
@@ -142,8 +143,8 @@ class ClassifyController extends Controller {
             if ($sector && $oagfile->hasSector($sector)) {
                 $sector->setConfidence($confidence);
             } else {
-                $sector = new \OagBundle\Entity\Sector();
-                $sector->setCode($_code);
+                $sector = new \OagBundle\Entity\SuggestedSector();
+                $sector->setSector($_code);
                 $sector->setConfidence($confidence);
             }
             $em->persist($sector);
@@ -170,12 +171,12 @@ class ClassifyController extends Controller {
      */
     public function activityAction(Request $request, OagFile $file) {
         // Load XML document
-        $path = $this->getParameter('oagfiles_directory') . '/' . $file->getDocumentName();
-        $xml = file_get_contents($path);
-        $root = $srvActivity->parseXML($xml);
+        $root = $srvActivity->load($file);
+
         // Extract each activity
         $srvActivities = $this->get(ActivityService::class);
         $activities = $srvActivities->summariseToArray($root);
+
         // Render them
         return array('activities' => $activities);
     }
@@ -222,10 +223,11 @@ class ClassifyController extends Controller {
         // Load and display XML doc
         $classifier = $this->get(Classifier::class);
         $srvActivity = $this->get(ActivityService::class);
+        $srvOagFile = $this->get(ActivityService::class);
 
-        $path = $this->getParameter('oagfiles_directory') . '/' . $file->getDocumentName();
-        $xml = file_get_contents($path);
-        $root = $srvActivity->parseXML($xml);
+        $xml = $srvOagFile->getContents($path);
+
+        $root = $srvActivity->load($file);
 
         $response = $classifier->processXML($xml);
         $allNewSectors = $classifier->extractSectors($response); // suggested

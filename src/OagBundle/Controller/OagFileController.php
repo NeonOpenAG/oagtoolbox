@@ -3,12 +3,12 @@
 namespace OagBundle\Controller;
 
 use OagBundle\Entity\OagFile;
+use OagBundle\Entity\Sector;
+use OagBundle\Entity\Geolocation;
+use OagBundle\Entity\SuggestedSector;
 use OagBundle\Service\ActivityService;
 use OagBundle\Service\Classifier;
 use OagBundle\Service\Geocoder;
-use OagBundle\Entity\Code;
-use OagBundle\Entity\Sector;
-use OagBundle\Entity\Geolocation;
 use OagBundle\Service\OagFileService;
 use OagBundle\Service\Cove;
 use OagBundle\Form\OagFileType;
@@ -41,10 +41,7 @@ class OagFileController extends Controller
         $data['mimetype'] = $file->getMimeType();
         $data['oagfiles_dir'] = $this->getParameter('oagxml_directory');
 
-        $path = $this->getParameter('oagxml_directory') . '/' . $file->getDocumentName();
-        $xml = file_get_contents($path);
-
-        $root = $srvActivity->parseXML($xml);
+        $root = $srvActivity->load($file);
         $srvActivities = $this->get(ActivityService::class);
         $activities = $srvActivities->summariseToArray($root);
 
@@ -109,8 +106,7 @@ class OagFileController extends Controller
 
         $this->get('logger')->debug(sprintf('Processing %s using CoVE', $file->getDocumentName()));
         // TODO - for bigger files we might need send as Uri
-        $path = $this->getParameter('oagfiles_directory') . '/' . $file->getDocumentName();
-        $contents = file_get_contents($path);
+        $contents = $srvOagFile->getContents($file);
         $json = $cove->processString($contents);
 
         $err = array_filter($json['err'] ?? []);
@@ -167,14 +163,14 @@ class OagFileController extends Controller
         $data['text'] = $srvActivity->stripOagFile($file);
 
         // Now loop through sectors flattening them (so we can re-use the xectors table template)
-        $sectors = $file->getSectors();
+        $sectors = $file->getSuggestedSectors();
         $_sectors = [];
         foreach ($sectors as $sector) {
             $_sectors[] = [
                 'id' => $sector->getId(),
                 'confidence' => $sector->getConfidence(),
-                'code' => $sector->getCode()->getCode(),
-                'description' => $sector->getCode()->getDescription(),
+                'code' => $sector->getSector()->getCode(),
+                'description' => $sector->getSector()->getDescription(),
             ];
         }
         $data['sectors'] = $_sectors;
@@ -188,50 +184,111 @@ class OagFileController extends Controller
     }
 
     /**
-     * @Route("/classify/{id}")
+     * @Route("/classify/xml/{id}")
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
-    public function classifyAction(Request $request, OagFile $file) {
+    public function classifyXmlAction(Request $request, OagFile $file) {
         $srvClassifier = $this->get(Classifier::class);
-        $json = $srvClassifier->processOagFile($file);
+        $srvOagFile = $this->get(OagFileService::class);
+
+        $rawXml = $srvOagFile->getContents($file);
+
+        $json = $srvClassifier->processXML($rawXml); 
 
         $file->clearSectors();
-        $em = $this->getDoctrine()->getManager();
-        $coderepo = $this->container->get('doctrine')->getRepository(Code::class);
-        $sectorrepo = $this->container->get('doctrine')->getRepository(Sector::class);
 
         // TODO if $row['status'] == 0
-        foreach ($json['data'] as $row) {
-            $code = $row['code'];
-            $description = $row['description'];
-            $confidence = $row['confidence'];
-
-            // Check that the code exists in the system
-            $_code = $coderepo->findOneByCode($code);
-            if (!$_code) {
-                $this->container->get('logger')
-                    ->info(sprintf('Creating new code %s (%s)', $code, $description));
-                $_code = new Code();
-                $_code->setCode($code);
-                $_code->setDescription($description);
-                $em->persist($_code);
+        foreach ($json['data'] as $part) {
+            foreach ($part as $activityId => $sectors) {
+                $this->persistSectors($sectors, $file, $activityId);
             }
-
-            $sector = $sectorrepo->findOneByCode($_code);
-            if ($sector && $file->hasSector($sector)) {
-                $sector->setConfidence($confidence);
-            } else {
-                $sector = new \OagBundle\Entity\Sector();
-                $sector->setCode($_code);
-                $sector->setConfidence($confidence);
-            }
-            $em->persist($sector);
-            $file->addSector($sector);
         }
+
+        $em = $this->getDoctrine()->getManager();
         $em->persist($file);
         $em->flush();
 
         return ['name' => $file->getDocumentName(), 'sectors' => $json['data']];
+    }
+
+    /**
+     * @Route("/classify/text/{id}")
+     * @ParamConverter("file", class="OagBundle:OagFile")
+     */
+    public function classifyTextAction(Request $request, OagFile $file) {
+        $srvClassifier = $this->get(Classifier::class);
+        $srvTextify = $this->get(TextifyService::class);
+
+        $rawText = $srvTextify->stripOagFile($file);
+
+        if ($rawText === false) {
+            // textifier failed
+            throw \RuntimeException('Unsupported file type to strip text from');
+        }
+
+        $json = $srvClassifier->processString($rawText);
+
+        $file->clearSectors();
+
+        // TODO if $row['status'] == 0
+        $this->persistSectors($json['data'], $file);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($file);
+        $em->flush();
+
+        return ['name' => $file->getDocumentName(), 'sectors' => $json['data']];
+    }
+
+    /**
+     * Persists Oag sectors from API response to database.
+     */
+    private function persistSectors($sectors, $file, $activityId = null) {
+        $em = $this->getDoctrine()->getManager();
+        $sectorRepo = $this->container->get('doctrine')->getRepository(Sector::class);
+
+        foreach ($sectors as $row) {
+            $code = $row['code'];
+            $description = $row['description'];
+            $confidence = $row['confidence'];
+
+            $vocab = $this->getParameter('classifier')['vocabulary'];
+            $vocabUri = $this->getParameter('classifier')['vocabulary_uri'];
+
+            $findBy = array(
+                'code' => $code,
+                'vocabulary' => $vocab
+            );
+
+            // if there is a vocab uri in the config, use it, if not, don't
+            if (strlen($vocabUri) > 0) {
+                $findBy['vocabulary_uri'] = $vocabUri;
+            } else {
+                $vocabUri = null;
+            }
+
+            // Check that the code exists in the system
+            $sector = $sectorRepo->findOneBy($findBy);
+            if (!$sector) {
+                $this->container->get('logger')
+                    ->info(sprintf('Creating new code %s (%s)', $code, $description));
+                $sector = new Sector();
+                $sector->setCode($code);
+                $sector->setDescription($description);
+                $sector->setVocabulary($vocab, $vocabUri);
+                $em->persist($sector);
+            }
+
+            $sugSector = new \OagBundle\Entity\SuggestedSector();
+            $sugSector->setSector($sector);
+            $sugSector->setConfidence($confidence);
+            if (!is_null($activityId)) {
+                $sugSector->setActivityId($activityId);
+            }
+
+            $em->persist($sugSector);
+            $file->addSuggestedSector($sugSector);
+        }
     }
 
     /**

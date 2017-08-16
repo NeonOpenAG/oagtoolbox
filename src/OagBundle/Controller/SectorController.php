@@ -20,7 +20,7 @@ class SectorController extends Controller {
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
     public function indexAction(Request $request, OagFile $file) {
-        $sectors = $file->getSectors();
+        $sectors = $file->getSuggestedSectors();
 
         return array(
             'sectors' => $sectors,

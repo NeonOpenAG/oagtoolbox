@@ -1,0 +1,18 @@
+{% extends 'OagBundle::Default/index.html.twig' %}
+
+{% block title %}Classify results: {{ name }}{% endblock %}
+
+{% block h1 %}{{ name }}{% endblock %}
+
+{% block body %}
+    {% if sectors|length > 0 %}
+        {% for part in sectors %}
+            {% for activityId, activitySectors in part %}
+                <h2>{{ activityId }}</h2>
+                {{ include('OagBundle::OagFile/sectors_table.html.twig', { 'sectors': activitySectors }) }}
+            {% endfor %}
+        {% endfor %}
+    {% else %}
+        <h2>No sectors associated</h2>
+    {% endif %}
+{% endblock %}

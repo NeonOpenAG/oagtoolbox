@@ -7,15 +7,15 @@ use OagBundle\Service\TextExtractor\ApplicationPdf;
 use OagBundle\Service\TextExtractor\ApplicationXml;
 use OagBundle\Service\TextExtractor\TextPlain;
 use OagBundle\Entity\OagFile;
-use OagBundle\Entity\Code;
 use OagBundle\Entity\Sector;
+use OagBundle\Entity\SuggestedSector;
 use Symfony\Component\Cache\Simple\FilesystemCache;
 
 class Classifier extends AbstractOagService {
 
     public function processUri($sometext) {
         // TODO implement non-fixture process
-        return json_decode($this->getFixtureData(), true);
+        return json_decode($this->getStringFixtureData(), true);
     }
 
     public function isAvailable() {
@@ -35,23 +35,30 @@ class Classifier extends AbstractOagService {
         return is_resource($connection);
     }
 
-    public function getFixtureData() {
+    public function getXMLFixtureData() {
         $kernel = $this->getContainer()->get('kernel');
         $path = $kernel->locateResource('@OagBundle/Resources/fixtures/before_enrichment_activities.classifier.json');
         $contents = file_get_contents($path);
         return $contents;
     }
 
+    public function getStringFixtureData() {
+        $kernel = $this->getContainer()->get('kernel');
+        $path = $kernel->locateResource('@OagBundle/Resources/fixtures/text.classifier.json');
+        $contents = file_get_contents($path);
+        return $contents;
+    }
+
     public function processXML($contents) {
         // TODO implement non-fixture process
-        return json_decode($this->getFixtureData(), true);
+        return json_decode($this->getXMLFixtureData(), true);
     }
 
     public function processString($contents) {
         if (!$this->isAvailable()) {
             // TODO use correct fixture data, the current is not representative of
             // output where just a string is processed
-            return json_decode($this->getFixtureData(), true);
+            return json_decode($this->getStringFixtureData(), true);
         }
 
 //        $cache = new FilesystemCache();
@@ -106,84 +113,6 @@ class Classifier extends AbstractOagService {
             $this->getContainer()->get('logger')->error('Classifier failed to process: ' . $data);
         }
         return array_merge($response, $json);
-    }
-
-    public function processOagFile(OagFile $file) {
-        // TODO Swap this to use the texitfy service
-        $path = $this
-                ->getContainer()
-                ->getParameter('oagfiles_directory') . '/' . $file->getDocumentName();
-        $mimetype = $file->getMimeType();
-
-        $this->getContainer()
-            ->get('logger')
-            ->info(sprintf('File %s detected as %s', $path, $mimetype));
-
-        $isXml = false;
-        $sourceFile = tempnam(sys_get_temp_dir(), 'oag') . '.txt';
-        switch ($mimetype) {
-            case 'application/pdf':
-            case 'application/pdf':
-            case 'application/x-pdf':
-            case 'application/acrobat':
-            case 'applications/vnd.pdf':
-            case 'text/pdf':
-            case 'text/x-pdf':
-                // pdf
-                $decoder = new PDFExtractor();
-                $decoder->setFilename($path);
-                $decoder->decode();
-                file_put_contents($sourceFile, $decoder->output());
-                break;
-            case 'application/txt':
-            case 'browser/internal':
-            case 'text/anytext':
-            case 'widetext/plain':
-            case 'widetext/paragraph':
-            case 'text/plain':
-                // txt
-                $sourceFile = $path;
-                break;
-            case 'text/html':
-            case 'application/xml':
-                // xml
-                $sourceFile = $path;
-                $isXml = true;
-                break;
-            case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-            case 'application/msword':
-            case 'application/doc':
-            case 'application/zip':
-                // docx
-                // phpword can't save to txt directly
-                $tmpRtfFile = dirname($sourceFile) . '/' . basename($sourceFile, '.txt') . '.rtf';
-                $phpWord = \PhpOffice\PhpWord\IOFactory::load($path, 'Word2007');
-                $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'RTF');
-                $objWriter->save($tmpRtfFile);
-                // Now let the switch fall through to decode rtf
-                $path = $tmpRtfFile;
-            case 'application/rtf':
-            case 'application/x-rtf':
-            case 'text/richtext':
-            case 'text/rtf':
-                // rtf
-                $decoder = new RTFExtractor();
-                $decoder->setFilename($path);
-                $decoder->decode();
-                file_put_contents($sourceFile, $decoder->output());
-                break;
-        }
-        $this->getContainer()->get('logger')->info(sprintf('Processing file %s', $sourceFile));
-
-        $contents = file_get_contents($sourceFile);
-        if ($isXml) {
-            // TODO hit the XML endpoint...
-            $json = $this->processXML($contents);
-        } else {
-            $json = $this->processString($contents);
-        }
-
-        return $json;
     }
 
     public function extractSectors($response) {

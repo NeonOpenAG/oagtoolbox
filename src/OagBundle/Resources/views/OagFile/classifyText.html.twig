@@ -6,6 +6,7 @@
 
 {% block body %}
     {% if sectors|length > 0 %}
+        <h2>Sectors</h2>
         {{ include('OagBundle::OagFile/sectors_table.html.twig', { 'sectors': sectors }) }}
     {% else %}
         <h2>No sectors associated</h2>

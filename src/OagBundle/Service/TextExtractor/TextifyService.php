@@ -9,6 +9,7 @@
 namespace OagBundle\Service\TextExtractor;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use OagBundle\Service\OagFileService;
 
 /**
  * Description of TextifyService
@@ -20,7 +21,8 @@ class TextifyService {
     private $container;
 
     public function stripOagFile($oagFile) {
-        $path = $this->container->getParameter('oagfiles_directory') . '/' . $oagFile->getDocumentName();
+        $srvOagFile = $this->container->get(OagFileService::class);
+        $path = $srvOagFile->getPath($oagFile);
 //        $mimetype = mime_content_type($path);
 //        $this->container->get('logger')->info(sprintf('File %s mime type is %s', $path, $mimetype));
         $mimetype = $oagFile->getMimeType();
