@@ -32,6 +32,7 @@ class ActivityController extends Controller
     public function enhanceAction(Request $request, OagFile $file, $iatiActivityId) {
         $srvActivity = $this->get(ActivityService::class);
         $sugSectorRepo = $this->container->get('doctrine')->getRepository(SuggestedSector::class);
+        $em = $this->getDoctrine()->getManager();
 
         # find activity
         $root = $srvActivity->load($file);
@@ -99,8 +100,6 @@ class ActivityController extends Controller
             foreach ($current as $sugSector) {
                 // has a pre-existing one been removed?
                 if (!in_array($sugSector['code'], $data['current'])) {
-                    $toRemove[] = $sugSector;
-
                     $sectorCode = $sugSector['code'];
                     $sectorDescription = $sugSector['code'];
                     $sectorVocab = $sugSector['vocabulary'];
@@ -110,6 +109,8 @@ class ActivityController extends Controller
                     $dbSector->setCode($sectorCode);
                     $dbSector->setVocabulary($sectorVocab, $sectorVocabUri);
                     $dbSector->setDescription($sectorDescription);
+                    $toRemove[] = $dbSector;
+                    $em->persist($dbSector);
 
                     $srvActivity->removeActivitySector($activity, $sectorCode, $sectorVocab);
                 }
@@ -119,7 +120,7 @@ class ActivityController extends Controller
             $toAddIds = $data['suggested'];
             foreach ($file->getEnhancingDocuments() as $otherFile) {
                 $id = $otherFile->getId();
-                $toAdd = array_merge($toAddIds, $data["enhanced_$id"]);
+                $toAddIds = array_merge($toAddIds, $data["enhanced_$id"]);
             }
 
             $toAdd = array();
@@ -134,14 +135,14 @@ class ActivityController extends Controller
             }
 
             $stagedChange = new Change();
-            $stagedChange->setAddedSectors(new ArrayCollection($toAdd));
-            $stagedChange->setRemovedSectors(new ArrayCollection($toRemove));
+            $stagedChange->setAddedSectors($toAdd);
+            $stagedChange->setRemovedSectors($toRemove);
             $stagedChange->setActivityId($iatiActivityId);
             $stagedChange->setTimestamp(new \DateTime("now"));
             $stagedChange->setFile($file);
 
-            $em = $this->getDoctrine()->getManager();
             $em->persist($stagedChange);
+            $em->flush();
         }
 
         return array(
