@@ -6,11 +6,9 @@ class OagFileService extends AbstractService {
 
     public function getXMLFileName($oagFile) {
         $filename = $oagFile->getDocumentName();
-        $ext = pathinfo($filename, PATHINFO_EXTENSION);
-        if ($ext != 'xml') {
-            $filename .= '.xml';
-        }
-        return $filename;
+        $name = pathinfo($filename, PATHINFO_FILENAME);
+
+        return $name . '.' . date("Ymd_His") . '.xml';
     }
 
 }

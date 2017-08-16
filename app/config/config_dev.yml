@@ -38,5 +38,7 @@ monolog:
             level: debug
             channels: ['!event', '!request', '!doctrine', '!security']
 
+parameters:
+    unlink_files: false
 #swiftmailer:
 #    delivery_addresses: ['me@example.com']

@@ -31,3 +31,4 @@ parameters:
         classifier:
             xml: http://localhost:8011
             text: http://private-044dc3-openag.apiary-mock.com/classifier/plaintext
+    unlink_files: false
