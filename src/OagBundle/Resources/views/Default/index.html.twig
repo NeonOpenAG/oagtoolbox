@@ -21,7 +21,7 @@
     <ul>
         {% for iatidoc in iatidocs %}
             <li>
-                <a href='{{ path('oag_dportal_index', { 'id': iatidoc['id'] }) }} target="dportal"'>[Visualise]</a>
+                <a href="{{ path('oag_dportal_index', { 'id': iatidoc['id'] }) }}" target="dportal">[Visualise]</a>
                 <a href="{{ path('oag_oagfile_iati', { 'id': iatidoc['id'] }) }}">{{ iatidoc['name'] }}</a>
                 <ul>
                     {% for doc in iatidoc['docs'] %}
