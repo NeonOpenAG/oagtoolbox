@@ -27,8 +27,7 @@
             {% if enhancingDocuments|length > 0 %}
                 <ul>
                     {% for doc in enhancingDocuments %}
-                        <li><span class='docname'>{{ doc.documentName }}</span>
-                            <a href="{{ path('oag_oagfile_enhancement', { 'id': doc.id }) }}">View</a> |
+                        <li><span class='docname'><a href="{{ path('oag_oagfile_enhancement', { 'id': doc.id }) }}">{{ doc.documentName }}</a></span>
                             <a href='{{ path('oag_oagfile_classify', { 'id': doc.id }) }}'>{% if doc.sectors|length > 0 %}Re-{% endif %}Classify</a> |
                             <a href="#">Geocode</a>
                         {% endfor %}
