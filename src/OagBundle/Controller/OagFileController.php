@@ -122,8 +122,8 @@ class OagFileController extends Controller
             $_sectors[] = [
                 'id' => $sector->getId(),
                 'confidence' => $sector->getConfidence(),
-                'code' => $sector->getCode()->getCode(),
-                'description' => $sector->getCode()->getDescription(),
+                'code' => $sector->getSector()->getCode(),
+                'description' => $sector->getSector()->getDescription(),
             ];
         }
         $data['sectors'] = $_sectors;
