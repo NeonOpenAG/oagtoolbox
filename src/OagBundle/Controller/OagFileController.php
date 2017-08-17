@@ -161,19 +161,7 @@ class OagFileController extends Controller
         $data['name'] = $file->getDocumentName();
         $data['mimetype'] = $file->getMimeType();
         $data['text'] = $srvActivity->stripOagFile($file);
-
-        // Now loop through sectors flattening them (so we can re-use the xectors table template)
-        $sectors = $file->getSuggestedSectors();
-        $_sectors = [];
-        foreach ($sectors as $sector) {
-            $_sectors[] = [
-                'id' => $sector->getId(),
-                'confidence' => $sector->getConfidence(),
-                'code' => $sector->getSector()->getCode(),
-                'description' => $sector->getSector()->getDescription(),
-            ];
-        }
-        $data['sectors'] = $_sectors;
+        $data['sectors'] = $file->getSuggestedSectors();
 
         $geolocations = $file->getGeolocations();
         $_geolocations = $this->locationsToArray($file->getGeolocations());
@@ -197,10 +185,15 @@ class OagFileController extends Controller
 
         $file->clearSectors();
 
-        // TODO if $row['status'] == 0
-        foreach ($json['data'] as $part) {
-            foreach ($part as $activityId => $sectors) {
-                $this->persistSectors($sectors, $file, $activityId);
+        if ($json['status']) {
+            throw \RuntimeException('Classifier service exited with a non 0 status');
+        }
+
+        foreach ($json['data'] as $block) {
+            foreach ($block as $part) {
+                foreach ($part as $activityId => $sectors) {
+                    $this->persistSectors($sectors, $file, $activityId);
+                }
             }
         }
 
@@ -208,7 +201,7 @@ class OagFileController extends Controller
         $em->persist($file);
         $em->flush();
 
-        return ['name' => $file->getDocumentName(), 'sectors' => $json['data']];
+        return ['name' => $file->getDocumentName(), 'sectors' => $file->getSuggestedSectors()->getValues()];
     }
 
     /**
@@ -237,7 +230,7 @@ class OagFileController extends Controller
         $em->persist($file);
         $em->flush();
 
-        return ['name' => $file->getDocumentName(), 'sectors' => $json['data']];
+        return ['name' => $file->getDocumentName(), 'sectors' => $file->getSuggestedSectors()->getValues()];
     }
 
     /**
@@ -253,6 +246,7 @@ class OagFileController extends Controller
                 // We get a single array of nulls back if no match is found.
                 break;
             }
+
             $description = $row['description'];
             $confidence = $row['confidence'];
 

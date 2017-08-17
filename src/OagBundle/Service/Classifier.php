@@ -49,8 +49,47 @@ class Classifier extends AbstractOagService {
     }
 
     public function processXML($contents) {
-        // TODO implement non-fixture process
-        return json_decode($this->getXMLFixtureData(), true);
+        $classifier_parameters = $this->getContainer()->getParameter('classifier');
+        $uri = $classifier_parameters['endpoint'];
+
+        $request = curl_init();
+        curl_setopt($request, CURLOPT_URL, $uri);
+        curl_setopt($request, CURLOPT_POST, true);
+        curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
+        $this->getContainer()->get('logger')->info('Accessing classifer at ' . $uri);
+
+        $payload = array(
+            'data' => $contents,
+            'chunk' => 'true',
+            'threshold' => 'low',
+            'rollup' => 'false',
+            'form' => 'json',
+            'xml_input' => 'true',
+        );
+
+        curl_setopt($request, CURLOPT_POSTFIELDS, json_encode($payload));
+        curl_setopt($request, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+        $data = curl_exec($request);
+        $responseCode = curl_getinfo($request, CURLINFO_HTTP_CODE);
+        curl_close($request);
+
+        $response = array(
+            'status' => ($responseCode >= 200 && $responseCode <= 209) ? 0 : 1,
+        );
+
+        $json = json_decode($data, true);
+        if (!is_array($json)) {
+            $json = [
+                'data' => [
+                    'code' => '',
+                    'description' => '',
+                    'confidence' => '',
+                ],
+            ];
+            $this->getContainer()->get('logger')->error('Classifier failed to process: ' . $data . ' with response code: ' . $responseCode);
+        }
+
+        return array_merge($response, $json);
     }
 
     public function processString($contents) {
