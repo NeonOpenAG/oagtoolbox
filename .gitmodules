@@ -1,0 +1,3 @@
+[submodule "src/OagBundle/Resources/public/neonmap"]
+	path = src/OagBundle/Resources/public/neonmap
+	url = https://github.com/neontribe/neonmap.git
