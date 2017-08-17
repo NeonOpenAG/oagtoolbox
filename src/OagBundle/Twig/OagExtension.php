@@ -50,6 +50,7 @@ class OagExtension extends \Twig_Extension {
         return array(
             new \Twig_SimpleFilter('isCoveable', array($this, 'isCoveable')),
             new \Twig_SimpleFilter('isClassifiable', array($this, 'isClassifiable')),
+            new \Twig_SimpleFilter('formatSectorList', array($this, 'formatSectorList')),
             new \Twig_SimpleFilter('suggestedSectorList', array($this, 'suggestedSectorList')),
         );
     }
@@ -72,14 +73,6 @@ class OagExtension extends \Twig_Extension {
         // Should we test file extension?
         // Should we now test for correct csv/xlsx format?
         return false;
-    }
-
-    public function suggestedSectorList($suggestedSector) {
-        $lines = [];
-        foreach ($suggestedSector as $sector) {
-            $lines[] = $sector->getSector()->getDescription();
-        }
-        return implode(', ', $lines);
     }
 
 }

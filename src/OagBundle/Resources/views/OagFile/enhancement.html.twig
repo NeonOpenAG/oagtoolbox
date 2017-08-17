@@ -8,7 +8,7 @@
     <h2>Mime type: {{ mimetype }}</h2>
 
     {% if sectors|length > 0 %}
-        {{ include('OagBundle::OagFile/sectors_table.html.twig', { 'sectors': sectors }) }}
+        {{ include('OagBundle::OagFile/suggested_sectors_table.html.twig', { 'sectors': sectors }) }}
     {% else %}
         <h2>No sectors associated</h2>
     {% endif %}
