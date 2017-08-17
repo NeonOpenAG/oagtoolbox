@@ -17,9 +17,7 @@ class Classifier extends AbstractOagService {
         return json_decode($this->getStringFixtureData(), true);
     }
 
-    public function isAvailable() {
-        $uri = $this->getUri('xml');
-
+    public function parseUri($uri) {
         // The classifier is VERY slow to respond, use a port check instead.
         // TODO Does this work with https
         $parts = parse_url($uri);
@@ -27,9 +25,23 @@ class Classifier extends AbstractOagService {
         $port = 80;
         if (isset($parts['port'])) {
             $port = $parts['port'];
-        } elseif (isset($parts['scheme']) && $parts['scheme'] == 'https') {
+        } elseif (isset($parts['scheme']) && $parts['scheme'] === 'https') {
             $port = 443;
         }
+
+        return array(
+            'host' => $host,
+            'port' => $port,
+        );
+    }
+
+    public function isAvailable() {
+        $uri = $this->getUri('xml');
+        $parsedUri = $this->parseUri($uri);
+
+        $host = $parsedUri['host'];
+        $port = $parsedUri['port'];
+
         $connection = @fsockopen($host, $port);
         return is_resource($connection);
     }
@@ -48,7 +60,7 @@ class Classifier extends AbstractOagService {
         return $contents;
     }
 
-    public function processXML($contents) {
+    public function processXML($contents = '') {
         // TODO implement non-fixture process
         return json_decode($this->getXMLFixtureData(), true);
     }
