@@ -9,7 +9,9 @@
         {% endblock %}
     </head>
     <body>
-        <h1><a href="{{ path('oag_default_index') }}">{% block h1 %}OAG Toolbox{% endblock %}</a></h1>
+        <h1><a href="{{ path('oag_default_index') }}">OAG Toolbox</a></h1>
+
+        <h2>{% block h2 %}Title{% endblock %}</h2>
 
         <div id="menu" style='padding-bottom: 30px'>
         {% block menu %}{% endblock %}

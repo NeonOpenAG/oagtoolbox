@@ -40,6 +40,12 @@ class ActivityController extends Controller
         $root = $srvActivity->load($file);
         $activity = $srvActivity->getActivityById($root, $iatiActivityId);
 
+        $activity_detail = [];
+        $activity_detail['id'] = $srvActivity->getActivityId($activity);
+        $activity_detail['name'] = $srvActivity->getActivityTitle($activity);
+        $activity_detail['sectors'] = $srvActivity->getActivitySectors($activity);
+        $activity_detail['locations'] = $srvActivity->getActivityLocations($activity);
+
         # build the form
         $formBuilder = $this->createFormBuilder(array(), array());
 
@@ -158,7 +164,8 @@ class ActivityController extends Controller
 
         return array(
             'form' => $form->createView(),
-            'id' => $file->getId()
+            'id' => $file->getId(),
+            'activity' => $activity_detail,
         );
     }
 

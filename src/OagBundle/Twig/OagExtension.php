@@ -75,4 +75,22 @@ class OagExtension extends \Twig_Extension {
         return false;
     }
 
+    public function formatSectorList($sectors) {
+        return array_reduce($sectors, function($reduction, $sector) {
+            $activityList = &$reduction[$sector->getActivityId()];
+            if (!$activityList)
+                $activityList = [];
+            array_push($activityList, $sector);
+            return $reduction;
+        }, []);
+    }
+
+    public function suggestedSectorList($suggestedSector) {
+        $lines = [];
+        foreach ($suggestedSector as $sector) {
+            $lines[] = $sector->getSector()->getDescription();
+        }
+        return implode(', ', $lines);
+    }
+
 }
