@@ -2,9 +2,15 @@
 
 {% block title %}OagBundle:Activity:enhance{% endblock %}
 
-{% block body %}
-    <h1>Welcome to the Activity:enhance page</h1>
+{% block h2 %}{{ activity.name }} [{{ activity.id }}]{% endblock %}
 
+{% block body %}
+    {{ dump(activity)  }}
+
+    {{ form(form) }}
+{% endblock %}
+
+{#
     <ul>
         <li>Show existing sectors as checked checkboxes</li>
         <li>Show classifier results for this (activity|document)?, not sure which check with Kat/Harry</li>
@@ -18,5 +24,6 @@
         <a href='{{ path('oag_oagfile_classifyxml', { 'id': id  }) }}'>Classify</a>
     </p>
 
-    {{ form(form) }}
-{% endblock %}
+    <p>
+    </p>
+#}

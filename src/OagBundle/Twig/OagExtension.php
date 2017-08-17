@@ -78,7 +78,8 @@ class OagExtension extends \Twig_Extension {
     public function formatSectorList($sectors) {
         return array_reduce($sectors, function($reduction, $sector) {
             $activityList = &$reduction[$sector->getActivityId()];
-            if(!$activityList) $activityList = [];
+            if (!$activityList)
+                $activityList = [];
             array_push($activityList, $sector);
             return $reduction;
         }, []);
@@ -91,4 +92,5 @@ class OagExtension extends \Twig_Extension {
         }
         return implode(', ', $lines);
     }
+
 }
