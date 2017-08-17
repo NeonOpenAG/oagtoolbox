@@ -99,13 +99,23 @@ class ClassifierTest extends TestCase {
             ->getMock();
         $classifier->setContainer($this->container);
 
+        $kernel = $this->container->get('kernel');
+        $path = $kernel->locateResource('@OagBundle/Resources/fixtures/text.classifier.json');
+        $contents = json_decode(file_get_contents($path), true);
+
+        // Assert that the correct fixture data is returned.
+        $classifier->method('isAvailable')
+            ->willReturn(false);
+
+        $notAvailableResult = $classifier->processString('');
+        $this->assertEquals($contents, $notAvailableResult);
+
+        // Assert that the
         $classifier->method('isAvailable')
             ->willReturn(true);
 
-
-        $result = $classifier->processString('swine');
-        dump($result);
-
+        $availableResult = $classifier->processString('');
+        $this->assertEquals($contents, $availableResult);
     }
     public function testExtractSectors() {}
 
