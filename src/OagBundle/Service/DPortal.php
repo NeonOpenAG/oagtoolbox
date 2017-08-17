@@ -36,7 +36,7 @@ class DPortal extends AbstractOagService {
         if (!is_dir($xmldir)) {
             mkdir($xmldir, 0755, true);
         }
-        $xmlfile = $xmldir . '/' . $srvOagFile->getXMLFileName($oagfile);
+        $xmlfile = $xmldir . '/' . $oagfile->getDocumentName();
 
         $start = exec("openag start dportal");
         $this->getContainer()->get('logger')->info(sprintf('Started dportal: "%s"', $start));
