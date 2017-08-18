@@ -2,12 +2,32 @@
 
 {% block title %}OagBundle:Activity:enhance{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/oag/neonmap/dist/neonmap.css') }}" rel="stylesheet" />
+{% endblock %}
+
 {% block h2 %}{{ activity.name }} [{{ activity.id }}]{% endblock %}
 
 {% block body %}
-    {{ dump(activity)  }}
 
+    <div id="existing-locations">
+        <h3>Existing locations</h3>
+        <div id="existing-map-block"
+             data-geojson='{{ mapdata }}'
+             ></div>
+    </div>
     {{ form(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/oag/neonmap/dist/neonmap.js') }}"></script>
+    <script>
+        $( document ).ready(function() {
+            $('#existing-map-block').neonmap({image_path: "{{ asset('bundles/oag/neonmap/dist/images') }}" });
+        });
+    </script>
 {% endblock %}
 
 {#

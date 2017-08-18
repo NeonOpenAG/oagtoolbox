@@ -159,11 +159,14 @@ class ActivityService extends AbstractService {
             $description = (string) $currentLocation->xpath('./name/narrative[1]')[0];
             $code = (string) $currentLocation->xpath('location-id')[0]['code'];
             $vocabulary = (string) $currentLocation->xpath('location-id')[0]['vocabulary'];
+            $pos = (string)$currentLocation->xpath('point/pos')[0];
+            $lonlat = explode(' ', $pos);
 
             $currentLocations[] = array(
                 'description' => $description,
                 'code' => $code,
-                'vocabulary' => $vocabulary
+                'vocabulary' => $vocabulary,
+                'lonlat' => $lonlat,
             );
         }
         return $currentLocations;

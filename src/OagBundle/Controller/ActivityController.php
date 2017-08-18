@@ -44,7 +44,31 @@ class ActivityController extends Controller
         $activity_detail['id'] = $srvActivity->getActivityId($activity);
         $activity_detail['name'] = $srvActivity->getActivityTitle($activity);
         $activity_detail['sectors'] = $srvActivity->getActivitySectors($activity);
-        $activity_detail['locations'] = $srvActivity->getActivityLocations($activity);
+
+        $locations = $srvActivity->getActivityLocations($activity);
+
+        $map_data = [];
+
+        $location_data = [];
+        foreach ($locations as $location) {
+            $location_data[] = [
+                "id" => $activity_detail['id'],
+                "type" => "Feature",
+                "geometry" => [
+                    "type" => "Point",
+                    "coordinates" => $location['lonlat'],
+                ],
+                'properties' => [
+                    'title' => $location['description'],
+                    'nid' => $location['code'],
+                ],
+            ];
+        }
+
+        $map_data = [
+            "type" => "FeatureCollection",
+            "features" => $location_data,
+        ];
 
         # build the form
         $formBuilder = $this->createFormBuilder(array(), array());
@@ -166,6 +190,7 @@ class ActivityController extends Controller
             'form' => $form->createView(),
             'id' => $file->getId(),
             'activity' => $activity_detail,
+            'mapdata' => json_encode($map_data, JSON_HEX_APOS + JSON_HEX_TAG + JSON_HEX_AMP + JSON_HEX_QUOT),
         );
     }
 
