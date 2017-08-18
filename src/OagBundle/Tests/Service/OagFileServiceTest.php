@@ -41,6 +41,8 @@ class OagFileServiceTest extends TestCase {
             ->setMethods(['getParameter'])
             ->getMock();
 
+        // Make sure that both "oagxml_directory" and "oagfiles_directory" are
+        // passed in as params.
         $container->expects($this->exactly(2))
             ->method('getParameter')
             ->withConsecutive(
@@ -70,8 +72,10 @@ class OagFileServiceTest extends TestCase {
 
         $fileService->setContainer($this->container);
 
-        $testFilePath = $fileService->getContainer()->getParameter('oagfiles_directory') . '/animalfarm.txt';
+        $testFilePath = $fileService->getContainer()
+                ->getParameter('oagfiles_directory') . '/animalfarm.txt';
 
+        // Return the file path on first call and an invalid path on the second.
         $fileService->expects($this->exactly(2))
             ->method('getPath')
             ->will(
