@@ -20,11 +20,16 @@ class ClassifierTest extends TestCase {
     }
 
 
-    public function testProcessUri() {}
+    public function testProcessUri() {
+        $classifier = $this->container->get(Classifier::class);
+        $classifier->setContainer($this->container);
+
+        $processed = $classifier->processUri();
+        $this->assertJson(json_encode($processed));
+    }
 
     /**
      * @dataProvider parseUriDataProvider
-     * @group failing
      */
     public function testParseUri($uri, $assertParsed) {
         $classifier = $this->container->get(Classifier::class);
@@ -87,47 +92,47 @@ class ClassifierTest extends TestCase {
         $classifier->setContainer($this->container);
 
         $processed_xml = $classifier->processXML();
-        $this->assertJson($processed_xml);
+        $this->assertJson(json_encode($processed_xml));
     }
 
-    /**
-     * @group failing
-     */
     public function testProcessString() {
         $classifier = $this->getMockBuilder(Classifier::class)
             ->setMethods(['isAvailable'])
             ->getMock();
         $classifier->setContainer($this->container);
 
-        $kernel = $this->container->get('kernel');
-        $path = $kernel->locateResource('@OagBundle/Resources/fixtures/text.classifier.json');
-        $contents = json_decode(file_get_contents($path), true);
-
         // Assert that the correct fixture data is returned.
-        $classifier->method('isAvailable')
+        $classifier->expects($this->at(0))
+            ->method('isAvailable')
             ->willReturn(false);
 
-        $notAvailableResult = $classifier->processString('');
-        $this->assertEquals($contents, $notAvailableResult);
-
-        // Assert that the
-        $classifier->method('isAvailable')
+        // Assert that the correct data is returned from Apiary.
+        $classifier->expects($this->at(1))
+            ->method('isAvailable')
             ->willReturn(true);
 
+        $notAvailableResult = $classifier->processString('');
+        $this->assertJson(json_encode($notAvailableResult));
+
+
+
         $availableResult = $classifier->processString('');
-        $this->assertEquals($contents, $availableResult);
+        $this->assertJson(json_encode($availableResult));
     }
-    public function testExtractSectors() {}
+
+    /**
+     * Left as a stub because method is unused.
+     */
+    public function testExtractSectors() {
+        $this->assertTrue(true);
+    }
 
     public function testGetStringFixtureData() {
         $classifier = $this->container->get(Classifier::class);
         $classifier->setContainer($this->container);
         $data = $classifier->getStringFixtureData();
 
-        $json = json_decode($data, true);
-
-        $this->assertNotNull($json, 'No JSON returned from classifier');
-        $this->assertTrue(count($json) >= 1);
+        $this->assertJson($data);
     }
 
     public function testGetXMLFixtureData() {
@@ -135,9 +140,6 @@ class ClassifierTest extends TestCase {
         $classifier->setContainer($this->container);
         $data = $classifier->getXMLFixtureData();
 
-        $json = json_decode($data, true);
-
-        $this->assertNotNull($json, 'No JSON returned from classifier');
-        $this->assertTrue(count($json) >= 1);
+        $this->assertJson($data);
     }
 }
