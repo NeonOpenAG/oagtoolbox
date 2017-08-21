@@ -100,6 +100,7 @@ class ActivityController extends Controller
             'expanded' => true,
             'multiple' => true,
             'choices' => array_reduce($suggested, function ($result, $item) {
+                # basically makes choices as $item->getSector()->getDescription() => $item->getId()
                 $label = $item->getSector()->getDescription();
                 $result[$label] = $item->getId();
                 return $result;
@@ -116,6 +117,7 @@ class ActivityController extends Controller
                 'multiple' => true,
                 'label' => $name,
                 'choices' => array_reduce($sectors->toArray(), function ($result, $item) {
+                    # basically makes choices as $item->getSector()->getDescription() => $item->getId()
                     $label = $item->getSector()->getDescription();
                     $result[$label] = $item->getId();
                     return $result;
