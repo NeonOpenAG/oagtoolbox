@@ -73,13 +73,18 @@ class ActivityController extends Controller
         # build the form
         $formBuilder = $this->createFormBuilder(array(), array());
 
-        # current sectors
+        # current sectors - field value is index, field label is description and vocab
         $current = $srvActivity->getActivitySectors($activity);
         $formBuilder->add('current', ChoiceType::class, array(
             'expanded' => true,
             'multiple' => true,
-            'choices' => array_column($current, 'code', 'description'),
-            'data' => array_column($current, 'code') // default to ticked
+            'choices' => array_keys($current), # [ 1 .. length-1 ]
+            'data' => array_keys($current), // default to ticked
+            'choice_label' => function ($value, $key, $index) use ($current) {
+                $desc = $current[$index]['description'];
+                $vocab = $current[$index]['vocabulary'];
+                return "$desc ($vocab)";
+            }
         ));
 
         # suggested sectors
@@ -129,9 +134,9 @@ class ActivityController extends Controller
             $data = $form->getData();
 
             $toRemove = array();
-            foreach ($current as $sugSector) {
+            foreach ($current as $index => $sugSector) {
                 // has a pre-existing one been removed?
-                if (!in_array($sugSector['code'], $data['current'])) {
+                if (!in_array($index, $data['current'])) {
                     $sectorCode = $sugSector['code'];
                     $sectorDescription = $sugSector['description'];
                     $sectorVocab = $sugSector['vocabulary'];
