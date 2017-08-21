@@ -16,7 +16,6 @@ class MergeActivityType extends AbstractType {
         $ids = $options['ids'];
         $allCur = $options['current'];
         $allNew = $options['new'];
-        $documents = $options['documents'];
 
         foreach (array_keys($ids) as $id) {
             $cur = array_key_exists($id, $allCur) ? $allCur[$id] : array();
@@ -34,23 +33,6 @@ class MergeActivityType extends AbstractType {
                 'multiple' => true,
                 'choices' => $new
             ));
-
-            $count = 0;
-            foreach ($documents as $key => $activites) {
-                $_activities = array();
-                foreach ($activites as $activity) {
-                    $description = $activity->getCode()->getDescription();
-                    $confidence = $activity->getConfidence();
-                    $label = sprintf("%s (%d%%)", $description, $confidence * 100);
-                    $_activities[$label] = $activity->getCode()->getCode();
-                }
-                $safeKey = 'addon_' . $id . '_' . $count++;
-                $builder->add($safeKey, ChoiceType::class, array(
-                    'expanded' => true,
-                    'multiple' => true,
-                    'choices' => $_activities,
-                ));
-            }
         }
 
         $builder->add('submit', SubmitType::class);
@@ -66,7 +48,6 @@ class MergeActivityType extends AbstractType {
                 'ids' => array(),
                 'current' => array(),
                 'new' => array(),
-                'documents' => array(),
                 'attr' => array(
                     'class' => 'pure-table pure-table-bordered'
                 )

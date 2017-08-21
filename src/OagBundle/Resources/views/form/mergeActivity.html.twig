@@ -6,9 +6,6 @@
                 <th>Name</th>
                 <th>Current</th>
                 <th>New</th>
-                    {% for name, document in documents %}
-                    <th>{{ name }}</th>
-                    {% endfor %}
             </tr>
         </thead>
         <tbody>
@@ -37,16 +34,6 @@
                         </ul>
                         {% do form['new' ~ id].setRendered %}
                     </td>
-                    {% for document in documents %}
-                        <td>
-                            {% set _key = 'addon_' ~ id ~ '_' ~ loop.index0 %}
-                            <ul>
-                                {% for row in form[_key] %}
-                                    <li>{{ form_label(row) }} {{ form_widget(row) }}</li>
-                                    {%endfor %}
-                            </ul>
-                        </td>
-                    {% endfor %}
                 </tr>
             {% endfor %}
             <tr>
