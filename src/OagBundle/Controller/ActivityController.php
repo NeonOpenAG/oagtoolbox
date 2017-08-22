@@ -174,6 +174,9 @@ class ActivityController extends Controller
 
                 $toAdd[] = $sector;
 
+                // TODO WARNING - if reusing this code elsewhere than the
+                // auto-classifier, ensure that you specify the correct
+                // vocabulary and reason for addition
                 $code = $sector->getCode();
                 $description = $sector->getDescription();
                 $srvActivity->addActivitySector($activity, $code, $description);
