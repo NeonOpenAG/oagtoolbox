@@ -71,6 +71,9 @@ class SuggestedSector {
         return $this->confidence;
     }
 
+    /**
+     * @return \OagBundle\Entity\Sector
+     */
     public function getSector() {
         return $this->sector;
     }
