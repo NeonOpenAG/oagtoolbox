@@ -115,6 +115,39 @@ class ActivityService extends AbstractService {
         return 'Unnamed';
     }
 
+    /**
+     * Creates a definition array to be provided to the NeonMap service.
+     *
+     * @param \SimpleXMLElement $activity
+     *
+     * @return array
+     */
+    public function getActivityMapData($activity) {
+        $activityDetail = $this->summariseActivityToArray($activity);
+
+        $locations = $activityDetail['locations'];
+        $location_data = [];
+        foreach ($locations as $location) {
+            $location_data[] = array(
+                "id" => $activityDetail['id'],
+                "type" => "Feature",
+                "geometry" => array(
+                    "type" => "Point",
+                    "coordinates" => $location['lonlat'],
+                ),
+                'properties' => array(
+                    'title' => $location['description'],
+                    'nid' => $location['code'],
+                ),
+            );
+        }
+
+        return $map_data = [
+            "type" => "FeatureCollection",
+            "features" => $location_data,
+        ];
+    }
+
     public function getActivitySectors($activity) {
         $currentSectors = array();
         foreach ($activity->xpath('./sector') as $currentSector) {

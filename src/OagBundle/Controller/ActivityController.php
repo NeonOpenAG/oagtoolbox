@@ -26,39 +26,6 @@ use OagBundle\Service\OagFileService;
  */
 class ActivityController extends Controller
  {
-
-    /**
-     * Creates a definition array to be provided to the NeonMap service.
-     *
-     * @param array $activityDetail
-     *
-     * @return array
-     */
-     private function getActivityMapData($activityDetail) {
-         $locations = $activityDetail['locations'] ?? [];
-         $location_data = [];
-         foreach ($locations as $location) {
-             $location_data[] = array(
-                 "id" => $activityDetail['id'],
-                 "type" => "Feature",
-                 "geometry" => array(
-                     "type" => "Point",
-                     "coordinates" => $location['lonlat'],
-                 ),
-                 'properties' => array(
-                     'title' => $location['description'],
-                     'nid' => $location['code'],
-                 ),
-             );
-         }
-
-         return $map_data = [
-             "type" => "FeatureCollection",
-             "features" => $location_data,
-         ];
-     }
-
-
     /**
      * Show summary of activity and existing sectors with sectors available from supporting documents.
      *
@@ -79,7 +46,7 @@ class ActivityController extends Controller
         $activityDetail = $srvActivity->summariseActivityToArray($activity);
 
         # Create map definition array.
-        $mapData = self::getActivityMapData($activityDetail);
+        $mapData = $srvActivity->getActivityMapData($activity);
 
         # Current sectors attached to $activity.
         $currentSectors = $srvActivity->getActivitySectors($activity);
