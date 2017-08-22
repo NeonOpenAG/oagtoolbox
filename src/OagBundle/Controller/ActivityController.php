@@ -151,7 +151,7 @@ class ActivityController extends Controller
                     $toRemove[] = $dbSector;
                     $em->persist($dbSector);
 
-                    $srvActivity->removeActivitySector($activity, $sectorCode, $sectorVocab);
+                    $srvActivity->removeActivitySector($activity, $sectorCode, $sectorVocab, $sectorVocabUri);
                 }
             }
 
