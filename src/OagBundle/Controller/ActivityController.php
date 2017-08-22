@@ -34,7 +34,7 @@ class ActivityController extends Controller
      *
      * @return array
      */
-     private static function getActivityMapData($activityDetail) {
+     private function getActivityMapData($activityDetail) {
          $locations = $activityDetail['locations'] ?? [];
          $location_data = [];
          foreach ($locations as $location) {
