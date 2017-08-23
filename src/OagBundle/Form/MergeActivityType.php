@@ -32,13 +32,19 @@ class MergeActivityType extends AbstractType {
         $builder->add('currentSectors', ChoiceType::class, array(
             'expanded' => true,
             'multiple' => true,
-            'choices' => array_column($currentSectors, 'code', 'description'),
-            'data' => array_column($currentSectors, 'code') // default to ticked
+            'choices' => array_keys($currentSectors),
+            'data' => array_keys($currentSectors), // default to ticked
+            'choice_label' => function ($value, $key, $index) use ($currentSectors) {
+                $desc = $currentSectors[$index]['description'];
+                $vocab = $currentSectors[$index]['vocabulary'];
+                return "$desc ($vocab)";
+            }
         ))
         ->add('suggested', ChoiceType::class, array(
             'expanded' => true,
             'multiple' => true,
             'choices' => array_reduce($suggestedSectors, function ($result, SuggestedSector $item) {
+                # basically changes choices to $item->getSector()->getDescription() => $item->getId()
                 $label = $item->getSector()->getDescription();
                 $result[$label] = $item->getId();
                 return $result;
@@ -56,6 +62,7 @@ class MergeActivityType extends AbstractType {
                 'multiple' => true,
                 'label' => $name,
                 'choices' => array_reduce($sectors->toArray(), function (array $result, SuggestedSector $item) {
+                    # basically changes choices to $item->getSector()->getDescription() => $item->getId()
                     $label = $item->getSector()->getDescription();
                     $result[$label] = $item->getId();
                     return $result;

@@ -64,9 +64,9 @@ class ActivityController extends Controller
             $data = $form->getData();
 
             $toRemove = array();
-            foreach ($currentSectors as $sugSector) {
+            foreach ($currentSectors as $index => $sugSector) {
                 // has a pre-existing one been removed?
-                if (!in_array($sugSector['code'], $data['currentSectors'])) {
+                if (!in_array($index, $data['currentSectors'])) {
                     $sectorCode = $sugSector['code'];
                     $sectorDescription = $sugSector['description'];
                     $sectorVocab = $sugSector['vocabulary'];
@@ -79,7 +79,7 @@ class ActivityController extends Controller
                     $toRemove[] = $dbSector;
                     $em->persist($dbSector);
 
-                    $srvActivity->removeActivitySector($activity, $sectorCode, $sectorVocab);
+                    $srvActivity->removeActivitySector($activity, $sectorCode, $sectorVocab, $sectorVocabUri);
                 }
             }
 
@@ -102,6 +102,9 @@ class ActivityController extends Controller
 
                 $toAdd[] = $sector;
 
+                // TODO WARNING - if reusing this code elsewhere than the
+                // auto-classifier, ensure that you specify the correct
+                // vocabulary and reason for addition
                 $code = $sector->getCode();
                 $description = $sector->getDescription();
                 $srvActivity->addActivitySector($activity, $code, $description);

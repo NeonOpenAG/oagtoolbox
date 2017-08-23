@@ -193,8 +193,15 @@ class ActivityService extends AbstractService {
         $sector->narrative[1]->addAttribute('xml:lang', 'en');
     }
 
-    public function removeActivitySector(&$activity, $code, $vocabulary) {
-        $sector = $activity->xpath("./sector[@code='$code' and @vocabulary='$vocabulary']");
+    public function removeActivitySector(&$activity, $code, $vocabulary, $vocabularyUri = null) {
+        $path = "./sector[@code='$code' and @vocabulary='$vocabulary']";
+        if ($vocabulary === '98' || $vocabulary === '99') {
+            if (is_null($vocabularyUri)) {
+                throw \Exception('Vocabulary URI must be provided if vocabulary is "98" or "99"');
+            }
+            $path = "./sector[@code='$code' and @vocabulary='$vocabulary' and @vocabulary-uri='$vocabularyUri']";
+        }
+        $sector = $activity->xpath($path);
 
         if (count($sector) < 1) {
             return;
