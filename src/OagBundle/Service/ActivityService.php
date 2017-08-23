@@ -38,10 +38,11 @@ class ActivityService extends AbstractService {
             $activities = $this->getActivities($root);
             $namespaceUri =  $this->getContainer()->getParameter('classifier')['namespace_uri'];
             foreach ($activities as $activity) {
-                $activity->addAttribute('xmlns:xmlns:openag', $namespaceUri);
+                $activityDocNamespaces = $activity->getDocNamespaces(FALSE, FALSE);
+                if(!array_key_exists('openag', $activityDocNamespaces)) {
+                    $activity->addAttribute('xmlns:xmlns:openag', $namespaceUri);
+                }
             }
-
-
             return $root;
         } catch (\Exception $ex) {
             $this->getContainer()->get('logger')->error('YU NO LOG' . $ex->getMessage());
