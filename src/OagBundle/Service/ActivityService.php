@@ -36,15 +36,33 @@ class ActivityService extends AbstractService {
         return $root->asXML();
     }
 
+    /**
+     * Returns a summary array for any given activity.
+     *
+     * @param $activity
+     *
+     * @return array
+     *   Summary of the passed in activity.
+     *
+     *   array['id'] Activity ID.
+     *   array['name'] Activity Name.
+     *   array['sectors'] Activity Sectors.
+     *   array['locations'] Activity Locations.
+     */
+    public function summariseActivityToArray($activity) {
+        $simpActivity = array();
+        $simpActivity['id'] = $this->getActivityId($activity);
+        $simpActivity['name'] = $this->getActivityTitle($activity);
+        $simpActivity['sectors'] = $this->getActivitySectors($activity);
+        $simpActivity['locations'] = $this->getActivityLocations($activity);
+        return $simpActivity;
+    }
+
     public function summariseToArray($root) {
         // gets a simplified representation of the data that we can deserialise at the moment
         $activities = array();
         foreach ($this->getActivities($root) as $activity) {
-            $simpActivity = array();
-            $simpActivity['id'] = $this->getActivityId($activity);
-            $simpActivity['name'] = $this->getActivityTitle($activity);
-            $simpActivity['sectors'] = $this->getActivitySectors($activity);
-            $simpActivity['locations'] = $this->getActivityLocations($activity);
+            $simpActivity = $this->summariseActivityToArray($activity);
             $activities[] = $simpActivity;
         }
         return $activities;
@@ -95,6 +113,39 @@ class ActivityService extends AbstractService {
         }
 
         return 'Unnamed';
+    }
+
+    /**
+     * Creates a definition array to be provided to the NeonMap service.
+     *
+     * @param \SimpleXMLElement $activity
+     *
+     * @return array
+     */
+    public function getActivityMapData($activity) {
+        $activityDetail = $this->summariseActivityToArray($activity);
+
+        $locations = $activityDetail['locations'];
+        $location_data = [];
+        foreach ($locations as $location) {
+            $location_data[] = array(
+                "id" => $activityDetail['id'],
+                "type" => "Feature",
+                "geometry" => array(
+                    "type" => "Point",
+                    "coordinates" => $location['lonlat'],
+                ),
+                'properties' => array(
+                    'title' => $location['description'],
+                    'nid' => $location['code'],
+                ),
+            );
+        }
+
+        return $map_data = [
+            "type" => "FeatureCollection",
+            "features" => $location_data,
+        ];
     }
 
     public function getActivitySectors($activity) {

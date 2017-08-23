@@ -5,10 +5,13 @@ namespace OagBundle\Controller;
 use Doctrine\Common\Collections\ArrayCollection;
 use OagBundle\Entity\Change;
 use OagBundle\Entity\Sector;
+use OagBundle\Form\MergeActivityType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -23,7 +26,6 @@ use OagBundle\Service\OagFileService;
  */
 class ActivityController extends Controller
  {
-
     /**
      * Show summary of activity and existing sectors with sectors available from supporting documents.
      *
@@ -36,109 +38,35 @@ class ActivityController extends Controller
         $sugSectorRepo = $this->container->get('doctrine')->getRepository(SuggestedSector::class);
         $em = $this->getDoctrine()->getManager();
 
-        # find activity
+        # Find activity using the provided ID.
         $root = $srvActivity->load($file);
         $activity = $srvActivity->getActivityById($root, $iatiActivityId);
 
-        $activity_detail = [];
-        $activity_detail['id'] = $srvActivity->getActivityId($activity);
-        $activity_detail['name'] = $srvActivity->getActivityTitle($activity);
-        $activity_detail['sectors'] = $srvActivity->getActivitySectors($activity);
+        # Current activity summarised in array form.
+        $activityDetail = $srvActivity->summariseActivityToArray($activity);
 
-        $locations = $srvActivity->getActivityLocations($activity);
+        # Create map definition array.
+        $mapData = $srvActivity->getActivityMapData($activity);
 
-        $map_data = [];
+        # Current sectors attached to $activity.
+        $currentSectors = $srvActivity->getActivitySectors($activity);
 
-        $location_data = [];
-        foreach ($locations as $location) {
-            $location_data[] = [
-                "id" => $activity_detail['id'],
-                "type" => "Feature",
-                "geometry" => [
-                    "type" => "Point",
-                    "coordinates" => $location['lonlat'],
-                ],
-                'properties' => [
-                    'title' => $location['description'],
-                    'nid' => $location['code'],
-                ],
-            ];
-        }
+        # Create a new instance of the form.
+        $form = $this->createForm(MergeActivityType::class, null, array_merge(array(
+            'currentSectors' => $currentSectors,
+            'iatiActivityId' => $iatiActivityId,
+            'file' => $file
+        )));
 
-        $map_data = [
-            "type" => "FeatureCollection",
-            "features" => $location_data,
-        ];
-
-        # build the form
-        $formBuilder = $this->createFormBuilder(array(), array());
-
-        # current sectors - field value is index, field label is description and vocab
-        $current = $srvActivity->getActivitySectors($activity);
-        $formBuilder->add('current', ChoiceType::class, array(
-            'expanded' => true,
-            'multiple' => true,
-            'choices' => array_keys($current), # [ 1 .. length-1 ]
-            'data' => array_keys($current), // default to ticked
-            'choice_label' => function ($value, $key, $index) use ($current) {
-                $desc = $current[$index]['description'];
-                $vocab = $current[$index]['vocabulary'];
-                return "$desc ($vocab)";
-            }
-        ));
-
-        # suggested sectors
-        $suggested = array();
-        foreach ($file->getSuggestedSectors() as $sugSector) {
-            # if it's not from our activity, ignore it
-            if ($sugSector->getActivityId() !== $iatiActivityId) {
-                continue;
-            }
-            $suggested[] = $sugSector;
-        }
-        $formBuilder->add('suggested', ChoiceType::class, array(
-            'expanded' => true,
-            'multiple' => true,
-            'choices' => array_reduce($suggested, function ($result, $item) {
-                # basically makes choices as $item->getSector()->getDescription() => $item->getId()
-                $label = $item->getSector()->getDescription();
-                $result[$label] = $item->getId();
-                return $result;
-            }, array())
-        ));
-
-        foreach ($file->getEnhancingDocuments() as $otherFile) {
-            $name = $otherFile->getDocumentName();
-            $sectors = $otherFile->getSuggestedSectors();
-            $id = $otherFile->getId();
-
-            $formBuilder->add("enhanced_$id", ChoiceType::class, array(
-                'expanded' => true,
-                'multiple' => true,
-                'label' => $name,
-                'choices' => array_reduce($sectors->toArray(), function ($result, $item) {
-                    # basically makes choices as $item->getSector()->getDescription() => $item->getId()
-                    $label = $item->getSector()->getDescription();
-                    $result[$label] = $item->getId();
-                    return $result;
-                }, array())
-            ));
-        }
-
-        $formBuilder->add('submit', SubmitType::class, array(
-            'label' => 'Merge'
-        ));
-
-        $form = $formBuilder->getForm();
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
             $toRemove = array();
-            foreach ($current as $index => $sugSector) {
+            foreach ($currentSectors as $index => $sugSector) {
                 // has a pre-existing one been removed?
-                if (!in_array($index, $data['current'])) {
+                if (!in_array($index, $data['currentSectors'])) {
                     $sectorCode = $sugSector['code'];
                     $sectorDescription = $sugSector['description'];
                     $sectorVocab = $sugSector['vocabulary'];
@@ -194,13 +122,16 @@ class ActivityController extends Controller
 
             $resultXML = $srvActivity->toXML($root);
             $srvOagFile->setContents($file, $resultXML);
+
+            # Force a redirect on successful submit so that the form is rebuilt.
+            return $this->redirect($request->getUri());
         }
 
         return array(
             'form' => $form->createView(),
             'id' => $file->getId(),
-            'activity' => $activity_detail,
-            'mapdata' => json_encode($map_data, JSON_HEX_APOS + JSON_HEX_TAG + JSON_HEX_AMP + JSON_HEX_QUOT),
+            'activity' => $activityDetail,
+            'mapdata' => json_encode($mapData, JSON_HEX_APOS + JSON_HEX_TAG + JSON_HEX_AMP + JSON_HEX_QUOT),
         );
     }
 
