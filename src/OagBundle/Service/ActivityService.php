@@ -11,6 +11,7 @@ namespace OagBundle\Service;
 class ActivityService extends AbstractService {
 
     const LIBXML_OPTIONS = LIBXML_BIGLINES & LIBXML_PARSEHUGE;
+    const OPENAG_NAMESPACE = 'openag';
 
     public function load($oagFile) {
         $srvOagFile = $this->getContainer()->get(OagFileService::class);
@@ -21,13 +22,31 @@ class ActivityService extends AbstractService {
         return $root;
     }
 
+    public function xpathNS(\SimpleXMLElement $activity, $xpathQuery, $namespace = 'openag') {
+        $namespaceUri =  $this->getContainer()->getParameter('classifier')['namespace_uri'];
+        $activity->registerXPathNamespace($namespace, $namespaceUri);
+        return $activity->xpath($xpathQuery);
+    }
+
     public function parseXML($string) {
+
+
         // helper function to allow for centralised changing of libxml options
         // where appropriate
         try {
-            return new \SimpleXMLElement($string, self::LIBXML_OPTIONS);
+            $root = new \SimpleXMLElement($string, self::LIBXML_OPTIONS);
+            $activities = $this->getActivities($root);
+            $namespaceUri =  $this->getContainer()->getParameter('classifier')['namespace_uri'];
+            foreach ($activities as $activity) {
+                $activity->addAttribute('xmlns:xmlns:openag', $namespaceUri);
+            }
+
+
+            return $root;
         } catch (\Exception $ex) {
+            $this->getContainer()->get('logger')->error('YU NO LOG' . $ex->getMessage());
             $this->getContainer()->get('logger')->error('Failed to parse XML: ' . substr($string, 0, 30));
+            throw $ex;
         }
         return false;
     }
@@ -150,7 +169,7 @@ class ActivityService extends AbstractService {
 
     public function getActivitySectors($activity) {
         $currentSectors = array();
-        foreach ($activity->xpath('./sector') as $currentSector) {
+        foreach ($this->xpathNS($activity, './openag:tag') as $currentSector) {
             $description = (string) $currentSector->xpath('./narrative[1]')[0];
             $code = (string) $currentSector['code'];
             $vocabulary = (string) $currentSector['vocabulary'];
@@ -169,39 +188,37 @@ class ActivityService extends AbstractService {
 
     public function addActivitySector(&$activity, $code, $description, $reason = null) {
         // TODO should we check if it already exists?
-
         if (is_null($reason)) {
             $reason = 'Classified automatically';
         }
 
         $vocab = $this->getContainer()->getParameter('classifier')['vocabulary'];
         $vocabUri = $this->getContainer()->getParameter('classifier')['vocabulary_uri'];
+        $namespaceUri =  $this->getContainer()->getParameter('classifier')['namespace_uri'];
 
-        $sector = $activity->addChild('sector');
+        $sector = $activity->addChild('openag:tag', '', $namespaceUri);
         $sector->addAttribute('code', $code);
         $sector->addAttribute('vocabulary', $vocab);
         if (strlen($vocabUri) > 0) {
             $sector->addAttribute('vocabulary-uri', $vocabUri);
         }
 
-        // narrative text content is set this way to let simplexml escape it
-        // see https://stackoverflow.com/a/555039
-        $sector->narrative[] = $description;
-        $sector->narrative[0]->addAttribute('xml:lang', 'en');
-
-        $sector->narrative[] = $reason;
-        $sector->narrative[1]->addAttribute('xml:lang', 'en');
+        # narrative text content is set this way to let simplexml escape it
+        # see https://stackoverflow.com/a/555039
+        # $narrative->addAttribute('xml:lang', 'en');
+        $sector->addChild('narrative', null, '')[] = $description;
+        $sector->addChild('narrative', null, '')[] = $reason;
     }
 
     public function removeActivitySector(&$activity, $code, $vocabulary, $vocabularyUri = null) {
-        $path = "./sector[@code='$code' and @vocabulary='$vocabulary']";
+        $path = "./openag:tag[@code='$code' and @vocabulary='$vocabulary']";
         if ($vocabulary === '98' || $vocabulary === '99') {
             if (is_null($vocabularyUri)) {
                 throw \Exception('Vocabulary URI must be provided if vocabulary is "98" or "99"');
             }
-            $path = "./sector[@code='$code' and @vocabulary='$vocabulary' and @vocabulary-uri='$vocabularyUri']";
+            $path = "./openag:tag[@code='$code' and @vocabulary='$vocabulary' and @vocabulary-uri='$vocabularyUri']";
         }
-        $sector = $activity->xpath($path);
+        $sector = $this->xpathNS($activity, $path);
 
         if (count($sector) < 1) {
             return;
