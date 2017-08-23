@@ -2,7 +2,7 @@
 
 namespace OagBundle\Form;
 
-use OagBundle\Entity\SuggestedSector;
+use OagBundle\Entity\SuggestedTag;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
@@ -43,7 +43,7 @@ class MergeActivityType extends AbstractType {
         ->add('suggested', ChoiceType::class, array(
             'expanded' => true,
             'multiple' => true,
-            'choices' => array_reduce($suggestedSectors, function ($result, SuggestedSector $item) {
+            'choices' => array_reduce($suggestedSectors, function ($result, SuggestedTag $item) {
                 # basically changes choices to $item->getSector()->getDescription() => $item->getId()
                 $label = $item->getSector()->getDescription();
                 $result[$label] = $item->getId();
@@ -61,7 +61,7 @@ class MergeActivityType extends AbstractType {
                 'expanded' => true,
                 'multiple' => true,
                 'label' => $name,
-                'choices' => array_reduce($sectors->toArray(), function (array $result, SuggestedSector $item) {
+                'choices' => array_reduce($sectors->toArray(), function (array $result, SuggestedTag $item) {
                     # basically changes choices to $item->getSector()->getDescription() => $item->getId()
                     $label = $item->getSector()->getDescription();
                     $result[$label] = $item->getId();

@@ -22,7 +22,6 @@ class DPortalController extends Controller {
     public function indexAction(Request $request, OagFile $file) {
         $portal = $this->get(DPortal::class);
 
-        $avaiable = false;
         if ($portal->isAvailable()) {
             $messages[] = 'DPortal is avaialable';
         } else {

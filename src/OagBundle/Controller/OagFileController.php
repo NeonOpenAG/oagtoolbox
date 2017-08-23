@@ -3,9 +3,9 @@
 namespace OagBundle\Controller;
 
 use OagBundle\Entity\OagFile;
-use OagBundle\Entity\Sector;
+use OagBundle\Entity\Tag;
 use OagBundle\Entity\Geolocation;
-use OagBundle\Entity\SuggestedSector;
+use OagBundle\Entity\SuggestedTag;
 use OagBundle\Service\ActivityService;
 use OagBundle\Service\Classifier;
 use OagBundle\Service\Geocoder;
@@ -238,7 +238,7 @@ class OagFileController extends Controller
      */
     private function persistSectors($sectors, $file, $activityId = null) {
         $em = $this->getDoctrine()->getManager();
-        $sectorRepo = $this->container->get('doctrine')->getRepository(Sector::class);
+        $sectorRepo = $this->container->get('doctrine')->getRepository(Tag::class);
 
         foreach ($sectors as $row) {
             $code = $row['code'];
@@ -270,14 +270,14 @@ class OagFileController extends Controller
             if (!$sector) {
                 $this->container->get('logger')
                     ->info(sprintf('Creating new code %s (%s)', $code, $description));
-                $sector = new Sector();
+                $sector = new Tag();
                 $sector->setCode($code);
                 $sector->setDescription($description);
                 $sector->setVocabulary($vocab, $vocabUri);
                 $em->persist($sector);
             }
 
-            $sugSector = new \OagBundle\Entity\SuggestedSector();
+            $sugSector = new \OagBundle\Entity\SuggestedTag();
             $sugSector->setSector($sector);
             $sugSector->setConfidence($confidence);
             if (!is_null($activityId)) {

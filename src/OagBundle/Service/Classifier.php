@@ -6,8 +6,8 @@ use OagBundle\Service\TextExtractor\PDFExtractor;
 use OagBundle\Service\TextExtractor\RTFExtractor;
 use PhpOffice\PhpWord\IOFactory;
 use OagBundle\Entity\OagFile;
-use OagBundle\Entity\Sector;
-use OagBundle\Entity\SuggestedSector;
+use OagBundle\Entity\Tag;
+use OagBundle\Entity\SuggestedTag;
 use Symfony\Component\Cache\Simple\FilesystemCache;
 
 class Classifier extends AbstractOagService {

@@ -3,7 +3,7 @@
 namespace OagBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use OagBundle\Entity\SuggestedSector;
+use OagBundle\Entity\SuggestedTag;
 use OagBundle\Entity\FileType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints\Range;
@@ -145,27 +145,27 @@ class OagFile {
     }
 
     /**
-     * @param \OagBundle\Entity\SuggestedSector $activity
+     * @param \OagBundle\Entity\SuggestedTag $activity
      *
      * @return bool
      */
-    public function hasSuggestedSector(SuggestedSector $activity) {
+    public function hasSuggestedSector(SuggestedTag $activity) {
         return $this->getSuggestedSectors()->contains($activity);
     }
 
     /**
-     * @param \OagBundle\Entity\SuggestedSector $activity
+     * @param \OagBundle\Entity\SuggestedTag $activity
      */
-    public function addSuggestedSector(SuggestedSector $activity) {
+    public function addSuggestedSector(SuggestedTag $activity) {
         if (!$this->hasSuggestedSector($activity)) {
             $this->suggestedSectors->add($activity);
         }
     }
 
     /**
-     * @param \OagBundle\Entity\SuggestedSector $activity
+     * @param \OagBundle\Entity\SuggestedTag $activity
      */
-    public function removeSuggestedSector(SuggestedSector $activity) {
+    public function removeSuggestedSector(SuggestedTag $activity) {
         if (!$this->hasSuggestedSector($activity)) {
             $this->suggestedSectors->removeElement($activity);
         }

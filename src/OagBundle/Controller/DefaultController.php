@@ -123,8 +123,6 @@ class DefaultController extends Controller {
                 continue;
             } else {
                 $data = array();
-
-                $data = array();
                 $data['file'] = $oagfile->getDocumentName();
                 $data['mimetype'] = $oagfile->getMimeType();
 

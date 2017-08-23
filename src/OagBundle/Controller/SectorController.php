@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use OagBundle\Entity\OagFile;
 
 /**
- * @Route("/sector")
+ * @Route("/tag")
  * @Template
  */
 class SectorController extends Controller {
