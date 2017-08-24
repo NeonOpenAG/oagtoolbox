@@ -130,14 +130,4 @@ class ActivityController extends Controller
         );
     }
 
-    /**
-     * Process the submission from the enhance function
-     *
-     * @Route("/merge/{id}/{iatiActivityId}")
-     * @ParamConverter("file", class="OagBundle:OagFile")
-     */
-    public function mergeAction(Request $request, OagFile $file, $iatiActivityId) {
-        return array();
-    }
-
 }
