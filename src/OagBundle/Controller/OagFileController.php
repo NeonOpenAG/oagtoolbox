@@ -19,6 +19,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -93,6 +94,30 @@ class OagFileController extends Controller
         }
 
         return $data;
+    }
+
+    /**
+     * @Route("/download/{id}")
+     * @ParamConverter("file", class="OagBundle:OagFile")
+     */
+    public function downloadAction(Request $request, OagFile $file) {
+        $srvOagFile = $this->get(OagFileService::class);
+
+        return $this->file($srvOagFile->getPath($file));
+    }
+
+    /**
+     * @Route("/raw/{id}")
+     * @ParamConverter("file", class="OagBundle:OagFile")
+     */
+    public function rawAction(Request $request, OagFile $file) {
+        $srvOagFile = $this->get(OagFileService::class);
+
+        return new Response(
+            $srvOagFile->getContents($file),
+            Response::HTTP_OK,
+            array('content-type' => 'text/xml')
+        );
     }
 
     /**
