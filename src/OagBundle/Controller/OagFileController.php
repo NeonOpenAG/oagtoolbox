@@ -161,7 +161,7 @@ class OagFileController extends Controller
         $data['name'] = $file->getDocumentName();
         $data['mimetype'] = $file->getMimeType();
         $data['text'] = $srvActivity->stripOagFile($file);
-        $data['sectors'] = $file->getSuggestedSectors();
+        $data['tags'] = $file->getSuggestedTags();
 
         $geolocations = $file->getGeolocations();
         $_geolocations = $this->locationsToArray($file->getGeolocations());
@@ -183,7 +183,7 @@ class OagFileController extends Controller
 
         $json = $srvClassifier->processXML($rawXml); 
 
-        $file->clearSectors();
+        $file->clearSuggestedTags();
 
         if ($json['status']) {
             throw \RuntimeException('Classifier service exited with a non 0 status');
@@ -191,8 +191,8 @@ class OagFileController extends Controller
 
         foreach ($json['data'] as $block) {
             foreach ($block as $part) {
-                foreach ($part as $activityId => $sectors) {
-                    $this->persistSectors($sectors, $file, $activityId);
+                foreach ($part as $activityId => $tags) {
+                    $this->persistTags($tags, $file, $activityId);
                 }
             }
         }
@@ -201,7 +201,7 @@ class OagFileController extends Controller
         $em->persist($file);
         $em->flush();
 
-        return ['name' => $file->getDocumentName(), 'sectors' => $file->getSuggestedSectors()->getValues()];
+        return ['name' => $file->getDocumentName(), 'tags' => $file->getSuggestedTags()->getValues()];
     }
 
     /**
@@ -221,26 +221,26 @@ class OagFileController extends Controller
 
         $json = $srvClassifier->processString($rawText);
 
-        $file->clearSectors();
+        $file->clearSuggestedTags();
 
         // TODO if $row['status'] == 0
-        $this->persistSectors($json['data'], $file);
+        $this->persistTags($json['data'], $file);
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($file);
         $em->flush();
 
-        return ['name' => $file->getDocumentName(), 'sectors' => $file->getSuggestedSectors()->getValues()];
+        return ['name' => $file->getDocumentName(), 'tags' => $file->getSuggestedTags()->getValues()];
     }
 
     /**
-     * Persists Oag sectors from API response to database.
+     * Persists Oag tags from API response to database.
      */
-    private function persistSectors($sectors, $file, $activityId = null) {
+    private function persistTags($tags, $file, $activityId = null) {
         $em = $this->getDoctrine()->getManager();
-        $sectorRepo = $this->container->get('doctrine')->getRepository(Tag::class);
+        $tagRepo = $this->container->get('doctrine')->getRepository(Tag::class);
 
-        foreach ($sectors as $row) {
+        foreach ($tags as $row) {
             $code = $row['code'];
             if ($code === null) {
                 // We get a single array of nulls back if no match is found.
@@ -266,26 +266,26 @@ class OagFileController extends Controller
             }
 
             // Check that the code exists in the system
-            $sector = $sectorRepo->findOneBy($findBy);
-            if (!$sector) {
+            $tag = $tagRepo->findOneBy($findBy);
+            if (!$tag) {
                 $this->container->get('logger')
                     ->info(sprintf('Creating new code %s (%s)', $code, $description));
-                $sector = new Tag();
-                $sector->setCode($code);
-                $sector->setDescription($description);
-                $sector->setVocabulary($vocab, $vocabUri);
-                $em->persist($sector);
+                $tag = new Tag();
+                $tag->setCode($code);
+                $tag->setDescription($description);
+                $tag->setVocabulary($vocab, $vocabUri);
+                $em->persist($tag);
             }
 
-            $sugSector = new \OagBundle\Entity\SuggestedTag();
-            $sugSector->setSector($sector);
-            $sugSector->setConfidence($confidence);
+            $sugTag = new \OagBundle\Entity\SuggestedTag();
+            $sugTag->setTag($tag);
+            $sugTag->setConfidence($confidence);
             if (!is_null($activityId)) {
-                $sugSector->setActivityId($activityId);
+                $sugTag->setActivityId($activityId);
             }
 
-            $em->persist($sugSector);
-            $file->addSuggestedSector($sugSector);
+            $em->persist($sugTag);
+            $file->addSuggestedTag($sugTag);
         }
     }
 

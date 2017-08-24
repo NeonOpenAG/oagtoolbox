@@ -153,18 +153,18 @@ class Classifier extends AbstractOagService {
         return array_merge($response, $json);
     }
 
-    public function extractSectors($response) {
-        // flatten the response to put it in the form $activityId => $arrayOfSectors
-        $sectors = array();
+    public function extractTags($response) {
+        // flatten the response to put it in the form $activityId => $arrayOfTags
+        $tags = array();
         foreach ($response['data'] as $part) {
             foreach ($part as $activityId => $descriptions) {
-                if (!array_key_exists($activityId, $sectors)) {
-                    $sectors[$activityId] = array();
+                if (!array_key_exists($activityId, $tags)) {
+                    $tags[$activityId] = array();
                 }
-                $sectors[$activityId] = array_merge($sectors[$activityId], $descriptions);
+                $tags[$activityId] = array_merge($tags[$activityId], $descriptions);
             }
         }
-        return $sectors;
+        return $tags;
     }
 
     public function getName() {

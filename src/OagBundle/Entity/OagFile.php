@@ -40,9 +40,9 @@ class OagFile {
     private $enhancingDocuments;
 
     /**
-     * @ORM\ManyToMany(targetEntity="OagBundle\Entity\SuggestedSector")
+     * @ORM\ManyToMany(targetEntity="OagBundle\Entity\SuggestedTag")
      */
-    protected $suggestedSectors;
+    protected $suggestedTags;
 
     /**
      * @ORM\ManyToMany(targetEntity="OagBundle\Entity\Geolocation")
@@ -76,7 +76,7 @@ class OagFile {
     private $mimeType;
 
     public function __construct() {
-        $this->suggestedSectors = new ArrayCollection();
+        $this->suggestedTags = new ArrayCollection();
         $this->iatiParents = new ArrayCollection();
         $this->enhancingDocuments = new ArrayCollection();
         $this->geolocations = new ArrayCollection();
@@ -136,12 +136,12 @@ class OagFile {
     }
 
     /**
-     * Get Sectors
+     * Get Tags
      *
      * @return ArrayCollection
      */
-    public function getSuggestedSectors() {
-        return $this->suggestedSectors;
+    public function getSuggestedTags() {
+        return $this->suggestedTags;
     }
 
     /**
@@ -149,25 +149,25 @@ class OagFile {
      *
      * @return bool
      */
-    public function hasSuggestedSector(SuggestedTag $activity) {
-        return $this->getSuggestedSectors()->contains($activity);
+    public function hasSuggestedTag(SuggestedTag $activity) {
+        return $this->getSuggestedTags()->contains($activity);
     }
 
     /**
      * @param \OagBundle\Entity\SuggestedTag $activity
      */
-    public function addSuggestedSector(SuggestedTag $activity) {
-        if (!$this->hasSuggestedSector($activity)) {
-            $this->suggestedSectors->add($activity);
+    public function addSuggestedTag(SuggestedTag $activity) {
+        if (!$this->hasSuggestedTag($activity)) {
+            $this->suggestedTags->add($activity);
         }
     }
 
     /**
      * @param \OagBundle\Entity\SuggestedTag $activity
      */
-    public function removeSuggestedSector(SuggestedTag $activity) {
-        if (!$this->hasSuggestedSector($activity)) {
-            $this->suggestedSectors->removeElement($activity);
+    public function removeSuggestedTag(SuggestedTag $activity) {
+        if (!$this->hasSuggestedTag($activity)) {
+            $this->suggestedTags->removeElement($activity);
         }
     }
 
@@ -206,19 +206,18 @@ class OagFile {
         }
     }
 
-    ///////////////////////////
     /**
-     * Remove all sectors.
+     * Remove all geolocations.
      */
     public function clearGeolocations() {
         $this->geolocations->clear();
     }
 
     /**
-     * Remove all sectors.
+     * Remove all suggested tags.
      */
-    public function clearSectors() {
-        $this->suggestedSectors->clear();
+    public function clearSuggestedTags() {
+        $this->suggestedTags->clear();
     }
 
     /**

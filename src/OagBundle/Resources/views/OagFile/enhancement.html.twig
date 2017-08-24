@@ -7,10 +7,10 @@
 {% block body %}
     <h2>Mime type: {{ mimetype }}</h2>
 
-    {% if sectors|length > 0 %}
-        {{ include('OagBundle::OagFile/suggested_sectors_table.html.twig', { 'sectors': sectors }) }}
+    {% if tags|length > 0 %}
+        {{ include('OagBundle::OagFile/suggested_tags_table.html.twig', { 'tags': tags }) }}
     {% else %}
-        <h2>No sectors associated</h2>
+        <h2>No tags associated</h2>
     {% endif %}
 
     {% if geolocations|length > 0 %}
@@ -19,8 +19,8 @@
         <h2>No Geolocations associated</h2>
     {% endif %}
     <div>
-        <a href='{{ path('oag_oagfile_classifytext', { 'id': id }) }}'>{% if sectors|length > 0 %}Re-{% endif %}Classify</a>
+        <a href='{{ path('oag_oagfile_classifytext', { 'id': id }) }}'>{% if tags|length > 0 %}Re-{% endif %}Classify</a>
         |
-        <a href='{{ path('oag_oagfile_geocode', { 'id': id }) }}'>{% if sectors|length > 0 %}Re-{% endif %}Geocode</a>
+        <a href='{{ path('oag_oagfile_geocode', { 'id': id }) }}'>{% if tags|length > 0 %}Re-{% endif %}Geocode</a>
     </div>
 {% endblock %}

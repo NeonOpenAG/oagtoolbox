@@ -3,12 +3,14 @@
         <tr>
             <th>AGROVOC Code</th>
             <th>Description</th>
+            <th>Confidence</th>
         </tr>
     </thead>
     <tbody>
-        {% for sector in sectors %}
+        {% for tag in tags %}
             <tr>
-                {{ include('OagBundle::OagFile/sector_row.html.twig', { 'sector': sector }) }}
+                {{ include('OagBundle::OagFile/tag_row.html.twig', { 'tag': tag.tag }) }}
+                <td>{{ tag.confidence }}</td>
             </tr>
         {% endfor %}
     </tbody>

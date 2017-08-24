@@ -50,8 +50,8 @@ class OagExtension extends \Twig_Extension {
         return array(
             new \Twig_SimpleFilter('isCoveable', array($this, 'isCoveable')),
             new \Twig_SimpleFilter('isClassifiable', array($this, 'isClassifiable')),
-            new \Twig_SimpleFilter('formatSectorList', array($this, 'formatSectorList')),
-            new \Twig_SimpleFilter('suggestedSectorList', array($this, 'suggestedSectorList')),
+            new \Twig_SimpleFilter('formatTagList', array($this, 'formatTagList')),
+            new \Twig_SimpleFilter('suggestedTagList', array($this, 'suggestedTagList')),
         );
     }
 
@@ -75,20 +75,20 @@ class OagExtension extends \Twig_Extension {
         return false;
     }
 
-    public function formatSectorList($sectors) {
-        return array_reduce($sectors, function($reduction, $sector) {
-            $activityList = &$reduction[$sector->getActivityId()];
+    public function formatTagList($tags) {
+        return array_reduce($tags, function($reduction, $tag) {
+            $activityList = &$reduction[$tag->getActivityId()];
             if (!$activityList)
                 $activityList = [];
-            array_push($activityList, $sector);
+            array_push($activityList, $tag);
             return $reduction;
         }, []);
     }
 
-    public function suggestedSectorList($suggestedSector) {
+    public function suggestedTagList($suggestedTag) {
         $lines = [];
-        foreach ($suggestedSector as $sector) {
-            $lines[] = $sector->getSector()->getDescription();
+        foreach ($suggestedTag as $tag) {
+            $lines[] = $tag->getTag()->getDescription();
         }
         return implode(', ', $lines);
     }

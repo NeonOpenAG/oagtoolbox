@@ -14,38 +14,38 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class MergeActivityType extends AbstractType {
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
-        $currentSectors = $options['currentSectors'];
+        $currentTags = $options['currentTags'];
         $iatiActivityId = $options['iatiActivityId'];
         $file = $options['file'];
 
-        # suggested sectors
-        $suggestedSectors = array();
-        foreach ($file->getSuggestedSectors() as $sugSector) {
+        # suggested tags
+        $suggestedTags = array();
+        foreach ($file->getSuggestedTags() as $sugTag) {
             # if it's not from our activity, ignore it
-            if ($sugSector->getActivityId() !== $iatiActivityId) {
+            if ($sugTag->getActivityId() !== $iatiActivityId) {
                 continue;
             }
-            $suggestedSectors[] = $sugSector;
+            $suggestedTags[] = $sugTag;
         }
 
         # Build the form.
-        $builder->add('currentSectors', ChoiceType::class, array(
+        $builder->add('currentTags', ChoiceType::class, array(
             'expanded' => true,
             'multiple' => true,
-            'choices' => array_keys($currentSectors),
-            'data' => array_keys($currentSectors), // default to ticked
-            'choice_label' => function ($value, $key, $index) use ($currentSectors) {
-                $desc = $currentSectors[$index]['description'];
-                $vocab = $currentSectors[$index]['vocabulary'];
+            'choices' => array_keys($currentTags),
+            'data' => array_keys($currentTags), // default to ticked
+            'choice_label' => function ($value, $key, $index) use ($currentTags) {
+                $desc = $currentTags[$index]['description'];
+                $vocab = $currentTags[$index]['vocabulary'];
                 return "$desc ($vocab)";
             }
         ))
         ->add('suggested', ChoiceType::class, array(
             'expanded' => true,
             'multiple' => true,
-            'choices' => array_reduce($suggestedSectors, function ($result, SuggestedTag $item) {
-                # basically changes choices to $item->getSector()->getDescription() => $item->getId()
-                $label = $item->getSector()->getDescription();
+            'choices' => array_reduce($suggestedTags, function ($result, SuggestedTag $item) {
+                # basically changes choices to $item->getTag()->getDescription() => $item->getId()
+                $label = $item->getTag()->getDescription();
                 $result[$label] = $item->getId();
                 return $result;
             }, array())
@@ -54,16 +54,16 @@ class MergeActivityType extends AbstractType {
         # Parse each of the enhancing documents into suggested form choices.
         foreach ($file->getEnhancingDocuments() as $otherFile) {
             $name = $otherFile->getDocumentName();
-            $sectors = $otherFile->getSuggestedSectors();
+            $tags = $otherFile->getSuggestedTags();
             $id = $otherFile->getId();
 
             $builder->add("enhanced_$id", ChoiceType::class, array(
                 'expanded' => true,
                 'multiple' => true,
                 'label' => $name,
-                'choices' => array_reduce($sectors->toArray(), function (array $result, SuggestedTag $item) {
-                    # basically changes choices to $item->getSector()->getDescription() => $item->getId()
-                    $label = $item->getSector()->getDescription();
+                'choices' => array_reduce($tags->toArray(), function (array $result, SuggestedTag $item) {
+                    # basically changes choices to $item->getTag()->getDescription() => $item->getId()
+                    $label = $item->getTag()->getDescription();
                     $result[$label] = $item->getId();
                     return $result;
                 }, array())
@@ -82,7 +82,7 @@ class MergeActivityType extends AbstractType {
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults(
             array(
-                'currentSectors' => array(),
+                'currentTags' => array(),
                 'iatiActivityId' => '',
                 'file' => NULL,
             )

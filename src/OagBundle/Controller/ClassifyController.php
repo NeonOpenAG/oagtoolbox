@@ -22,9 +22,6 @@ class ClassifyController extends Controller {
      *
      * @Route("/activity/{id}")
      * @ParamConverter("file", class="OagBundle:OagFile")
-     *
-     * Provides an interface for merging in sectors. Will replace mergeSectors
-     * (above) when complete.
      */
     public function activityAction(Request $request, OagFile $file) {
         // Load XML document
