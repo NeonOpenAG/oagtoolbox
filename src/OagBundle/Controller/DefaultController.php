@@ -63,16 +63,16 @@ class DefaultController extends Controller {
                 $em->persist($oagfile);
                 $em->flush();
 
-                return $this->redirect($this->generateUrl('oag_oagfile_source', ['id' => $oagfile->getId()]));
+                return $this->redirect($this->generateUrl('oag_oagfile_source', array('id' => $oagfile->getId())));
             }
         }
 
-        $sourcedocs = $data = [
+        $sourcedocs = $data = array( 
             'iatidocs' => $iatidocs,
             'sourceDocs' => $sourceDocs,
             'enhancingDocs' => $enhancingDocs,
             'source_upload_form' => $sourceUploadForm->createView(),
-        ];
+        );
         return $data;
     }
 

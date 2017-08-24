@@ -79,13 +79,13 @@ class Classifier extends AbstractOagService {
 
         $json = json_decode($data, true);
         if (!is_array($json)) {
-            $json = [
-                'data' => [
+            $json = array(
+                'data' => array(
                     'code' => '',
                     'description' => '',
                     'confidence' => '',
-                ],
-            ];
+                ),
+            );
             $this->getContainer()->get('logger')->error('Classifier failed to process: ' . $data . ' with response code: ' . $responseCode);
         }
 
@@ -141,13 +141,13 @@ class Classifier extends AbstractOagService {
 
         $json = json_decode($data, true);
         if (!is_array($json)) {
-            $json = [
-                'data' => [
+            $json = array(
+                'data' => array(
                     'code' => '',
                     'description' => '',
                     'confidence' => '',
-                ],
-            ];
+                ),
+            );
             $this->getContainer()->get('logger')->error('Classifier failed to process: ' . $data);
         }
         return array_merge($response, $json);

@@ -20,7 +20,7 @@ class CoveController extends Controller {
      * @Template
      */
     public function indexAction($fileid) {
-        $messages = [];
+        $messages = array();
         $cove = $this->get(Cove::class);
         $srvOagFile = $this->get(OagFileService::class);
 

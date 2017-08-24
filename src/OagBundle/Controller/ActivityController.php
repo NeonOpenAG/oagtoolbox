@@ -137,7 +137,7 @@ class ActivityController extends Controller
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
     public function mergeAction(Request $request, OagFile $file, $iatiActivityId) {
-        return [];
+        return array();
     }
 
 }

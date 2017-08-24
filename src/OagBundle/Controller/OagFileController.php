@@ -34,7 +34,7 @@ class OagFileController extends Controller
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
     public function iatiAction(Request $request, OagFile $file) {
-        $data = [];
+        $data = array();
         $srvActivity = $this->get(ActivityService::class);
 
         $data['id'] = $file->getId();
@@ -89,7 +89,7 @@ class OagFileController extends Controller
                 $em->persist($oagfile);
                 $em->flush();
 
-                return $this->redirect($this->generateUrl('oag_oagfile_iati', ['id' => $file->getId()]));
+                return $this->redirect($this->generateUrl('oag_oagfile_iati', array('id' => $file->getId())));
             }
         }
 
@@ -134,7 +134,7 @@ class OagFileController extends Controller
         $contents = $srvOagFile->getContents($file);
         $json = $cove->processString($contents);
 
-        $err = array_filter($json['err'] ?? []);
+        $err = array_filter($json['err'] ?? array());
         $status = $json['status'] ?? '';
 
         // TODO Check status
@@ -181,7 +181,7 @@ class OagFileController extends Controller
      */
     public function enhancementAction(Request $request, OagFile $file) {
         $srvActivity = $this->get(TextifyService::class);
-        $data = [];
+        $data = array();
         $data['id'] = $file->getId();
         $data['name'] = $file->getDocumentName();
         $data['mimetype'] = $file->getMimeType();
@@ -226,7 +226,7 @@ class OagFileController extends Controller
         $em->persist($file);
         $em->flush();
 
-        return ['name' => $file->getDocumentName(), 'tags' => $file->getSuggestedTags()->getValues()];
+        return array('name' => $file->getDocumentName(), 'tags' => $file->getSuggestedTags()->getValues());
     }
 
     /**
@@ -255,7 +255,7 @@ class OagFileController extends Controller
         $em->persist($file);
         $em->flush();
 
-        return ['name' => $file->getDocumentName(), 'tags' => $file->getSuggestedTags()->getValues()];
+        return array('name' => $file->getDocumentName(), 'tags' => $file->getSuggestedTags()->getValues());
     }
 
     /**
@@ -370,15 +370,15 @@ class OagFileController extends Controller
 
         $geodata = $this->locationsToArray($file->getGeolocations());
 
-        return [
+        return array(
             'name' => $file->getDocumentName(),
             'geolocations' => $geodata,
             'json' => json_encode(json_decode($json, true), JSON_PRETTY_PRINT),
-        ];
+        );
     }
 
     private function locationsToArray($allLocations) {
-        $geodata = [];
+        $geodata = array();
         foreach ($allLocations as $location) {
             $geodata[] = $this->locationToArray($location);
         }
@@ -391,7 +391,7 @@ class OagFileController extends Controller
      * @param Geolocation $location
      */
     private function locationToArray(Geolocation $location) {
-        $data = [];
+        $data = array();
         $data['vocab_id'] = $location->getVocabId();
         $data['geolocation_id'] = $location->getGeolocationId();
         $data['name'] = $location->getName();

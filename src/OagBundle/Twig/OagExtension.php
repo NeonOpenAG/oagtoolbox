@@ -79,14 +79,14 @@ class OagExtension extends \Twig_Extension {
         return array_reduce($tags, function($reduction, $tag) {
             $activityList = &$reduction[$tag->getActivityId()];
             if (!$activityList)
-                $activityList = [];
+                $activityList = array();
             array_push($activityList, $tag);
             return $reduction;
-        }, []);
+        }, array());
     }
 
     public function suggestedTagList($suggestedTag) {
-        $lines = [];
+        $lines = array();
         foreach ($suggestedTag as $tag) {
             $lines[] = $tag->getTag()->getDescription();
         }

@@ -146,7 +146,7 @@ class ActivityService extends AbstractService {
         $activityDetail = $this->summariseActivityToArray($activity);
 
         $locations = $activityDetail['locations'];
-        $location_data = [];
+        $location_data = array();
         foreach ($locations as $location) {
             $location_data[] = array(
                 "id" => $activityDetail['id'],
@@ -162,10 +162,10 @@ class ActivityService extends AbstractService {
             );
         }
 
-        return $map_data = [
+        return $map_data = array(
             "type" => "FeatureCollection",
             "features" => $location_data,
-        ];
+        );
     }
 
     public function getActivityTags($activity) {
