@@ -66,14 +66,14 @@ class ActivityService extends AbstractService {
      *
      *   array['id'] Activity ID.
      *   array['name'] Activity Name.
-     *   array['sectors'] Activity Sectors.
+     *   array['tags'] Activity Tags.
      *   array['locations'] Activity Locations.
      */
     public function summariseActivityToArray($activity) {
         $simpActivity = array();
         $simpActivity['id'] = $this->getActivityId($activity);
         $simpActivity['name'] = $this->getActivityTitle($activity);
-        $simpActivity['sectors'] = $this->getActivitySectors($activity);
+        $simpActivity['tags'] = $this->getActivityTags($activity);
         $simpActivity['locations'] = $this->getActivityLocations($activity);
         return $simpActivity;
     }
@@ -168,15 +168,15 @@ class ActivityService extends AbstractService {
         ];
     }
 
-    public function getActivitySectors($activity) {
-        $currentSectors = array();
-        foreach ($this->xpathNS($activity, './openag:tag') as $currentSector) {
-            $description = (string) $currentSector->xpath('./narrative[1]')[0];
-            $code = (string) $currentSector['code'];
-            $vocabulary = (string) $currentSector['vocabulary'];
-            $vocabularyUri = (string) $currentSector['vocabulary-uri'] ?: null;
+    public function getActivityTags($activity) {
+        $currentTags = array();
+        foreach ($this->xpathNS($activity, './openag:tag') as $currentTag) {
+            $description = (string) $currentTag->xpath('./narrative[1]')[0];
+            $code = (string) $currentTag['code'];
+            $vocabulary = (string) $currentTag['vocabulary'];
+            $vocabularyUri = (string) $currentTag['vocabulary-uri'] ?: null;
 
-            $currentSectors[] = array(
+            $currentTags[] = array(
                 'description' => $description,
                 'code' => $code,
                 'vocabulary' => $vocabulary,
@@ -184,10 +184,10 @@ class ActivityService extends AbstractService {
             );
         }
 
-        return $currentSectors;
+        return $currentTags;
     }
 
-    public function addActivitySector(&$activity, $code, $description, $reason = null) {
+    public function addActivityTag(&$activity, $code, $description, $reason = null) {
         // TODO should we check if it already exists?
         if (is_null($reason)) {
             $reason = 'Classified automatically';
@@ -197,21 +197,22 @@ class ActivityService extends AbstractService {
         $vocabUri = $this->getContainer()->getParameter('classifier')['vocabulary_uri'];
         $namespaceUri =  $this->getContainer()->getParameter('classifier')['namespace_uri'];
 
-        $sector = $activity->addChild('openag:tag', '', $namespaceUri);
-        $sector->addAttribute('code', $code);
-        $sector->addAttribute('vocabulary', $vocab);
+        $tag = $activity->addChild('openag:tag', '', $namespaceUri);
+        $tag->addAttribute('code', $code);
+        $tag->addAttribute('vocabulary', $vocab);
+
         if (strlen($vocabUri) > 0) {
-            $sector->addAttribute('vocabulary-uri', $vocabUri);
+            $tag->addAttribute('vocabulary-uri', $vocabUri);
         }
 
         # narrative text content is set this way to let simplexml escape it
         # see https://stackoverflow.com/a/555039
         # $narrative->addAttribute('xml:lang', 'en');
-        $sector->addChild('narrative', null, '')[] = $description;
-        $sector->addChild('narrative', null, '')[] = $reason;
+        $tag->addChild('narrative', null, '')[] = $description;
+        $tag->addChild('narrative', null, '')[] = $reason;
     }
 
-    public function removeActivitySector(&$activity, $code, $vocabulary, $vocabularyUri = null) {
+    public function removeActivityTag(&$activity, $code, $vocabulary, $vocabularyUri = null) {
         $path = "./openag:tag[@code='$code' and @vocabulary='$vocabulary']";
         if ($vocabulary === '98' || $vocabulary === '99') {
             if (is_null($vocabularyUri)) {
@@ -219,14 +220,14 @@ class ActivityService extends AbstractService {
             }
             $path = "./openag:tag[@code='$code' and @vocabulary='$vocabulary' and @vocabulary-uri='$vocabularyUri']";
         }
-        $sector = $this->xpathNS($activity, $path);
+        $tag = $this->xpathNS($activity, $path);
 
-        if (count($sector) < 1) {
+        if (count($tag) < 1) {
             return;
         }
 
-        $sector = $sector[0];
-        unset($sector[0]);
+        $tag = $tag[0];
+        unset($tag[0]);
     }
 
     public function getActivityLocations($activity) {

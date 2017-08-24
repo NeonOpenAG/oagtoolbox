@@ -10,20 +10,20 @@ use Symfony\Component\HttpFoundation\Request;
 use OagBundle\Entity\OagFile;
 
 /**
- * @Route("/sector")
+ * @Route("/tag")
  * @Template
  */
-class SectorController extends Controller {
+class TagController extends Controller {
 
     /**
      * @Route("/{id}", requirements={"id": "\d+"})
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
     public function indexAction(Request $request, OagFile $file) {
-        $sectors = $file->getSuggestedSectors();
+        $tags = $file->getSuggestedTags();
 
         return array(
-            'sectors' => $sectors,
+            'tags' => $tags,
         );
     }
 

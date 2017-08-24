@@ -18,8 +18,8 @@
         {% for activity in activities %}
             <li><a href='{{ path('oag_activity_enhance', { 'id': id, 'iatiActivityId': activity['id'] }) }}'>{{ activity['name'] }}</a></li>
             <ul>
-                {% for sector in activity['sectors'] %}
-                    <li>{{ sector['description'] }}</li>
+                {% for tag in activity['tags'] %}
+                    <li>{{ tag['description'] }}</li>
                 {% endfor %}
             </ul>
         {% endfor %}
@@ -31,7 +31,7 @@
                     {% for doc in enhancingDocuments %}
                         <li><span class='docname'>{{ doc.documentName }}</span>
                             <a href="{{ path('oag_oagfile_enhancement', { 'id': doc.id }) }}">View</a> |
-                            <a href='{{ path('oag_oagfile_classifytext', { 'id': doc.id }) }}'>{% if doc.suggestedsectors|length > 0 %}Re-{% endif %}Classify</a> |
+                            <a href='{{ path('oag_oagfile_classifytext', { 'id': doc.id }) }}'>{% if doc.suggestedtags|length > 0 %}Re-{% endif %}Classify</a> |
                             <a href='{{ path('oag_oagfile_geocode', { 'id': doc.id }) }}'>{% if doc.geolocations|length > 0 %}Re-{% endif %}Geocode</a>
                         {% endfor %}
                 </ul>

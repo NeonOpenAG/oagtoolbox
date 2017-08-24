@@ -2,21 +2,16 @@
 
 namespace OagBundle\Controller;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use OagBundle\Entity\Change;
-use OagBundle\Entity\Sector;
+use OagBundle\Entity\Tag;
 use OagBundle\Form\MergeActivityType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use OagBundle\Entity\OagFile;
-use OagBundle\Entity\SuggestedSector;
+use OagBundle\Entity\SuggestedTag;
 use OagBundle\Service\ActivityService;
 use OagBundle\Service\OagFileService;
 
@@ -27,7 +22,7 @@ use OagBundle\Service\OagFileService;
 class ActivityController extends Controller
  {
     /**
-     * Show summary of activity and existing sectors with sectors available from supporting documents.
+     * Show summary of activity and existing tags with tags available from supporting documents.
      *
      * @Route("/enhance/{id}/{iatiActivityId}")
      * @ParamConverter("file", class="OagBundle:OagFile")
@@ -35,7 +30,7 @@ class ActivityController extends Controller
     public function enhanceAction(Request $request, OagFile $file, $iatiActivityId) {
         $srvActivity = $this->get(ActivityService::class);
         $srvOagFile = $this->get(OagFileService::class);
-        $sugSectorRepo = $this->container->get('doctrine')->getRepository(SuggestedSector::class);
+        $sugTagRepo = $this->container->get('doctrine')->getRepository(SuggestedTag::class);
         $em = $this->getDoctrine()->getManager();
 
         # Find activity using the provided ID.
@@ -48,12 +43,12 @@ class ActivityController extends Controller
         # Create map definition array.
         $mapData = $srvActivity->getActivityMapData($activity);
 
-        # Current sectors attached to $activity.
-        $currentSectors = $srvActivity->getActivitySectors($activity);
+        # Current tags attached to $activity.
+        $currentTags = $srvActivity->getActivityTags($activity);
 
         # Create a new instance of the form.
         $form = $this->createForm(MergeActivityType::class, null, array_merge(array(
-            'currentSectors' => $currentSectors,
+            'currentTags' => $currentTags,
             'iatiActivityId' => $iatiActivityId,
             'file' => $file
         )));
@@ -64,22 +59,22 @@ class ActivityController extends Controller
             $data = $form->getData();
 
             $toRemove = array();
-            foreach ($currentSectors as $index => $sugSector) {
+            foreach ($currentTags as $index => $sugTag) {
                 // has a pre-existing one been removed?
-                if (!in_array($index, $data['currentSectors'])) {
-                    $sectorCode = $sugSector['code'];
-                    $sectorDescription = $sugSector['description'];
-                    $sectorVocab = $sugSector['vocabulary'];
-                    $sectorVocabUri = $sugSector['vocabulary-uri'];
+                if (!in_array($index, $data['currentTags'])) {
+                    $tagCode = $sugTag['code'];
+                    $tagDescription = $sugTag['description'];
+                    $tagVocab = $sugTag['vocabulary'];
+                    $tagVocabUri = $sugTag['vocabulary-uri'];
 
-                    $dbSector = new Sector();
-                    $dbSector->setCode($sectorCode);
-                    $dbSector->setVocabulary($sectorVocab, $sectorVocabUri);
-                    $dbSector->setDescription($sectorDescription);
-                    $toRemove[] = $dbSector;
-                    $em->persist($dbSector);
+                    $dbTag = new Tag();
+                    $dbTag->setCode($tagCode);
+                    $dbTag->setVocabulary($tagVocab, $tagVocabUri);
+                    $dbTag->setDescription($tagDescription);
+                    $toRemove[] = $dbTag;
+                    $em->persist($dbTag);
 
-                    $srvActivity->removeActivitySector($activity, $sectorCode, $sectorVocab, $sectorVocabUri);
+                    $srvActivity->removeActivityTag($activity, $tagCode, $tagVocab, $tagVocabUri);
                 }
             }
 
@@ -91,28 +86,28 @@ class ActivityController extends Controller
             }
 
             $toAdd = array();
-            foreach ($toAddIds as $sectorId) {
-                $sugSector = $sugSectorRepo->findOneById($sectorId);
-                $sector = $sugSector->getSector();
+            foreach ($toAddIds as $tagId) {
+                $sugTag = $sugTagRepo->findOneById($tagId);
+                $tag = $sugTag->getTag();
 
-                if (in_array($sector, $toAdd)) {
+                if (in_array($tag, $toAdd)) {
                     // no duplicates please
                     continue;
                 }
 
-                $toAdd[] = $sector;
+                $toAdd[] = $tag;
 
                 // TODO WARNING - if reusing this code elsewhere than the
                 // auto-classifier, ensure that you specify the correct
                 // vocabulary and reason for addition
-                $code = $sector->getCode();
-                $description = $sector->getDescription();
-                $srvActivity->addActivitySector($activity, $code, $description);
+                $code = $tag->getCode();
+                $description = $tag->getDescription();
+                $srvActivity->addActivityTag($activity, $code, $description);
             }
 
             $stagedChange = new Change();
-            $stagedChange->setAddedSectors($toAdd);
-            $stagedChange->setRemovedSectors($toRemove);
+            $stagedChange->setAddedTags($toAdd);
+            $stagedChange->setRemovedTags($toRemove);
             $stagedChange->setActivityId($iatiActivityId);
             $stagedChange->setTimestamp(new \DateTime("now"));
             $stagedChange->setFile($file);

@@ -1,10 +1,10 @@
 <a
     href="{{ path('oag_oagfile_enhancement', { 'id': enhancingDoc.id }) }}"
-    {% if enhancingDoc.suggestedSectors | length > 0 %}
-        title="{{ enhancingDoc.suggestedSectors | suggestedSectorList }}"
+    {% if enhancingDoc.suggestedTags | length > 0 %}
+        title="{{ enhancingDoc.suggestedTags | suggestedTagList }}"
     {% endif %}
     >
     {{ enhancingDoc.documentName }}
 </a>
 
-[{{ enhancingDoc.suggestedSectors | length }}]
+[{{ enhancingDoc.suggestedTags | length }}]

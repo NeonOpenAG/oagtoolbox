@@ -5,14 +5,9 @@ namespace OagBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use OagBundle\Service\Classifier;
-use Symfony\Component\HttpFoundation\Request;
 use OagBundle\Service\Cove;
 use OagBundle\Entity\OagFile;
 use OagBundle\Service\OagFileService;
-use OagBundle\Form\OagFileType;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 /**
  * @Route("/cove")

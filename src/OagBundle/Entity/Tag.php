@@ -8,10 +8,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * Code
  *
- * @ORM\Table(name="sector")
- * @ORM\Entity(repositoryClass="OagBundle\Repository\SectorRepository")
+ * @ORM\Table(name="tag")
+ * @ORM\Entity(repositoryClass="OagBundle\Repository\TagRepository")
  */
-class Sector {
+class Tag {
 
     /**
      * @var int
@@ -68,7 +68,7 @@ class Sector {
      *
      * @param string $code
      *
-     * @return Sector
+     * @return Tag
      */
     public function setCode($code) {
         $this->code = $code;
@@ -90,7 +90,7 @@ class Sector {
      *
      * @param string $description
      *
-     * @return Sector
+     * @return Tag
      */
     public function setDescription($description) {
         $this->description = $description;

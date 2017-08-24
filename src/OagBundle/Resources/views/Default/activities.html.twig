@@ -2,7 +2,7 @@
 
 {% block stylesheets %}
     <style>
-        #sectors li, #locations li {
+        #tags li, #locations li {
             display: inline;
             list-style-type: none;
             background-color: lightgrey;
@@ -20,10 +20,10 @@
                     {% for activity in activities %}
                         <li>
                             <h2>{{ activity.name }} <em>({{ activity.id }})</em></h2>
-                            <h3>Sectors</h3>
-                            <ul id='sectors'>
-                                {% for sector in activity.sectors %}
-                                    <li>{{ sector.description }}</li>
+                            <h3>Tags</h3>
+                            <ul id='tags'>
+                                {% for tag in activity.tags %}
+                                    <li>{{ tag.description }}</li>
                                     {% endfor %}
                             </ul>
                             <h3>Locations</h3>

@@ -5,10 +5,10 @@
 {% block h2 %}{{ name }}{% endblock %}
 
 {% block body %}
-    {% if sectors|length > 0 %}
-        <h2>Sectors</h2>
-        {{ include('OagBundle::OagFile/suggested_sectors_table.html.twig', { 'sectors': sectors }) }}
+    {% if tags|length > 0 %}
+        <h2>Tags</h2>
+        {{ include('OagBundle::OagFile/suggested_tags_table.html.twig', { 'tags': tags }) }}
     {% else %}
-        <h2>No sectors associated</h2>
+        <h2>No tags associated</h2>
     {% endif %}
 {% endblock %}
