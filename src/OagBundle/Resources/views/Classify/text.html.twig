@@ -7,7 +7,7 @@
 {% block body %}
     {% if tags|length > 0 %}
         <h2>Tags</h2>
-        {{ include('OagBundle::OagFile/suggested_tags_table.html.twig', { 'tags': tags }) }}
+        {{ include('OagBundle::Classify/suggested_tags_table.html.twig', { 'tags': tags }) }}
     {% else %}
         <h2>No tags associated</h2>
     {% endif %}

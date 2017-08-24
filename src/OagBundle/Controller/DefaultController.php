@@ -75,17 +75,7 @@ class DefaultController extends Controller {
         );
         return $data;
     }
-
-    /**
-     * Load oag files by file type.
-     */
-    private function loadOagFileByType($type) {
-        $repository = $this->getDoctrine()->getRepository(OagFile::class);
-        $oagfiles = $repository->findByFileType($type);
-
-        return $oagfiles;
-    }
-
+    
     /**
      * @Route("/delete/{ids}")
      */
@@ -108,6 +98,18 @@ class DefaultController extends Controller {
             }
         }
         return $this->redirectToRoute('oag_default_index');
+    }
+
+
+
+    /**
+     * Load oag files by file type.
+     */
+    private function loadOagFileByType($type) {
+        $repository = $this->getDoctrine()->getRepository(OagFile::class);
+        $oagfiles = $repository->findByFileType($type);
+
+        return $oagfiles;
     }
 
 }

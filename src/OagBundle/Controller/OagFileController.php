@@ -30,6 +30,8 @@ class OagFileController extends Controller
  {
 
     /**
+     * View a specific IATI file.
+     *
      * @Route("/iati/{id}")
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
@@ -97,85 +99,8 @@ class OagFileController extends Controller
     }
 
     /**
-     * @Route("/download/{id}")
-     * @ParamConverter("file", class="OagBundle:OagFile")
-     */
-    public function downloadAction(Request $request, OagFile $file) {
-        $srvOagFile = $this->get(OagFileService::class);
-
-        return $this->file($srvOagFile->getPath($file));
-    }
-
-    /**
-     * @Route("/raw/{id}")
-     * @ParamConverter("file", class="OagBundle:OagFile")
-     */
-    public function rawAction(Request $request, OagFile $file) {
-        $srvOagFile = $this->get(OagFileService::class);
-
-        return new Response(
-            $srvOagFile->getContents($file),
-            Response::HTTP_OK,
-            array('content-type' => 'text/xml')
-        );
-    }
-
-    /**
-     * @Route("/source/{id}")
-     * @ParamConverter("file", class="OagBundle:OagFile")
-     */
-    public function sourceAction(Request $request, OagFile $file) {
-        $cove = $this->get(Cove::class);
-        $srvOagFile = $this->get(OagFileService::class);
-        $srvActivity = $this->get(ActivityService::class);
-
-        $this->get('logger')->debug(sprintf('Processing %s using CoVE', $file->getDocumentName()));
-        // TODO - for bigger files we might need send as Uri
-        $contents = $srvOagFile->getContents($file);
-        $json = $cove->processString($contents);
-
-        $err = array_filter($json['err'] ?? array());
-        $status = $json['status'] ?? '';
-
-        // TODO Check status
-        foreach ($err as $line) {
-            $this->get('session')->getFlashBag()->add('error', $line);
-        }
-
-        $xml = $json['xml'];
-        if ($srvActivity->parseXML($xml)) {
-            $xmldir = $this->getParameter('oagxml_directory');
-            if (!is_dir($xmldir)) {
-                mkdir($xmldir, 0755, true);
-            }
-
-            $filename = $srvOagFile->getXMLFileName($file);
-            $xmlfile = $xmldir . '/' . $filename;
-            if (!file_put_contents($xmlfile, $xml)) {
-                $this->get('session')->getFlashBag()->add('error', 'Unable to create XML file.');
-                $this->get('logger')->debug(sprintf('Unable to create XML file: %s', $xmlfile));
-                return $this->redirectToRoute('oag_default_index');
-            }
-            // else
-            if ($this->getParameter('unlink_files')) {
-                unlink($path);
-            }
-
-            $file->setDocumentName($filename);
-            $file->setFileType(OagFile::OAGFILE_IATI_DOCUMENT);
-            $file->setMimeType('application/xml');
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($file);
-            $em->flush();
-            $this->get('session')->getFlashBag()->add('info', 'IATI File created/Updated\; ' . $xmlfile);
-        } else {
-            $this->get('session')->getFlashBag()->add('error', 'CoVE returned data that was not XML.');
-        }
-
-        return $this->redirectToRoute('oag_default_index');
-    }
-
-    /**
+     * View a specific enhancement file.
+     *
      * @Route("/enhancement/{id}")
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
@@ -197,186 +122,40 @@ class OagFileController extends Controller
     }
 
     /**
-     * @Route("/classify/xml/{id}")
+     * Download an IATI file.
+     *
+     * @Route("/download/{id}")
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
-    public function classifyXmlAction(Request $request, OagFile $file) {
-        $srvClassifier = $this->get(Classifier::class);
+    public function downloadAction(Request $request, OagFile $file) {
         $srvOagFile = $this->get(OagFileService::class);
 
-        $rawXml = $srvOagFile->getContents($file);
-
-        $json = $srvClassifier->processXML($rawXml); 
-
-        $file->clearSuggestedTags();
-
-        if ($json['status']) {
-            throw \RuntimeException('Classifier service exited with a non 0 status');
-        }
-
-        foreach ($json['data'] as $block) {
-            foreach ($block as $part) {
-                foreach ($part as $activityId => $tags) {
-                    $this->persistTags($tags, $file, $activityId);
-                }
-            }
-        }
-
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($file);
-        $em->flush();
-
-        return array('name' => $file->getDocumentName(), 'tags' => $file->getSuggestedTags()->getValues());
+        return $this->file($srvOagFile->getPath($file));
     }
 
     /**
-     * @Route("/classify/text/{id}")
+     * View the raw content of an IATI file.
+     *
+     * TODO support OagFiles in general, not just IATI ones
+     *
+     * @Route("/raw/{id}")
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
-    public function classifyTextAction(Request $request, OagFile $file) {
-        $srvClassifier = $this->get(Classifier::class);
-        $srvTextify = $this->get(TextifyService::class);
+    public function rawAction(Request $request, OagFile $file) {
+        $srvOagFile = $this->get(OagFileService::class);
 
-        $rawText = $srvTextify->stripOagFile($file);
-
-        if ($rawText === false) {
-            // textifier failed
-            throw \RuntimeException('Unsupported file type to strip text from');
-        }
-
-        $json = $srvClassifier->processString($rawText);
-
-        $file->clearSuggestedTags();
-
-        // TODO if $row['status'] == 0
-        $this->persistTags($json['data'], $file);
-
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($file);
-        $em->flush();
-
-        return array('name' => $file->getDocumentName(), 'tags' => $file->getSuggestedTags()->getValues());
-    }
-
-    /**
-     * Persists Oag tags from API response to database.
-     */
-    private function persistTags($tags, $file, $activityId = null) {
-        $em = $this->getDoctrine()->getManager();
-        $tagRepo = $this->container->get('doctrine')->getRepository(Tag::class);
-
-        foreach ($tags as $row) {
-            $code = $row['code'];
-            if ($code === null) {
-                // We get a single array of nulls back if no match is found.
-                break;
-            }
-
-            $description = $row['description'];
-            $confidence = $row['confidence'];
-
-            $vocab = $this->getParameter('classifier')['vocabulary'];
-            $vocabUri = $this->getParameter('classifier')['vocabulary_uri'];
-
-            $findBy = array(
-                'code' => $code,
-                'vocabulary' => $vocab
-            );
-
-            // if there is a vocab uri in the config, use it, if not, don't
-            if (strlen($vocabUri) > 0) {
-                $findBy['vocabulary_uri'] = $vocabUri;
-            } else {
-                $vocabUri = null;
-            }
-
-            // Check that the code exists in the system
-            $tag = $tagRepo->findOneBy($findBy);
-            if (!$tag) {
-                $this->container->get('logger')
-                    ->info(sprintf('Creating new code %s (%s)', $code, $description));
-                $tag = new Tag();
-                $tag->setCode($code);
-                $tag->setDescription($description);
-                $tag->setVocabulary($vocab, $vocabUri);
-                $em->persist($tag);
-            }
-
-            $sugTag = new \OagBundle\Entity\SuggestedTag();
-            $sugTag->setTag($tag);
-            $sugTag->setConfidence($confidence);
-            if (!is_null($activityId)) {
-                $sugTag->setActivityId($activityId);
-            }
-
-            $em->persist($sugTag);
-            $file->addSuggestedTag($sugTag);
-        }
-    }
-
-    /**
-     * @Route("/geocode/{id}")
-     * @ParamConverter("file", class="OagBundle:OagFile")
-     */
-    public function geocodeAction(Request $request, OagFile $file) {
-        $srvGeocoder = $this->get(Geocoder::class);
-        $json = $srvGeocoder->processOagFile($file);
-        $results = json_decode($json, true);
-
-        $file->clearGeolocations();
-        $em = $this->getDoctrine()->getManager();
-        $geolocationrepo = $this->container->get('doctrine')->getRepository(Geolocation::class);
-
-        foreach ($results as $activity) {
-            $iatiActivityId = $activity['project_id'] ?? null;
-            $locations = $activity['locations'];
-            foreach ($locations as $location) {
-                $locationId = $location['id'];
-                $vocabId = '99'; // TODO get a valif vocab id
-                // Does this location already exist for this IATI ID?
-                $geolocation = $geolocationrepo->findOneBy(
-                    array(
-                        'iatiActivityId' => $iatiActivityId,
-                        'geolocationId' => $locationId,
-                        'vocabId' => $vocabId,
-                    )
-                );
-
-                if (!$geolocation) {
-                    $geolocation = new Geolocation();
-                    $geolocation->setIatiActivityId($iatiActivityId);
-                    $geolocation->setGeolocationId($locationId);
-                    $geolocation->setVocabId('99'); // TODO get a valif vocab id
-                }
-                $geolocation->setName($location['name']);
-                $geolocation->setAdminCode1Code($location['admin1']['code']);
-                $geolocation->setAdminCode1Name($location['admin1']['name']);
-                $geolocation->setAdminCode2Code($location['admin2']['code']);
-                $geolocation->setAdminCode2Name($location['admin2']['name']);
-                $geolocation->setLatitude($location['geometry']['coordinates'][0]);
-                $geolocation->setLongitude($location['geometry']['coordinates'][1]);
-                $geolocation->setExactness($location['exactness']['code']);
-                $geolocation->setClass($location['locationClass']['code']);
-                $geolocation->setDescription($location['locationClass']['description']);
-                $em->persist($geolocation);
-
-                if (!$file->hasGeolocation($geolocation)) {
-                    $file->addGeolocation($geolocation);
-                }
-            }
-        }
-        $em->persist($file);
-        $em->flush();
-
-        $geodata = $this->locationsToArray($file->getGeolocations());
-
-        return array(
-            'name' => $file->getDocumentName(),
-            'geolocations' => $geodata,
-            'json' => json_encode(json_decode($json, true), JSON_PRETTY_PRINT),
+        return new Response(
+            $srvOagFile->getContents($file),
+            Response::HTTP_OK,
+            array('content-type' => 'text/xml')
         );
     }
 
+    /**
+     * Flatten a list of geolocations into arrays.
+     *
+     * @param Geolocation[] $allLocations
+     */
     private function locationsToArray($allLocations) {
         $geodata = array();
         foreach ($allLocations as $location) {

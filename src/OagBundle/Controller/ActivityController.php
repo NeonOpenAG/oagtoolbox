@@ -24,7 +24,7 @@ class ActivityController extends Controller
     /**
      * Show summary of activity and existing tags with tags available from supporting documents.
      *
-     * @Route("/enhance/{id}/{iatiActivityId}")
+     * @Route("/{id}/{iatiActivityId}")
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
     public function enhanceAction(Request $request, OagFile $file, $iatiActivityId) {

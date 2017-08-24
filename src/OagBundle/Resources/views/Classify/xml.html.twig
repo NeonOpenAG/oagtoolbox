@@ -8,7 +8,7 @@
     {% if tags|length > 0 %}
         {% for activityId, activityTags in tags|formatTagList %}
             <h2>{{ activityId }}</h2>
-            {{ include('OagBundle::OagFile/suggested_tags_table.html.twig', { 'tags': activityTags }) }}
+            {{ include('OagBundle::Classify/suggested_tags_table.html.twig', { 'tags': activityTags }) }}
         {% endfor %}
     {% else %}
         <h2>No tags associated</h2>
