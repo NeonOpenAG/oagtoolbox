@@ -200,6 +200,7 @@ class ActivityService extends AbstractService {
         $tag = $activity->addChild('openag:tag', '', $namespaceUri);
         $tag->addAttribute('code', $code);
         $tag->addAttribute('vocabulary', $vocab);
+
         if (strlen($vocabUri) > 0) {
             $tag->addAttribute('vocabulary-uri', $vocabUri);
         }
