@@ -7,12 +7,22 @@ namespace OagBundle\Service;
  * they have been parsed into a SimpleXMLElement object. This also acts as a
  * nice abstraction away from the SimpleXMLElement, in an effort to make
  * dealing with it more predictable.
+ *
+ * IATI activity files are represented by their 'root' \SimpleXMLElement.
+ * Individual activities are represented by their \SimpleXMLElement.
+ * All other data is processed as associative arrays.
  */
 class IATI extends AbstractService {
 
     const LIBXML_OPTIONS = LIBXML_BIGLINES & LIBXML_PARSEHUGE;
     const OPENAG_NAMESPACE = 'openag';
 
+    /**
+     * Load and parse an IATI OagFile into a SimpleXMLElement object.
+     *
+     * @param OagFile $oagFile
+     * @return \SimpleXMLElement
+     */
     public function load($oagFile) {
         $srvOagFile = $this->getContainer()->get(OagFileService::class);
 
@@ -22,15 +32,27 @@ class IATI extends AbstractService {
         return $root;
     }
 
+    /**
+     * Perform an xpath but with an additional namespace defined.
+     *
+     * @param \SimpleXMLElement $activity the activity to xpath within
+     * @param string $xpathQuery
+     * @param string $namespace the name of the namespace
+     * @return \SimpleXMLElement[]
+     */
     public function xpathNS(\SimpleXMLElement $activity, $xpathQuery, $namespace = 'openag') {
         $namespaceUri =  $this->getContainer()->getParameter('classifier')['namespace_uri'];
         $activity->registerXPathNamespace($namespace, $namespaceUri);
         return $activity->xpath($xpathQuery);
     }
 
+    /**
+     * Parse a given string into a \SimpleXMLElement object.
+     *
+     * @param $string
+     * @return \SimpleXMLElement or false on failure
+     */
     public function parseXML($string) {
-
-
         // helper function to allow for centralised changing of libxml options
         // where appropriate
         try {
@@ -52,6 +74,11 @@ class IATI extends AbstractService {
         return false;
     }
 
+    /**
+     * Convert a \SimpleXMLElement back into XML.
+     *
+     * @return string the XML
+     */
     public function toXML($root) {
         return $root->asXML();
     }
@@ -78,6 +105,13 @@ class IATI extends AbstractService {
         return $simpActivity;
     }
 
+    /**
+     * Return a simplified array representation of the IATI file.
+     *
+     * @see summariseActivityToArray
+     * @param \SimpleXMLElement $root
+     * @return array
+     */
     public function summariseToArray($root) {
         // gets a simplified representation of the data that we can deserialise at the moment
         $activities = array();
@@ -88,6 +122,11 @@ class IATI extends AbstractService {
         return $activities;
     }
 
+    /**
+     * Get XML fixture data to use - an example IATI file's contents.
+     *
+     * @return string
+     */
     public function getFixtureData() {
         $kernel = $this->getContainer()->get('kernel');
         $file = $kernel->locateResource('@OagBundle/Resources/fixtures/before_enrichment_activities.xml');
@@ -95,14 +134,23 @@ class IATI extends AbstractService {
         return $xml;
     }
 
+    /**
+     * Get each activity in an IATI XML file.
+     *
+     * @param \SimpleXMLElement $root the base of the file once loaded
+     * @return \SimpleXMLElement[] one for each activity
+     */
     public function getActivities($root) {
         return $root->xpath('/iati-activities/iati-activity');
     }
 
-    public function getActivityId($activity) {
-        return (string) $activity->xpath('./iati-identifier')[0];
-    }
-
+    /**
+     * Get an IATI activity from the file from its ID.
+     *
+     * @param \SimpleXMLElement $root
+     * @param string $id
+     * @return \SimpleXMLElement or NULL if missing
+     */
     public function getActivityById($root, $id) {
         foreach ($this->getActivities($root) as $activity) {
             if ($this->getActivityId($activity) === $id) {
@@ -112,6 +160,22 @@ class IATI extends AbstractService {
         return NULL;
     }
 
+    /**
+     * Get the ID of an IATI activity.
+     *
+     * @param \SimpleXMLElement $activity
+     * @return string
+     */
+    public function getActivityId($activity) {
+        return (string) $activity->xpath('./iati-identifier')[0];
+    }
+
+    /**
+     * Get the title of an IATI activity.
+     *
+     * @param \SimpleXMLElement $activity
+     * @return string
+     */
     public function getActivityTitle($activity) {
         $preference = array(
             './title/narrative[not(@xml:lang)]',
@@ -136,11 +200,12 @@ class IATI extends AbstractService {
     }
 
     /**
-     * Creates a definition array to be provided to the NeonMap service.
+     * Creates a definition array to be provided to the NeonMap service,
+     * summarising any location data in the activity that can be visualised
+     * on a map.
      *
      * @param \SimpleXMLElement $activity
-     *
-     * @return array
+     * @return array see code
      */
     public function getActivityMapData($activity) {
         $activityDetail = $this->summariseActivityToArray($activity);
@@ -168,6 +233,13 @@ class IATI extends AbstractService {
         );
     }
 
+    /**
+     * Get the information on the tags contained in an activity, from prior
+     * classification.
+     *
+     * @param \SimpleXMLElement $activity
+     * @return array
+     */
     public function getActivityTags($activity) {
         $currentTags = array();
         foreach ($this->xpathNS($activity, './openag:tag') as $currentTag) {
@@ -187,6 +259,14 @@ class IATI extends AbstractService {
         return $currentTags;
     }
 
+    /**
+     * Add a tag to the activity, effectively classifying it in the XML.
+     *
+     * @param \SimpleXMLElement $activity
+     * @param string $code the uniquely identifying code of the tag in the vocabulary
+     * @param string $description a human-readable description of the tag
+     * @param string $reason a human-readable origin provided in the XML of the tag
+     */
     public function addActivityTag(&$activity, $code, $description, $reason = null) {
         // TODO should we check if it already exists?
         if (is_null($reason)) {
@@ -212,6 +292,15 @@ class IATI extends AbstractService {
         $tag->addChild('narrative', null, '')[] = $reason;
     }
 
+
+    /**
+     * Remove a tag to the activity, effectively un-classifying it in the XML.
+     *
+     * @param \SimpleXMLElement $activity
+     * @param string $code the uniquely identifying code of the tag in the vocabulary
+     * @param string $vocabulary the vocabulary the code belongs to
+     * @param string $vocabularyUri the URI of the vocabulary, if it is custom
+     */
     public function removeActivityTag(&$activity, $code, $vocabulary, $vocabularyUri = null) {
         $path = "./openag:tag[@code='$code' and @vocabulary='$vocabulary']";
         if ($vocabulary === '98' || $vocabulary === '99') {
@@ -230,6 +319,13 @@ class IATI extends AbstractService {
         unset($tag[0]);
     }
 
+    /**
+     * Gets summarised representations of the locations in the activity as
+     * associative arrays.
+     *
+     * @param \SimpleXMLElement $activity
+     * @return array see code
+     */
     public function getActivityLocations($activity) {
         $currentLocations = array();
         foreach ($activity->xpath('./location') as $currentLocation) {
@@ -249,6 +345,12 @@ class IATI extends AbstractService {
         return $currentLocations;
     }
 
+    /**
+     * Add a location to an activity in the XML, effectively geocoding it.
+     * 
+     * @param \SimpleXMLElement $activity
+     * @param array $json a representation of the location's properties, as returned from the Geocoder service
+     */
     public function addActivityLocation(&$activity, $json) {
         // $location is the JSON assoc-array describing a location as returned by
         // the Geocoder API
@@ -299,6 +401,13 @@ class IATI extends AbstractService {
         $admin2->addAttribute('vocabulary', $this->getContainer()->getParameter('geocoder')['admin_2_vocabulary']);
     }
 
+    /**
+     * Remove an activity location from the XML.
+     *
+     * TODO IMPORTANT - vocabulary should be added to ensure locations are uniquely identified
+     *
+     * @param string $code the unique code of the location within the vocabulary
+     */
     public function removeActivityLocation(&$activity, $code) { // TODO $vocabulary
         $location = $activity->xpath("./location/location-id[@code='$code']/..");
 

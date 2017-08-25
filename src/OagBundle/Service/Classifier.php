@@ -206,6 +206,10 @@ class Classifier extends AbstractOagService {
 
     /**
      * Persists Oag tags from API response to database.
+     *
+     * @param array $tags an array of tags, as represented by the Classifier's JSON
+     * @param OagFile $file the OagFile to suggest the tags to
+     * @param string $activityId the activity ID the tags apply to, if they are specific
      */
     private function persistTags($tags, $file, $activityId = null) {
         $em = $this->getContainer()->get('doctrine')->getManager();

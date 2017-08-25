@@ -28,6 +28,11 @@ class DPortal extends AbstractOagService {
         }
     }
 
+    /**
+     * Export an OagFile to DPortal.
+     *
+     * @param OagFile $oagfile the OagFile to export
+     */
     public function visualise($oagfile) {
 
         $srvOagFile = $this->getContainer()->get(OagFileService::class);

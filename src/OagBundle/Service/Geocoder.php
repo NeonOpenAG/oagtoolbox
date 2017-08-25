@@ -99,9 +99,10 @@ class Geocoder extends AbstractAutoService {
     }
 
     /**
-     * Flatten a geolocation as an array
+     * Flatten a geolocation entity instance to an associative array summarising it.
      *
      * @param Geolocation $location
+     * @return array see function for clearest view of keys and values
      */
     public function locationToArray(Geolocation $location) {
         $data = array();
