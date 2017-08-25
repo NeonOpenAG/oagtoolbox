@@ -12,7 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 use OagBundle\Entity\OagFile;
 use OagBundle\Entity\SuggestedTag;
-use OagBundle\Service\IATIService;
+use OagBundle\Service\IATI;
 use OagBundle\Service\OagFileService;
 
 /**
@@ -28,7 +28,7 @@ class ActivityController extends Controller
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
     public function enhanceAction(Request $request, OagFile $file, $iatiActivityId) {
-        $srvIATI = $this->get(IATIService::class);
+        $srvIATI = $this->get(IATI::class);
         $srvOagFile = $this->get(OagFileService::class);
         $sugTagRepo = $this->container->get('doctrine')->getRepository(SuggestedTag::class);
         $em = $this->getDoctrine()->getManager();

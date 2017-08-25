@@ -8,7 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use OagBundle\Service\Cove;
 use Symfony\Component\HttpFoundation\Request;
 use OagBundle\Entity\OagFile;
-use OagBundle\Service\IATIService;
+use OagBundle\Service\IATI;
 use OagBundle\Service\OagFileService;
 use OagBundle\Form\OagFileType;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;

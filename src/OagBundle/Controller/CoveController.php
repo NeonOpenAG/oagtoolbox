@@ -3,7 +3,7 @@
 namespace OagBundle\Controller;
 
 use OagBundle\Entity\OagFile;
-use OagBundle\Service\IATIService;
+use OagBundle\Service\IATI;
 use OagBundle\Service\Cove;
 use OagBundle\Service\OagFileService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -27,7 +27,7 @@ class CoveController extends Controller {
     public function oagFileAction(Request $request, OagFile $file) {
         $cove = $this->get(Cove::class);
         $srvOagFile = $this->get(OagFileService::class);
-        $srvIATI = $this->get(IATIService::class);
+        $srvIATI = $this->get(IATI::class);
 
         $this->get('logger')->debug(sprintf('Processing %s using CoVE', $file->getDocumentName()));
         // TODO - for bigger files we might need send as Uri

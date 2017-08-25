@@ -6,7 +6,7 @@ use OagBundle\Entity\OagFile;
 use OagBundle\Entity\Tag;
 use OagBundle\Entity\Geolocation;
 use OagBundle\Entity\SuggestedTag;
-use OagBundle\Service\IATIService;
+use OagBundle\Service\IATI;
 use OagBundle\Service\Classifier;
 use OagBundle\Service\Geocoder;
 use OagBundle\Service\OagFileService;
@@ -37,7 +37,7 @@ class OagFileController extends Controller
      */
     public function iatiAction(Request $request, OagFile $file) {
         $data = array();
-        $srvIATI = $this->get(IATIService::class);
+        $srvIATI = $this->get(IATI::class);
 
         $data['id'] = $file->getId();
         $data['name'] = $file->getDocumentName();
@@ -45,7 +45,7 @@ class OagFileController extends Controller
         $data['oagfiles_dir'] = $this->getParameter('oagxml_directory');
 
         $root = $srvIATI->load($file);
-        $srvActivities = $this->get(IATIService::class);
+        $srvActivities = $this->get(IATI::class);
         $activities = $srvActivities->summariseToArray($root);
 
         $this->get('logger')->debug(sprintf('IATI Document %s has %d activites', count($activities), $file->getDocumentName()));
