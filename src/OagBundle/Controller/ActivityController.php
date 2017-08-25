@@ -12,7 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 use OagBundle\Entity\OagFile;
 use OagBundle\Entity\SuggestedTag;
-use OagBundle\Service\ActivityService;
+use OagBundle\Service\IATIService;
 use OagBundle\Service\OagFileService;
 
 /**
@@ -28,23 +28,23 @@ class ActivityController extends Controller
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
     public function enhanceAction(Request $request, OagFile $file, $iatiActivityId) {
-        $srvActivity = $this->get(ActivityService::class);
+        $srvIATI = $this->get(IATIService::class);
         $srvOagFile = $this->get(OagFileService::class);
         $sugTagRepo = $this->container->get('doctrine')->getRepository(SuggestedTag::class);
         $em = $this->getDoctrine()->getManager();
 
         # Find activity using the provided ID.
-        $root = $srvActivity->load($file);
-        $activity = $srvActivity->getActivityById($root, $iatiActivityId);
+        $root = $srvIATI->load($file);
+        $activity = $srvIATI->getActivityById($root, $iatiActivityId);
 
         # Current activity summarised in array form.
-        $activityDetail = $srvActivity->summariseActivityToArray($activity);
+        $activityDetail = $srvIATI->summariseActivityToArray($activity);
 
         # Create map definition array.
-        $mapData = $srvActivity->getActivityMapData($activity);
+        $mapData = $srvIATI->getActivityMapData($activity);
 
         # Current tags attached to $activity.
-        $currentTags = $srvActivity->getActivityTags($activity);
+        $currentTags = $srvIATI->getActivityTags($activity);
 
         # Create a new instance of the form.
         $form = $this->createForm(MergeActivityType::class, null, array_merge(array(
@@ -74,7 +74,7 @@ class ActivityController extends Controller
                     $toRemove[] = $dbTag;
                     $em->persist($dbTag);
 
-                    $srvActivity->removeActivityTag($activity, $tagCode, $tagVocab, $tagVocabUri);
+                    $srvIATI->removeActivityTag($activity, $tagCode, $tagVocab, $tagVocabUri);
                 }
             }
 
@@ -102,7 +102,7 @@ class ActivityController extends Controller
                 // vocabulary and reason for addition
                 $code = $tag->getCode();
                 $description = $tag->getDescription();
-                $srvActivity->addActivityTag($activity, $code, $description);
+                $srvIATI->addActivityTag($activity, $code, $description);
             }
 
             $stagedChange = new Change();
@@ -115,7 +115,7 @@ class ActivityController extends Controller
             $em->persist($stagedChange);
             $em->flush();
 
-            $resultXML = $srvActivity->toXML($root);
+            $resultXML = $srvIATI->toXML($root);
             $srvOagFile->setContents($file, $resultXML);
 
             # Force a redirect on successful submit so that the form is rebuilt.

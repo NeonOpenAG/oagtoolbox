@@ -8,7 +8,7 @@ namespace OagBundle\Service;
  * nice abstraction away from the SimpleXMLElement, in an effort to make
  * dealing with it more predictable.
  */
-class ActivityService extends AbstractService {
+class IATIService extends AbstractService {
 
     const LIBXML_OPTIONS = LIBXML_BIGLINES & LIBXML_PARSEHUGE;
     const OPENAG_NAMESPACE = 'openag';
