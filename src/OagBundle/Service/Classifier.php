@@ -2,6 +2,7 @@
 
 namespace OagBundle\Service;
 
+use OagBundle\Service\TextExtractor\TextifyService;
 use OagBundle\Service\TextExtractor\PDFExtractor;
 use OagBundle\Service\TextExtractor\RTFExtractor;
 use PhpOffice\PhpWord\IOFactory;
@@ -151,6 +152,112 @@ class Classifier extends AbstractOagService {
             $this->getContainer()->get('logger')->error('Classifier failed to process: ' . $data);
         }
         return array_merge($response, $json);
+    }
+
+    /**
+     * Classify an OagFile and attach the resulting SuggestedTag objects to it.
+     *
+     * @param OagFile $oagFile the file to classify
+     */
+    public function classifyOagFile(OagFile $oagFile) {
+        $srvClassifier = $this->getContainer()->get(Classifier::class);
+        $srvOagFile = $this->getContainer()->get(OagFileService::class);
+        $srvTextify = $this->getContainer()->get(TextifyService::class);
+
+        $oagFile->clearSuggestedTags();
+
+        if (($oagFile->getFileType() & OagFile::OAGFILE_IATI_DOCUMENT) === OagFile::OAGFILE_IATI_DOCUMENT) {
+            // IATI xml document
+            $rawXml = $srvOagFile->getContents($oagFile);
+            $jsonResp = $this->processXML($rawXml);
+
+            if ($jsonResp['status']) {
+                throw \RuntimeException('Classifier service could not classify file');
+            }
+
+            foreach ($jsonResp['data'] as $block) {
+                foreach ($block as $part) {
+                    foreach ($part as $activityId => $tags) {
+                        $this->persistTags($tags, $oagFile, $activityId);
+                    }
+                }
+            }
+        } else if (($oagFile->getFileType() & OagFile::OAGFILE_IATI_ENHANCEMENT_DOCUMENT) === OagFile::OAGFILE_IATI_ENHANCEMENT_DOCUMENT) {
+            // enhancing/text document
+            $rawText = $srvTextify->stripOagFile($oagFile);
+
+            if ($rawText === false) {
+                // textifier failed
+                throw new \RuntimeException('Unsupported file type to strip text from');
+            }
+
+            $json = $srvClassifier->processString($rawText);
+
+            // TODO if $row['status'] == 0
+            $this->persistTags($json['data'], $oagFile);
+        } else {
+            throw new \RuntimeException('Unsupported OagFile type to classify');
+        }
+
+        $em = $this->getContainer()->get('doctrine')->getManager();
+        $em->persist($oagFile);
+        $em->flush();
+    }
+
+    /**
+     * Persists Oag tags from API response to database.
+     */
+    private function persistTags($tags, $file, $activityId = null) {
+        $em = $this->getContainer()->get('doctrine')->getManager();
+        $tagRepo = $this->getContainer()->get('doctrine')->getRepository(Tag::class);
+
+        foreach ($tags as $row) {
+            $code = $row['code'];
+            if ($code === null) {
+                // We get a single array of nulls back if no match is found.
+                break;
+            }
+
+            $description = $row['description'];
+            $confidence = $row['confidence'];
+
+            $vocab = $this->getContainer()->getParameter('classifier')['vocabulary'];
+            $vocabUri = $this->getContainer()->getParameter('classifier')['vocabulary_uri'];
+
+            $findBy = array(
+                'code' => $code,
+                'vocabulary' => $vocab
+            );
+
+            // if there is a vocab uri in the config, use it, if not, don't
+            if (strlen($vocabUri) > 0) {
+                $findBy['vocabulary_uri'] = $vocabUri;
+            } else {
+                $vocabUri = null;
+            }
+
+            // Check that the code exists in the system
+            $tag = $tagRepo->findOneBy($findBy);
+            if (!$tag) {
+                $this->container->get('logger')
+                    ->info(sprintf('Creating new code %s (%s)', $code, $description));
+                $tag = new Tag();
+                $tag->setCode($code);
+                $tag->setDescription($description);
+                $tag->setVocabulary($vocab, $vocabUri);
+                $em->persist($tag);
+            }
+
+            $sugTag = new \OagBundle\Entity\SuggestedTag();
+            $sugTag->setTag($tag);
+            $sugTag->setConfidence($confidence);
+            if (!is_null($activityId)) {
+                $sugTag->setActivityId($activityId);
+            }
+
+            $em->persist($sugTag);
+            $file->addSuggestedTag($sugTag);
+        }
     }
 
     public function getName() {

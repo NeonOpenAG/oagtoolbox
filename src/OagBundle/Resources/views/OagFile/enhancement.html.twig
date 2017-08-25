@@ -19,7 +19,7 @@
         <h2>No Geolocations associated</h2>
     {% endif %}
     <div>
-        <a href='{{ path('oag_classify_text', { 'id': id }) }}'>{% if tags|length > 0 %}Re-{% endif %}Classify</a>
+        <a href='{{ path('oag_classify_oagfile', { 'id': id }) }}'>{% if tags|length > 0 %}Re-{% endif %}Classify</a>
         |
         <a href='{{ path('oag_geocode_oagfile', { 'id': id }) }}'>{% if tags|length > 0 %}Re-{% endif %}Geocode</a>
     </div>

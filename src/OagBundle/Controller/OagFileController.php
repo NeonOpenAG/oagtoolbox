@@ -105,16 +105,18 @@ class OagFileController extends Controller
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
     public function enhancementAction(Request $request, OagFile $file) {
-        $srvActivity = $this->get(TextifyService::class);
+        $srvGeocoder = $this->get(Geocoder::class);
+        $srvTextify = $this->get(TextifyService::class);
+
         $data = array();
         $data['id'] = $file->getId();
         $data['name'] = $file->getDocumentName();
         $data['mimetype'] = $file->getMimeType();
-        $data['text'] = $srvActivity->stripOagFile($file);
+        $data['text'] = $srvTextify->stripOagFile($file);
         $data['tags'] = $file->getSuggestedTags();
 
         $geolocations = $file->getGeolocations();
-        $_geolocations = $this->locationsToArray($file->getGeolocations());
+        $_geolocations = array_map(array($srvGeocoder, 'locationToArray'), $file->getGeolocations()->getValues());
 
         $data['geolocations'] = $_geolocations;
 
@@ -149,41 +151,6 @@ class OagFileController extends Controller
             Response::HTTP_OK,
             array('content-type' => 'text/xml')
         );
-    }
-
-    /**
-     * Flatten a list of geolocations into arrays.
-     *
-     * @param Geolocation[] $allLocations
-     */
-    private function locationsToArray($allLocations) {
-        $geodata = array();
-        foreach ($allLocations as $location) {
-            $geodata[] = $this->locationToArray($location);
-        }
-        return $geodata;
-    }
-
-    /**
-     * Flatten a geolocation as an array
-     *
-     * @param Geolocation $location
-     */
-    private function locationToArray(Geolocation $location) {
-        $data = array();
-        $data['vocab_id'] = $location->getVocabId();
-        $data['geolocation_id'] = $location->getGeolocationId();
-        $data['name'] = $location->getName();
-        $data['admin_code_1_code'] = $location->getAdminCode1Code();
-        $data['admin_code_1_name'] = $location->getAdminCode1Name();
-        $data['admin_code_2_code'] = $location->getAdminCode2Code();
-        $data['admin_code_2_name'] = $location->getAdminCode2Name();
-        $data['latitude'] = $location->getLatitude();
-        $data['longitude'] = $location->getLongitude();
-        $data['exactness'] = $location->getExactness();
-        $data['class'] = $location->getClass();
-        $data['description'] = $location->getDescription();
-        return $data;
     }
 
 }
