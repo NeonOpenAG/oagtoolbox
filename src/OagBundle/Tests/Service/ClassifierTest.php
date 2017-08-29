@@ -86,8 +86,12 @@ class ClassifierTest extends TestCase {
         $classifier = $this->container->get(Classifier::class);
         $classifier->setContainer($this->container);
 
-        $processed_xml = $classifier->processXML();
-        $this->assertJson($processed_xml);
+        $fixtureData = $classifier->getXMLFixtureData();
+
+        $processed_xml = $classifier->processXML($fixtureData);
+
+        $this->assertArrayHasKey('data', $processed_xml);
+        $this->assertArrayHasKey('status', $processed_xml);
     }
 
     /**
