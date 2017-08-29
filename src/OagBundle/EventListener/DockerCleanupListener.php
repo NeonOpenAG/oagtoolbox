@@ -8,9 +8,28 @@ use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 class DockerCleanupListener {
 
+    private $container;
+
     public function onKernelTerminate(PostResponseEvent $event) {
-        exec('docker rm $(docker ps --filter=status=exited --filter=status=created -q)');
-        exec('docker rmi $(docker images -a --filter=dangling=true -q)');
+        $this->getContainer()->get('logger')->debug(
+            exec('docker rm $(docker ps --filter=status=exited --filter=status=created -q)')
+        );
+        $this->getContainer()->get('logger')->debug(
+            exec('docker rmi $(docker images -a --filter=dangling=true -q)')
+        );
+    }
+
+    /**
+     * Sets the container.
+     *
+     * @param ContainerInterface|null $container A ContainerInterface instance or null
+     */
+    public function setContainer(ContainerInterface $container = null) {
+        $this->container = $container;
+    }
+
+    public function getContainer() {
+        return $this->container;
     }
 
 }
