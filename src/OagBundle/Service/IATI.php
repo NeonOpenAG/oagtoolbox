@@ -70,7 +70,7 @@ class IATI extends AbstractService {
             return $root;
         } catch (\Exception $ex) {
             $this->getContainer()->get('logger')->error('Failed to parse XML: ' . substr($string, 0, 30));
-            throw $ex;
+            $this->getContainer()->get('logger')->error('Reason: ' . $ex->getMessage());
         }
     }
 
