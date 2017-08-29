@@ -5,6 +5,7 @@ namespace OagBundle\EventListener;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class DockerCleanupListener {
 
