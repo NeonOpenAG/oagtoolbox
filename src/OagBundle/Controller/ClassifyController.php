@@ -2,14 +2,17 @@
 
 namespace OagBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use OagBundle\Entity\OagFile;
+use OagBundle\Entity\Tag;
+use OagBundle\Entity\SuggestedTag;
+use OagBundle\Service\Classifier;
+use OagBundle\Service\OagFileService;
+use OagBundle\Service\TextExtractor\TextifyService;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use OagBundle\Service\ActivityService;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use OagBundle\Entity\OagFile;
-
 
 /**
  * @Route("/classify")
@@ -18,21 +21,18 @@ use OagBundle\Entity\OagFile;
 class ClassifyController extends Controller {
 
     /**
-     * List all activities in a document
+     * Classify an OagFile.
      *
-     * @Route("/activity/{id}")
+     * @Route("/{id}")
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
-    public function activityAction(Request $request, OagFile $file) {
-        // Load XML document
-        $root = $srvActivity->load($file);
+    public function oagFileAction(Request $request, OagFile $file) {
+        $srvClassifier = $this->get(Classifier::class);
+        $srvOagFile = $this->get(OagFileService::class);
 
-        // Extract each activity
-        $srvActivities = $this->get(ActivityService::class);
-        $activities = $srvActivities->summariseToArray($root);
+        $srvClassifier->classifyOagFile($file);
 
-        // Render them
-        return array('activities' => $activities);
+        return array('name' => $file->getDocumentName(), 'tags' => $file->getSuggestedTags()->getValues());
     }
 
 }

@@ -9,7 +9,7 @@
     <tbody>
         {% for tag in tags %}
             <tr>
-                {{ include('OagBundle::OagFile/tag_row.html.twig', { 'tag': tag.tag }) }}
+                {{ include('OagBundle::Classify/tag_row.html.twig', { 'tag': tag.tag }) }}
                 <td>{{ tag.confidence }}</td>
             </tr>
         {% endfor %}
