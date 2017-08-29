@@ -13,7 +13,7 @@ use Symfony\Component\Cache\Simple\FilesystemCache;
 
 class Classifier extends AbstractOagService {
 
-    public function processUri($sometext) {
+    public function processUri($sometext = '') {
         // TODO implement non-fixture process
         return json_decode($this->getStringFixtureData(), true);
     }
