@@ -35,41 +35,45 @@ class CoveController extends Controller {
         $json = $cove->processString($contents);
 
         $err = array_filter($json['err'] ?? array());
-        $status = $json['status'] ?? '';
+        $status = $json['status'];
 
-        // TODO Check status
-        foreach ($err as $line) {
-            $this->get('session')->getFlashBag()->add('error', $line);
-        }
+        if ($status === 0) {
+            // CoVE claims to have processed the XML successfully
+            $xml = $json['xml'];
+            if ($srvIATI->parseXML($xml)) {
+                // CoVE actually has returned valid XML
+                $xmldir = $this->getParameter('oagxml_directory');
+                if (!is_dir($xmldir)) {
+                    mkdir($xmldir, 0755, true);
+                }
 
-        $xml = $json['xml'];
-        if ($srvIATI->parseXML($xml)) {
-            $xmldir = $this->getParameter('oagxml_directory');
-            if (!is_dir($xmldir)) {
-                mkdir($xmldir, 0755, true);
+                $filename = $srvOagFile->getXMLFileName($file);
+                $xmlfile = $xmldir . '/' . $filename;
+                if (!file_put_contents($xmlfile, $xml)) {
+                    $this->get('session')->getFlashBag()->add('error', 'Unable to create XML file.');
+                    $this->get('logger')->debug(sprintf('Unable to create XML file: %s', $xmlfile));
+                    return $this->redirectToRoute('oag_default_index');
+                }
+                // else
+                if ($this->getParameter('unlink_files')) {
+                    unlink($path);
+                }
+
+                $file->setDocumentName($filename);
+                $file->setFileType(OagFile::OAGFILE_IATI_DOCUMENT);
+                $file->setMimeType('application/xml');
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($file);
+                $em->flush();
+                $this->get('session')->getFlashBag()->add('info', 'IATI File created/Updated\; ' . $xmlfile);
+            } else {
+                $this->get('session')->getFlashBag()->add('error', 'CoVE returned data that was not XML.');
             }
-
-            $filename = $srvOagFile->getXMLFileName($file);
-            $xmlfile = $xmldir . '/' . $filename;
-            if (!file_put_contents($xmlfile, $xml)) {
-                $this->get('session')->getFlashBag()->add('error', 'Unable to create XML file.');
-                $this->get('logger')->debug(sprintf('Unable to create XML file: %s', $xmlfile));
-                return $this->redirectToRoute('oag_default_index');
-            }
-            // else
-            if ($this->getParameter('unlink_files')) {
-                unlink($path);
-            }
-
-            $file->setDocumentName($filename);
-            $file->setFileType(OagFile::OAGFILE_IATI_DOCUMENT);
-            $file->setMimeType('application/xml');
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($file);
-            $em->flush();
-            $this->get('session')->getFlashBag()->add('info', 'IATI File created/Updated\; ' . $xmlfile);
         } else {
-            $this->get('session')->getFlashBag()->add('error', 'CoVE returned data that was not XML.');
+            // CoVE returned with an error, spit out stderr
+            foreach ($err as $line) {
+                $this->get('session')->getFlashBag()->add('error', $line);
+            }
         }
 
         return $this->redirectToRoute('oag_default_index');
