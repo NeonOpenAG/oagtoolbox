@@ -27,6 +27,7 @@ class IATI extends AbstractService {
         $srvOagFile = $this->getContainer()->get(OagFileService::class);
 
         $contents = $srvOagFile->getContents($oagFile);
+
         $root = $this->parseXML($contents);
 
         return $root;
@@ -50,7 +51,8 @@ class IATI extends AbstractService {
      * Parse a given string into a \SimpleXMLElement object.
      *
      * @param $string
-     * @return \SimpleXMLElement or false on failure
+     *
+     * @return \SimpleXMLElement
      */
     public function parseXML($string) {
         // helper function to allow for centralised changing of libxml options
@@ -70,7 +72,6 @@ class IATI extends AbstractService {
             $this->getContainer()->get('logger')->error('Failed to parse XML: ' . substr($string, 0, 30));
             throw $ex;
         }
-        return false;
     }
 
     /**
@@ -95,7 +96,7 @@ class IATI extends AbstractService {
      *   array['tags'] Activity Tags.
      *   array['locations'] Activity Locations.
      */
-    public function summariseActivityToArray($activity) {
+    public function summariseActivityToArray(\SimpleXMLElement $activity) {
         $simpActivity = array();
         $simpActivity['id'] = $this->getActivityId($activity);
         $simpActivity['name'] = $this->getActivityTitle($activity);

@@ -65,6 +65,8 @@ class Cove extends AbstractAutoService {
     }
 
     public function getFixtureData() {
+
+
         // TODO - load from file, can we make this an asset?
         // https://symfony.com/doc/current/best_practices/web-assets.html
         $json = array(
