@@ -243,7 +243,7 @@ class Classifier extends AbstractOagService {
             // Check that the code exists in the system
             $tag = $tagRepo->findOneBy($findBy);
             if (!$tag) {
-                $this->container->get('logger')
+                $this->getContainer()->get('logger')
                     ->info(sprintf('Creating new code %s (%s)', $code, $description));
                 $tag = new Tag();
                 $tag->setCode($code);

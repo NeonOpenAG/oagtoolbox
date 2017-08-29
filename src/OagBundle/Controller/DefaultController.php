@@ -63,7 +63,7 @@ class DefaultController extends Controller {
                 $em->persist($oagfile);
                 $em->flush();
 
-                return $this->redirect($this->generateUrl('oag_oagfile_source', array('id' => $oagfile->getId())));
+                return $this->redirect($this->generateUrl('oag_cove_oagfile', array('id' => $oagfile->getId())));
             }
         }
 
