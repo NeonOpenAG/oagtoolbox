@@ -172,7 +172,7 @@ class Classifier extends AbstractOagService {
             $jsonResp = $this->processXML($rawXml);
 
             if ($jsonResp['status']) {
-                throw \RuntimeException('Classifier service could not classify file');
+                throw new \Exception('Classifier service could not classify file');
             }
 
             foreach ($jsonResp['data'] as $block) {

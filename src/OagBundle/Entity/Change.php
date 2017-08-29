@@ -135,10 +135,24 @@ class Change {
     }
 
     /**
+     * @return ArrayCollection|array
+     */
+    public function getAddedTags() {
+        return $this->addedTags;
+    }
+
+    /**
      * @param ArrayCollection|array $removedTags
      */
     public function setRemovedTags($removedTags) {
         $this->removedTags = $removedTags;
+    }
+
+    /**
+     * @return ArrayCollection|array
+     */
+    public function getRemovedTags() {
+        return $this->removedTags;
     }
 
 }
