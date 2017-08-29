@@ -41,16 +41,16 @@ class Change {
     private $file;
 
     /**
-     * @ORM\ManyToMany(targetEntity="OagBundle\Entity\Sector")
-     * @ORM\JoinTable(name="change_sector_add")
+     * @ORM\ManyToMany(targetEntity="OagBundle\Entity\Tag")
+     * @ORM\JoinTable(name="change_tag_add")
      */
-    private $addedSectors;
+    private $addedTags;
 
     /**
-     * @ORM\ManyToMany(targetEntity="OagBundle\Entity\Sector")
-     * @ORM\JoinTable(name="change_sector_remove")
+     * @ORM\ManyToMany(targetEntity="OagBundle\Entity\Tag")
+     * @ORM\JoinTable(name="change_tag_remove")
      */
-    private $removedSectors;
+    private $removedTags;
 
     /**
      * Get id
@@ -128,17 +128,17 @@ class Change {
     }
 
     /**
-     * @param ArrayCollection|array $addedSectors
+     * @param ArrayCollection|array $addedTags
      */
-    public function setAddedSectors($addedSectors) {
-        $this->addedSectors = $addedSectors;
+    public function setAddedTags($addedTags) {
+        $this->addedTags = $addedTags;
     }
 
     /**
-     * @param ArrayCollection|array $removedSectors
+     * @param ArrayCollection|array $removedTags
      */
-    public function setRemovedSectors($removedSectors) {
-        $this->removedSectors = $removedSectors;
+    public function setRemovedTags($removedTags) {
+        $this->removedTags = $removedTags;
     }
 
 }

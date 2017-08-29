@@ -16,6 +16,8 @@ parameters:
     classifier:
         vocabulary: '99'
         vocabulary_uri: 'http://gis.foundationcenter.org/OpenAgCoder/'
+        namespace_uri: 'http://openagfunding.opendataservices.coop/openag/ns/'
+        endpoint: 'https://gis.foundationcenter.org/ag-classify/predict.php'
     geocoder:
         id_vocabulary: 'G1'
         admin_1_vocabulary: 'PLACEHOLDER'

@@ -20,6 +20,12 @@ class TextifyService {
 
     private $container;
 
+    /**
+     * Gets the raw text content of an OagFile.
+     *
+     * @param OagFile $oagfile the file to get the text of
+     * @return string
+     */
     public function stripOagFile($oagFile) {
         $srvOagFile = $this->container->get(OagFileService::class);
         $path = $srvOagFile->getPath($oagFile);

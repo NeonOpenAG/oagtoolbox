@@ -2,21 +2,48 @@
 
 {% block title %}OagBundle:Activity:enhance{% endblock %}
 
-{% block body %}
-    <h1>Welcome to the Activity:enhance page</h1>
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/oag/neonmap/dist/neonmap.css') }}" rel="stylesheet" />
+{% endblock %}
 
+{% block h2 %}{{ activity.name }} [{{ activity.id }}]{% endblock %}
+
+{% block body %}
+
+    <div id="existing-locations">
+        <h3>Existing locations</h3>
+        <div id="existing-map-block"
+             data-geojson='{{ mapdata }}'
+             ></div>
+    </div>
+    {{ form(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/oag/neonmap/dist/neonmap.js') }}"></script>
+    <script>
+        $( document ).ready(function() {
+            $('#existing-map-block').neonmap({image_path: "{{ asset('bundles/oag/neonmap/dist/images') }}" });
+        });
+    </script>
+{% endblock %}
+
+{#
     <ul>
-        <li>Show existing sectors as checked checkboxes</li>
+        <li>Show existing tags as checked checkboxes</li>
         <li>Show classifier results for this (activity|document)?, not sure which check with Kat/Harry</li>
-        <li>Show a block of sectors as checkboxes for each $file->getEnhancingDocuments()</li>
+        <li>Show a block of tags as checkboxes for each $file->getEnhancingDocuments()</li>
     </ul>
 
     <p>Submit merges to new XML and overwites the existing IATI XML document identified by route param ID.</p>
     <p>Any smart ideas about versioning welcome</p>
 
     <p>
-        <a href='{{ path('oag_oagfile_classifyxml', { 'id': id  }) }}'>Classify</a>
+        <a href='{{ path('oag_classify_oagfile', { 'id': id  }) }}'>Classify</a>
     </p>
 
-    {{ form(form) }}
-{% endblock %}
+    <p>
+    </p>
+#}

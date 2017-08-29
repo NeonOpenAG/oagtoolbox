@@ -53,3 +53,28 @@ body {
 .ui-tooltip {
     white-space: pre-line;
 }
+
+#existing-locations {
+    width: 100%;
+}
+
+#existing-map-block {
+    width: 100%;
+    height: 400px;
+    border: 1px solid;
+}
+
+#existing-map-block .leaflet-map-pane *+* {
+    margin: 0;
+}
+
+.leaflet-container .markerLabel img {
+    /* override map img max width none on img */
+    max-width: 100% !important;
+    margin-top: 6px;
+}
+
+/* Override body *+* margin */
+.leaflet-tile.leaflet-tile-loaded {
+    margin-top: 0;
+}

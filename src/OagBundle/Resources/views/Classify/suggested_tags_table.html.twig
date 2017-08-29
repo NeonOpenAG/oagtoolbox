@@ -7,11 +7,10 @@
         </tr>
     </thead>
     <tbody>
-        {% for sector in sectors %}
+        {% for tag in tags %}
             <tr>
-                <td>{{ sector['code'] }}</td>
-                <td>{{ sector['description'] }}</td>
-                <td>{{ sector['confidence'] }}</td>
+                {{ include('OagBundle::Classify/tag_row.html.twig', { 'tag': tag.tag }) }}
+                <td>{{ tag.confidence }}</td>
             </tr>
         {% endfor %}
     </tbody>

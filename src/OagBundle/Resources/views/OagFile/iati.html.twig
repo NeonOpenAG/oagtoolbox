@@ -2,12 +2,16 @@
 
 {% block title %}IATI Document: {{ name }}{% endblock %}
 
-{% block h1 %}{{ name }}{% endblock %}
+{% block h2 %}{{ name }}{% endblock %}
 
 {% block menu %}
     {{ parent() }}
     |
-    <a class='view-xml-link' href="{{ asset('xml')}}/{{ oagfiles_dir }}/{{ name }}">Raw XML</a>
+    <a class='view-xml-link' href="{{ path('oag_oagfile_download', { 'id': id }) }}">Download</a>
+    |
+    <a class='view-xml-link' href="{{ path('oag_oagfile_raw', { 'id': id }) }}">Raw XML</a>
+    |
+    <a class='view-xml-link' href="{{ path('oag_classify_oagfile', { 'id': id }) }}">Re-Classify</a>
 {% endblock %}
 
 {% block body %}
@@ -16,8 +20,8 @@
         {% for activity in activities %}
             <li><a href='{{ path('oag_activity_enhance', { 'id': id, 'iatiActivityId': activity['id'] }) }}'>{{ activity['name'] }}</a></li>
             <ul>
-                {% for sector in activity['sectors'] %}
-                    <li>{{ sector['description'] }}</li>
+                {% for tag in activity['tags'] %}
+                    <li>{{ tag['description'] }}</li>
                 {% endfor %}
             </ul>
         {% endfor %}
@@ -29,8 +33,8 @@
                     {% for doc in enhancingDocuments %}
                         <li><span class='docname'>{{ doc.documentName }}</span>
                             <a href="{{ path('oag_oagfile_enhancement', { 'id': doc.id }) }}">View</a> |
-                            <a href='{{ path('oag_oagfile_classifytext', { 'id': doc.id }) }}'>{% if doc.suggestedsectors|length > 0 %}Re-{% endif %}Classify</a> |
-                            <a href='{{ path('oag_oagfile_geocode', { 'id': doc.id }) }}'>{% if doc.geolocations|length > 0 %}Re-{% endif %}Geocode</a>
+                            <a href='{{ path('oag_classify_oagfile', { 'id': doc.id }) }}'>{% if doc.suggestedtags|length > 0 %}Re-{% endif %}Classify</a> |
+                            <a href='{{ path('oag_geocode_oagfile', { 'id': doc.id }) }}'>{% if doc.geolocations|length > 0 %}Re-{% endif %}Geocode</a>
                         {% endfor %}
                 </ul>
         {% else %}

@@ -11,6 +11,7 @@ env:
 before-install:
 - composer self-update
 install:
+- git submodule update --init --recursive
 - composer install -n
 script:
 - "./vendor/bin/simple-phpunit -c phpunit.xml"

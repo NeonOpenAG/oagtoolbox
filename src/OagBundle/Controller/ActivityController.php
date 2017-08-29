@@ -2,19 +2,17 @@
 
 namespace OagBundle\Controller;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use OagBundle\Entity\Change;
-use OagBundle\Entity\Sector;
+use OagBundle\Entity\Tag;
+use OagBundle\Form\MergeActivityType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use OagBundle\Entity\OagFile;
-use OagBundle\Entity\SuggestedSector;
-use OagBundle\Service\ActivityService;
+use OagBundle\Entity\SuggestedTag;
+use OagBundle\Service\IATI;
 use OagBundle\Service\OagFileService;
 
 /**
@@ -23,98 +21,60 @@ use OagBundle\Service\OagFileService;
  */
 class ActivityController extends Controller
  {
-
     /**
-     * Show summary of activity and existing sectors with sectors available from supporting documents.
+     * Show summary of activity and existing tags with tags available from supporting documents.
      *
-     * @Route("/enhance/{id}/{iatiActivityId}")
+     * @Route("/{id}/{iatiActivityId}")
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
     public function enhanceAction(Request $request, OagFile $file, $iatiActivityId) {
-        $srvActivity = $this->get(ActivityService::class);
+        $srvIATI = $this->get(IATI::class);
         $srvOagFile = $this->get(OagFileService::class);
-        $sugSectorRepo = $this->container->get('doctrine')->getRepository(SuggestedSector::class);
+        $sugTagRepo = $this->container->get('doctrine')->getRepository(SuggestedTag::class);
         $em = $this->getDoctrine()->getManager();
 
-        # find activity
-        $root = $srvActivity->load($file);
-        $activity = $srvActivity->getActivityById($root, $iatiActivityId);
+        # Find activity using the provided ID.
+        $root = $srvIATI->load($file);
+        $activity = $srvIATI->getActivityById($root, $iatiActivityId);
 
-        # build the form
-        $formBuilder = $this->createFormBuilder(array(), array());
+        # Current activity summarised in array form.
+        $activityDetail = $srvIATI->summariseActivityToArray($activity);
 
-        # current sectors
-        $current = $srvActivity->getActivitySectors($activity);
-        $formBuilder->add('current', ChoiceType::class, array(
-            'expanded' => true,
-            'multiple' => true,
-            'choices' => array_column($current, 'code', 'description'),
-            'data' => array_column($current, 'code') // default to ticked
-        ));
+        # Create map definition array.
+        $mapData = $srvIATI->getActivityMapData($activity);
 
-        # suggested sectors
-        $suggested = array();
-        foreach ($file->getSuggestedSectors() as $sugSector) {
-            # if it's not from our activity, ignore it
-            if ($sugSector->getActivityId() !== $iatiActivityId) {
-                continue;
-            }
-            $suggested[] = $sugSector;
-        }
-        $formBuilder->add('suggested', ChoiceType::class, array(
-            'expanded' => true,
-            'multiple' => true,
-            'choices' => array_reduce($suggested, function ($result, $item) {
-                $label = $item->getSector()->getDescription();
-                $result[$label] = $item->getId();
-                return $result;
-            }, array())
-        ));
+        # Current tags attached to $activity.
+        $currentTags = $srvIATI->getActivityTags($activity);
 
-        foreach ($file->getEnhancingDocuments() as $otherFile) {
-            $name = $otherFile->getDocumentName();
-            $sectors = $otherFile->getSuggestedSectors();
-            $id = $otherFile->getId();
+        # Create a new instance of the form.
+        $form = $this->createForm(MergeActivityType::class, null, array_merge(array(
+            'currentTags' => $currentTags,
+            'iatiActivityId' => $iatiActivityId,
+            'file' => $file
+        )));
 
-            $formBuilder->add("enhanced_$id", ChoiceType::class, array(
-                'expanded' => true,
-                'multiple' => true,
-                'label' => $name,
-                'choices' => array_reduce($sectors->toArray(), function ($result, $item) {
-                    $label = $item->getSector()->getDescription();
-                    $result[$label] = $item->getId();
-                    return $result;
-                }, array())
-            ));
-        }
-
-        $formBuilder->add('submit', SubmitType::class, array(
-            'label' => 'Merge'
-        ));
-
-        $form = $formBuilder->getForm();
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
             $toRemove = array();
-            foreach ($current as $sugSector) {
+            foreach ($currentTags as $index => $sugTag) {
                 // has a pre-existing one been removed?
-                if (!in_array($sugSector['code'], $data['current'])) {
-                    $sectorCode = $sugSector['code'];
-                    $sectorDescription = $sugSector['description'];
-                    $sectorVocab = $sugSector['vocabulary'];
-                    $sectorVocabUri = $sugSector['vocabulary-uri'];
+                if (!in_array($index, $data['currentTags'])) {
+                    $tagCode = $sugTag['code'];
+                    $tagDescription = $sugTag['description'];
+                    $tagVocab = $sugTag['vocabulary'];
+                    $tagVocabUri = $sugTag['vocabulary-uri'];
 
-                    $dbSector = new Sector();
-                    $dbSector->setCode($sectorCode);
-                    $dbSector->setVocabulary($sectorVocab, $sectorVocabUri);
-                    $dbSector->setDescription($sectorDescription);
-                    $toRemove[] = $dbSector;
-                    $em->persist($dbSector);
+                    $dbTag = new Tag();
+                    $dbTag->setCode($tagCode);
+                    $dbTag->setVocabulary($tagVocab, $tagVocabUri);
+                    $dbTag->setDescription($tagDescription);
+                    $toRemove[] = $dbTag;
+                    $em->persist($dbTag);
 
-                    $srvActivity->removeActivitySector($activity, $sectorCode, $sectorVocab);
+                    $srvIATI->removeActivityTag($activity, $tagCode, $tagVocab, $tagVocabUri);
                 }
             }
 
@@ -126,25 +86,28 @@ class ActivityController extends Controller
             }
 
             $toAdd = array();
-            foreach ($toAddIds as $sectorId) {
-                $sugSector = $sugSectorRepo->findOneById($sectorId);
-                $sector = $sugSector->getSector();
+            foreach ($toAddIds as $tagId) {
+                $sugTag = $sugTagRepo->findOneById($tagId);
+                $tag = $sugTag->getTag();
 
-                if (in_array($sector, $toAdd)) {
+                if (in_array($tag, $toAdd)) {
                     // no duplicates please
                     continue;
                 }
 
-                $toAdd[] = $sector;
+                $toAdd[] = $tag;
 
-                $code = $sector->getCode();
-                $description = $sector->getDescription();
-                $srvActivity->addActivitySector($activity, $code, $description);
+                // TODO WARNING - if reusing this code elsewhere than the
+                // auto-classifier, ensure that you specify the correct
+                // vocabulary and reason for addition
+                $code = $tag->getCode();
+                $description = $tag->getDescription();
+                $srvIATI->addActivityTag($activity, $code, $description);
             }
 
             $stagedChange = new Change();
-            $stagedChange->setAddedSectors($toAdd);
-            $stagedChange->setRemovedSectors($toRemove);
+            $stagedChange->setAddedTags($toAdd);
+            $stagedChange->setRemovedTags($toRemove);
             $stagedChange->setActivityId($iatiActivityId);
             $stagedChange->setTimestamp(new \DateTime("now"));
             $stagedChange->setFile($file);
@@ -152,24 +115,19 @@ class ActivityController extends Controller
             $em->persist($stagedChange);
             $em->flush();
 
-            $resultXML = $srvActivity->toXML($root);
+            $resultXML = $srvIATI->toXML($root);
             $srvOagFile->setContents($file, $resultXML);
+
+            # Force a redirect on successful submit so that the form is rebuilt.
+            return $this->redirect($request->getUri());
         }
 
         return array(
             'form' => $form->createView(),
-            'id' => $file->getId()
+            'id' => $file->getId(),
+            'activity' => $activityDetail,
+            'mapdata' => json_encode($mapData, JSON_HEX_APOS + JSON_HEX_TAG + JSON_HEX_AMP + JSON_HEX_QUOT),
         );
-    }
-
-    /**
-     * Process the submission from the enhance function
-     *
-     * @Route("/merge/{id}/{iatiActivityId}")
-     * @ParamConverter("file", class="OagBundle:OagFile")
-     */
-    public function mergeAction(Request $request, OagFile $file, $iatiActivityId) {
-        return [];
     }
 
 }

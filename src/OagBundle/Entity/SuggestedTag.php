@@ -5,12 +5,12 @@ namespace OagBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Sector
+ * SuggestedTag
  *
- * @ORM\Table(name="suggestedsector")
- * @ORM\Entity(repositoryClass="OagBundle\Repository\SuggestedSectorRepository")
+ * @ORM\Table(name="suggestedtag")
+ * @ORM\Entity(repositoryClass="OagBundle\Repository\SuggestedTagRepository")
  */
-class SuggestedSector {
+class SuggestedTag {
 
     /**
      * @var int
@@ -29,9 +29,9 @@ class SuggestedSector {
     private $confidence;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\OagBundle\Entity\Sector")
+     * @ORM\ManyToOne(targetEntity="\OagBundle\Entity\Tag")
      */
-    private $sector;
+    private $tag;
 
     /**
      * @var string
@@ -54,7 +54,7 @@ class SuggestedSector {
      *
      * @param string $confidence
      *
-     * @return SuggestedSector
+     * @return SuggestedTag
      */
     public function setConfidence($confidence) {
         $this->confidence = $confidence;
@@ -71,12 +71,15 @@ class SuggestedSector {
         return $this->confidence;
     }
 
-    public function getSector() {
-        return $this->sector;
+    /**
+     * @return \OagBundle\Entity\Tag
+     */
+    public function getTag() {
+        return $this->tag;
     }
 
-    public function setSector(Sector $sector) {
-        $this->sector = $sector;
+    public function setTag(Tag $tag) {
+        $this->tag = $tag;
     }
 
     public function getActivityId() {

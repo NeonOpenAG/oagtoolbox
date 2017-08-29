@@ -8,7 +8,7 @@
 
 {% block title %}Tool POCs{% endblock %}
 
-{% block h1 %}Open Ag Toolbox{% endblock %}
+{% block h2 %}Open Ag Toolbox{% endblock %}
 
 {% block body %}
 
@@ -17,7 +17,7 @@
     <ul>
         {% for iatidoc in iatidocs %}
             <li>
-                <a href="{{ path('oag_dportal_index', { 'id': iatidoc.id }) }}" target="dportal">[Visualise]</a>
+                <a href="{{ path('oag_dportal_oagfile', { 'id': iatidoc.id }) }}" target="dportal">[Visualise]</a>
                 {{ include('OagBundle::Default/iatiFile.html.twig', { 'iatiDoc': iatidoc }) }}
                 <ul>
                     {% for enhancingDoc in iatidoc.enhancingDocuments %}

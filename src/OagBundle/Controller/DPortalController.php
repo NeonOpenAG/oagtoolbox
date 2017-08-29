@@ -19,10 +19,9 @@ class DPortalController extends Controller {
      * @Route("/{id}")
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
-    public function indexAction(Request $request, OagFile $file) {
+    public function oagFileAction(Request $request, OagFile $file) {
         $portal = $this->get(DPortal::class);
 
-        $avaiable = false;
         if ($portal->isAvailable()) {
             $messages[] = 'DPortal is avaialable';
         } else {
