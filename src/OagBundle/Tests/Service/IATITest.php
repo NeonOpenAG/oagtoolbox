@@ -133,8 +133,26 @@ class IATITest extends TestCase {
       $this->assertArrayHasKey('locations', $summarisedActivity);
   }
 
+    /**
+     * @group failing
+     */
+  public function testSummariseToArray() {
+      $srvIATI = $this->getMockBuilder(IATI::class)
+          ->setMethods(array('summariseActivityToArray'))
+          ->getMock();
+      $srvIATI->setContainer($this->container);
+      $root = $srvIATI->load($this->testOagFile);
+      $activities = $srvIATI->load($this->testOagFile)
+          ->xpath('/iati-activities/iati-activity');
 
-  public function testSummariseToArray() {}
+      # Assert that the methods required to build the summary array are called.
+      $srvIATI->expects($this->exactly(count($activities)))
+          ->method('summariseActivityToArray');
+
+      $summary = $srvIATI->summariseToArray($root);
+      $this->assertEquals(count($activities), count($summary));
+  }
+
   public function testGetFixtureData() {}
   public function testGetActivities() {}
   public function testGetActivityById() {}
