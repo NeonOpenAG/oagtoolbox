@@ -84,8 +84,8 @@ class IATITest extends TestCase {
       );
     }
 
-    # Check that the method throws when expected.
-    $this->expectExceptionMessage('String could not be parsed as XML');
+    # Check that the method logs when expected.
+
     $srvIATI->parseXML('');
   }
 
@@ -216,9 +216,34 @@ class IATITest extends TestCase {
 
   }
 
+  public function testGetActivityId() {
+      $srvIATI = $this->container->get(IATI::class);
+      $srvIATI->setContainer($this->container);
+      $mock = $this
+          ->getMockBuilder('Traversable')
+          ->setMethods(['xpath', 'key', 'next', 'valid', 'rewind', 'current'])
+          ->getMock();
 
-  public function testGetActivityId() {}
-  public function testGetActivityTitle() {}
+      # We expect the xpath method to be ran once with the expected param.
+      # It will return the two choices.
+      $expectedParam = './iati-identifier';
+      $mock->expects($this->once())
+          ->method('xpath')
+          ->with($expectedParam)
+          ->willReturn([0, 1]);
+
+      $activities = $srvIATI->getActivityId($mock);
+
+      # Assert that the first item found by the xpath is returned.
+      $this->assertEquals(0, $activities);
+
+  }
+
+  public function testGetActivityTitle() {
+
+  }
+
+
   public function testGetActivityMapData() {}
   public function testGetActivityTags() {}
   public function testGetActivityLocations() {}
