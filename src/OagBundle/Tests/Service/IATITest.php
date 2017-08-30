@@ -101,14 +101,36 @@ class IATITest extends TestCase {
   }
 
   public function testSummariseActivityToArray() {
-      $srvIATI = $this->container->get(IATI::class);
+      $srvIATI = $this->getMockBuilder(IATI::class)
+          ->setMethods(array(
+              'getActivityId',
+              'getActivityTitle',
+              'getActivityTags',
+              'getActivityLocations'
+          ))
+          ->getMock();
       $srvIATI->setContainer($this->container);
 
-      $iatiFileString = $this->oagFileService->getContents($this->testOagFile);
+      # Load a single activity for test purposes.
+      $activity = $srvIATI->load($this->testOagFile)
+          ->xpath('/iati-activities/iati-activity')[0];
 
-      $root = $srvIATI->parseXML($iatiFileString);
-//TODO
+      # Assert that the methods required to build the summary array are called.
+      $srvIATI->expects($this->once())
+          ->method('getActivityId');
+      $srvIATI->expects($this->once())
+          ->method('getActivityTitle');
+      $srvIATI->expects($this->once())
+          ->method('getActivityTags');
+      $srvIATI->expects($this->once())
+          ->method('getActivityLocations');
 
+      # Assert that the correct keys are used in the summary array.
+      $summarisedActivity = $srvIATI->summariseActivityToArray($activity);
+      $this->assertArrayHasKey('id', $summarisedActivity);
+      $this->assertArrayHasKey('name', $summarisedActivity);
+      $this->assertArrayHasKey('tags', $summarisedActivity);
+      $this->assertArrayHasKey('locations', $summarisedActivity);
   }
 
 
