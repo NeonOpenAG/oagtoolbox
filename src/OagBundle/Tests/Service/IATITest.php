@@ -282,7 +282,60 @@ class IATITest extends TestCase {
         }
     }
 
-    public function testGetActivityTags() {}
+    /**
+     * Open to cool ideas to test these functions more individually without
+     * needless code repetition. The fact that the state is always stored as XML
+     * should keep this test worthy for now.
+     *
+     * @dataProvider tagManipulationProvider
+     */
+    public function testTagManipulation($tagInfo) {
+        $srvIATI = $this->container->get(IATI::class);
+        $srvIATI->setContainer($this->container);
+
+        $mockActivity = new \SimpleXMLElement('<iati-activity></iati-activity>');
+
+        $srvIATI->addActivityTag(
+            $mockActivity,
+            $tagInfo['code'],
+            $tagInfo['description']
+        );
+
+        $tags = $srvIATI->getActivityTags($mockActivity);
+        $this->assertEquals(1, count($tags));
+
+        $tag = $tags[0];
+        $this->assertEquals($tagInfo['description'], $tag['description']);
+        $this->assertEquals($tagInfo['code'], $tag['code']);
+        $this->assertEquals($tagInfo['vocabulary'], $tag['vocabulary']);
+        $this->assertEquals($tagInfo['vocabularyUri'], $tag['vocabulary-uri']);
+    }
+
+    public function tagManipulationProvider() {
+        // it would nice to be able to use $this->container - any ideas?
+        // https://stackoverflow.com/a/42161440
+        $kernel = new \AppKernel("test", true);
+        $kernel->boot();
+
+        $vocab = $kernel->getContainer()->getParameter('classifier')['vocabulary'];
+        $vocabUri = $kernel->getContainer()->getParameter('classifier')['vocabulary_uri'];
+
+        return array(
+            array(array(
+                'description' => 'test description 1',
+                'code' => 'abc123',
+                'vocabulary' => $vocab,
+                'vocabularyUri' => $vocabUri
+            )),
+            array(array(
+                'description' => 'test description 2',
+                'code' => 'def456',
+                'vocabulary' => $vocab,
+                'vocabularyUri' => $vocabUri
+            ))
+        );
+    }
+
     public function testGetActivityLocations() {}
     public function testAddActivityTag() {}
     public function testAddActivityLocation() {}
@@ -298,4 +351,5 @@ class IATITest extends TestCase {
         $this->em->close();
         $this->em = null; // avoid memory leaks
     }
+
 }
