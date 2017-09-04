@@ -240,7 +240,21 @@ class IATITest extends TestCase {
     }
 
     public function testGetActivityTitle() {
+        $srvIATI = $this->container->get(IATI::class);
+        $srvIATI->setContainer($this->container);
 
+        // test activity with narrative
+        $loadedFile = $srvIATI->load($this->testOagFile);
+        $activity = $srvIATI->getActivities($loadedFile)[0];
+        $title = $srvIATI->getActivityTitle($activity);
+        $this->assertNotEquals('Unnamed', $title);
+        $this->assertTrue(is_string($title), "Title should be a string not a " . gettype($title));
+        $this->assertGreaterThan(0, strlen($title));
+
+        // text activity without narrative
+        $activity = new \SimpleXMLElement('<iati-activity></iati-activity>');
+        $title = $srvIATI->getActivityTitle($activity);
+        $this->assertEquals('Unnamed', $title);
     }
 
 

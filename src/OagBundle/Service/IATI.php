@@ -173,6 +173,13 @@ class IATI extends AbstractService {
     /**
      * Get the title of an IATI activity.
      *
+     * Prioritises globalisation in the following order:
+     * 1. No language specified
+     * 2. English specified
+     * 3. Other language specified
+     *
+     * Returns 'Unnamed' if a <title> with <narrative> is not present.
+     *
      * @param \SimpleXMLElement $activity
      * @return string
      */
