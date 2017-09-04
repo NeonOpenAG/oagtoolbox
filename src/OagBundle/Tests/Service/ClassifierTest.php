@@ -123,13 +123,6 @@ class ClassifierTest extends TestCase {
         $this->assertJson(json_encode($availableResult));
     }
 
-    /**
-     * Left as a stub because method is unused.
-     */
-    public function testExtractSectors() {
-        $this->assertTrue(true);
-    }
-
     public function testGetStringFixtureData() {
         $classifier = $this->container->get(Classifier::class);
         $classifier->setContainer($this->container);
