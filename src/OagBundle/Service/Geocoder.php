@@ -121,12 +121,4 @@ class Geocoder extends AbstractAutoService {
         return $data;
     }
 
-  public function getFixtureData() {
-    $kernel = $this->getContainer()->get('kernel');
-    $path = $kernel->locateResource('@OagBundle/Resources/fixtures/geocoder.json');
-    $contents = file_get_contents($path);
-
-    return $contents;
-  }
-
 }
