@@ -8,80 +8,77 @@
 
 {% block title %}Tool POCs{% endblock %}
 
-{% block h1 %}Open Ag Toolbox{% endblock %}
-
-{% block menu %}
-    <a class='home-link' href="{{ path('oag_default_index') }}">Home</a> | <a class='upload-link' href="{{ path('oag_default_upload') }}">Upload file</a>
-{% endblock %}
+{% block h2 %}Open Ag Toolbox{% endblock %}
 
 {% block body %}
 
-    {{ form_start(form) }}
-    <table class="pure-table pure-table-bordered document-table">
-        <thead>
-            <tr>
-                <th><input type="checkbox" id="select-all-delete" /></th>
-                <th>File</th>
-                <th>Process with ...</th>
-                <th>Process with ...</th>
-                <th>Download IATI XML ...</th>
-                <th>Visualise</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for id, file in files %}
-                <tr>
-                    <td>
-                        {{ form_widget(form.delete_list[loop.index - 1], { 'attr': { 'class': 'cbox-del' } }) }}
-                    </td>
-                    <td><a href="{{ asset('uploads')}}/oagfiles/{{ file['file'] }}" title="{{ file['mimetype'] }}">{{ file['file'] }}</a></td>
-                <td>
-                    {% if file['mimetype'] | isCoveable %}
-                        <a href="{{ path('oag_cove_index', { 'fileid': id } ) }}">CoVE</a>
-                    {% endif %}
-                </td>
-                <td>
-                    {% if file['mimetype'] | isClassifiable %}
-                        <a href="{{ path('oag_classify_index', { 'fileid': id }) }}">Classifier</a>
-                    {% endif %}
-                </td>
-                <td>
-                    {% if file['xml'] is defined %}
-                        <a href="{{ asset('xml')}}/oagfiles/{{ file['file'] }}">XML</a>
-                    {% endif %}
-                </td>
-                {# TODO I guess there is a sy3 way of doping this using form builder #}
-                <td>
-                    {% if file['xml'] is defined %}
-                        <a href="{{ path('oag_dportal_index', { 'fileid': id }) }}" target="dportal">D-Portal</a>
-                    {% endif %}
-                </td>
-            </tr>
+    <h2>IATI Documents</h2>
+
+    <ul>
+        {% for iatidoc in iatidocs %}
+            <li>
+                <a href="{{ path('oag_dportal_oagfile', { 'id': iatidoc.id }) }}" target="dportal">[Visualise]</a>
+                {{ include('OagBundle::Default/iatiFile.html.twig', { 'iatiDoc': iatidoc }) }}
+                <ul>
+                    {% for enhancingDoc in iatidoc.enhancingDocuments %}
+                        <li>
+                            {{ include('OagBundle::Default/enhancementFile.html.twig', { 'enhancingDoc': enhancingDoc }) }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </li>
         {% endfor %}
-        <tr>
-            <td><button type="submit">Delete</button></td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-        </tr>
-        </tbody>
-    </table>
-{{ form_end(form) }}
+    </ul>
+
+    <h2>Unvalidated IATI Documents</h2>
+
+    <ul>
+        {% for sourceDoc in sourceDocs %}
+            <li>
+                {{ include('OagBundle::Default/sourceFile.html.twig', { 'sourceDoc': sourceDoc }) }}
+            </li>
+        {% endfor %}
+        <div class="upload-form">
+            <h3>Import a new source document</h3>
+            <div>The imported document will be automatically processed with CoVE and added to the IATI document list above.</div>
+            <div>Currently only XML is supported.</div>
+            <div>
+                {{ form_start(source_upload_form) }}
+                {{ form_label(source_upload_form.documentName) }}
+                {{ form_errors(source_upload_form.documentName) }}
+                {{ form_widget(source_upload_form.documentName) }}
+
+                {{ form_widget(source_upload_form.fileType, { 'attr': {'class': 'hidden-row'} }) }}
+                {{ form_end(source_upload_form) }}
+            </div>
+        </div>
+    </ul>
+
+    <h2>Enhancement Documents</h2>
+
+    <ul>
+        {% for enhancingDoc in enhancingDocs %}
+            <li>
+                {{ include('OagBundle::Default/enhancementFile.html.twig', { 'enhancingDoc': enhancingDoc }) }}
+            </li>
+        {% endfor %}
+    </ul>
+
+        <h2>Todo Add</h2>
+        <ul><li>elete button</li></ul>
 
 {% endblock %}
 
 {% block javascripts %}
     <script type="text/javascript" src="{{ asset('bundles/oag/js/main.js') }}"></script>
     <script>
-$( function() {
-  $( document ).tooltip();
+        $(function () {
+            $(document).tooltip();
 
-  $("#select-all-delete").click(function() {
-        var checkBoxes = $(".cbox-del");
-        checkBoxes.prop("checked", !checkBoxes.prop("checked"));
-  });
-});
+            $("#select-all-delete").click(function () {
+                var checkBoxes = $(".cbox-del");
+                checkBoxes.prop("checked", !checkBoxes.prop("checked"));
+            });
+        });
     </script>
 {% endblock %}

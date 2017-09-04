@@ -1,0 +1,31 @@
+<h2>Geolocations</h2>
+<table class="pure-table pure-table-bordered">
+    <thead>
+        <tr>
+            <th>Vocab/Id</th>
+            <th>Name</th>
+            <th>Admin 1</th>
+            <th>Admin 2</th>
+            <th>Lat, Lon</th>
+            <th>Exactness</th>
+            <th>Class</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for geolocation in geolocations %}
+            <tr>
+                <td>{{ geolocation['vocab_id'] }}/{{ geolocation['geolocation_id'] }}</td>
+                <td>{{ geolocation['name'] }}</td>
+                <td>{{ geolocation['admin_code_1_name'] }}/{{ geolocation['admin_code_1_code'] }}</td>
+                <td>{{ geolocation['admin_code_2_name'] }}/{{ geolocation['admin_code_2_code'] }}</td>
+                <td>
+                    <a href='https://www.google.com/maps/preview/@{{ geolocation['longitude'] }},{{ geolocation['latitude'] }},8z'>{{ geolocation['latitude'] }}, {{ geolocation['longitude'] }}</a>
+                </td>
+                <td>{{ geolocation['exactness'] }}</td>
+                <td>{{ geolocation['class'] }}</td>
+                <td>{{ geolocation['description'] }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

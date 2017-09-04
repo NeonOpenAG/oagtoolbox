@@ -23,3 +23,5 @@ web/bundles/
 web/xml
 /.web-server-pid
 web/test-coverage/
+web-server-pid
+.idea

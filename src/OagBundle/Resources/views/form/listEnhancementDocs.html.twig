@@ -1,0 +1,21 @@
+{% block list_enhancement_docs_widget %}
+    <table>
+        <thead>
+            <tr>
+                <th>Document Name</th>
+                <th>Include?</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for id, documentName in documentNames %}
+                <tr>
+                    <td>{{ documentName }}</td>
+                    <td>{{ form_widget(form[id]) }}</td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td colspan='2'>{{ form_widget(form.submit, { 'label': 'Add' }) }}</td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}

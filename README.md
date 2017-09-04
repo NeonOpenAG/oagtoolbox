@@ -6,19 +6,22 @@ oagtoolbox
 Install
 -------
 
-    sudo apt install php7.0-sqlite pecl
-    sudo pecl install runkit
+When you clone the repository you want to initialize any submodules. You can achieve this with a recursive flag:
 
+```bash
+git clone --recursive git://github.com/foo/bar.git
+```
+
+If you have a pre-existing repo without the submodules initialized you can achieve this with the following command:
+
+```bash
+git submodule update --init --recursive
+```
+
+To run a standard lamp stack, you'll need to enter a sudo password at the end of the composer install.  This is to fix the permissions on the cache, var and upload folder.
+
+    sudo apt install php7.0-sqlite realpath
     composer install
-    cp app/config/parameters.yml.sqlite app/config/parameters.yml
-    ./bin/console doctrine:schema:create
-    ./bin/console server:start
-
-To run in apache you'll need some permissions foo
-
-    HTTPDUSER=$(ps axo user,comm | grep -E '[a]pache|[h]ttpd|[_]www|[w]ww-data|[n]ginx' | grep -v root | head -1 | cut -d\  -f1)
-    sudo setfacl -dR -m u:"$HTTPDUSER":rwX -m u:$(whoami):rwX var app/*.db web/*/oagfiles
-    sudo setfacl -R -m u:"$HTTPDUSER":rwX -m u:$(whoami):rwX var app/*.db web/*/oagfiles
 
 Tests
 -----

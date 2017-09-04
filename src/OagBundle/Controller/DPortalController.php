@@ -7,36 +7,30 @@ use OagBundle\Entity\OagFile;
 use RuntimeException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("/dportal")
  */
-class DPortalController extends Controller
-{
-  /**
-   * @Route("/{fileid}", requirements={"fileid": "\d+"})
-   */
-  public function indexAction($fileid) {
-    $portal = $this->get(DPortal::class);
+class DPortalController extends Controller {
 
-    $avaiable = false;
-    if ($portal->isAvailable()) {
-      $messages[] = 'DPortal is avaialable';
+    /**
+     * @Route("/{id}")
+     * @ParamConverter("file", class="OagBundle:OagFile")
+     */
+    public function oagFileAction(Request $request, OagFile $file) {
+        $portal = $this->get(DPortal::class);
+
+        if ($portal->isAvailable()) {
+            $messages[] = 'DPortal is avaialable';
+        } else {
+            throw new RuntimeException('DPortal is not available in application scope');
+        }
+
+        $portal->visualise($file);
+
+        return $this->redirect($this->getParameter('oag')['dportal']['uri']);
     }
-    else {
-      throw new RuntimeException('DPortal is not available in application scope');
-    }
-
-    $repository = $this->getDoctrine()->getRepository(OagFile::class);
-    $oagfile = $repository->find($fileid);
-
-    if (!$oagfile) {
-      // TODO throw 404
-      throw new RuntimeException('OAG file not found: ' . $fileid);
-    }
-    $portal->visualise($oagfile);
-
-    return $this->redirect($this->getParameter('oag')['dportal']['uri']);
-  }
 
 }

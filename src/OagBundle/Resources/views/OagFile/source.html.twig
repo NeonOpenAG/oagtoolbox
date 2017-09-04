@@ -1,0 +1,20 @@
+{% extends 'OagBundle::Default/index.html.twig' %}
+
+{% block title %}Source file: {{ name }}{% endblock %}
+
+{% block h2 %}{{ name }}{% endblock %}
+
+{% block body %}
+    {% if err | length > 0 %}
+        <h2>Validation Errors</h2>
+        <ul>
+            {% for error in err %}
+                <li>{{ error }}</li>
+                {% endfor %}
+        </ul>
+    {% else %}
+        <h2>{{ name }} validated as a valid IATI Source</h2>
+        <div>A new IATI XML document called {{ xml_filename }} has been created for you.</div>
+    {% endif %}
+
+{% endblock %}

@@ -1,49 +1,60 @@
 <?php
+
 // src/OagBundle/Service/Geocoder.php
+
 namespace OagBundle\Service;
 
 class DPortal extends AbstractOagService {
 
-  public function isAvailable() {
-    $name = $this->getName();
-    $cmd = sprintf('docker images openagdata/%s |wc -l', $name);
-    $output = array();
-    $retval = 0;
-    $linecount = exec($cmd, $output, $retval);
+    public function isAvailable() {
+        $name = $this->getName();
+        $cmd = sprintf('docker images openagdata/%s |wc -l', $name);
+        $output = array();
+        $retval = 0;
+        $linecount = exec($cmd, $output, $retval);
 
-    if ($retval == 0 && $linecount > 1) {
-      $this->getContainer()->get('logger')->debug(
-        sprintf('Docker %s is available', $name)
-      );
-      return true;
+        if ($retval == 0 && $linecount > 1) {
+            $this->getContainer()->get('logger')->debug(
+                sprintf('Docker %s is available', $name)
+            );
+            return true;
+        } else {
+            $this->getContainer()->get('logger')->info(
+                sprintf(
+                    'Failed to stat docker %s: %s', $name, json_encode($output)
+                )
+            );
+            return false;
+        }
     }
-    else {
-      $this->getContainer()->get('logger')->info(
-        sprintf(
-          'Failed to stat docker %s: %s', $name, json_encode($output)
-        )
-      );
-      return false;
+
+    /**
+     * Export an OagFile to DPortal.
+     *
+     * @param OagFile $oagfile the OagFile to export
+     */
+    public function visualise($oagfile) {
+
+        $srvOagFile = $this->getContainer()->get(OagFileService::class);
+
+        $xmldir = $this->getContainer()->getParameter('oagxml_directory');
+        if (!is_dir($xmldir)) {
+            mkdir($xmldir, 0755, true);
+        }
+        $xmlfile = $xmldir . '/' . $oagfile->getDocumentName();
+
+        $start = exec("openag start dportal");
+        $this->getContainer()->get('logger')->info(sprintf('Started dportal: "%s"', $start));
+
+        $reset = exec("openag reset dportal");
+        $this->getContainer()->get('logger')->info(sprintf('Reset dportal: "%s"', $xmlfile));
+
+        $import = exec("openag import dportal " . $xmlfile);
+        $this->getContainer()->get('logger')->info(sprintf('Import dportal data: "%s"', $import));
     }
-  }
 
-  public function visualise($oagfile) {
-
-    $srvOagFile = $this->getContainer()->get(OagFileService::class);
-
-    $xmldir = $this->getContainer()->getParameter('oagxml_directory');
-    if (!is_dir($xmldir)) {
-      mkdir($xmldir, 0755, true);
+    public function getName() {
+        return 'dportal';
     }
-    $xmlfile = $xmldir . '/' . $srvOagFile->getXMLFileName($oagfile);
-
-    exec("openag start dportal");
-    exec("openag reset dportal");
-    exec("openag import dportal " . $xmlfile);
-  }
-
-  public function getName() {
-    return 'dportal';
-  }
 
 }

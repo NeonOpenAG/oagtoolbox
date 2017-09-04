@@ -2,23 +2,17 @@
 
 namespace OagBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use OagBundle\Entity\OagFile;
+use OagBundle\Entity\Tag;
+use OagBundle\Entity\SuggestedTag;
+use OagBundle\Service\Classifier;
+use OagBundle\Service\OagFileService;
+use OagBundle\Service\TextExtractor\TextifyService;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use OagBundle\Service\Classifier;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use OagBundle\Entity\OagFile;
-use OagBundle\Form\OagFileType;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use OagBundle\Service\TextExtractor\PDFExtractor;
-use OagBundle\Service\TextExtractor\RTFExtractor;
-use PhpOffice\PhpWord\Shared\ZipArchive;
 
 /**
  * @Route("/classify")
@@ -26,124 +20,19 @@ use PhpOffice\PhpWord\Shared\ZipArchive;
  */
 class ClassifyController extends Controller {
 
-  /**
-   * @Route("/{fileid}", requirements={"fileid": "\d+"})
-   * @Template
-   */
-  public function indexAction($fileid) {
-    $messages = [];
-    $classifier = $this->get(Classifier::class);
+    /**
+     * Classify an OagFile.
+     *
+     * @Route("/{id}")
+     * @ParamConverter("file", class="OagBundle:OagFile")
+     */
+    public function oagFileAction(Request $request, OagFile $file) {
+        $srvClassifier = $this->get(Classifier::class);
+        $srvOagFile = $this->get(OagFileService::class);
 
-    $repository = $this->container->get('doctrine')->getRepository(OagFile::class);
-    $oagfile = $repository->find($fileid);
-    if (!$oagfile) {
-      throw $this->createNotFoundException(sprintf('The document %d does not exist', $fileid));
+        $srvClassifier->classifyOagFile($file);
+
+        return array('name' => $file->getDocumentName(), 'tags' => $file->getSuggestedTags()->getValues());
     }
-    // TODO - for bigger files we might need send as Uri
-    $path = $this->getParameter('oagfiles_directory') . '/' . $oagfile->getDocumentName();
-    $mimetype = mime_content_type($path);
-    $messages[] = sprintf('File %s detected as %s', $path, $mimetype);
-
-    $isXml = false;
-    $sourceFile = tempnam(sys_get_temp_dir(), 'oag') . '.txt';
-    switch ($mimetype) {
-      case 'application/pdf':
-      case 'application/pdf':
-      case 'application/x-pdf':
-      case 'application/acrobat':
-      case 'applications/vnd.pdf':
-      case 'text/pdf':
-      case 'text/x-pdf':
-        // pdf
-        $decoder = new PDFExtractor();
-        $decoder->setFilename($path);
-        $decoder->decode();
-        file_put_contents($sourceFile, $decoder->output());
-        break;
-      case 'application/txt':
-      case 'browser/internal':
-      case 'text/anytext':
-      case 'widetext/plain':
-      case 'widetext/paragraph':
-      case 'text/plain':
-        // txt
-        $sourceFile = $path;
-        break;
-      case 'text/html':
-      case 'application/xml':
-        // xml
-        $sourceFile = $path;
-        $isXml = true;
-        break;
-      case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-      case 'application/msword':
-      case 'application/doc':
-      case 'application/zip':
-        // docx
-        // phpword can't save to txt directly
-        $tmpRtfFile = dirname($sourceFile) . '/' . basename($sourceFile, '.txt') . '.rtf';
-        $phpWord = \PhpOffice\PhpWord\IOFactory::load($path, 'Word2007');
-        $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'RTF');
-        $objWriter->save($tmpRtfFile);
-        // Now let the switch fall through to decode rtf
-        $path = $tmpRtfFile;
-      case 'application/rtf':
-      case 'application/x-rtf':
-      case 'text/richtext':
-      case 'text/rtf':
-        // rtf
-        $decoder = new RTFExtractor();
-        $decoder->setFilename($path);
-        $decoder->decode();
-        file_put_contents($sourceFile, $decoder->output());
-        break;
-    }
-    $this->container->get('logger')->info(sprintf('Processing file %s', $sourceFile));
-
-    $contents = file_get_contents($sourceFile);
-    if ($isXml) {
-      // hit the XML endpoint...
-    }
-    $json = $classifier->processString($contents);
-
-    $data = array(
-      'messages' => $messages,
-      'response' => $json,
-    );
-    return $data;
-  }
-
-  /**
-   * @Route("/sector")
-   * @Template
-   */
-  public function sectorAction(Request $request) {
-    $classifier = $this->get(Classifier::class);
-
-    $defaultData = array();
-    $options = array();
-    $form = $this->createFormBuilder($defaultData, $options)
-      ->add('json', TextareaType::class)
-      ->add('submit', SubmitType::class, array( 'label' => 'Convert to Sector'))
-      ->getForm();
-
-    $form->handleRequest($request);
-
-    $response = array(
-      'form' => $form->createView()
-    );
-
-    if ($form->isSubmitted()) {
-      $rawJson = $form->getData()['json'];
-
-      if(strlen($rawJson) === 0) {
-        $this->addFlash("warn", "No json was entered!");
-      }
-
-      $json = json_decode($rawJson);
-      $response['xml'] = $classifier->getSector($json);
-    }
-    return $response;
-  }
 
 }

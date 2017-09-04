@@ -1,16 +1,25 @@
 parameters:
     oag:
         cove:
-            uri: http://localhost:8008
+            cmd: "docker run -i -e PROCESS_DATA=true openagdata/cove /usr/local/bin/process.sh"
         geocoder:
-            uri: http://localhost:8009
+            uri: http://localhost
         autogeocoder:
-            uri: http://localhost:8010
+            uri: http://localhost
         dportal:
-            uri: http://localhost:8011
+            uri: http://localhost:8011/ctrack.html?search&year_min=1960&year=1960&year_max=2019&year=2019#view=main
         classifier:
-            uri: http://gis.foundationcenter.org/OpenAgCoder/extract_codes.php
+            xml: http://localhost
+            text: http://gis.foundationcenter.org/OpenAgCoder/extract_codes.php
     oagfiles_directory: '%kernel.project_dir%/web/uploads/oagfiles'
     oagxml_directory: '%kernel.project_dir%/web/xml/oagfiles'
-    vocabulary: '99'
-    vocabulary_uri: 'http://gis.foundationcenter.org/OpenAgCoder/'
+    classifier:
+        vocabulary: '99'
+        vocabulary_uri: 'http://gis.foundationcenter.org/OpenAgCoder/'
+        namespace_uri: 'http://openagfunding.opendataservices.coop/openag/ns/'
+        endpoint: 'https://gis.foundationcenter.org/ag-classify/predict.php'
+    geocoder:
+        id_vocabulary: 'G1'
+        admin_1_vocabulary: 'PLACEHOLDER'
+        admin_2_vocabulary: 'PLACEHOLDER'
+    unlink_files: true

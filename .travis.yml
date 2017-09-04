@@ -1,37 +1,24 @@
-# Project language
 language: php
 php:
-    - 7.1
-
-# Allows use container-based infrastructure
+- 7.1
 sudo: false
-
-# Cache composer packages so "composer install" is faster
 cache:
   directories:
-    - $HOME/.composer/cache/files
-
-# Define an environment variable
+  - "$HOME/.composer/cache/files"
 env:
+  matrix:
   - SYMFONY_VERSION="3.3.*" DB=sqlite
-
-# Update composer
 before-install:
-  - composer self-update
-
-# Install composer dependencies,
-# Create database, schema and fixtures
+- composer self-update
 install:
-  - composer install
-  - cp app/config/parameters.yml.sqlite app/config/parameters.yml
-  - mkdir -p web/uploads/tests web/xml/tests
-  - php bin/console doctrine:database:create --env=test
-  - php bin/console doctrine:schema:create --env=test
-
-# Run script
+- git submodule update --init --recursive
+- composer install -n
 script:
-  - ./vendor/bin/simple-phpunit -c phpunit.xml
-
-# After a build, send email notification with the build results
+- "./vendor/bin/simple-phpunit -c phpunit.xml"
+deploy:
+    provider: script
+    script: wget -O /dev/null http://ci.openag.org.uk/app.php?branch=$TRAVIS_BRANCH
+    on:
+        all_branches: true
 notifications:
   email: tobias@neontribe.co.uk

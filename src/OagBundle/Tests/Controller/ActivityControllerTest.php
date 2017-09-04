@@ -1,0 +1,27 @@
+<?php
+
+namespace OagBundle\Tests\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+
+class ActivityControllerTest extends WebTestCase
+ {
+
+    public function testEnhance()
+    {
+        $client = static::createClient();
+
+        $crawler = $client->request('GET', '/activity/5/46002-P-TN-AAC-009');
+        $code = $client->getResponse()->getStatusCode();
+        $this->assertTrue($code >= 200 && $code <= 399);
+    }
+
+//    public function testMerge()
+//    {
+//        $client = static::createClient();
+//
+//        $crawler = $client->request('GET', '/activity/merge');
+//        $code = $client->getResponse()->getStatusCode();
+//        $this->assertTrue($code >= 200 && $code <= 399);
+//    }
+}

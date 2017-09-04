@@ -1,0 +1,44 @@
+{% block merge_activity_widget %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Current</th>
+                <th>New</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for id, name in ids %}
+                <tr>
+                    <td>{{ id }}</td>
+                    <td width='100'>{{ name }}</td>
+                    <td>
+                        <ul>
+                            {% for tag in current[id] %}
+                                <li>
+                                    {{ form_label(form['current' ~ id][loop.index0]) }}
+                                    {{ form_widget(form['current' ~ id][loop.index0]) }}
+                                </li>
+                            {% endfor %}
+                            {% do form['current' ~ id].setRendered %}
+                    </td>
+                    <td>
+                        <ul>
+                            {% for tag in new[id] %}
+                                <li>
+                                    {{ form_label(form['new' ~ id][loop.index0]) }}
+                                    {{ form_widget(form['new' ~ id][loop.index0]) }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        {% do form['new' ~ id].setRendered %}
+                    </td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td colspan='4'>{{ form_widget(form.submit, { 'label': 'Merge' }) }}</td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}
