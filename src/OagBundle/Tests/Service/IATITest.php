@@ -295,20 +295,33 @@ class IATITest extends TestCase {
 
         $mockActivity = new \SimpleXMLElement('<iati-activity></iati-activity>');
 
+        // add our tag
         $srvIATI->addActivityTag(
             $mockActivity,
             $tagInfo['code'],
             $tagInfo['description']
         );
 
+        // check it's there
         $tags = $srvIATI->getActivityTags($mockActivity);
         $this->assertEquals(1, count($tags));
 
+        // check its attributes survived the conversion to and from XML
         $tag = $tags[0];
         $this->assertEquals($tagInfo['description'], $tag['description']);
         $this->assertEquals($tagInfo['code'], $tag['code']);
         $this->assertEquals($tagInfo['vocabulary'], $tag['vocabulary']);
         $this->assertEquals($tagInfo['vocabularyUri'], $tag['vocabulary-uri']);
+
+        // remove it but specify the wrong one
+        $srvIATI->removeActivityTag($mockActivity, 'the wrong code', $tagInfo['vocabulary'], $tagInfo['vocabularyUri']);
+        $tags = $srvIATI->getActivityTags($mockActivity);
+        $this->assertEquals(1, count($tags)); // it should still be there
+
+        // remove it but get it right this time
+        $srvIATI->removeActivityTag($mockActivity, $tagInfo['code'], $tagInfo['vocabulary'], $tagInfo['vocabularyUri']);
+        $tags = $srvIATI->getActivityTags($mockActivity);
+        $this->assertEquals(0, count($tags)); // it should have gone
     }
 
     public function tagManipulationProvider() {
@@ -337,9 +350,7 @@ class IATITest extends TestCase {
     }
 
     public function testGetActivityLocations() {}
-    public function testAddActivityTag() {}
     public function testAddActivityLocation() {}
-    public function testRemoveActivityTag() {}
     public function testRemoveActivityLocation() {}
 
     /**
