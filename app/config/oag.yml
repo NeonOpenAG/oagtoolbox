@@ -7,7 +7,7 @@ parameters:
         autogeocoder:
             uri: http://localhost
         dportal:
-            uri: http://localhost:8011/ctrack.html?search&year_min=1960&year=1960&year_max=2019&year=2019#view=main
+            uri: http://www.openag.org.uk:8011/ctrack.html?search&year_min=1960&year=1960&year_max=2019&year=2019#view=main
         classifier:
             xml: http://localhost
             text: http://gis.foundationcenter.org/OpenAgCoder/extract_codes.php
