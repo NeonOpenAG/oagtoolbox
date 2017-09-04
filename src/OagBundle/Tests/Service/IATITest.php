@@ -1,6 +1,7 @@
 <?php
 
 use OagBundle\Entity\OagFile;
+use OagBundle\Service\Geocoder;
 use OagBundle\Service\IATI;
 use OagBundle\Service\OagFileService;
 use Symfony\Bundle\WebProfilerBundle\Tests\TestCase;
@@ -349,9 +350,62 @@ class IATITest extends TestCase {
         );
     }
 
-    public function testGetActivityLocations() {}
-    public function testAddActivityLocation() {}
-    public function testRemoveActivityLocation() {}
+    public function testGetActivityLocations() {
+        $srvIATI = $this->container->get(IATI::class);
+        $srvIATI->setContainer($this->container);
+        $loadedFile = $srvIATI->load($this->testOagFile);
+        $activity = $srvIATI->getActivities($loadedFile)[0];
+
+        $locations = $srvIATI->getActivityLocations($activity);
+        $this->assertGreaterThan(0, count($locations));
+
+        // just test structure and basic types for now
+        foreach ($locations as $location) {
+            $this->assertInternalType('string', $location['description']);
+            $this->assertInternalType('string', $location['code']);
+            $this->assertInternalType('string', $location['lonlat'][0]);
+            $this->assertInternalType('string', $location['lonlat'][1]);
+        }
+    }
+
+    /**
+     * @depends testGetActivityLocations
+     * @depends GeocoderTest::testGetFixtureData
+     */
+    public function testActivityLocationEditing() {
+        $srvGeocoder = $this->container->get(Geocoder::class);
+        $srvGeocoder->setContainer($this->container);
+
+        $srvIATI = $this->container->get(IATI::class);
+        $srvIATI->setContainer($this->container);
+
+        $loadedFile = $srvIATI->load($this->testOagFile);
+        $activity = $srvIATI->getActivities($loadedFile)[0];
+
+        $numberBefore = count($srvIATI->getActivityLocations($activity));
+
+        // let's pick an example location from the JSON response fixture and add it
+        $location = json_decode($srvGeocoder->getFixtureData(), true)[0]['locations'][0];
+        $srvIATI->addActivityLocation($activity, $location);
+
+        // was it added correctly?
+        $xmlLocations = $srvIATI->getActivityLocations($activity);
+        $justAdded = end($xmlLocations);
+        $this->assertEquals($location['name'], $justAdded['description']);
+        $this->assertEquals($location['id'], $justAdded['code']);
+        $this->assertEquals($this->container->getParameter('geocoder')['id_vocabulary'], $justAdded['vocabulary']);
+        $this->assertEquals($location['geometry']['coordinates'], $justAdded['lonlat']);
+
+        // remove it incorrectly and check it's not gone
+        $srvIATI->removeActivityLocation($activity, 'not the code');
+        $numberNow = count($srvIATI->getActivityLocations($activity));
+        $this->assertEquals($numberBefore + 1, $numberNow);
+
+        // remove it correctly and check it is gone
+        $srvIATI->removeActivityLocation($activity, $location['id']);
+        $numberNow = count($srvIATI->getActivityLocations($activity));
+        $this->assertEquals($numberBefore, $numberNow);
+    }
 
     /**
     * {@inheritDoc}
