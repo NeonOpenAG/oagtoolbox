@@ -248,7 +248,7 @@ class IATITest extends TestCase {
         $activity = $srvIATI->getActivities($loadedFile)[0];
         $title = $srvIATI->getActivityTitle($activity);
         $this->assertNotEquals('Unnamed', $title);
-        $this->assertTrue(is_string($title), "Title should be a string not a " . gettype($title));
+        $this->assertInternalType('string', $title);
         $this->assertGreaterThan(0, strlen($title));
 
         // text activity without narrative
@@ -257,8 +257,31 @@ class IATITest extends TestCase {
         $this->assertEquals('Unnamed', $title);
     }
 
+    /**
+     * @depends testGetActivityId
+     */
+    public function testGetActivityMapData() {
+        $srvIATI = $this->container->get(IATI::class);
+        $srvIATI->setContainer($this->container);
+        $loadedFile = $srvIATI->load($this->testOagFile);
+        $activity = $srvIATI->getActivities($loadedFile)[0];
 
-    public function testGetActivityMapData() {}
+        $mapData = $srvIATI->getActivityMapData($activity);
+
+        $this->assertInternalType('string', $mapData['type']);
+
+        foreach ($mapData['features'] as $location) {
+            // just check types and data structure for now
+            $this->assertEquals($srvIATI->getActivityId($activity), $location['id']);
+            $this->assertInternalType('string', $location['type']);
+            $this->assertInternalType('string', $location['geometry']['type']);
+            $this->assertInternalType('string', $location['geometry']['coordinates'][0]);
+            $this->assertInternalType('string', $location['geometry']['coordinates'][1]);
+            $this->assertInternalType('string', $location['properties']['title']);
+            $this->assertInternalType('string', $location['properties']['nid']);
+        }
+    }
+
     public function testGetActivityTags() {}
     public function testGetActivityLocations() {}
     public function testAddActivityTag() {}

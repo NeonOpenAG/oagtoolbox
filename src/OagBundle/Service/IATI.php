@@ -211,6 +211,10 @@ class IATI extends AbstractService {
      * summarising any location data in the activity that can be visualised
      * on a map.
      *
+     * This method's purpose is purely to format data in a way that NeonMap
+     * likes; if a better home is found for it than this service, it would travel
+     * freely.
+     *
      * @param \SimpleXMLElement $activity
      * @return array see code
      */
