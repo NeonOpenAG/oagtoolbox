@@ -41,7 +41,16 @@ monolog:
 parameters:
     unlink_files: false
     oag:
+        cove:
+            cmd: "docker run -i -e PROCESS_DATA=true openagdata/cove /usr/local/bin/process.sh"
+        geocoder:
+            uri: http://localhost
+        autogeocoder:
+            uri: http://localhost
         dportal:
             uri: http://localhost:8011/ctrack.html?search&year_min=1960&year=1960&year_max=2019&year=2019#view=main
+        classifier:
+            xml: http://localhost
+            text: http://gis.foundationcenter.org/OpenAgCoder/extract_codes.php
 #swiftmailer:
 #    delivery_addresses: ['me@example.com']
