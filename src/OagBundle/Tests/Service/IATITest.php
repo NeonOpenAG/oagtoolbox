@@ -58,9 +58,10 @@ class IATITest extends TestCase {
         # Add a child tag for test purposes.
         $tag = $activity->addChild('openag:tag', '', $namespaceUri);
         $tags = $srvIATI->xpathNS($activity, './openag:tag');
+        $justAdded = end($tags);
         $this->assertEquals(
-            [$tag],
-            $tags,
+            $tag,
+            $justAdded,
             'Check that namespaced tag is found correctly.'
         );
     }
@@ -77,9 +78,9 @@ class IATITest extends TestCase {
         # Ensure that the namspace was added to each activity.
         $activities = $root->xpath('/iati-activities/iati-activity');
         foreach ($activities as $activity) {
-            $activityDocAttributes = $activity->attributes();
-            $this->assertObjectHasAttribute(
-                'xmlns:openag',
+            $activityDocAttributes = $activity->getDocNamespaces(FALSE, FALSE);
+            $this->assertArrayHasKey(
+                'openag',
                 $activityDocAttributes,
                 'Activities have openag namespace.'
             );

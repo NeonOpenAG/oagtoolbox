@@ -456,5 +456,5 @@
     <openag:tag vocabulary="99" vocabulary-uri="http://aims.fao.org/standards/agrovoc" code="c_1148">
       <narrative>bulls</narrative>
     </openag:tag>
-  <openag:tag code="c_8174" vocabulary="99" vocabulary-uri="http://aims.fao.org/standards/agrovoc"><narrative xmlns="">Vegetables</narrative><narrative xmlns="">Classified automatically</narrative></openag:tag></iati-activity>
+  <openag:tag code="c_4397" vocabulary="99" vocabulary-uri="http://aims.fao.org/standards/agrovoc"><narrative xmlns="">Livestock</narrative><narrative xmlns="">Classified automatically</narrative></openag:tag></iati-activity>
 </iati-activities>
