@@ -31,11 +31,15 @@ class ActivityController extends Controller
         $srvIATI = $this->get(IATI::class);
         $srvOagFile = $this->get(OagFileService::class);
         $sugTagRepo = $this->container->get('doctrine')->getRepository(SuggestedTag::class);
+        $changeRepo = $this->container->get('doctrine')->getRepository(Change::class);
         $em = $this->getDoctrine()->getManager();
 
         # Find activity using the provided ID.
         $root = $srvIATI->load($file);
         $activity = $srvIATI->getActivityById($root, $iatiActivityId);
+
+        # Find past changes made to activity
+        $pastChanges = $changeRepo->findBy(array('activityId' => $iatiActivityId));
 
         # Current activity summarised in array form.
         $activityDetail = $srvIATI->summariseActivityToArray($activity);
@@ -125,6 +129,7 @@ class ActivityController extends Controller
         return array(
             'form' => $form->createView(),
             'id' => $file->getId(),
+            'pastChanges' => $pastChanges,
             'activity' => $activityDetail,
             'mapdata' => json_encode($mapData, JSON_HEX_APOS + JSON_HEX_TAG + JSON_HEX_AMP + JSON_HEX_QUOT),
         );
