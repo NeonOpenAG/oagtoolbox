@@ -11,8 +11,9 @@ class ActivityControllerTest extends WebTestCase
     {
         $client = static::createClient();
 
-        $crawler = $client->request('GET', '/activity/5/46002-P-TN-AAC-009');
+        $crawler = $client->request('GET', '/activity/4/XM-DAC-41108-1100001602');
         $code = $client->getResponse()->getStatusCode();
+
         $this->assertTrue($code >= 200 && $code <= 399);
     }
 
