@@ -15,8 +15,8 @@ parameters:
     oagxml_directory: '%kernel.project_dir%/web/xml/oagfiles'
     classifier:
         vocabulary: '99'
-        vocabulary_uri: 'http://gis.foundationcenter.org/OpenAgCoder/'
-        namespace_uri: 'http://openagfunding.opendataservices.coop/openag/ns/'
+        vocabulary_uri: 'http://aims.fao.org/standards/agrovoc'
+        namespace_uri: 'http://openagfunding.opendataservices.coop/openag/ns#'
         endpoint: 'https://gis.foundationcenter.org/ag-classify/predict.php'
     geocoder:
         id_vocabulary: 'G1'
