@@ -78,3 +78,14 @@ body {
 .leaflet-tile.leaflet-tile-loaded {
     margin-top: 0;
 }
+
+.biglabel {
+    font-size: 105%;
+    font-weight: bolder;
+}
+
+#merge_activity_currentTags, #merge_activity_suggested {
+    margin-bottom: 20px;
+}
+
+

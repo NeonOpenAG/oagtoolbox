@@ -30,25 +30,27 @@ class MergeActivityType extends AbstractType {
 
         # Build the form.
         $builder->add('currentTags', ChoiceType::class, array(
-            'expanded' => true,
-            'multiple' => true,
-            'choices' => array_keys($currentTags),
-            'data' => array_keys($currentTags), // default to ticked
-            'choice_label' => function ($value, $key, $index) use ($currentTags) {
-                $desc = $currentTags[$index]['description'];
-                $vocab = $currentTags[$index]['vocabulary'];
-                return "$desc ($vocab)";
-            }
-        ))
-        ->add('suggested', ChoiceType::class, array(
-            'expanded' => true,
-            'multiple' => true,
-            'choices' => array_reduce($suggestedTags, function ($result, SuggestedTag $item) {
-                # basically changes choices to $item->getTag()->getDescription() => $item->getId()
-                $label = $item->getTag()->getDescription();
-                $result[$label] = $item->getId();
-                return $result;
-            }, array())
+                'expanded' => true,
+                'multiple' => true,
+                'label_attr' => array('class' => 'biglabel'),
+                'choices' => array_keys($currentTags),
+                'data' => array_keys($currentTags), // default to ticked
+                'choice_label' => function ($value, $key, $index) use ($currentTags) {
+                    $desc = $currentTags[$index]['description'];
+                    $vocab = $currentTags[$index]['vocabulary'];
+                    return "$desc ($vocab)";
+                }
+            ))
+            ->add('suggested', ChoiceType::class, array(
+                'expanded' => true,
+                'multiple' => true,
+                'label_attr' => array('class' => 'biglabel'),
+                'choices' => array_reduce($suggestedTags, function ($result, SuggestedTag $item) {
+                        # basically changes choices to $item->getTag()->getDescription() => $item->getId()
+                        $label = $item->getTag()->getDescription();
+                        $result[$label] = $item->getId();
+                        return $result;
+                    }, array())
         ));
 
         # Parse each of the enhancing documents into suggested form choices.
