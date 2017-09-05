@@ -1,4 +1,4 @@
-{# This inherrites from /app/Resources/views/base.html.twig #}
+{# This inherits from /app/Resources/views/base.html.twig #}
 {% extends 'base.html.twig' %}
 
 {% block stylesheets %}
@@ -9,77 +9,38 @@
 
 {% block title %}Tool POCs{% endblock %}
 
-{% block h2 %}Open Ag Toolbox{% endblock %}
-
 {% block body %}
 
-    <h2>IATI Documents</h2>
+    <h2>Using the Open Ag Toolbox you can:</h2>
 
-    <ul>
-        {% for iatidoc in iatidocs %}
-            <li>
-                <a href="{{ path('oag_dportal_oagfile', { 'id': iatidoc.id }) }}" target="dportal">[Visualise]</a>
-                {{ include('OagBundle::Default/iatiFile.html.twig', { 'iatiDoc': iatidoc }) }}
-                <ul>
-                    {% for enhancingDoc in iatidoc.enhancingDocuments %}
-                        <li>
-                            {{ include('OagBundle::Default/enhancementFile.html.twig', { 'enhancingDoc': enhancingDoc }) }}
-                        </li>
-                    {% endfor %}
-                </ul>
-            </li>
-        {% endfor %}
-    </ul>
+    <h3>View - How your data will look to the world.</h3>
 
-    <h2>Unvalidated IATI Documents</h2>
+    <h3>Check - What your data can be used for and improve it.</h3>
 
-    <ul>
-        {% for sourceDoc in sourceDocs %}
-            <li>
-                {{ include('OagBundle::Default/sourceFile.html.twig', { 'sourceDoc': sourceDoc }) }}
-            </li>
-        {% endfor %}
-        <div class="upload-form">
-            <h3>Import a new source document</h3>
-            <div>The imported document will be automatically processed with CoVE and added to the IATI document list above.</div>
-            <div>Currently only XML is supported.</div>
-            <div>
-                {{ form_start(source_upload_form) }}
-                {{ form_label(source_upload_form.documentName) }}
-                {{ form_errors(source_upload_form.documentName) }}
-                {{ form_widget(source_upload_form.documentName) }}
+    <h3>Publish - Your improved activity file.</h3>
 
-                {{ form_widget(source_upload_form.fileType, { 'attr': {'class': 'hidden-row'} }) }}
-                {{ form_end(source_upload_form) }}
-            </div>
+    <h2>Get Started:</h2>
+
+    <div class="upload-form">
+        <h3>Import a new source document</h3>
+        <div>The imported document will be automatically processed with CoVE and added to the IATI document list above.</div>
+        <div>Currently only XML is supported.</div>
+        <div>
+            {{ form_start(source_upload_form) }}
+            {{ form_label(source_upload_form.documentName) }}
+            {{ form_errors(source_upload_form.documentName) }}
+            {{ form_widget(source_upload_form.documentName) }}
+
+            {{ form_widget(source_upload_form.fileType, { 'attr': {'class': 'hidden-row'} }) }}
+            {{ form_end(source_upload_form) }}
         </div>
-    </ul>
+    </div>
 
-    <h2>Enhancement Documents <small><small>[activities/locations]</small></small></h2>
+    <h3>What can I upload:</h3>
 
     <ul>
-        {% for enhancingDoc in enhancingDocs %}
-            <li>
-                {{ include('OagBundle::Default/enhancementFile.html.twig', { 'enhancingDoc': enhancingDoc }) }}
-            </li>
-        {% endfor %}
+        <li>A spreadsheet with the right columns.</li>
+        <li>XML that is IATI compliant - see instructions</li>
     </ul>
 
-        <h2>Todo Add</h2>
-        <ul><li>Delete button</li></ul>
-
-{% endblock %}
-
-{% block javascripts %}
-    <script type="text/javascript" src="{{ asset('bundles/oag/js/main.js') }}"></script>
-    <script>
-        $(function () {
-            $(document).tooltip();
-
-            $("#select-all-delete").click(function () {
-                var checkBoxes = $(".cbox-del");
-                checkBoxes.prop("checked", !checkBoxes.prop("checked"));
-            });
-        });
-    </script>
 {% endblock %}
