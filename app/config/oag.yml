@@ -7,7 +7,7 @@ parameters:
         autogeocoder:
             uri: http://localhost
         dportal:
-            uri: http://localhost:8011/ctrack.html?search&year_min=1960&year=1960&year_max=2019&year=2019#view=main
+            uri: http://www.openag.org.uk:8011/ctrack.html?search&year_min=1960&year=1960&year_max=2019&year=2019#view=main
         classifier:
             xml: http://localhost
             text: http://gis.foundationcenter.org/OpenAgCoder/extract_codes.php
@@ -15,8 +15,8 @@ parameters:
     oagxml_directory: '%kernel.project_dir%/web/xml/oagfiles'
     classifier:
         vocabulary: '99'
-        vocabulary_uri: 'http://gis.foundationcenter.org/OpenAgCoder/'
-        namespace_uri: 'http://openagfunding.opendataservices.coop/openag/ns/'
+        vocabulary_uri: 'http://aims.fao.org/standards/agrovoc'
+        namespace_uri: 'http://openagfunding.opendataservices.coop/openag/ns#'
         endpoint: 'https://gis.foundationcenter.org/ag-classify/predict.php'
     geocoder:
         id_vocabulary: 'G1'
