@@ -1,0 +1,45 @@
+/* --------------------------------------------------------------
+
+   Fonts
+
+-------------------------------------------------------------- */
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('../fonts/Roboto-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Roboto Bold';
+    src: url('./fonts/Roboto-Bold.ttf');
+}
+
+
+/* --------------------------------------------------------------
+
+   Typography
+
+-------------------------------------------------------------- */
+
+$oag_font_copy: 'Roboto', sans-serif;
+$oag_font_headings: 'Roboto Bold', sans-serif;
+
+
+/* --------------------------------------------------------------
+
+   Colours
+
+-------------------------------------------------------------- */
+
+$oag_brand_blue: #056d91;
+$oag_brand_yellow: #d6a929;
+$oag_brand_green: #8e9337;
+$oag_blue: #2b9fc9;
+$oag_yellow: #f3cf6b;
+$oag_green: #bdc265;
+$oag_purple: #955b9a;
+$oag_red: #cc3f4d;
+$oag_grey: #5b8499;
+$oag_copy: #6b6b6b;
+$oag_copy_light: #a7a9ac;
+$oag_link: #fc7e00;
