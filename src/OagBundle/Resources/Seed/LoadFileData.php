@@ -38,12 +38,6 @@ class LoadFileData implements FixtureInterface {
         $file->setMimeType('text/plain');
         $em->persist($file);
 
-        $file = new OagFile();
-        $file->setDocumentName('before_enrichment_activities.xml');
-        $file->setFileType(OagFile::OAGFILE_IATI_SOURCE_DOCUMENT);
-        $file->setMimeType('application/xml');
-        $em->persist($file);
-
         $em->flush();
 
         $repo = $em->getRepository('OagBundle:OagFile');
@@ -51,7 +45,7 @@ class LoadFileData implements FixtureInterface {
         $threelittlepigs = $repo->findOneByDocumentName('poobear.txt');
 
         $file = new OagFile();
-        $file->setDocumentName('after_enrichment_activities.xml');
+        $file->setDocumentName('ifad-agrovoc-tag.xml');
         $file->setFileType(OagFile::OAGFILE_IATI_DOCUMENT);
         $file->setMimeType('application/xml');
         $file->addEnhancingDocument($animalfarm);

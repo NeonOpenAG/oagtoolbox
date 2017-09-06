@@ -1,17 +1,19 @@
-{# This inherrites from /app/Resources/views/base.html.twig #}
+{# This inherits from /app/Resources/views/base.html.twig #}
 {% extends 'base.html.twig' %}
 
 {% block stylesheets %}
     <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
-    <link href="{{ asset('bundles/oag/css/main.css') }}" rel="stylesheet" />
+    <link href="{{ asset('bundles/oag/stylesheets/normalize.css') }}" rel="stylesheet" />
     <link href="{{ asset('bundles/oag/stylesheets/main.css') }}" rel="stylesheet" />
 {% endblock %}
 
-{% block title %}Tool POCs{% endblock %}
+{% block title %}{{ toolbox_title }}{% endblock %}
 
 {% block h2 %}Open Ag Toolbox{% endblock %}
 
 {% block body %}
+
+    {% if iatidocs %}
 
     <h2>IATI Documents</h2>
 
@@ -65,8 +67,44 @@
         {% endfor %}
     </ul>
 
-        <h2>Todo Add</h2>
-        <ul><li>Delete button</li></ul>
+    <h2>Todo Add</h2>
+    <ul><li>Delete button</li></ul>
+
+    {% else %}
+
+      <h2>Using the Open Ag Toolbox you can:</h2>
+
+      <h3>View - How your data will look to the world.</h3>
+
+      <h3>Check - What your data can be used for and improve it.</h3>
+
+      <h3>Publish - Your improved activity file.</h3>
+
+      <h2>Get Started:</h2>
+
+      <div class="upload-form">
+          <h3>Import a new source document</h3>
+          <div>The imported document will be automatically processed with CoVE and added to the IATI document list above.</div>
+          <div>Currently only XML is supported.</div>
+          <div>
+              {{ form_start(source_upload_form) }}
+              {{ form_label(source_upload_form.documentName) }}
+              {{ form_errors(source_upload_form.documentName) }}
+              {{ form_widget(source_upload_form.documentName) }}
+
+              {{ form_widget(source_upload_form.fileType, { 'attr': {'class': 'hidden-row'} }) }}
+              {{ form_end(source_upload_form) }}
+          </div>
+      </div>
+
+      <h3>What can I upload:</h3>
+
+      <ul>
+          <li>A spreadsheet with the right columns.</li>
+          <li>XML that is IATI compliant - see instructions</li>
+      </ul>
+
+    {% endif %}
 
 {% endblock %}
 
