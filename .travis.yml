@@ -1,3 +1,5 @@
+notifications:
+  slack: neontribers:9NBu6ICXBNZkM226SFEAbUWh#openag
 language: php
 php:
 - 7.1
