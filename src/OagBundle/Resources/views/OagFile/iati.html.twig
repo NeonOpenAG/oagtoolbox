@@ -21,7 +21,7 @@
             <li><a href='{{ path('oag_activity_enhance', { 'id': id, 'iatiActivityId': activity['id'] }) }}'>{{ activity['name'] }}</a></li>
             <ul>
                 {% for tag in activity['tags'] %}
-                    <li>{{ tag['description'] }}</li>
+                    <li>{{ tag.getDescription() }}</li>
                 {% endfor %}
             </ul>
         {% endfor %}

@@ -3,17 +3,17 @@
 namespace OagBundle\Controller;
 
 use OagBundle\Entity\Change;
-use OagBundle\Entity\Tag;
-use OagBundle\Form\MergeActivityType;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Component\HttpFoundation\Request;
 use OagBundle\Entity\OagFile;
 use OagBundle\Entity\SuggestedTag;
+use OagBundle\Entity\Tag;
+use OagBundle\Form\MergeActivityType;
 use OagBundle\Service\IATI;
 use OagBundle\Service\OagFileService;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("/activity")
@@ -30,6 +30,7 @@ class ActivityController extends Controller
     public function enhanceAction(Request $request, OagFile $file, $iatiActivityId) {
         $srvIATI = $this->get(IATI::class);
         $srvOagFile = $this->get(OagFileService::class);
+        $tagRepo = $this->container->get('doctrine')->getRepository(Tag::class);
         $sugTagRepo = $this->container->get('doctrine')->getRepository(SuggestedTag::class);
         $changeRepo = $this->container->get('doctrine')->getRepository(Change::class);
         $em = $this->getDoctrine()->getManager();
@@ -63,35 +64,23 @@ class ActivityController extends Controller
             $data = $form->getData();
 
             $toRemove = array();
-            foreach ($currentTags as $index => $sugTag) {
+            foreach ($currentTags as $tag) {
                 // has a pre-existing one been removed?
-                if (!in_array($index, $data['currentTags'])) {
-                    $tagCode = $sugTag['code'];
-                    $tagDescription = $sugTag['description'];
-                    $tagVocab = $sugTag['vocabulary'];
-                    $tagVocabUri = $sugTag['vocabulary-uri'];
-
-                    $dbTag = new Tag();
-                    $dbTag->setCode($tagCode);
-                    $dbTag->setVocabulary($tagVocab, $tagVocabUri);
-                    $dbTag->setDescription($tagDescription);
-                    $toRemove[] = $dbTag;
-                    $em->persist($dbTag);
-
-                    $srvIATI->removeActivityTag($activity, $tagCode, $tagVocab, $tagVocabUri);
+                if (!in_array($tag, $data['currentTags'])) {
+                    $srvIATI->removeActivityTag($activity, $tag);
+                    $toRemove[] = $tag;
                 }
             }
 
             // everything else is to be added
-            $toAddIds = $data['suggested'];
+            $toAddSuggested = $data['suggested'];
             foreach ($file->getEnhancingDocuments() as $otherFile) {
                 $id = $otherFile->getId();
-                $toAddIds = array_merge($toAddIds, $data["enhanced_$id"]);
+                $toAddSuggested = array_merge($toAddSuggested, $data["enhanced_$id"]);
             }
 
             $toAdd = array();
-            foreach ($toAddIds as $tagId) {
-                $sugTag = $sugTagRepo->findOneById($tagId);
+            foreach ($toAddSuggested as $sugTag) {
                 $tag = $sugTag->getTag();
 
                 if (in_array($tag, $toAdd)) {
@@ -100,13 +89,7 @@ class ActivityController extends Controller
                 }
 
                 $toAdd[] = $tag;
-
-                // TODO WARNING - if reusing this code elsewhere than the
-                // auto-classifier, ensure that you specify the correct
-                // vocabulary and reason for addition
-                $code = $tag->getCode();
-                $description = $tag->getDescription();
-                $srvIATI->addActivityTag($activity, $code, $description);
+                $srvIATI->addActivityTag($activity, $tag, 'Classified automatically');
             }
 
             $stagedChange = new Change();

@@ -31,13 +31,13 @@
                 Added tags:
                 <ul>
                     {% for tag in pastChange.getAddedTags() %}
-                        <li>{{ tag.description }} ({{ tag.code }})</li>
+                        <li>{{ tag.description }} ({{ tag.code }}) - {{ tag.id }}</li>
                     {% endfor %}
                 </ul>
                 Removed tags:
                 <ul>
                     {% for tag in pastChange.getRemovedTags() %}
-                        <li>{{ tag.description }} ({{ tag.code }})</li>
+                        <li>{{ tag.description }} ({{ tag.code }}) - {{ tag.id }}</li>
                     {% endfor %}
                 </ul>
             </li>
