@@ -5,13 +5,13 @@
         <title>{% block title %}{{ toolbox_title }}{% endblock %}</title>
         <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
         {% block stylesheets %}
-            <link href="{{ asset('css/main.css') }}" rel="stylesheet" />
+            <link href="{{ asset('bundles/oag/stylesheets/normalize.css') }}" rel="stylesheet" />
+            <link href="{{ asset('bundles/oag/stylesheets/main.css') }}" rel="stylesheet" />
         {% endblock %}
     </head>
     <body>
+        {# Header and navigation #}
         <h1><a href="{{ path('oag_default_index') }}">{{ toolbox_title }}</a></h1>
-
-        <h2>{% block h2 %}Title{% endblock %}</h2>
 
         <div id="menu" style='padding-bottom: 30px'>
         {% block menu %}{% endblock %}
