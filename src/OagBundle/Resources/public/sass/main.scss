@@ -1,10 +1,12 @@
 // Install these with
 // php ./bin/console assets:install public --symlink --relative
 
+@import 'vars';
+
 body {
     background: #eeeeee;
-    font-family: sans-serif;
     margin: 15px;
+    font-family: $oag_font_copy;
 }
 
 .associated-files .docname {
