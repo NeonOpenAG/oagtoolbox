@@ -1,0 +1,51 @@
+{% extends 'OagBundle::Default/index.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/oag/jquery-filestyle-1.5.1/src/jquery-filestyle.min.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block body %}
+
+<div>Using {{ toolbox_title }} You can</div>
+
+<div><span>Preview</span> - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris commodo lectus at odio viverra rhoncus.</div>
+<div><span>Check</span> - Vivamus ultrices leo eu nisl aliquam vehicula.</div>
+<div><span>Download</span> - Vestibulum sed mollis sem. Etiam ultrices risus id lacus scelerisque vulputate ut vitae massa.</div>
+
+<h2>Get Started</h2>
+
+<div>
+    
+    {{ form_start(source_upload_form) }}
+    {{ form_errors(source_upload_form.documentName) }}
+    
+    {{ form_widget(source_upload_form.documentName) }}
+
+    {{ form_widget(source_upload_form.fileType, { 'attr': {'class': 'hidden-row'} }) }}
+    {{ form_end(source_upload_form) }}
+    
+</div>
+
+<div>
+    <h3>What can I upload?</h3>
+    <div>
+        <ul>
+            <li>Etiam quis lectus tincidunt, aliquet lorem a, mollis sem. </li>
+            <li>Phasellus eu justo id odio fringilla imperdiet.</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/oag/jquery-filestyle-1.5.1/src/jquery-filestyle.min.js') }}"></script>
+    <script>
+        $(function () {
+            $(document).tooltip();
+
+            $("#oag_file_documentName").jfilestyle();;
+        });
+    </script>
+{% endblock %}
