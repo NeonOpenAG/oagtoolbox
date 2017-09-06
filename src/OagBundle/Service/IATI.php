@@ -27,6 +27,7 @@ class IATI extends AbstractService {
         $srvOagFile = $this->getContainer()->get(OagFileService::class);
 
         $contents = $srvOagFile->getContents($oagFile);
+
         $root = $this->parseXML($contents);
 
         return $root;
@@ -50,7 +51,8 @@ class IATI extends AbstractService {
      * Parse a given string into a \SimpleXMLElement object.
      *
      * @param $string
-     * @return \SimpleXMLElement or false on failure
+     *
+     * @return \SimpleXMLElement
      */
     public function parseXML($string) {
         // helper function to allow for centralised changing of libxml options
@@ -70,7 +72,6 @@ class IATI extends AbstractService {
             $this->getContainer()->get('logger')->error('Failed to parse XML: ' . substr($string, 0, 30));
             $this->getContainer()->get('logger')->error('Reason: ' . $ex->getMessage());
         }
-        return false;
     }
 
     /**
@@ -95,7 +96,7 @@ class IATI extends AbstractService {
      *   array['tags'] Activity Tags.
      *   array['locations'] Activity Locations.
      */
-    public function summariseActivityToArray($activity) {
+    public function summariseActivityToArray(\SimpleXMLElement $activity) {
         $simpActivity = array();
         $simpActivity['id'] = $this->getActivityId($activity);
         $simpActivity['name'] = $this->getActivityTitle($activity);
@@ -172,6 +173,13 @@ class IATI extends AbstractService {
     /**
      * Get the title of an IATI activity.
      *
+     * Prioritises globalisation in the following order:
+     * 1. No language specified
+     * 2. English specified
+     * 3. Other language specified
+     *
+     * Returns 'Unnamed' if a <title> with <narrative> is not present.
+     *
      * @param \SimpleXMLElement $activity
      * @return string
      */
@@ -202,6 +210,10 @@ class IATI extends AbstractService {
      * Creates a definition array to be provided to the NeonMap service,
      * summarising any location data in the activity that can be visualised
      * on a map.
+     *
+     * This method's purpose is purely to format data in a way that NeonMap
+     * likes; if a better home is found for it than this service, it would travel
+     * freely.
      *
      * @param \SimpleXMLElement $activity
      * @return array see code
