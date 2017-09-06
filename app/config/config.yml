@@ -40,6 +40,8 @@ framework:
 twig:
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
+    globals:
+        toolbox_title: "IATI Magic Box of Tricks"
 
 # Doctrine Configuration
 doctrine:

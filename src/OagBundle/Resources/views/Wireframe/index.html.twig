@@ -1,0 +1,15 @@
+{% extends 'OagBundle::Default/index.html.twig' %}
+
+{% block body %}
+<h1>Welcome to the Wireframe:index page</h1>
+
+<ul>
+    <li><a href="{{ path('oag_wireframe_uploadiati') }}">uploadIatiAction</a></li>
+    <li><a href="{{ path('oag_wireframe_uploadenhancement') }}">uploadEnhancementAction</a></li>
+    <li><a href="{{ path('oag_wireframe_classifier') }}">classifierAction</a></li>
+    <li><a href="{{ path('oag_wireframe_classifiersuggestion') }}">classifierSuggestionAction</a></li>
+    <li><a href="{{ path('oag_wireframe_geocoder') }}">geocoderAction</a></li>
+    <li><a href="{{ path('oag_wireframe_geocodersuggestion') }}">geocoderSuggestionAction</a></li>
+    <li><a href="{{ path('oag_wireframe_improveryourdata') }}">improverYourDataAction</a></li>
+</ul>
+{% endblock %}
