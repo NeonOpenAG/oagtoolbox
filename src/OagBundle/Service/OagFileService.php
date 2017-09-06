@@ -12,7 +12,7 @@ class OagFileService extends AbstractService {
      * @param OagFile $oagFile the file to get the name of
      * @return string
      */
-    public function getXMLFileName($oagFile) {
+    public function getXMLFileName(OagFile $oagFile) {
         $filename = $oagFile->getDocumentName();
         $name = pathinfo($filename, PATHINFO_FILENAME);
 
@@ -44,8 +44,8 @@ class OagFileService extends AbstractService {
     public function getContents($oagFile) {
         $contents = file_get_contents($this->getPath($oagFile));
 
-        if ($contents === false) {
-            throw \Exception('OagFile contents not found at path');
+        if ($contents == false) {
+            throw new \Exception('OagFile contents not found at path');
         }
 
         return $contents;
