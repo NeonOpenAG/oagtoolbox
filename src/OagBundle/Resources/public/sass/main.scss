@@ -14,17 +14,17 @@ html, body {
   height: 100%;
   font-family: 'Montserrat', sans-serif;
   font-size: 1em;
+  line-height: 1.5;
   color: $oag_copy;
   margin: 0;
   background: #efefef;
 }
 
 a:-webkit-any-link {
-  color: $oag_grey;
+  color: $oag_dark;
 }
 
 a {
-  font-weight: bold;
   text-decoration: none;
   &:active,
   &:visited {
@@ -37,26 +37,37 @@ a {
 }
 
 header {
-  background-color: $oag_grey;
+  background-color: white;
   display: flex;
   justify-content: center;
   padding: 2em;
   a {
     font-weight: bold;
-    text-decoration: none;
     &:active,
     &:visited {
-      color: white;
+      color: #d5e6ef;
     }
     &:hover {
       color: $oag_link;
       text-decoration: underline;
     }
   }
+  a:-webkit-any-link {
+    color: $oag_dark;
+  }
 }
 
 nav {
   width: 980px;
+  .logo {
+    float: left;
+  }
+  .nav-options {
+    float: right;
+    a {
+      padding-left: 3em;
+    }
+  }
 }
 
 section {
@@ -64,6 +75,13 @@ section {
   display: flex;
   justify-content: center;
   padding: 2em;
+}
+
+.gradient {
+  color: white;
+  background: rgb(189,194,101);  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, rgba(43,159,201,0.5), rgba(189,194,101,0.5));  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, rgba(43,159,201,0.5), rgba(189,194,101,0.5)); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
 .content {

@@ -12,9 +12,16 @@
     </head>
     <body>
 
-        <header class="header" role="banner">
+        <header class="header">
             <nav class="header-nav">
-                <a href="{{ path('oag_default_index') }}">{{ toolbox_title }}</a>
+                <div class="logo"><a href="{{ path('oag_default_index') }}">{{ toolbox_title }}</a></div>
+
+                {% if iatidocs == false %}
+                <div class="nav-options">
+                    <a href="#">Preview</a>
+                    <a href="#">Check and improve</a>
+                </div>
+                {% endif %}
 
                 <div id="menu">
                     {% block menu %}{% endblock %}

@@ -14,9 +14,9 @@
 
 {% block body %}
 
-    {% if iatidocs %}
+    {% if iatidocs == false %}
 
-    <section>
+    <section class="gradient">
 
         <div class="content">
 
@@ -94,19 +94,19 @@
 
     {% else %}
 
-    <section>
+    <section class="gradient">
 
         <div class="content">
 
-            <h2>Using the Open Ag Toolbox you can:</h2>
+            <h1>Using the {{ toolbox_title }} you can:</h1>
 
-            <h3>View - How your data will look to the world.</h3>
+            <h2>View - How your data will look to the world.</h2>
 
-            <h3>Check - What your data can be used for and improve it.</h3>
+            <h2>Check - What your data can be used for and improve it.</h2>
 
-            <h3>Publish - Your improved activity file.</h3>
+            <h2>Publish - Your improved activity file.</h2>
 
-            <h2>Get Started:</h2>
+            <h1>Get Started:</h1>
 
             <div class="upload-form">
                 <h3>Import a new source document</h3>
