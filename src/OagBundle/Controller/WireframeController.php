@@ -8,13 +8,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("/wireframe")
  * @Template
  */
-class WireframeController extends Controller
- {
+class WireframeController extends Controller {
 
     /**
      * @Route("/")
@@ -24,15 +24,37 @@ class WireframeController extends Controller
     }
 
     /**
-     * @Route("/uploadIati")
+     * @Route("/upload")
      */
-    public function uploadIatiAction() {
+    public function uploadAction(Request $request) {
         $oagfile = new OagFile();
         $oagfile->setFileType(OagFile::OAGFILE_IATI_SOURCE_DOCUMENT);
         $sourceUploadForm = $this->createForm(OagFileType::class, $oagfile);
         $sourceUploadForm->add('Upload', SubmitType::class, array(
             'attr' => array('class' => 'submit'),
         ));
+
+        if ($request) {
+            $sourceUploadForm->handleRequest($request);
+
+            // TODO Check for too big files.
+            if ($sourceUploadForm->isSubmitted() && $sourceUploadForm->isValid()) {
+                $tmpFile = $oagfile->getDocumentName();
+                $oagfile->setMimeType(mime_content_type($tmpFile->getPathname()));
+
+                $filename = $tmpFile->getClientOriginalName();
+
+                $tmpFile->move(
+                    $this->getParameter('oagfiles_directory'), $filename
+                );
+
+                $oagfile->setDocumentName($filename);
+                $em->persist($oagfile);
+                $em->flush();
+
+                return $this->redirect($this->generateUrl('oag_cove_oagfile', array('id' => $oagfile->getId())));
+            }
+        }
 
         $data = array(
             'source_upload_form' => $sourceUploadForm->createView()
@@ -42,49 +64,37 @@ class WireframeController extends Controller
     }
 
     /**
-     * @Route("/uploadEnhancement")
-     */
-    public function uploadEnhancementAction() {
-        return array();
-    }
-
-    /**
      * @Route("/classifier")
      */
-    public function classifierAction()
-    {
+    public function classifierAction() {
         return array();
     }
 
     /**
      * @Route("/classifierSuggestion")
      */
-    public function classifierSuggestionAction()
-    {
+    public function classifierSuggestionAction() {
         return array();
     }
 
     /**
      * @Route("/geocoder")
      */
-    public function geocoderAction()
-    {
+    public function geocoderAction() {
         return array();
     }
 
     /**
      * @Route("/geocoderSuggestion")
      */
-    public function geocoderSuggestionAction()
-    {
+    public function geocoderSuggestionAction() {
         return array();
     }
 
     /**
      * @Route("/improverYourData")
      */
-    public function improverYourDataAction()
-    {
+    public function improverYourDataAction() {
         return array();
     }
 

@@ -15,17 +15,7 @@
 
 <h2>Get Started</h2>
 
-<div>
-    
-    {{ form_start(source_upload_form) }}
-    {{ form_errors(source_upload_form.documentName) }}
-    
-    {{ form_widget(source_upload_form.documentName) }}
-
-    {{ form_widget(source_upload_form.fileType, { 'attr': {'class': 'hidden-row'} }) }}
-    {{ form_end(source_upload_form) }}
-    
-</div>
+{{ include('OagBundle::widgets/fileUploadWidget.html.twig', { 'form': source_upload_form }) }}
 
 <div>
     <h3>What can I upload?</h3>
