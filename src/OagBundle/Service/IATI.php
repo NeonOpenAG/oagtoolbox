@@ -93,6 +93,7 @@ class IATI extends AbstractService {
      *
      *   array['id'] Activity ID.
      *   array['name'] Activity Name.
+     *   array['description'] Activity Description.
      *   array['tags'] Activity Tags.
      *   array['locations'] Activity Locations.
      */
@@ -100,6 +101,7 @@ class IATI extends AbstractService {
         $simpActivity = array();
         $simpActivity['id'] = $this->getActivityId($activity);
         $simpActivity['name'] = $this->getActivityTitle($activity);
+        $simpActivity['description'] = $this->getActivityDescription($activity);
         $simpActivity['tags'] = $this->getActivityTags($activity);
         $simpActivity['locations'] = $this->getActivityLocations($activity);
         return $simpActivity;
@@ -178,10 +180,10 @@ class IATI extends AbstractService {
      * 2. English specified
      * 3. Other language specified
      *
-     * Returns 'Unnamed' if a <title> with <narrative> is not present.
+     * Returns null if a <title> with <narrative> is not present.
      *
      * @param \SimpleXMLElement $activity
-     * @return string
+     * @return string|null
      */
     public function getActivityTitle($activity) {
         $preference = array(
@@ -203,7 +205,51 @@ class IATI extends AbstractService {
             }
         }
 
-        return 'Unnamed';
+        return null;
+    }
+
+    /**
+     * Get the description of an IATI activity.
+     *
+     * Prioritises as generic a description as possible with a non-specific
+     * language. Less-generic descriptions in other languages are fallen-back
+     * to.
+     *
+     * Returns null if a <description> with <narrative> is not present.
+     *
+     * @param \SimpleXMLElement $activity
+     * @return string|null
+     */
+    public function getActivityDescription($activity) {
+        $descPreference = array(
+            './description[not(@type)]',
+            './description[@type=1]',
+            './description'
+        );
+
+        $narrativePreference = array(
+            './narrative[not(@xml:lang)]',
+            './narrative[@xml:lang="en"]', // TODO make this configurable
+            './narrative'
+        );
+
+        foreach ($descPreference as $descPath) {
+            // use the first or look again
+            $descs = $activity->xpath($descPath);
+            if (count($descs) === 0) continue;
+            $desc = $descs[0];
+
+            foreach ($narrativePreference as $narrativePath) {
+                // use the first or look again
+                $narratives = $desc->xpath($narrativePath);
+                if (count($narratives) === 0) continue;
+                $narrative = $narratives[0];
+
+                return (string) $narrative;
+            }
+        }
+
+        return null;
     }
 
     /**
