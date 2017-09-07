@@ -1,0 +1,12 @@
+<article>
+    <header>
+        <h1>{{ activity.name }} </h1>
+        <h2>{{ activity.id }}</h2>
+    </header>
+
+    <p>DESCRIPTION: {{ activity.description }}</p>
+
+    {% if suggestRoute is defined %}
+        <a href="{{ suggestRoute }}">View Suggestions</a>
+    {% endif %}
+</article>
