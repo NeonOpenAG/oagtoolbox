@@ -256,7 +256,7 @@ class IATITest extends TestCase {
         // text activity without narrative
         $activity = new \SimpleXMLElement('<iati-activity></iati-activity>');
         $title = $srvIATI->getActivityTitle($activity);
-        $this->assertEquals('Unnamed', $title);
+        $this->assertNull($title, 'Title should be null when there is none in the activity');
     }
 
     /**
