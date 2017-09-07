@@ -7,25 +7,47 @@
 
 {% block body %}
 
-<div>Using {{ toolbox_title }} You can</div>
+    <section>
 
-<div><span>Preview</span> - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris commodo lectus at odio viverra rhoncus.</div>
-<div><span>Check</span> - Vivamus ultrices leo eu nisl aliquam vehicula.</div>
-<div><span>Download</span> - Vestibulum sed mollis sem. Etiam ultrices risus id lacus scelerisque vulputate ut vitae massa.</div>
+        <div class="content">
 
-<h2>Get Started</h2>
+            <div class="intro">
+                <h1 class="dark">Using the {{ toolbox_title }} you can...</h1>
 
-{{ include('OagBundle::widgets/fileUploadWidget.html.twig', { 'form': source_upload_form }) }}
+                <h2><span class="dark">View</span> how your data will look to the world.</h2>
 
-<div>
-    <h3>What can I upload?</h3>
-    <div>
-        <ul>
-            <li>Etiam quis lectus tincidunt, aliquet lorem a, mollis sem. </li>
-            <li>Phasellus eu justo id odio fringilla imperdiet.</li>
-        </ul>
-    </div>
-</div>
+                <h2><span class="dark">Check</span> what your data can be used for and improve it.</h2>
+
+                <h2><span class="dark">Publish</span> your improved activity file.</h2>
+            </div>
+
+            <h1 class="dark">Get Started</h1>
+
+            <div class="upload-form">
+                <h3>Import a new source document</h3>
+                <hr>
+                <div>The imported document will be automatically processed with CoVE and added to the IATI document list above.</div>
+                <div>Currently only XML is supported.</div>
+                {{ include('OagBundle::widgets/fileUploadWidget.html.twig', { 'form': source_upload_form }) }}
+            </div>
+
+        </div>
+
+    </section>
+
+    <section>
+
+        <div class="content">
+
+            <h1>What can I upload</h1>
+
+            <h2>A spreadsheet with the right columns.</h2>
+            <h2>XML that is IATI compliant - see instructions</h2>
+
+        </div>
+
+    </section>
+
 {% endblock %}
 
 {% block javascripts %}
