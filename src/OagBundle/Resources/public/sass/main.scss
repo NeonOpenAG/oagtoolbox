@@ -20,6 +20,18 @@ html, body {
   background: #efefef;
 }
 
+h1 {
+  font-size: 2.5em;
+}
+
+h2 {
+  font-weight: normal;
+}
+
+hr {
+  margin-bottom: 2em;
+}
+
 a:-webkit-any-link {
   color: $oag_dark;
 }
@@ -36,11 +48,24 @@ a {
   }
 }
 
+button {
+  border: 0;
+  font-family: inherit;
+  display: inline-block;
+  padding: 1em 2em;
+  cursor: pointer;
+  background-color: $oag_purple;
+  color: white;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 header {
   background-color: white;
   display: flex;
   justify-content: center;
-  padding: 2em;
+  padding: 1.5em;
   a {
     font-weight: bold;
     &:active,
@@ -71,7 +96,6 @@ nav {
 }
 
 section {
-  background-color: white;
   display: flex;
   justify-content: center;
   padding: 2em;
@@ -79,9 +103,17 @@ section {
 
 .gradient {
   color: white;
-  background: rgb(189,194,101);  /* fallback for old browsers */
+  background: rgb(43,159,201);  /* fallback for old browsers */
   background: -webkit-linear-gradient(to right, rgba(43,159,201,0.5), rgba(189,194,101,0.5));  /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(to right, rgba(43,159,201,0.5), rgba(189,194,101,0.5)); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.intro {
+  margin-bottom: 4em;
+}
+
+.dark {
+  color: white;
 }
 
 .content {
@@ -100,17 +132,18 @@ section {
 }
 
 .upload-form {
-  padding: 0px 10px;
-  margin: 15px 0px 0px 0px;
+  background-color: white;
+  color: $oag_copy;
+  padding: 1em 2em;
   display: inline-block;
-  border: 2px groove;
-  width: 300px;
+  border: none;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
   div {
-    margin-bottom: 15px;
+    margin-bottom: 1em;
   }
   input,
   button {
-    margin-top: 10px;
+    margin-top: 1em;
   }
 }
 

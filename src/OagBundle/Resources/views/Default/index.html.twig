@@ -98,18 +98,21 @@
 
         <div class="content">
 
-            <h1>Using the {{ toolbox_title }} you can:</h1>
+            <div class="intro">
+                <h1 class="dark">Using the {{ toolbox_title }} you can...</h1>
 
-            <h2>View - How your data will look to the world.</h2>
+                <h2><span class="dark">View</span> how your data will look to the world.</h2>
 
-            <h2>Check - What your data can be used for and improve it.</h2>
+                <h2><span class="dark">Check</span> what your data can be used for and improve it.</h2>
 
-            <h2>Publish - Your improved activity file.</h2>
+                <h2><span class="dark">Publish</span> your improved activity file.</h2>
+            </div>
 
-            <h1>Get Started:</h1>
+            <h1 class="dark">Get Started</h1>
 
             <div class="upload-form">
                 <h3>Import a new source document</h3>
+                <hr>
                 <div>The imported document will be automatically processed with CoVE and added to the IATI document list above.</div>
                 <div>Currently only XML is supported.</div>
                 <div>
@@ -123,12 +126,18 @@
                 </div>
             </div>
 
-            <h3>What can I upload:</h3>
+        </div>
 
-            <ul>
-                <li>A spreadsheet with the right columns.</li>
-                <li>XML that is IATI compliant - see instructions</li>
-            </ul>
+    </section>
+
+    <section>
+
+        <div class="content">
+
+            <h1>What can I upload</h1>
+
+            <h2>A spreadsheet with the right columns.</h2>
+            <h2>XML that is IATI compliant - see instructions</h2>
 
         </div>
 
@@ -150,4 +159,5 @@
             });
         });
     </script>
+    <script>
 {% endblock %}
