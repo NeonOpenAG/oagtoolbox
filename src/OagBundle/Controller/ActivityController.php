@@ -7,6 +7,7 @@ use OagBundle\Entity\OagFile;
 use OagBundle\Entity\SuggestedTag;
 use OagBundle\Entity\Tag;
 use OagBundle\Form\MergeActivityType;
+use OagBundle\Service\ChangeService;
 use OagBundle\Service\IATI;
 use OagBundle\Service\OagFileService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -30,6 +31,7 @@ class ActivityController extends Controller
     public function enhanceAction(Request $request, OagFile $file, $iatiActivityId) {
         $srvIATI = $this->get(IATI::class);
         $srvOagFile = $this->get(OagFileService::class);
+        $srvChange = $this->get(ChangeService::class);
         $tagRepo = $this->container->get('doctrine')->getRepository(Tag::class);
         $sugTagRepo = $this->container->get('doctrine')->getRepository(SuggestedTag::class);
         $changeRepo = $this->container->get('doctrine')->getRepository(Change::class);
@@ -41,6 +43,7 @@ class ActivityController extends Controller
 
         # Find past changes made to activity
         $pastChanges = $changeRepo->findBy(array('activityId' => $iatiActivityId));
+        $summarisedHistory = $srvChange->summariseHistory($activity);
 
         # Current activity summarised in array form.
         $activityDetail = $srvIATI->summariseActivityToArray($activity);
@@ -113,6 +116,7 @@ class ActivityController extends Controller
             'form' => $form->createView(),
             'id' => $file->getId(),
             'pastChanges' => $pastChanges,
+            'summarisedHistory' => $summarisedHistory,
             'activity' => $activityDetail,
             'mapdata' => json_encode($mapData, JSON_HEX_APOS + JSON_HEX_TAG + JSON_HEX_AMP + JSON_HEX_QUOT),
         );

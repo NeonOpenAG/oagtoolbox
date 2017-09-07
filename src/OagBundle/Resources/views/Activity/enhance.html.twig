@@ -23,6 +23,24 @@
         {{ form(form) }}
     </div>
 
+    {% if summarisedHistory.getAddedTags|length > 0 or summarisedHistory.getRemovedTags|length > 0 %}
+        <h3>Previously Edited</h3>
+        <p>This activity has been edited before, in a different file.</p>
+        Added tags:
+        <ul>
+            {% for tag in summarisedHistory.getAddedTags() %}
+                <li>{{ tag.description }} ({{ tag.code }})</li>
+            {% endfor %}
+        </ul>
+        Removed tags:
+        <ul>
+            {% for tag in summarisedHistory.getRemovedTags() %}
+                <li>{{ tag.description }} ({{ tag.code }})</li>
+            {% endfor %}
+        </ul>
+        <a href=''>Reapply Changes</a>
+    {% endif %}
+
     <h3>Past changes to activity</h3>
     <ul>
         {% for pastChange in pastChanges|reverse %}
@@ -31,13 +49,13 @@
                 Added tags:
                 <ul>
                     {% for tag in pastChange.getAddedTags() %}
-                        <li>{{ tag.description }} ({{ tag.code }}) - {{ tag.id }}</li>
+                        <li>{{ tag.description }} ({{ tag.code }})</li>
                     {% endfor %}
                 </ul>
                 Removed tags:
                 <ul>
                     {% for tag in pastChange.getRemovedTags() %}
-                        <li>{{ tag.description }} ({{ tag.code }}) - {{ tag.id }}</li>
+                        <li>{{ tag.description }} ({{ tag.code }})</li>
                     {% endfor %}
                 </ul>
             </li>

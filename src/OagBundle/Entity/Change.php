@@ -131,6 +131,9 @@ class Change {
      * @param ArrayCollection|array $addedTags
      */
     public function setAddedTags($addedTags) {
+        if (is_array($addedTags)) {
+            $addedTags = new ArrayCollection($addedTags);
+        }
         $this->addedTags = $addedTags;
     }
 
@@ -145,6 +148,9 @@ class Change {
      * @param ArrayCollection|array $removedTags
      */
     public function setRemovedTags($removedTags) {
+        if (is_array($removedTags)) {
+            $removedTags = new ArrayCollection($removedTags);
+        }
         $this->removedTags = $removedTags;
     }
 
