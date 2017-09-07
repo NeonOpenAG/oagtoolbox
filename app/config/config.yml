@@ -80,3 +80,4 @@ assetic:
     filters:
         sass:
             apply_to: ".scss$"
+            bin: /usr/local/bin/sass
