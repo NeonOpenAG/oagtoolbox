@@ -16,13 +16,11 @@
             <nav class="header-nav">
                 <div class="logo"><a href="{{ path('oag_default_index') }}">{{ toolbox_title }}</a></div>
 
-                {% if iatidocs %}
                 <div class="nav-options">
                     <a href="#">Preview</a>
                     <a href="#">Check and improve</a>
                     <a href="#">Download</a>
                 </div>
-                {% endif %}
 
                 <div id="menu">
                     {% block menu %}{% endblock %}
