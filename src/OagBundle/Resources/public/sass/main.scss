@@ -57,7 +57,7 @@ button {
   background-color: $oag_purple;
   color: white;
   &:hover {
-    text-decoration: underline;
+    background-color: lighten($oag_purple, 10%);
   }
 }
 
@@ -67,19 +67,17 @@ header {
   justify-content: center;
   padding: 0;
   a {
-    font-weight: bold;
-    &:active,
     &:visited {
-      color: #d5e6ef;
+      color: $oag_dark;
     }
     &:hover {
       color: $oag_link;
-      text-decoration: underline;
+      text-decoration: none;
     }
   }
-  a:-webkit-any-link {
-    color: $oag_dark;
-  }
+  // a:-webkit-any-link {
+  //   color: $oag_dark;
+  // }
 }
 
 nav {
@@ -100,12 +98,12 @@ nav {
       display: inline;
       list-style-type: none;
       a {
-        color: $oag_copy;
+        color: $oag_dark;
         padding: 1.5em;
         line-height: 67px;
         transition: all 0.5s ease 0s;
         &:hover {
-          color: $oag_dark;
+          color: black;
           text-decoration: none;
         }
       }
@@ -142,7 +140,11 @@ section {
   color: white;
   background: $oag_blue;  /* fallback for old browsers */
   background: -webkit-linear-gradient(to right, rgba(43,159,201,0.5), rgba(189,194,101,0.5));  /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(150deg, $oag_blue 15%, $oag_purple 70%); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  //background: linear-gradient(150deg, $oag_blue 15%, $oag_purple 70%); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: linear-gradient(311deg, rgb(43, 159, 201) 0%, rgb(149, 91, 154) 61%);
+  h1 {
+    color: white;
+  }
 }
 
 .instructions {
@@ -155,10 +157,11 @@ section {
 
 .intro {
   margin-bottom: 4em;
+  color: #ebd7ec;
 }
 
 .dark {
-  color: white;
+  color: $oag_dark;
 }
 
 .content {
