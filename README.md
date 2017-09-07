@@ -20,8 +20,11 @@ git submodule update --init --recursive
 
 To run a standard lamp stack, you'll need to enter a sudo password at the end of the composer install.  This is to fix the permissions on the cache, var and upload folder.
 
-    sudo apt install php7.0-sqlite realpath
-    composer install
+```bash
+sudo apt install php7.0-sqlite realpath ruby ruby-dev
+sudo gem install sass --no-user-install
+composer install
+```
 
 Tests
 -----
