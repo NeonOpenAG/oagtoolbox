@@ -12,10 +12,10 @@
 
 html, body {
   height: 100%;
-  font-family: 'Montserrat', sans-serif;
+  font-family: $oag_font;
   font-size: 1em;
   line-height: 1.5;
-  color: $oag_copy;
+  color: $oag_dark;
   margin: 0;
   background: #efefef;
 }
@@ -48,18 +48,18 @@ a {
   }
 }
 
-button {
-  border: 0;
-  font-family: inherit;
-  display: inline-block;
-  padding: 1em 2em;
-  cursor: pointer;
-  background-color: $oag_purple;
-  color: white;
-  &:hover {
-    text-decoration: underline;
-  }
-}
+// button {
+//   border: 0;
+//   font-family: inherit;
+//   display: inline-block;
+//   padding: 1em 2em;
+//   cursor: pointer;
+//   background-color: $oag_purple;
+//   color: white;
+//   &:hover {
+//     text-decoration: underline;
+//   }
+// }
 
 header {
   background-color: white;
@@ -113,7 +113,7 @@ section {
 }
 
 .dark {
-  color: white;
+  color: $oag_dark;
 }
 
 .content {
@@ -133,7 +133,7 @@ section {
 
 .upload-form {
   background-color: white;
-  color: $oag_copy;
+  color: $oag_dark;
   padding: 1em 2em;
   display: inline-block;
   border: none;
