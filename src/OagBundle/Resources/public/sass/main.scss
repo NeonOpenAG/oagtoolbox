@@ -16,8 +16,8 @@ html, body {
   font-size: 1em;
   line-height: 1.5;
   color: $oag_dark;
+  background-color: #F6F9FC;
   margin: 0;
-  background: #efefef;
 }
 
 h1 {
@@ -48,24 +48,24 @@ a {
   }
 }
 
-// button {
-//   border: 0;
-//   font-family: inherit;
-//   display: inline-block;
-//   padding: 1em 2em;
-//   cursor: pointer;
-//   background-color: $oag_purple;
-//   color: white;
-//   &:hover {
-//     text-decoration: underline;
-//   }
-// }
+button {
+  border: 0;
+  font-family: inherit;
+  display: inline-block;
+  padding: 1em 2em;
+  cursor: pointer;
+  background-color: $oag_purple;
+  color: white;
+  &:hover {
+    text-decoration: underline;
+  }
+}
 
 header {
   background-color: white;
   display: flex;
   justify-content: center;
-  padding: 1.5em;
+  padding: 0;
   a {
     font-weight: bold;
     &:active,
@@ -86,11 +86,47 @@ nav {
   width: 980px;
   .logo {
     float: left;
+    line-height: 67px;
   }
   .nav-options {
     float: right;
-    a {
-      padding-left: 3em;
+    ul {
+      padding: 0;
+      margin: 0;
+      display: flex;
+    }
+    li {
+      padding: 0;
+      display: inline;
+      list-style-type: none;
+      a {
+        color: $oag_copy;
+        padding: 1.5em;
+        line-height: 67px;
+        transition: all 0.5s ease 0s;
+        &:hover {
+          color: $oag_dark;
+          text-decoration: none;
+        }
+      }
+      &:nth-child(1) > a {
+        box-shadow: inset 0px -6px 0px $oag_blue;
+        &:hover {
+          background-color: rgba(43,159,201, 0.1);
+        }
+      }
+      &:nth-child(2) > a {
+        box-shadow: inset 0px -6px 0px $oag_green;
+        &:hover {
+          background-color: rgba(189,194,101, 0.1);
+        }
+      }
+      &:nth-child(3) > a {
+        box-shadow: inset 0px -6px 0px $oag_purple;
+        &:hover {
+          background-color: rgba(149,91,154, 0.1);
+        }
+      }
     }
   }
 }
@@ -102,10 +138,19 @@ section {
 }
 
 .gradient {
+  height: 545px;
   color: white;
-  background: rgb(43,159,201);  /* fallback for old browsers */
+  background: $oag_blue;  /* fallback for old browsers */
   background: -webkit-linear-gradient(to right, rgba(43,159,201,0.5), rgba(189,194,101,0.5));  /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(to right, rgba(43,159,201,0.5), rgba(189,194,101,0.5)); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: linear-gradient(150deg, $oag_blue 15%, $oag_purple 70%); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.instructions {
+  padding: 12em 2em 2em 2em;
+  color: $oag_copy;
+  h1 {
+    color: $oag_purple;
+  }
 }
 
 .intro {
@@ -113,7 +158,7 @@ section {
 }
 
 .dark {
-  color: $oag_dark;
+  color: white;
 }
 
 .content {
@@ -132,6 +177,7 @@ section {
 }
 
 .upload-form {
+  position: absolute;
   background-color: white;
   color: $oag_dark;
   padding: 1em 2em;
