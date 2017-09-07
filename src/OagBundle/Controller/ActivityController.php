@@ -14,6 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -54,17 +55,17 @@ class ActivityController extends Controller
         # Current tags attached to $activity.
         $currentTags = $srvIATI->getActivityTags($activity);
 
-        # Create a new instance of the form.
-        $form = $this->createForm(MergeActivityType::class, null, array_merge(array(
+        # Create a new instance of the mergeForm for merging in tags.
+        $mergeForm = $this->createForm(MergeActivityType::class, null, array_merge(array(
             'currentTags' => $currentTags,
             'iatiActivityId' => $iatiActivityId,
             'file' => $file
         )));
 
-        $form->handleRequest($request);
+        $mergeForm->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
+        if ($mergeForm->isSubmitted() && $mergeForm->isValid()) {
+            $data = $mergeForm->getData();
 
             $toRemove = array();
             foreach ($currentTags as $tag) {
@@ -108,12 +109,33 @@ class ActivityController extends Controller
             $resultXML = $srvIATI->toXML($root);
             $srvOagFile->setContents($file, $resultXML);
 
-            # Force a redirect on successful submit so that the form is rebuilt.
+            # Force a redirect on successful submit so that the mergeForm is rebuilt.
+            return $this->redirect($request->getUri());
+        }
+
+        // fast-forward form (for bringing up-to-date with past changes)
+        $fastForwardForm = $this
+            ->createFormBuilder(array())
+            ->add('submit', SubmitType::class, array( 'label' => 'Re-apply Changes' ))
+            ->getForm();
+
+        $fastForwardForm->handleRequest($request);
+
+        if ($fastForwardForm->isSubmitted() && $fastForwardForm->isValid()) {
+            // apply changes to XML
+            $srvChange->apply($summarisedHistory, $activity);
+
+            // persist the result
+            $resultXML = $srvIATI->toXML($root);
+            $srvOagFile->setContents($file, $resultXML);
+
+            // force a redirect on successful submit so that form are rebuilt
             return $this->redirect($request->getUri());
         }
 
         return array(
-            'form' => $form->createView(),
+            'mergeForm' => $mergeForm->createView(),
+            'fastForwardForm' => $fastForwardForm->createView(),
             'id' => $file->getId(),
             'pastChanges' => $pastChanges,
             'summarisedHistory' => $summarisedHistory,

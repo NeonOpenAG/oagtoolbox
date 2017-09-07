@@ -123,11 +123,11 @@ class ChangeService extends AbstractService {
         $srvIATI = $this->getContainer()->get(IATI::class);
 
         foreach ($toApply->getAddedTags() as $tag) {
-            $srvIATI->addActvityTag($activity, $tag);   
+            $srvIATI->addActivityTag($activity, $tag);   
         }
 
         foreach ($toApply->getRemovedTags() as $tag) {
-            $srvIATI->removeActvityTag($activity, $tag);   
+            $srvIATI->removeActivityTag($activity, $tag);   
         }
     }
 

@@ -302,7 +302,10 @@ class IATI extends AbstractService {
      * @param string $reason a human-readable origin provided in the XML of the tag
      */
     public function addActivityTag(&$activity, $tag, $reason = null) {
-        // TODO should we check if it already exists?
+        if (in_array($tag, $this->getActivityTags($activity))) {
+            // no duplicates
+            return;
+        }
 
         $namespaceUri =  $this->getContainer()->getParameter('classifier')['namespace_uri'];
 

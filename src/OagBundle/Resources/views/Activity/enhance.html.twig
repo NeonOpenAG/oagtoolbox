@@ -20,7 +20,7 @@
 
     <div id='activities'>
         <h3>Sectors</h3>
-        {{ form(form) }}
+        {{ form(mergeForm) }}
     </div>
 
     {% if summarisedHistory.getAddedTags|length > 0 or summarisedHistory.getRemovedTags|length > 0 %}
@@ -38,7 +38,7 @@
                 <li>{{ tag.description }} ({{ tag.code }})</li>
             {% endfor %}
         </ul>
-        <a href=''>Reapply Changes</a>
+        {{ form(fastForwardForm) }}
     {% endif %}
 
     <h3>Past changes to activity</h3>
