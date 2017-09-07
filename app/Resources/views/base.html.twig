@@ -3,11 +3,17 @@
     <head>
         <meta charset="UTF-8">
         <title>{% block title %}{{ toolbox_title }}{% endblock %}</title>
-        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
         {% block stylesheets %}
-            <link href="{{ asset('bundles/oag/stylesheets/normalize.css') }}" rel="stylesheet" />
-            <link href="{{ asset('bundles/oag/stylesheets/main.css') }}" rel="stylesheet" />
-            <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+
+        {% stylesheets
+            'bundles/oag/stylesheets/normalize.css'
+            'bundles/oag/sass/main.scss'
+        %}
+            <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+            <link rel="stylesheet" href="{{ asset_url }}" />
+        {% endstylesheets %}
+
         {% endblock %}
     </head>
     <body>
