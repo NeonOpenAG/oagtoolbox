@@ -265,11 +265,11 @@ section {
 
 .addremove input + span:before {
   @extend button;
-  content: 'Add';
+  content: 'Add this';
 }
 
 .addremove input:checked + span:before {
-  content: 'Remove';
+  content: 'Remove this';
 }
 
 .addremove input

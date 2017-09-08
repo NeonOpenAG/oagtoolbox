@@ -2,9 +2,11 @@
 
 namespace OagBundle\Controller;
 
+use OagBundle\Entity\Change;
 use OagBundle\Entity\OagFile;
 use OagBundle\Form\OagFileType;
 use OagBundle\Service\IATI;
+use OagBundle\Service\OagFileService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -88,12 +90,15 @@ class WireframeController extends Controller {
      * @Route("/classifier/{id}/{activityId}")
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
-    public function classifierSuggestionAction(OagFile $file, $activityId) {
+    public function classifierSuggestionAction(Request $request, OagFile $file, $activityId) {
         if (!$file->hasFileType(OagFile::OAGFILE_IATI_DOCUMENT)) {
             // TODO throw a reasonable error
         }
 
+        $em = $this->getDoctrine()->getManager();
+        $srvOagFile = $this->get(OagFileService::class);
         $srvIATI = $this->get(IATI::class);
+
         $root = $srvIATI->load($file);
         $activity = $srvIATI->getActivityById($root, $activityId);
 
@@ -132,6 +137,43 @@ class WireframeController extends Controller {
             ))
             ->add('save', SubmitType::class)
             ->getForm();
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $editedTags = $form->getData()['tags'];
+
+            // have any current tags been removed
+            $toRemove = array();
+            foreach ($currentTags as $currentTag) {
+                if (!in_array($currentTag, $editedTags)) {
+                    $srvIATI->removeActivityTag($activity, $currentTag);
+                    $toRemove[] = $currentTag;
+                }
+            }
+
+            // have any suggsted tags been added
+            $toAdd = array();
+            foreach ($suggestedTags as $suggestedTag) {
+                if (in_array($suggestedTag, $editedTags)) {
+                    $srvIATI->addActivityTag($activity, $suggestedTag);
+                    $toAdd[] = $suggestedTag;
+                }
+            }
+
+            $resultXML = $srvIATI->toXML($root);
+            $srvOagFile->setContents($file, $resultXML);
+
+            $change = new Change();
+            $change->setAddedTags($toAdd);
+            $change->setRemovedTags($toRemove);
+            $change->setFile($file);
+            $change->setActivityId($activityId);
+            $change->setTimestamp(new \DateTime('now'));
+            $em->persist($change);
+            $em->flush();
+
+            return $this->redirect($this->generateUrl('oag_wireframe_classifier', array('id' => $file->getId()))); 
+        }
 
         return array(
             'file' => $file,
