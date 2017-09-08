@@ -31,6 +31,8 @@ class WireframeController extends Controller {
      * @Route("/upload")
      */
     public function uploadAction(Request $request) {
+        $em = $this->getDoctrine()->getEntityManager();
+
         $oagfile = new OagFile();
         $oagfile->setFileType(OagFile::OAGFILE_IATI_SOURCE_DOCUMENT);
         $sourceUploadForm = $this->createForm(OagFileType::class, $oagfile);
@@ -56,7 +58,7 @@ class WireframeController extends Controller {
                 $em->persist($oagfile);
                 $em->flush();
 
-                return $this->redirect($this->generateUrl('oag_cove_oagfile', array('id' => $oagfile->getId())));
+                return $this->redirect($this->generateUrl('oag_wireframe_improveyourdata', array('id' => $oagfile->getId())));
             }
         }
 
