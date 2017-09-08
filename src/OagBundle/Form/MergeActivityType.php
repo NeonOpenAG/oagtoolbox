@@ -33,11 +33,11 @@ class MergeActivityType extends AbstractType {
                 'expanded' => true,
                 'multiple' => true,
                 'label_attr' => array('class' => 'biglabel'),
-                'choices' => array_keys($currentTags),
-                'data' => array_keys($currentTags), // default to ticked
-                'choice_label' => function ($value, $key, $index) use ($currentTags) {
-                    $desc = $currentTags[$index]['description'];
-                    $vocab = $currentTags[$index]['vocabulary'];
+                'choices' => $currentTags,
+                'data' => $currentTags, // default to ticked
+                'choice_label' => function ($value, $key, $index) {
+                    $desc = $value->getDescription();
+                    $vocab = $value->getVocabulary();
                     return "$desc ($vocab)";
                 }
             ))
@@ -45,30 +45,30 @@ class MergeActivityType extends AbstractType {
                 'expanded' => true,
                 'multiple' => true,
                 'label_attr' => array('class' => 'biglabel'),
-                'choices' => array_reduce($suggestedTags, function ($result, SuggestedTag $item) {
-                        # basically changes choices to $item->getTag()->getDescription() => $item->getId()
-                        $label = $item->getTag()->getDescription();
-                        $result[$label] = $item->getId();
-                        return $result;
-                    }, array())
+                'choices' => $suggestedTags,
+                'choice_label' => function ($value, $key, $index) {
+                    $desc = $value->getTag()->getDescription();
+                    $vocab = $value->getTag()->getVocabulary();
+                    return "$desc ($vocab)";
+                }
         ));
 
         # Parse each of the enhancing documents into suggested form choices.
         foreach ($file->getEnhancingDocuments() as $otherFile) {
             $name = $otherFile->getDocumentName();
-            $tags = $otherFile->getSuggestedTags();
+            $sugTags = $otherFile->getSuggestedTags();
             $id = $otherFile->getId();
 
             $builder->add("enhanced_$id", ChoiceType::class, array(
                 'expanded' => true,
                 'multiple' => true,
                 'label' => $name,
-                'choices' => array_reduce($tags->toArray(), function (array $result, SuggestedTag $item) {
-                    # basically changes choices to $item->getTag()->getDescription() => $item->getId()
-                    $label = $item->getTag()->getDescription();
-                    $result[$label] = $item->getId();
-                    return $result;
-                }, array())
+                'choices' => $sugTags->toArray(),
+                'choice_label' => function ($value, $key, $index) {
+                    $desc = $value->getTag()->getDescription();
+                    $vocab = $value->getTag()->getVocabulary();
+                    return "$desc ($vocab)";
+                }
             ));
         }
 

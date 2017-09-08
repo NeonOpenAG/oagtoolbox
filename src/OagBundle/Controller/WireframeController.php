@@ -4,6 +4,8 @@ namespace OagBundle\Controller;
 
 use OagBundle\Entity\OagFile;
 use OagBundle\Form\OagFileType;
+use OagBundle\Service\IATI;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -64,16 +66,32 @@ class WireframeController extends Controller {
     }
 
     /**
-     * @Route("/classifier")
+     * @Route("/classifier/{id}")
+     * @ParamConverter("file", class="OagBundle:OagFile")
      */
-    public function classifierAction() {
-        return array();
+    public function classifierAction(OagFile $file) {
+        if (!$file->hasFileType(OagFile::OAGFILE_IATI_DOCUMENT)) {
+            // TODO throw a reasonable error
+        }
+
+        $srvIATI = $this->get(IATI::class);
+        $root = $srvIATI->load($file);
+
+        return array(
+            'file' => $file,
+            'activities' => $srvIATI->summariseToArray($root)
+        );
     }
 
     /**
-     * @Route("/classifierSuggestion")
+     * @Route("/classifier/{id}/{activityId}")
+     * @ParamConverter("file", class="OagBundle:OagFile")
      */
-    public function classifierSuggestionAction() {
+    public function classifierSuggestionAction(OagFile $file, $activityId) {
+        if (!$file->hasFileType(OagFile::OAGFILE_IATI_DOCUMENT)) {
+            // TODO throw a reasonable error
+        }
+
         return array();
     }
 
