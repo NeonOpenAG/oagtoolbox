@@ -110,9 +110,9 @@ class WireframeController extends Controller {
     }
 
     /**
-     * @Route("/improverYourData")
+     * @Route("/improveYourData")
      */
-    public function improverYourDataAction() {
+    public function improveYourDataAction() {
         return array();
     }
 
