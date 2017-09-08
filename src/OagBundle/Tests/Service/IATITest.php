@@ -249,7 +249,7 @@ class IATITest extends TestCase {
         $loadedFile = $srvIATI->load($this->testOagFile);
         $activity = $srvIATI->getActivities($loadedFile)[0];
         $title = $srvIATI->getActivityTitle($activity);
-        $this->assertNotEquals('Unnamed', $title);
+        $this->assertNotEquals(null, $title);
         $this->assertInternalType('string', $title);
         $this->assertGreaterThan(0, strlen($title));
 
@@ -257,6 +257,24 @@ class IATITest extends TestCase {
         $activity = new \SimpleXMLElement('<iati-activity></iati-activity>');
         $title = $srvIATI->getActivityTitle($activity);
         $this->assertNull($title, 'Title should be null when there is none in the activity');
+    }
+
+    public function testGetActivityDescription() {
+        $srvIATI = $this->container->get(IATI::class);
+        $srvIATI->setContainer($this->container);
+
+        // test activity with narrative
+        $loadedFile = $srvIATI->load($this->testOagFile);
+        $activity = $srvIATI->getActivities($loadedFile)[0];
+        $title = $srvIATI->getActivityDescription($activity);
+        $this->assertNotEquals(null, $title);
+        $this->assertInternalType('string', $title);
+        $this->assertGreaterThan(0, strlen($title));
+
+        // text activity without narrative
+        $activity = new \SimpleXMLElement('<iati-activity></iati-activity>');
+        $title = $srvIATI->getActivityDescription($activity);
+        $this->assertNull($title, 'Description should be null when there is none in the activity');
     }
 
     /**
