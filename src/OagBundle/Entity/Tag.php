@@ -50,10 +50,6 @@ class Tag {
      */
     private $vocabulary_uri;
 
-    public function __construct() {
-        $this->oagFile = new ArrayCollection();
-    }
-
     /**
      * Get id
      *

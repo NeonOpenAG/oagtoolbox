@@ -1,6 +1,7 @@
 <?php
 
 use OagBundle\Entity\OagFile;
+use OagBundle\Entity\Tag;
 use OagBundle\Service\Geocoder;
 use OagBundle\Service\IATI;
 use OagBundle\Service\OagFileService;
@@ -309,7 +310,7 @@ class IATITest extends TestCase {
      *
      * @dataProvider tagManipulationProvider
      */
-    public function testTagManipulation($tagInfo) {
+    public function testTagManipulation($exampleTag) {
         $srvIATI = $this->container->get(IATI::class);
         $srvIATI->setContainer($this->container);
 
@@ -318,8 +319,7 @@ class IATITest extends TestCase {
         // add our tag
         $srvIATI->addActivityTag(
             $mockActivity,
-            $tagInfo['code'],
-            $tagInfo['description']
+            $exampleTag
         );
 
         // check it's there
@@ -327,19 +327,16 @@ class IATITest extends TestCase {
         $this->assertEquals(1, count($tags));
 
         // check its attributes survived the conversion to and from XML
-        $tag = $tags[0];
-        $this->assertEquals($tagInfo['description'], $tag['description']);
-        $this->assertEquals($tagInfo['code'], $tag['code']);
-        $this->assertEquals($tagInfo['vocabulary'], $tag['vocabulary']);
-        $this->assertEquals($tagInfo['vocabularyUri'], $tag['vocabulary-uri']);
+        $addedTag = $tags[0];
+        $this->assertEquals($exampleTag, $addedTag);
 
         // remove it but specify the wrong one
-        $srvIATI->removeActivityTag($mockActivity, 'the wrong code', $tagInfo['vocabulary'], $tagInfo['vocabularyUri']);
+        $srvIATI->removeActivityTag($mockActivity, new Tag());
         $tags = $srvIATI->getActivityTags($mockActivity);
         $this->assertEquals(1, count($tags)); // it should still be there
 
         // remove it but get it right this time
-        $srvIATI->removeActivityTag($mockActivity, $tagInfo['code'], $tagInfo['vocabulary'], $tagInfo['vocabularyUri']);
+        $srvIATI->removeActivityTag($mockActivity, $exampleTag);
         $tags = $srvIATI->getActivityTags($mockActivity);
         $this->assertEquals(0, count($tags)); // it should have gone
     }
@@ -350,23 +347,47 @@ class IATITest extends TestCase {
         $kernel = new \AppKernel("test", true);
         $kernel->boot();
 
+        $em = $kernel->getContainer()->get('doctrine')->getManager();
+        $tagRepo = $kernel->getContainer()->get('doctrine')->getRepository(Tag::class);
+
         $vocab = $kernel->getContainer()->getParameter('classifier')['vocabulary'];
         $vocabUri = $kernel->getContainer()->getParameter('classifier')['vocabulary_uri'];
 
-        return array(
-            array(array(
+        $descriptions = array(
+            array(
                 'description' => 'test description 1',
                 'code' => 'abc123',
                 'vocabulary' => $vocab,
-                'vocabularyUri' => $vocabUri
-            )),
-            array(array(
+                'vocabulary_uri' => $vocabUri
+            ),
+            array(
                 'description' => 'test description 2',
-                'code' => 'def456',
-                'vocabulary' => $vocab,
-                'vocabularyUri' => $vocabUri
-            ))
+                'code' => 'abc123',
+                'vocabulary' => 'test',
+                'vocabulary_uri' => null
+            )
         );
+
+        $cases = array();
+
+        foreach ($descriptions as $description) {
+            $arguments = array();
+
+            $tag = $tagRepo->findOneBy($description);
+            if (!$tag) {
+                $tag = new Tag();
+                $tag->setDescription($description['description']);
+                $tag->setCode($description['code']);
+                $tag->setVocabulary($description['vocabulary'], $description['vocabulary_uri']);
+                $em->persist($tag);
+            }
+
+            $arguments[] = $tag;
+            $cases[] = $arguments;
+        }
+        $em->flush();
+
+        return $cases;
     }
 
     public function testGetActivityLocations() {

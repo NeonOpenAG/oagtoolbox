@@ -2,6 +2,8 @@
 
 namespace OagBundle\Service;
 
+use OagBundle\Entity\Tag;
+
 /**
  * A service for manipulating and getting data from IATI Activity files after
  * they have been parsed into a SimpleXMLElement object. This also acts as a
@@ -295,23 +297,45 @@ class IATI extends AbstractService {
      * classification.
      *
      * @param \SimpleXMLElement $activity
-     * @return array
+     * @return Tag[]
      */
     public function getActivityTags($activity) {
+        $em = $this->getContainer()->get('doctrine')->getManager();
+        $tagRepo = $this->getContainer()->get('doctrine')->getRepository(Tag::class);
+
         $currentTags = array();
         foreach ($this->xpathNS($activity, './openag:tag') as $currentTag) {
-            $description = (string) $currentTag->xpath('./narrative[1]')[0];
+            // create the tag in the database if it doesn't exist
             $code = (string) $currentTag['code'];
-            $vocabulary = (string) $currentTag['vocabulary'];
-            $vocabularyUri = (string) $currentTag['vocabulary-uri'] ?: null;
+            $desc = (string) $currentTag->xpath('./narrative[1]')[0];
+            $vocab = (string) $currentTag['vocabulary'];
+            $vocabUri = (string) $currentTag['vocabulary-uri'] ?: null;
 
-            $currentTags[] = array(
-                'description' => $description,
+            // use the tag if it is already in the database
+            $findBy = array(
                 'code' => $code,
-                'vocabulary' => $vocabulary,
-                'vocabulary-uri' => $vocabularyUri,
+                'vocabulary' => $vocab
             );
+
+            if (!is_null($vocabUri)) {
+                $findBy['vocabulary_uri'] = $vocabUri;
+            }
+
+            $dbTag = $tagRepo->findOneBy($findBy);
+            if (!$dbTag) {
+                // create a tag entity for the database
+                $dbTag = new Tag();
+                $dbTag->setCode($code);
+                $dbTag->setDescription($desc);
+                $dbTag->setVocabulary($vocab, $vocabUri);
+                $em->persist($dbTag);
+            }
+
+            $currentTags[] = $dbTag;
         }
+
+        // flush any tags we have added
+        $em->flush();
 
         return $currentTags;
     }
@@ -320,33 +344,34 @@ class IATI extends AbstractService {
      * Add a tag to the activity, effectively classifying it in the XML.
      *
      * @param \SimpleXMLElement $activity
-     * @param string $code the uniquely identifying code of the tag in the vocabulary
-     * @param string $description a human-readable description of the tag
+     * @param Tag $tag the details of the tag to add
      * @param string $reason a human-readable origin provided in the XML of the tag
      */
-    public function addActivityTag(&$activity, $code, $description, $reason = null) {
-        // TODO should we check if it already exists?
-        if (is_null($reason)) {
-            $reason = 'Classified automatically';
+    public function addActivityTag($activity, $tag, $reason = null) {
+        if (in_array($tag, $this->getActivityTags($activity))) {
+            // no duplicates
+            return;
         }
 
-        $vocab = $this->getContainer()->getParameter('classifier')['vocabulary'];
-        $vocabUri = $this->getContainer()->getParameter('classifier')['vocabulary_uri'];
         $namespaceUri =  $this->getContainer()->getParameter('classifier')['namespace_uri'];
 
-        $tag = $activity->addChild('openag:tag', '', $namespaceUri);
-        $tag->addAttribute('code', $code);
-        $tag->addAttribute('vocabulary', $vocab);
+        $node = $activity->addChild('openag:tag', '', $namespaceUri);
+        $node->addAttribute('code', $tag->getCode());
+        $node->addAttribute('vocabulary', $tag->getVocabulary());
 
-        if (strlen($vocabUri) > 0) {
-            $tag->addAttribute('vocabulary-uri', $vocabUri);
+        if (!is_null($tag->getVocabularyUri())) {
+            $node->addAttribute('vocabulary-uri', $tag->getVocabularyUri());
         }
 
-        # narrative text content is set this way to let simplexml escape it
-        # see https://stackoverflow.com/a/555039
-        # $narrative->addAttribute('xml:lang', 'en');
-        $tag->addChild('narrative', null, '')[] = $description;
-        $tag->addChild('narrative', null, '')[] = $reason;
+        // narrative text content is set this way to let simplexml escape it
+        // see https://stackoverflow.com/a/555039
+        // $narrative->addAttribute('xml:lang', 'en');
+        $node->addChild('narrative', null, '')[] = $tag->getDescription();
+
+        // add an additional narrative describing changes, optionally
+        if (!is_null($reason)) {
+            $node->addChild('narrative', null, '')[] = $reason;
+        }
     }
 
 
@@ -354,11 +379,13 @@ class IATI extends AbstractService {
      * Remove a tag to the activity, effectively un-classifying it in the XML.
      *
      * @param \SimpleXMLElement $activity
-     * @param string $code the uniquely identifying code of the tag in the vocabulary
-     * @param string $vocabulary the vocabulary the code belongs to
-     * @param string $vocabularyUri the URI of the vocabulary, if it is custom
+     * @param Tag $tag the details of the tag to remove
      */
-    public function removeActivityTag(&$activity, $code, $vocabulary, $vocabularyUri = null) {
+    public function removeActivityTag($activity, $tag) {
+        $code = $tag->getCode();
+        $vocabulary = $tag->getVocabulary();
+        $vocabularyUri = $tag->getVocabularyUri();
+
         $path = "./openag:tag[@code='$code' and @vocabulary='$vocabulary']";
         if ($vocabulary === '98' || $vocabulary === '99') {
             if (is_null($vocabularyUri)) {
@@ -408,7 +435,7 @@ class IATI extends AbstractService {
      * @param \SimpleXMLElement $activity
      * @param array $json a representation of the location's properties, as returned from the Geocoder service
      */
-    public function addActivityLocation(&$activity, $json) {
+    public function addActivityLocation($activity, $json) {
         // $location is the JSON assoc-array describing a location as returned by
         // the Geocoder API
         // TODO what is "rollback"?
@@ -465,7 +492,7 @@ class IATI extends AbstractService {
      *
      * @param string $code the unique code of the location within the vocabulary
      */
-    public function removeActivityLocation(&$activity, $code) { // TODO $vocabulary
+    public function removeActivityLocation($activity, $code) { // TODO $vocabulary
         $location = $activity->xpath("./location/location-id[@code='$code']/..");
 
         if (count($location) < 1) {

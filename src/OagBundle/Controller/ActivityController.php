@@ -3,17 +3,19 @@
 namespace OagBundle\Controller;
 
 use OagBundle\Entity\Change;
-use OagBundle\Entity\Tag;
-use OagBundle\Form\MergeActivityType;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Component\HttpFoundation\Request;
 use OagBundle\Entity\OagFile;
 use OagBundle\Entity\SuggestedTag;
+use OagBundle\Entity\Tag;
+use OagBundle\Form\MergeActivityType;
+use OagBundle\Service\ChangeService;
 use OagBundle\Service\IATI;
 use OagBundle\Service\OagFileService;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("/activity")
@@ -30,6 +32,8 @@ class ActivityController extends Controller
     public function enhanceAction(Request $request, OagFile $file, $iatiActivityId) {
         $srvIATI = $this->get(IATI::class);
         $srvOagFile = $this->get(OagFileService::class);
+        $srvChange = $this->get(ChangeService::class);
+        $tagRepo = $this->container->get('doctrine')->getRepository(Tag::class);
         $sugTagRepo = $this->container->get('doctrine')->getRepository(SuggestedTag::class);
         $changeRepo = $this->container->get('doctrine')->getRepository(Change::class);
         $em = $this->getDoctrine()->getManager();
@@ -40,6 +44,7 @@ class ActivityController extends Controller
 
         # Find past changes made to activity
         $pastChanges = $changeRepo->findBy(array('activityId' => $iatiActivityId));
+        $summarisedHistory = $srvChange->summariseHistory($activity);
 
         # Current activity summarised in array form.
         $activityDetail = $srvIATI->summariseActivityToArray($activity);
@@ -50,48 +55,36 @@ class ActivityController extends Controller
         # Current tags attached to $activity.
         $currentTags = $srvIATI->getActivityTags($activity);
 
-        # Create a new instance of the form.
-        $form = $this->createForm(MergeActivityType::class, null, array_merge(array(
+        # Create a new instance of the mergeForm for merging in tags.
+        $mergeForm = $this->createForm(MergeActivityType::class, null, array_merge(array(
             'currentTags' => $currentTags,
             'iatiActivityId' => $iatiActivityId,
             'file' => $file
         )));
 
-        $form->handleRequest($request);
+        $mergeForm->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
+        if ($mergeForm->isSubmitted() && $mergeForm->isValid()) {
+            $data = $mergeForm->getData();
 
             $toRemove = array();
-            foreach ($currentTags as $index => $sugTag) {
+            foreach ($currentTags as $tag) {
                 // has a pre-existing one been removed?
-                if (!in_array($index, $data['currentTags'])) {
-                    $tagCode = $sugTag['code'];
-                    $tagDescription = $sugTag['description'];
-                    $tagVocab = $sugTag['vocabulary'];
-                    $tagVocabUri = $sugTag['vocabulary-uri'];
-
-                    $dbTag = new Tag();
-                    $dbTag->setCode($tagCode);
-                    $dbTag->setVocabulary($tagVocab, $tagVocabUri);
-                    $dbTag->setDescription($tagDescription);
-                    $toRemove[] = $dbTag;
-                    $em->persist($dbTag);
-
-                    $srvIATI->removeActivityTag($activity, $tagCode, $tagVocab, $tagVocabUri);
+                if (!in_array($tag, $data['currentTags'])) {
+                    $srvIATI->removeActivityTag($activity, $tag);
+                    $toRemove[] = $tag;
                 }
             }
 
             // everything else is to be added
-            $toAddIds = $data['suggested'];
+            $toAddSuggested = $data['suggested'];
             foreach ($file->getEnhancingDocuments() as $otherFile) {
                 $id = $otherFile->getId();
-                $toAddIds = array_merge($toAddIds, $data["enhanced_$id"]);
+                $toAddSuggested = array_merge($toAddSuggested, $data["enhanced_$id"]);
             }
 
             $toAdd = array();
-            foreach ($toAddIds as $tagId) {
-                $sugTag = $sugTagRepo->findOneById($tagId);
+            foreach ($toAddSuggested as $sugTag) {
                 $tag = $sugTag->getTag();
 
                 if (in_array($tag, $toAdd)) {
@@ -100,13 +93,7 @@ class ActivityController extends Controller
                 }
 
                 $toAdd[] = $tag;
-
-                // TODO WARNING - if reusing this code elsewhere than the
-                // auto-classifier, ensure that you specify the correct
-                // vocabulary and reason for addition
-                $code = $tag->getCode();
-                $description = $tag->getDescription();
-                $srvIATI->addActivityTag($activity, $code, $description);
+                $srvIATI->addActivityTag($activity, $tag, 'Classified automatically');
             }
 
             $stagedChange = new Change();
@@ -122,14 +109,36 @@ class ActivityController extends Controller
             $resultXML = $srvIATI->toXML($root);
             $srvOagFile->setContents($file, $resultXML);
 
-            # Force a redirect on successful submit so that the form is rebuilt.
+            # Force a redirect on successful submit so that the mergeForm is rebuilt.
+            return $this->redirect($request->getUri());
+        }
+
+        // fast-forward form (for bringing up-to-date with past changes)
+        $fastForwardForm = $this
+            ->createFormBuilder(array())
+            ->add('submit', SubmitType::class, array( 'label' => 'Re-apply Changes' ))
+            ->getForm();
+
+        $fastForwardForm->handleRequest($request);
+
+        if ($fastForwardForm->isSubmitted() && $fastForwardForm->isValid()) {
+            // apply changes to XML
+            $srvChange->apply($summarisedHistory, $activity);
+
+            // persist the result
+            $resultXML = $srvIATI->toXML($root);
+            $srvOagFile->setContents($file, $resultXML);
+
+            // force a redirect on successful submit so that form are rebuilt
             return $this->redirect($request->getUri());
         }
 
         return array(
-            'form' => $form->createView(),
+            'mergeForm' => $mergeForm->createView(),
+            'fastForwardForm' => $fastForwardForm->createView(),
             'id' => $file->getId(),
             'pastChanges' => $pastChanges,
+            'summarisedHistory' => $summarisedHistory,
             'activity' => $activityDetail,
             'mapdata' => json_encode($mapData, JSON_HEX_APOS + JSON_HEX_TAG + JSON_HEX_AMP + JSON_HEX_QUOT),
         );
