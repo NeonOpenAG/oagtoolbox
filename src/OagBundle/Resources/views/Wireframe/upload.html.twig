@@ -1,0 +1,63 @@
+{% extends 'OagBundle::Default/index.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/oag/jquery-filestyle-1.5.1/src/jquery-filestyle.min.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block body %}
+
+    <section>
+
+        <div class="content">
+
+            <div class="intro">
+                <h1 class="dark">Using the {{ toolbox_title }} you can...</h1>
+
+                <h2><span class="dark">View</span> how your data will look to the world.</h2>
+
+                <h2><span class="dark">Check</span> what your data can be used for and improve it.</h2>
+
+                <h2><span class="dark">Publish</span> your improved activity file.</h2>
+            </div>
+
+            <h1 class="dark">Get Started</h1>
+
+            <div class="upload-form">
+                <h3>Import a new source document</h3>
+                <hr>
+                <div>The imported document will be automatically processed with CoVE and added to the IATI document list above.</div>
+                <div>Currently only XML is supported.</div>
+                {{ include('OagBundle::widgets/fileUploadWidget.html.twig', { 'form': source_upload_form }) }}
+            </div>
+
+        </div>
+
+    </section>
+
+    <section>
+
+        <div class="content">
+
+            <h1>What can I upload</h1>
+
+            <h2>A spreadsheet with the right columns.</h2>
+            <h2>XML that is IATI compliant - see instructions</h2>
+
+        </div>
+
+    </section>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/oag/jquery-filestyle-1.5.1/src/jquery-filestyle.min.js') }}"></script>
+    <script>
+        $(function () {
+            $(document).tooltip();
+
+            $("#oag_file_documentName").jfilestyle();;
+        });
+    </script>
+{% endblock %}

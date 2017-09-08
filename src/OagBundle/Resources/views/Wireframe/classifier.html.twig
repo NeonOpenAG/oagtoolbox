@@ -1,0 +1,13 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}OagBundle:Wireframe:classifier{% endblock %}
+
+{% block body %}
+    <h1>Add Agricultural Classifications</h1>
+    <p>This tool 'reads' your files and suggests AGROVOC codes it believes match each activity ID.</p>
+    <section>
+        {% for activity in activities %}
+            {{ include('OagBundle::widgets/activity.html.twig', { 'activity': activity, 'suggestRoute': path('oag_wireframe_classifiersuggestion', { 'id': file.getId(), 'activityId': activity.id }) }) }}
+        {% endfor %}
+    </section>
+{% endblock %}

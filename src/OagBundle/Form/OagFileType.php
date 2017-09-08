@@ -23,7 +23,9 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 class OagFileType extends AbstractType {
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
-        $builder->add('documentName', FileType::class, array('label' => 'Locate on filesystem '));
+        $builder->add(
+            'documentName', FileType::class, array('label' => false)
+        );
         $builder->add('fileType', ChoiceType::class, array(
             'label' => 'Type ',
             'choices' => array(

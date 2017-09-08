@@ -286,6 +286,16 @@ class OagFile {
     }
 
     /**
+     * Gets whether the FileType given is one of the file's types.
+     *
+     * @param $fileType integer
+     * @return boolean
+     */
+    public function hasFileType($fileType) {
+        return $this->fileType & $fileType === $fileType;
+    }
+
+    /**
      * Set file type
      *
      * @param integer $fileType
