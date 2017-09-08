@@ -3,5 +3,21 @@
 {% block title %}OagBundle:Wireframe:classifierSuggestion{% endblock %}
 
 {% block body %}
-<h1>Welcome to the Wireframe:classifierSuggestion page</h1>
+    <header>
+        <h1>Suggestions for</h1>
+        {{ include('OagBundle::widgets/activity.html.twig', { 'activity': activity }) }}
+    </header>
+    <section>
+        {{ form_start(form) }}
+        {% for tag in form['tags'] %}
+            <article>
+                <h1>{{ form_label(tag) }}</h1>
+                <label class='addremove'>
+                    {{ form_widget(tag) }}
+                    <span></span>
+                </label>
+            </article>
+        {% endfor %}
+        {{ form_end(form) }}
+    </section>
 {% endblock %}

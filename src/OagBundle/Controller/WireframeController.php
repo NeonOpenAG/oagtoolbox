@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -92,7 +93,51 @@ class WireframeController extends Controller {
             // TODO throw a reasonable error
         }
 
-        return array();
+        $srvIATI = $this->get(IATI::class);
+        $root = $srvIATI->load($file);
+        $activity = $srvIATI->getActivityById($root, $activityId);
+
+        if (is_null($activity)) {
+            // TODO throw a reasonable error
+        }
+
+        $currentTags = $srvIATI->getActivityTags($activity);
+        $suggestedTags = array();
+        foreach ($file->getSuggestedTags() as $sugTag) {
+            if (in_array($sugTag, $suggestedTags) || in_array($sugTag->getTag(), $currentTags)) {
+                // no duplicates
+                continue;
+            }
+
+            if ((!is_null($sugTag->getActivityId())) && $sugTag->getActivityId() !== $activityId) {
+                // only those generic else specific to this activity
+                continue;
+            }
+
+            $suggestedTags[] = $sugTag->getTag();
+        }
+        $allTags = array_merge($currentTags, $suggestedTags);
+
+        $form = $this->createFormBuilder()
+            ->add('tags', ChoiceType::class, array(
+                'expanded' => true,
+                'multiple' => true,
+                'choices' => $allTags,
+                'data' => $currentTags, // default current tags to ticked
+                'choice_label' => function ($value, $key, $index) {
+                    $desc = $value->getDescription();
+                    $vocab = $value->getVocabulary();
+                    return "$desc ($vocab)";
+                }
+            ))
+            ->add('save', SubmitType::class)
+            ->getForm();
+
+        return array(
+            'file' => $file,
+            'activity' => $srvIATI->summariseActivityToArray($activity),
+            'form' => $form->createView()
+        );
     }
 
     /**

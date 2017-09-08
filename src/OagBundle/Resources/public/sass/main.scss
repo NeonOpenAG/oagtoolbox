@@ -257,6 +257,25 @@ section {
   margin-bottom: 20px;
 }
 
+/* --------------------------------------------------------------
+
+   Fancy checkbox styling
+
+-------------------------------------------------------------- */
+
+.addremove input + span:before {
+  @extend button;
+  content: 'Add';
+}
+
+.addremove input:checked + span:before {
+  content: 'Remove';
+}
+
+.addremove input
+{
+  display: none;
+}
 
 /* --------------------------------------------------------------
 
