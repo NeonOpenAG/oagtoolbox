@@ -15,25 +15,25 @@ html, body {
   font-family: $oag_font;
   font-size: 1em;
   line-height: 1.5;
-  color: $oag_dark;
+  color: $oag_title;
+  background-color: #fcfcfd;
   margin: 0;
-  background: #efefef;
 }
 
 h1 {
   font-size: 2.5em;
+  font-weight: normal;
 }
 
-h2 {
+h2,
+h3 {
   font-weight: normal;
+  color: $oag_dark;
 }
 
 hr {
   margin-bottom: 2em;
-}
-
-a:-webkit-any-link {
-  color: $oag_dark;
+  border: 1px solid rgba(205, 210, 212, 0.24);
 }
 
 a {
@@ -48,37 +48,32 @@ a {
   }
 }
 
-// button {
-//   border: 0;
-//   font-family: inherit;
-//   display: inline-block;
-//   padding: 1em 2em;
-//   cursor: pointer;
-//   background-color: $oag_purple;
-//   color: white;
-//   &:hover {
-//     text-decoration: underline;
-//   }
-// }
+button {
+  border: 0;
+  font-family: inherit;
+  display: inline-block;
+  padding: 1em 2em;
+  cursor: pointer;
+  background-color: $oag_purple;
+  color: white;
+  &:hover {
+    background-color: lighten($oag_purple, 10%);
+  }
+}
 
 header {
   background-color: white;
   display: flex;
   justify-content: center;
-  padding: 1.5em;
+  padding: 0em 2em;
   a {
-    font-weight: bold;
-    &:active,
     &:visited {
-      color: #d5e6ef;
+      color: $oag_dark;
     }
     &:hover {
-      color: $oag_link;
-      text-decoration: underline;
+      color: $oag_grey;
+      text-decoration: none;
     }
-  }
-  a:-webkit-any-link {
-    color: $oag_dark;
   }
 }
 
@@ -86,11 +81,51 @@ nav {
   width: 980px;
   .logo {
     float: left;
+    line-height: 67px;
   }
   .nav-options {
     float: right;
-    a {
-      margin-left: 3em;
+    ul {
+      padding: 0;
+      margin: 0;
+      display: flex;
+    }
+    li {
+      padding: 0;
+      display: inline;
+      list-style-type: none;
+      margin-left: 5px;
+      a {
+        color: $oag_dark;
+        padding: 1.5em;
+        line-height: 67px;
+        transition: all 0.5s ease 0s;
+        &:hover {
+          color: black;
+          text-decoration: none;
+        }
+      }
+      &:nth-child(1) > a {
+        box-shadow: inset 0px -6px 0px $oag_purple;
+        &:hover {
+          background-color: rgba(149,91,154, 0.1);
+          box-shadow: inset 0px -6px 0px #a362a8;
+        }
+      }
+      &:nth-child(2) > a {
+        box-shadow: inset 0px -6px 0px $oag_green;
+        &:hover {
+          background-color: rgba(189,194,101, 0.1);
+          box-shadow: inset 0px -6px 0px #cad069;
+        }
+      }
+      &:nth-child(3) > a {
+        box-shadow: inset 0px -6px 0px $oag_blue;
+        &:hover {
+          background-color: rgba(43,159,201, 0.1);
+          box-shadow: inset 0px -6px 0px #4fb1d4;
+        }
+      }
     }
   }
 }
@@ -102,14 +137,33 @@ section {
 }
 
 .gradient {
-  color: white;
-  background: rgb(43,159,201);  /* fallback for old browsers */
-  background: -webkit-linear-gradient(to right, rgba(43,159,201,0.5), rgba(189,194,101,0.5));  /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(to right, rgba(43,159,201,0.5), rgba(189,194,101,0.5)); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  height: 555px;
+  background: $oag_blue;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(150deg, $oag_blue 15%, $oag_purple 70%);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(150deg, $oag_blue 15%, $oag_purple 70%); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  // background: -webkit-linear-gradient(to right, rgba(43,159,201,0.5), rgba(189,194,101,0.5));  /* Chrome 10-25, Safari 5.1-6 */
+  // background: linear-gradient(311deg, rgb(43, 159, 201) 0%, rgb(149, 91, 154) 61%);
+  h1 {
+    color: white;
+  }
+}
+
+.instructions {
+  padding: 12em 2em 2em 2em;
+  color: $oag_title;
+  h1 {
+    color: $oag_purple;
+  }
+  h2 {
+    color: #585873;
+  }
 }
 
 .intro {
   margin-bottom: 4em;
+  h2 {
+    color: #e4f0f5;
+  }
 }
 
 .dark {
@@ -133,17 +187,18 @@ section {
 
 .upload-form {
   background-color: white;
-  color: $oag_dark;
   padding: 1em 2em;
   display: inline-block;
   border: none;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+  border-radius: 1px;
+  box-shadow: 0 15px 35px rgba(50,50,93,.1), 0 5px 15px rgba(0,0,0,.07);
   div {
     margin-bottom: 1em;
   }
   input,
   button {
     margin-top: 1em;
+    transition: all 0.5s ease 0s;
   }
 }
 
@@ -201,3 +256,10 @@ section {
 #merge_activity_suggested {
   margin-bottom: 20px;
 }
+
+
+/* --------------------------------------------------------------
+
+   Media queries
+
+-------------------------------------------------------------- */
