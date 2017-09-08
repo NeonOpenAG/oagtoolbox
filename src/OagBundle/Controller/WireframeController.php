@@ -135,11 +135,16 @@ class WireframeController extends Controller {
                     return "$desc ($vocab)";
                 }
             ))
+            ->add('back', SubmitType::class)
             ->add('save', SubmitType::class)
             ->getForm();
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('back')->isClicked()) {
+                return $this->redirect($this->generateUrl('oag_wireframe_classifier', array('id' => $file->getId()))); 
+            }
+
             $editedTags = $form->getData()['tags'];
 
             // have any current tags been removed
@@ -197,10 +202,15 @@ class WireframeController extends Controller {
     }
 
     /**
-     * @Route("/improverYourData")
+     * @Route("/improveYourData/{id}")
+     * @ParamConverter("file", class="OagBundle:OagFile")
      */
-    public function improverYourDataAction() {
-        return array();
+    public function improveYourDataAction(OagFile $file) {
+        if (!$file->hasFileType(OagFile::OAGFILE_IATI_DOCUMENT)) {
+            // TODO throw a reasonable error
+        }
+
+        return array( 'file' => $file );
     }
 
 }
