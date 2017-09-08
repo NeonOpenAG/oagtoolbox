@@ -301,7 +301,7 @@ class IATI extends AbstractService {
      * @param Tag $tag the details of the tag to add
      * @param string $reason a human-readable origin provided in the XML of the tag
      */
-    public function addActivityTag(&$activity, $tag, $reason = null) {
+    public function addActivityTag($activity, $tag, $reason = null) {
         if (in_array($tag, $this->getActivityTags($activity))) {
             // no duplicates
             return;
@@ -335,7 +335,7 @@ class IATI extends AbstractService {
      * @param \SimpleXMLElement $activity
      * @param Tag $tag the details of the tag to remove
      */
-    public function removeActivityTag(&$activity, $tag) {
+    public function removeActivityTag($activity, $tag) {
         $code = $tag->getCode();
         $vocabulary = $tag->getVocabulary();
         $vocabularyUri = $tag->getVocabularyUri();
@@ -389,7 +389,7 @@ class IATI extends AbstractService {
      * @param \SimpleXMLElement $activity
      * @param array $json a representation of the location's properties, as returned from the Geocoder service
      */
-    public function addActivityLocation(&$activity, $json) {
+    public function addActivityLocation($activity, $json) {
         // $location is the JSON assoc-array describing a location as returned by
         // the Geocoder API
         // TODO what is "rollback"?
@@ -446,7 +446,7 @@ class IATI extends AbstractService {
      *
      * @param string $code the unique code of the location within the vocabulary
      */
-    public function removeActivityLocation(&$activity, $code) { // TODO $vocabulary
+    public function removeActivityLocation($activity, $code) { // TODO $vocabulary
         $location = $activity->xpath("./location/location-id[@code='$code']/..");
 
         if (count($location) < 1) {
