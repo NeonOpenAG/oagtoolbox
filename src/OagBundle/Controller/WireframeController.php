@@ -66,6 +66,14 @@ class WireframeController extends Controller {
     }
 
     /**
+     * @Route("/download/{id}")
+     * @ParamConverter("file", class="OagBundle:OagFile")
+     */
+    public function downloadAction(OagFile $file) {
+        return array('file' => $file);
+    }
+
+    /**
      * @Route("/classifier/{id}")
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
