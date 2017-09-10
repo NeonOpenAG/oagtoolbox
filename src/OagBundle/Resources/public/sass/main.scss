@@ -1,103 +1,112 @@
-// Install these with
-// php ./bin/console assets:install public --symlink --relative
-
 @import 'vars';
 
 
 /* --------------------------------------------------------------
 
-   Page Layout
+   General styling
 
 -------------------------------------------------------------- */
 
 html, body {
   height: 100%;
+  line-height: 1.5;
+  margin: 0;
   font-family: $oag_font;
   font-size: 1em;
-  line-height: 1.5;
   color: $oag_title;
   background: $oag_blue;  /* fallback for old browsers */
-  background: -webkit-linear-gradient(150deg, $oag_blue 15%, $oag_purple 70%);  /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(150deg, $oag_blue 15%, $oag_purple 70%); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-  margin: 0;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+  background: -webkit-linear-gradient(150deg, $oag_blue 15%, $oag_purple 70%) fixed no-repeat;  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(150deg, $oag_blue 15%, $oag_purple 70%) fixed no-repeat; /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: $oag_dark;
+  font-weight: normal;
 }
 
 h1 {
   font-size: 2.5em;
-  font-weight: normal;
-}
-
-h2,
-h3 {
-  font-weight: normal;
-  color: $oag_dark;
 }
 
 hr {
   margin-bottom: 2em;
-  border: 1px solid rgba(205, 210, 212, 0.24);
+  border: 1px solid $oag_hr;
 }
 
 a {
   text-decoration: none;
+  color: inherit;
   &:active,
   &:visited {
-    text-decoration: underline;
+    color: $oag_grey;
   }
   &:hover {
     color: $oag_link;
-    text-decoration: underline;
   }
 }
 
-// button {
-//   border: 0;
-//   font-family: inherit;
-//   display: inline-block;
-//   padding: 1em 2em;
-//   cursor: pointer;
-//   background-color: $oag_purple;
-//   color: white;
-//   &:hover {
-//     background-color: lighten($oag_purple, 10%);
-//   }
-// }
-
-.cta,
-button {
-  font-family: $oag_font;
+button,
+.cta {
   background-color: $oag_purple;
-  float: right;
+  color: white;
+  font-weight: bold;
   white-space: nowrap;
   display: inline-block;
   padding: 1em 1.5em;
   border: 0;
-  box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
   border-radius: 2px;
+  box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
   cursor: pointer;
-  letter-spacing: .025em;
-  color: white;
-  text-decoration: none;
-  font-weight: bold;
   transition: all .15s ease;
   &:hover {
-    background-color: #a362a8;
+    background-color: $oag_purple_highlight;
     color: white;
     text-decoration: none;
     transform: translateY(-1px);
     box-shadow: 0 7px 14px rgba(50,50,93,.1), 0 3px 6px rgba(0,0,0,.08);
   }
-  &.grey {
+  &.back {
     background-color: white;
     color: $oag_title;
+    float: right;
   }
-  &.grey:hover {
-    background-color: white;
+  &.back:hover {
     color: $oag_dark;
   }
 }
+
+
+/* --------------------------------------------------------------
+
+   Page layout
+
+-------------------------------------------------------------- */
+
+.block {
+  width: 1200px;
+}
+
+.content {
+  width: 1000px;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  padding: 3em;
+}
+
+
+/* --------------------------------------------------------------
+
+   Header
+
+-------------------------------------------------------------- */
 
 header {
   background-color: white;
@@ -110,107 +119,75 @@ header {
     }
     &:hover {
       color: $oag_grey;
-      text-decoration: none;
     }
   }
 }
 
 nav {
   width: 1200px;
+  line-height: 67px;
   .logo {
     float: left;
-    line-height: 67px;
   }
   .nav-options {
     float: right;
     ul {
+      display: flex;
       padding: 0;
       margin: 0;
-      display: flex;
     }
     li {
-      padding: 0;
       display: inline;
-      list-style-type: none;
+      padding: 0;
       margin-left: 5px;
+      list-style-type: none;
       a {
         color: $oag_dark;
         padding: 1.5em;
-        line-height: 67px;
         transition: all 0.3s ease 0s;
         &:hover {
           color: black;
-          text-decoration: none;
         }
       }
       &:nth-child(1) > a {
         box-shadow: inset 0px -6px 0px $oag_purple;
         &:hover {
-          background-color: rgba(149,91,154, 0.1);
-          box-shadow: inset 0px -6px 0px #a362a8;
+          background-color: rgba($oag_purple, 0.1);
+          box-shadow: inset 0px -6px 0px $oag_purple_highlight;
         }
       }
       &:nth-child(2) > a {
         box-shadow: inset 0px -6px 0px $oag_green;
         &:hover {
-          background-color: rgba(189,194,101, 0.1);
-          box-shadow: inset 0px -6px 0px #cad069;
+          background-color: rgba($oag_green, 0.1);
+          box-shadow: inset 0px -6px 0px $oag_green_highlight;
         }
       }
       &:nth-child(3) > a {
         box-shadow: inset 0px -6px 0px $oag_blue;
         &:hover {
-          background-color: rgba(43,159,201, 0.1);
-          box-shadow: inset 0px -6px 0px #4fb1d4;
+          background-color: rgba($oag_blue, 0.1);
+          box-shadow: inset 0px -6px 0px $oag_blue_highlight;
         }
       }
     }
   }
 }
 
-article {
-  position: relative;
-  margin-bottom: 2em;
-  background-color: none;
-  box-shadow: 0 15px 35px rgba(50,50,93,.1), 0 5px 15px rgba(0,0,0,.07);
-}
 
-.white {
-  color: white;
-}
+/* --------------------------------------------------------------
 
-.content {
-  width: 1000px;
-}
+   Upload page
 
-.block {
-  width: 1200px;
-}
-
-.center {
-  display: flex;
-  justify-content: center;
-  padding: 3em;
-}
+-------------------------------------------------------------- */
 
 .gradient {
-  height: 536px;
+  height: 532px;
   background: $oag_blue;  /* fallback for old browsers */
   background: -webkit-linear-gradient(150deg, $oag_blue 15%, $oag_purple 70%);  /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(150deg, $oag_blue 15%, $oag_purple 70%); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   h1 {
     color: white;
-  }
-}
-
-.instructions {
-  background-color: #fcfcfd;
-  padding-top: 12em;
-  h1 {
-    color: $oag_purple;
-  }
-  h2 {
-    color: #585873;
   }
 }
 
@@ -220,33 +197,29 @@ article {
     color: white;
   }
   h2 {
-    color: #e4f0f5;
+    color: $oag_offwhite;
   }
   &.margin {
     margin-bottom: 3em;
   }
 }
 
-.dark {
-  color: $oag_dark;
-}
-
-.associated-files .docname {
-  margin-top: 5px;
-  width: 250px;
-  display: inline-block;
-  border-bottom: 1px dotted;
-}
-
-.hidden-row {
-  display: none;
+.instructions {
+  background-color: $oag_bg;
+  padding-top: 11em;
+  h1 {
+    color: $oag_purple;
+  }
+  h2 {
+    color: #585873;
+  }
 }
 
 .upload-form {
   position: relative;
+  display: inline-block;
   background-color: white;
   padding: 1em 2em;
-  display: inline-block;
   border: none;
   border-radius: 2px;
   box-shadow: 0 15px 35px rgba(50,50,93,.1), 0 5px 15px rgba(0,0,0,.07);
@@ -295,14 +268,21 @@ article {
     position: absolute;
     bottom: 48px;
     left: 460px;
+    font-family: $oag_font;
   }
 }
 
-.view-suggestions {
-  position: absolute;
-  right: 24px;
-  bottom: 24px;
-  margin-top: 0.5em;
+
+/* --------------------------------------------------------------
+
+   Classifier / geocoder page
+
+-------------------------------------------------------------- */
+
+article {
+  position: relative;
+  margin-bottom: 2em;
+  box-shadow: 0 15px 35px rgba(50,50,93,.1), 0 5px 15px rgba(0,0,0,.07);
 }
 
 .activity {
@@ -322,6 +302,30 @@ article {
     border-bottom-right-radius: 2px;
     padding: .5em 1.5em 4em 1.5em;
   }
+  .view-suggestions {
+    position: absolute;
+    right: 24px;
+    bottom: 24px;
+    margin-top: 0.5em;
+  }
+}
+
+
+/* --------------------------------------------------------------
+
+   Original CSS - will get to to this later
+
+-------------------------------------------------------------- */
+
+.associated-files .docname {
+  margin-top: 5px;
+  width: 250px;
+  display: inline-block;
+  border-bottom: 1px dotted;
+}
+
+.hidden-row {
+  display: none;
 }
 
 .flash-info {
