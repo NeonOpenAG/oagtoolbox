@@ -1,39 +1,70 @@
 {% extends "::base.html.twig" %}
 
-{% block title %}OagBundle:Wireframe:improverYourData{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/oag/jquery-filestyle-1.5.1/src/jquery-filestyle.min.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block title %}Check and improve your data{% endblock %}
 
 {% block body %}
-<h1>Check & Improve</h1>
 
-<h2>Right now, your data...</h2>
-<ul>
-    <li><h3>Works for most people comparing IATI data</h3></li>
-    <li><h3>Helps show traceability</h3></li>
-    {% if classified %}
-        <li><h3>Accusamus adipisci voluptatem aperiam rerum occaecati incidunt fuga provident</h3></li>
-    {% endif %}
-    {% if geocoded %}
-        <li><h3>Shows exactly where your work helps people</h3></li>
-    {% endif %}
-</ul>
+    <div class="center">
 
-{% if (not geocoded) or (not classified) %}
-    <h2>Improve your data to help people...</h2>
-    <ul>
-        {% if not classified %}
-            <li>
-                <h3>Find AG projects to fund</h3>
-                <p>Atque repellat nesciunt unde. Provident quam dolores ipsam debitis harum. Omnis modi et eveniet autem. Earum est perferendis officia voluptatem quae.</p>
-                <a href="{{ path('oag_wireframe_classifier', { 'id': file.getId() }) }}"><button>Use Our Classifier</button></a>
-            </li>
-        {% endif %}
-        {% if not geocoded %}
-            <li>
-                <h3>Find partners on the ground</h3>
-                <p>In eius et enim. Quam doloribus ut quisquam suscipit consectetur ab quasi. Provident fugiat explicabo est rerum. Eveniet ut quisquam et omnis rerum dolores corrupti architecto. Facere in ipsa soluta.</p>
-                <a href="{{ path('oag_wireframe_geocoder', { 'id': file.getId() }) }}"><button>Use Our Geocoder</button></a>
-            </li>
-        {% endif %}
-    </ul>
-{% endif %}
+        <section class="block">
+
+            <div class="intro margin">
+                <h1>Check and improve your data</h1>
+            </div>
+
+            <article class="activity">
+                <div class="heading summary">
+                    <h1>Right now, your data...</h1>
+                </div>
+                <div class="content-block summary">
+                    <ul>
+                        <li><h2><span class="completed">Works for most people comparing IATI data</span></h2></li>
+                        <li><h2><span class="completed">Helps show traceability</span></h2></li>
+                        {% if classified %}
+                        <li><h2><span class="completed">Accusamus adipisci voluptatem aperiam rerum occaecati incidunt fuga provident</span></h2></li>
+                        {% endif %}
+                        {% if geocoded %}
+                        <li><h2><span class="completed">Shows exactly where your work helps people</span></h2></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </article>
+
+            {% if (not geocoded) or (not classified) %}
+            <article class="activity">
+                <div class="heading summary">
+                    <h1>Improve your data to help people...</h1>
+                </div>
+                <div class="content-block summary">
+                    <ul>
+                        {% if not classified %}
+                        <li><h2><span class="tip">Find AG projects to fund</span></h2>
+                            <div class="improvements">
+                                <p>Atque repellat nesciunt unde. Provident quam dolores ipsam debitis harum. Omnis modi et eveniet autem. Earum est perferendis officia voluptatem quae.</p>
+                                <a href="{{ path('oag_wireframe_classifier', { 'id': file.getId() }) }}"><button>Use Our Classifier</button></a>
+                            </div>
+                        </li>
+                        {% endif %}
+                        {% if not geocoded %}
+                        <li><h2><span class="tip">Find partners on the ground</span></h2>
+                            <div class="improvements">
+                                <p>In eius et enim. Quam doloribus ut quisquam suscipit consectetur ab quasi. Provident fugiat explicabo est rerum. Eveniet ut quisquam et omnis rerum dolores corrupti architecto. Facere in ipsa soluta.</p>
+                                <a href="{{ path('oag_wireframe_geocoder', { 'id': file.getId() }) }}"><button>Use Our Geocoder</button></a>
+                            </div>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </article>
+            {% endif %}
+
+        </section>
+
+    </div>
+
 {% endblock %}
