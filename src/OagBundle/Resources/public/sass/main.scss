@@ -331,7 +331,7 @@ article {
     background-color: #f9f9fd;
     border-bottom-left-radius: 2px;
     border-bottom-right-radius: 2px;
-    padding: .5em 1.5em 5.5em 1.5em;
+    padding: .5em 1.5em 1.5em 1.5em;
     &.summary {
       padding: 2em;
       ul li {
@@ -379,11 +379,45 @@ article {
     }
   }
   .view-suggestions {
-    position: absolute;
-    right: 24px;
-    bottom: 24px;
-    margin-top: 0.5em;
+    display: flex;
+    justify-content: flex-end;
   }
+}
+
+
+/* --------------------------------------------------------------
+
+   Classifier suggestions page
+
+-------------------------------------------------------------- */
+
+.tags {
+  padding: 1em;
+  margin-bottom: 1em;
+  background-color: $oag_bg;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* --------------------------------------------------------------
+
+   Fancy checkbox styling
+
+-------------------------------------------------------------- */
+
+.addremove input {
+  display: none;
+  background-color: $oag_green;
+}
+
+.addremove input + span:before {
+  @extend button;
+  content: 'Add this';
+}
+
+.addremove input:checked + span:before {
+  background-color: $oag_red;
+  content: 'Remove this';
 }
 
 
@@ -468,26 +502,6 @@ iframe {
 #merge_activity_currentTags,
 #merge_activity_suggested {
   margin-bottom: 20px;
-}
-
-/* --------------------------------------------------------------
-
-   Fancy checkbox styling
-
--------------------------------------------------------------- */
-
-.addremove input + span:before {
-  @extend button;
-  content: 'Add this';
-}
-
-.addremove input:checked + span:before {
-  content: 'Remove this';
-}
-
-.addremove input
-{
-  display: none;
 }
 
 /* --------------------------------------------------------------

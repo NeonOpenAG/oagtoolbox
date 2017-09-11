@@ -6,9 +6,9 @@
 
     <div class="content-block">
         <p>Description: {{ activity.description }}</p>
-    </div>
 
-    {% if suggestRoute is defined %}
-    <div class="view-suggestions"><a href="{{ suggestRoute }}" class="cta">View Suggestions</a></div>
-    {% endif %}
+        {% if suggestRoute is defined %}
+        <div class="view-suggestions"><a href="{{ suggestRoute }}" class="cta">View Suggestions</a></div>
+        {% endif %}
+    </div>
 </article>

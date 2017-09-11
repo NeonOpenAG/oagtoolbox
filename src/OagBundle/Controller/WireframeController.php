@@ -205,8 +205,7 @@ class WireframeController extends Controller {
                     $desc = $value->getDescription();
                     $vocab = $value->getVocabulary();
                     return "$desc ($vocab)";
-                },
-                'attr' => array('class' => 'formyform')
+                }
             ))
             ->add('back', SubmitType::class)
             ->add('save', SubmitType::class)
