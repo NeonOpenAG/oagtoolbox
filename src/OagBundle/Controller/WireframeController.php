@@ -7,6 +7,7 @@ use OagBundle\Entity\OagFile;
 use OagBundle\Form\OagFileType;
 use OagBundle\Service\ChangeService;
 use OagBundle\Service\Classifier;
+use OagBundle\Service\Cove;
 use OagBundle\Service\DPortal;
 use OagBundle\Service\IATI;
 use OagBundle\Service\OagFileService;
@@ -36,6 +37,7 @@ class WireframeController extends Controller {
      */
     public function uploadAction(Request $request) {
         $em = $this->getDoctrine()->getEntityManager();
+        $srvCove = $this->get(Cove::class);
         $srvClassifier = $this->get(Classifier::class);
 
         $oagfile = new OagFile();
@@ -60,6 +62,9 @@ class WireframeController extends Controller {
 	    $em->persist($oagfile);
 	    $em->flush();
 
+            if (!$srvCove->validateOagFile($oagfile)) {
+                // TODO CoVE failed
+            }
             $srvClassifier->classifyOagFile($oagfile);
 
 	    return $this->redirect($this->generateUrl('oag_wireframe_improveyourdata', array('id' => $oagfile->getId())));
@@ -103,9 +108,12 @@ class WireframeController extends Controller {
             $em->persist($oagfile);
             $em->flush();
 
-            $srvClassifer->classifyOagFile($oagFile);
+            if (!$srvCove->validateOagFile($oagfile)) {
+                // TODO CoVE failed
+            }
+            $srvClassifier->classifyOagFile($oagfile);
 
-            return $this->redirect($this->generateUrl('oag_cove_oagfile', array('id' => $oagfile->getId())));
+	    return $this->redirect($this->generateUrl('oag_wireframe_improveyourdata', array('id' => $oagfile->getId())));
         }
 
         return array(
@@ -185,7 +193,6 @@ class WireframeController extends Controller {
             $suggestedTags[] = $sugTag->getTag();
         }
         $allTags = array_merge($currentTags, $suggestedTags);
-
         $form = $this->createFormBuilder()
             ->add('tags', ChoiceType::class, array(
                 'expanded' => true,

@@ -240,4 +240,12 @@ class OagFile {
         $this->uploadDate = $uploadDate;
     }
 
+    public function isCoved() {
+        return $this->coved;
+    }
+
+    public function setCoved($coved) {
+        $this->coved = $coved;
+    }
+
 }

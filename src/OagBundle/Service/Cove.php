@@ -4,6 +4,8 @@
 
 namespace OagBundle\Service;
 
+use OagBundle\Entity\OagFile;
+
 class Cove extends AbstractAutoService {
 
     public function processUri($uri) {
@@ -63,6 +65,66 @@ class Cove extends AbstractAutoService {
     public function processXML($contents) {
         // TODO - implement fetching this result from CoVE
         return json_encode($this->getFixtureData(), true);
+    }
+
+    /**
+     * Process on OagFile with CoVE.
+     *
+     * @param OagFile $file
+     */
+    public function validateOagFile(OagFile $file) {
+        $srvOagFile = $this->getContainer()->get(OagFileService::class);
+        $srvIATI = $this->getContainer()->get(IATI::class);
+
+        $this->getContainer()->get('logger')->debug(sprintf('Processing %s using CoVE', $file->getDocumentName()));
+        // TODO - for bigger files we might need send as Uri
+        $contents = $srvOagFile->getContents($file);
+        $json = $this->processString($contents);
+
+        $err = array_filter($json['err'] ?? array());
+        $status = $json['status'];
+
+        if ($status === 0) {
+            // CoVE claims to have processed the XML successfully
+            $xml = $json['xml'];
+            if ($srvIATI->parseXML($xml)) {
+                // CoVE actually has returned valid XML
+                $xmldir = $this->getContainer()->getParameter('oagxml_directory');
+                if (!is_dir($xmldir)) {
+                    mkdir($xmldir, 0755, true);
+                }
+
+                $filename = $srvOagFile->getXMLFileName($file);
+                $xmlfile = $xmldir . '/' . $filename;
+                if (!file_put_contents($xmlfile, $xml)) {
+                    $this->get('session')->getFlashBag()->add('error', 'Unable to create XML file.');
+                    $this->get('logger')->debug(sprintf('Unable to create XML file: %s', $xmlfile));
+                    return $this->redirectToRoute('oag_default_index');
+                }
+                // else
+                if ($this->getContainer()->getParameter('unlink_files')) {
+                    unlink($path);
+                }
+
+                $file->setDocumentName($filename);
+                $file->setCoved(true);
+                $em = $this->getContainer()->get('doctrine')->getManager();
+                $em->persist($file);
+                $em->flush();
+                $this->getContainer()->get('session')->getFlashBag()->add('info', 'IATI File created/Updated\; ' . $xmlfile);
+
+                return true;
+            } else {
+                $this->getContainer()->get('session')->getFlashBag()->add('error', 'CoVE returned data that was not XML.');
+            }
+        } else {
+            // CoVE returned with an error, spit out stderr
+            foreach ($err as $line) {
+                $this->getContainer()->get('session')->getFlashBag()->add('error', $line);
+            }
+        }
+
+        return false;
     }
 
     public function getFixtureData() {

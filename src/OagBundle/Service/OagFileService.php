@@ -27,7 +27,11 @@ class OagFileService extends AbstractService {
      * @return string
      */
     public function getPath(OagFile $oagFile) {
-        $path = $this->getContainer()->getParameter('oagxml_directory');
+        if ($oagFile->isCoved()) {
+            $path = $this->getContainer()->getParameter('oagxml_directory');
+        } else {
+            $path = $this->getContainer()->getParameter('oagfiles_directory');
+        }
         $path .= '/' . $oagFile->getDocumentName();
         return $path;
     }
