@@ -55,7 +55,7 @@ class CoveController extends Controller {
                     return $this->redirectToRoute('oag_default_index');
                 }
                 // else
-                if ($this->getParameter('unlink_files')) {
+                if ($this->getParameter('unlink_files') && file_exists($path)) {
                     unlink($path);
                 }
 
