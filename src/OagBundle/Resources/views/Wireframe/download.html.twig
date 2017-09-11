@@ -6,7 +6,7 @@
     <header>
 	<h1>Download</h1>
 	<h2>{{ file.getDocumentName() }}</h2>
-	<h3>Uploaded: perferendis</h3>
+	<h3>Uploaded: {{ file.getUploadDate|date }}</h3>
     </header>
     <p>This is the most recently uploaded version of your activity file.</p>
     <a><button>Preview</button></a>
@@ -20,16 +20,16 @@
     <section>
 	<h1>Store</h1>
 	<table>
-	    <th>
-		<td>File</td>
-		<td>Date</td>
-		<td>Improved</td>
-		<td>Download</td>
-	    </th>
+	    <tr>
+		<th>File</th>
+		<th>Date</th>
+		<th>Improved</th>
+		<th>Download</th>
+	    </tr>
 	    {% for otherFile in otherFiles %}
 		<tr>
 		    <td>{{ otherFile.getDocumentName() }}</td>
-		    <td>nihil</td>
+		    <td>{{ otherFile.getUploadDate|date }}</td>
 		    <td>alias</td>
 		    <td><a href="{{ path('oag_wireframe_downloadfile', { id: otherFile.getId() }) }}">Download</a></td>
 		</tr>

@@ -51,6 +51,7 @@ class WireframeController extends Controller {
                 );
 
                 $oagfile->setDocumentName($filename);
+                $oagfile->setUploadDate(new \DateTime('now'));
                 $em->persist($oagfile);
                 $em->flush();
 
@@ -92,6 +93,7 @@ class WireframeController extends Controller {
             );
 
             $oagfile->setDocumentName($filename);
+            $oagfile->setUploadDate(new \DateTime('now'));
             $em->persist($oagfile);
             $em->flush();
 

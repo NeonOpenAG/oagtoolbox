@@ -60,6 +60,7 @@ class DefaultController extends Controller {
                 );
 
                 $oagfile->setDocumentName($filename);
+                $oagfile->setUploadDate(new \DateTime('now'));
                 $em->persist($oagfile);
                 $em->flush();
 
