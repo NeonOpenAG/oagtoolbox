@@ -33,7 +33,7 @@ class IATITest extends TestCase {
         // Find one OagFile::IATI_DOCUMENT to test with.
         $this->testOagFile = $this->em
             ->getRepository(OagFile::class)
-            ->findOneBy(array('fileType' => OagFile::OAGFILE_IATI_DOCUMENT));
+            ->findOneBy(array());
 
         $this->oagFileService = $this->container->get(OagFileService::class);
         $this->oagFileService->setContainer($this->container);

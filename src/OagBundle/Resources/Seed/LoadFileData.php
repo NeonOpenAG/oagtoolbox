@@ -50,6 +50,7 @@ class LoadFileData implements FixtureInterface {
         $file->addEnhancingDocument($animalfarm);
         $file->addEnhancingDocument($threelittlepigs);
         $file->setUploadDate(new \DateTime('now'));
+        $file->setCoved(true);
         $em->persist($file);
 
         $em->flush();
