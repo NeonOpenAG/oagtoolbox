@@ -4,6 +4,7 @@ namespace OagBundle\Controller;
 
 use OagBundle\Entity\OagFile;
 use OagBundle\Form\OagFileType;
+use OagBundle\Service\DPortal;
 use OagBundle\Service\IATI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -93,6 +94,23 @@ class WireframeController extends Controller {
         }
 
         return array();
+    }
+
+    /**
+     * @Route("/preview/{id}")
+     * @ParamConverter("file", class="OagBundle:OagFile")
+     */
+    public function previewAction(OagFile $file) {
+        if (!$file->hasFileType(OagFile::OAGFILE_IATI_DOCUMENT)) {
+            // TODO throw a reasonable error
+        }
+
+        $srvDPortal = $this->get(DPortal::class);
+        $srvDPortal->visualise($file);
+
+        return array(
+            'dPortalUri' => $this->getParameter('oag')['dportal']['uri']
+        );
     }
 
     /**
