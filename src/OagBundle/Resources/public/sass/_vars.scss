@@ -28,13 +28,27 @@ $oag_font: 'Montserrat', sans-serif;
 $oag_brand_blue: #056d91;
 $oag_brand_yellow: #d6a929;
 $oag_brand_green: #8e9337;
-$oag_blue: #2b9fc9; /* rgb(43,159,201) */
+$oag_blue: #2b9fc9; /* rgb(43, 159, 201) */
 $oag_yellow: #f3cf6b;
-$oag_green: #bdc265; /* rgb(189,194,101) */
-$oag_purple: #955b9a; /* rgb(149,91,154) */
+$oag_green: #bdc265; /* rgb(189, 194, 101) */
+$oag_purple: #955b9a; /* rgb(149, 91, 154) */
 $oag_red: #cc3f4d;
 $oag_grey: #5b8499;
-$oag_dark: #323638;
 $oag_title: #6b6b6b;
 $oag_copy: #a7a9ac;
 $oag_link: #fc7e00;
+
+
+/* --------------------------------------------------------------
+
+   Supporting colours
+
+-------------------------------------------------------------- */
+
+$oag_dark: #323638;
+$oag_offwhite: #e4f0f5;
+$oag_bg: #fcfcfd;
+$oag_purple_highlight: #a362a8;
+$oag_green_highlight: #cad069;
+$oag_blue_highlight: #4fb1d4;
+$oag_hr: rgba(205, 210, 212, 0.24);
