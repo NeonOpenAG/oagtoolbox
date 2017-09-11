@@ -276,6 +276,7 @@ nav {
   border: none;
   border-radius: 2px;
   box-shadow: 0 15px 35px rgba(50,50,93,.1), 0 5px 15px rgba(0,0,0,.07);
+  width: calc(100% - 4em);
   div {
     margin-bottom: 1em;
     &.jfilestyle {
@@ -430,9 +431,34 @@ iframe {
 
 -------------------------------------------------------------- */
 
+.options {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 2em;
+  a {
+    margin:0 0.5em;
+  }
+}
 table {
   width: 100%;
+  th {
+    padding: 1em;
+    text-align: left;
+    &:nth-child(4),
+    &:nth-child(5) {
+      text-align: center;
+    }
+  }
   td {
+    padding: 1em;
+    text-align: center;
+    &:nth-child(2),
+    &:nth-child(3) {
+      text-align: left;
+    }
+    &:nth-child(5):hover {
+      color: $oag_grey;
+    }
   }
 }
 
