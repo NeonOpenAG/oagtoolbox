@@ -29,8 +29,11 @@ class DPortalController extends Controller {
         }
 
         $portal->visualise($file);
+        $url = \str_replace(
+            'SERVER_HOST', $this->getRequest()->getHost(), $this->redirect($this->getParameter('oag')['dportal']['uri'])
+        );
 
-        return $this->redirect($this->getParameter('oag')['dportal']['uri']);
+        return $this->redirect($url);
     }
 
 }
