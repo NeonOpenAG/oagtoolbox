@@ -3,5 +3,37 @@
 {% block title %}OagBundle:Wireframe:download{% endblock %}
 
 {% block body %}
-<h1>Download</h1>
+    <header>
+	<h1>Download</h1>
+	<h2>{{ file.getDocumentName() }}</h2>
+	<h3>Uploaded: perferendis</h3>
+    </header>
+    <p>This is the most recently uploaded version of your activity file.</p>
+    <a><button>Preview</button></a>
+    {# <a href="{{ path('oag_wireframe_preview', { 'id': file.getId() }) }}"><button>Preview</button></a> #}
+    {# <a href="{{ path('oag_wireframe_improveyourdata', { 'id': file.getId() }) }}"><button>Check + Improve</button></a> #}
+    <a href="{{ path('oag_wireframe_download', { 'id': file.getId() }) }}"><button>Download</button></a>
+    <section>
+	<p>Upload a version of your Activity file.</p>
+	{{ include('OagBundle::widgets/fileUploadWidget.html.twig', { 'form': uploadForm }) }}
+    </section>
+    <section>
+	<h1>Store</h1>
+	<table>
+	    <th>
+		<td>File</td>
+		<td>Date</td>
+		<td>Improved</td>
+		<td>Download</td>
+	    </th>
+	    {% for otherFile in otherFiles %}
+		<tr>
+		    <td>{{ otherFile.getDocumentName() }}</td>
+		    <td>nihil</td>
+		    <td>alias</td>
+		    <td><a href="{{ path('oag_wireframe_downloadfile', { id: otherFile.getId() }) }}">Download</a></td>
+		</tr>
+	    {% endfor %}
+	</table>
+    </section>
 {% endblock %}

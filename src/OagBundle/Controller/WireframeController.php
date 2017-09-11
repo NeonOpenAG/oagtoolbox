@@ -69,8 +69,52 @@ class WireframeController extends Controller {
      * @Route("/download/{id}")
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
-    public function downloadAction(OagFile $file) {
-        return array('file' => $file);
+    public function downloadAction(Request $request, OagFile $file) {
+        $fileRepo = $this->getDoctrine()->getRepository(OagFile::class);
+
+        $oagfile = new OagFile();
+        $oagfile->setFileType(OagFile::OAGFILE_IATI_SOURCE_DOCUMENT);
+        $sourceUploadForm = $this->createForm(OagFileType::class, $oagfile);
+        $sourceUploadForm->add('Upload', SubmitType::class, array(
+            'attr' => array('class' => 'submit'),
+        ));
+        $sourceUploadForm->handleRequest($request);
+
+        // TODO Check for too big files.
+        if ($sourceUploadForm->isSubmitted() && $sourceUploadForm->isValid()) {
+            $tmpFile = $oagfile->getDocumentName();
+            $oagfile->setMimeType(mime_content_type($tmpFile->getPathname()));
+
+            $filename = $tmpFile->getClientOriginalName();
+
+            $tmpFile->move(
+                $this->getParameter('oagfiles_directory'), $filename
+            );
+
+            $oagfile->setDocumentName($filename);
+            $em->persist($oagfile);
+            $em->flush();
+
+            return $this->redirect($this->generateUrl('oag_cove_oagfile', array('id' => $oagfile->getId())));
+        }
+
+        return array(
+            'file' => $file,
+            'otherFiles' => $fileRepo->findBy(array()), // TODO filter to just IATI files
+            'uploadForm' => $sourceUploadForm->createView()
+        );
+    }
+
+    /**
+     * Download an IATI file.
+     *
+     * @Route("/downloadFile/{id}")
+     * @ParamConverter("file", class="OagBundle:OagFile")
+     */
+    public function downloadFileAction(Request $request, OagFile $file) {
+        $srvOagFile = $this->get(OagFileService::class);
+
+        return $this->file($srvOagFile->getPath($file));
     }
 
     /**
