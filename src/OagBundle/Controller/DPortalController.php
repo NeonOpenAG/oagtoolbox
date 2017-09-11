@@ -34,10 +34,8 @@ class DPortalController extends Controller {
         $url = \str_replace(
             'SERVER_HOST', $_SERVER['HTTP_HOST'], $this->getParameter('oag')['dportal']['uri']
         );
-        dump($url);
-        return array('url' => $url);
 
-        // return $this->redirect($url);
+        return $this->redirect($url)
     }
 
 }
