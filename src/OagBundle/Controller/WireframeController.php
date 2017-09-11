@@ -2,8 +2,10 @@
 
 namespace OagBundle\Controller;
 
+use OagBundle\Entity\Change;
 use OagBundle\Entity\OagFile;
 use OagBundle\Form\OagFileType;
+use OagBundle\Service\ChangeService;
 use OagBundle\Service\DPortal;
 use OagBundle\Service\IATI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -30,6 +32,8 @@ class WireframeController extends Controller {
      * @Route("/upload")
      */
     public function uploadAction(Request $request) {
+        $em = $this->getDoctrine()->getEntityManager();
+
         $oagfile = new OagFile();
         $oagfile->setFileType(OagFile::OAGFILE_IATI_SOURCE_DOCUMENT);
         $sourceUploadForm = $this->createForm(OagFileType::class, $oagfile);
@@ -55,7 +59,7 @@ class WireframeController extends Controller {
                 $em->persist($oagfile);
                 $em->flush();
 
-                return $this->redirect($this->generateUrl('oag_cove_oagfile', array('id' => $oagfile->getId())));
+                return $this->redirect($this->generateUrl('oag_wireframe_improveyourdata', array('id' => $oagfile->getId())));
             }
         }
 
@@ -128,10 +132,31 @@ class WireframeController extends Controller {
     }
 
     /**
-     * @Route("/improverYourData")
+     * @Route("/improveYourData/{id}")
+     * @ParamConverter("file", class="OagBundle:OagFile")
      */
-    public function improverYourDataAction() {
-        return array();
+    public function improveYourDataAction(OagFile $file) {
+        if (!$file->hasFileType(OagFile::OAGFILE_IATI_DOCUMENT)) {
+            // TODO throw a reasonable error
+        }
+
+        $srvChange = $this->get(ChangeService::class);
+        $changeRepo = $this->getDoctrine()->getRepository(Change::class);
+
+        $changes = $changeRepo->findBy(array( 'file' => $file ));
+        $flattened = $srvChange->flatten($changes);
+
+        $classified = count($flattened->getAddedTags()) > 0 || count($flattened->getRemovedTags()) > 0;
+
+        // TODO geocoder modifications are not implemented yet
+        //$geocoded = count($flattened->getAddedTags()) > 0 || count($flattened->getRemovedTags()) > 0;
+        $geocoded = false;
+
+        return array(
+            'file' => $file,
+            'classified' => $classified,
+            'geocoded' => $geocoded
+        );
     }
 
 }

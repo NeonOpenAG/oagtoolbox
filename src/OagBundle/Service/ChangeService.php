@@ -55,9 +55,12 @@ class ChangeService extends AbstractService {
             if ($a->getTimestamp() < $b->getTimestamp()) {
                 // $a happened before $b
                 return -1;
+            } elseif ($a->getTimestamp() > $b->getTimestamp()) {
+                // $b happened before $a
+                return 1;
             }
 
-            return 1;
+            return 0;
         });
 
         // work out the net effect
