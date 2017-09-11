@@ -3,21 +3,29 @@
 {% block title %}OagBundle:Wireframe:classifierSuggestion{% endblock %}
 
 {% block body %}
-    <header>
-        <h1>Suggestions for</h1>
+
+    <div class="center">
+
+    <section class="block">
+
+        <div class="intro margin">
+            <h1>Suggestions for...</h1>
+        </div>
+
         {{ include('OagBundle::widgets/activity.html.twig', { 'activity': activity }) }}
-    </header>
-    <section>
+
         {{ form_start(form) }}
         {% for tag in form['tags'] %}
-            <article>
-                <h1>{{ form_label(tag) }}</h1>
-                <label class='addremove'>
-                    {{ form_widget(tag) }}
-                    <span></span>
-                </label>
-            </article>
+        <h3>{{ form_label(tag) }}</h3>
+        <label class='addremove'>
+            {{ form_widget(tag) }}
+            <span></span>
+        </label>
         {% endfor %}
         {{ form_end(form) }}
-    </section>
+
+        </section>
+
+    </div>
+
 {% endblock %}
