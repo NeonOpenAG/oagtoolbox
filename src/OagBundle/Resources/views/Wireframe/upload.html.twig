@@ -3,7 +3,10 @@
 {% block stylesheets %}
     {{ parent() }}
     <link href="{{ asset('bundles/oag/jquery-filestyle-1.5.1/src/jquery-filestyle.min.css') }}" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('bundles/oag/font-awesome/css/font-awesome.css') }}">
 {% endblock %}
+
+{% block title %}{{ toolbox_title }} - Upload your file{% endblock %}
 
 {% block body %}
 
@@ -14,14 +17,14 @@
             <div class="intro">
                 <h1>Using the {{ toolbox_title }} you can...</h1>
 
-                <h2>View how your data will look to the world.</h2>
+                <h2><span class="view">View how your data will look to the world.</span></h2>
 
-                <h2>Check what your data can be used for and improve it.</h2>
+                <h2><span class="check">Check what your data can be used for and improve it.</span></h2>
 
-                <h2>Download your improved activity file.</h2>
+                <h2><span class="download">Download your improved activity file.</span></h2>
             </div>
 
-            <h1>Get Started</h1>
+            <h1>Get started</h1>
 
             <div class="upload-form">
                 <h3>Import a new source document</h3>
