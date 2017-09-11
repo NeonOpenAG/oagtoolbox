@@ -1,12 +1,14 @@
-<article>
-    <header>
-        <h1>{{ activity.name }} </h1>
-        <h2>{{ activity.id }}</h2>
-    </header>
+<article class="activity">
+    <div class="title">
+        <h2 >{{ activity.name }} </h2>
+        <h3>Activity ID: {{ activity.id }}</h3>
+    </div>
 
-    <p>DESCRIPTION: {{ activity.description }}</p>
+    <div class="description">
+        <p>Description: {{ activity.description }}</p>
+    </div>
 
     {% if suggestRoute is defined %}
-        <a href="{{ suggestRoute }}">View Suggestions</a>
+    <div class="view-suggestions"><a href="{{ suggestRoute }}" class="cta">View Suggestions</a></div>
     {% endif %}
 </article>
