@@ -378,12 +378,15 @@ article {
       }
     }
   }
-  .view-suggestions {
-    display: flex;
-    justify-content: flex-end;
-  }
 }
 
+.page-nav {
+  display: flex;
+  justify-content: flex-end;
+  div {
+    margin-left: 1em;
+  }
+}
 
 /* --------------------------------------------------------------
 
@@ -397,6 +400,7 @@ article {
   background-color: $oag_bg;
   display: flex;
   justify-content: space-between;
+  border-bottom: 1px solid $oag_hr;
 }
 
 /* --------------------------------------------------------------
@@ -407,11 +411,11 @@ article {
 
 .addremove input {
   display: none;
-  background-color: $oag_green;
 }
 
 .addremove input + span:before {
   @extend button;
+  background-color: $oag_green;
   content: 'Add this';
 }
 
