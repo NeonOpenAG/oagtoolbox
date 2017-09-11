@@ -470,6 +470,25 @@ iframe {
   margin-bottom: 20px;
 }
 
+/* --------------------------------------------------------------
+
+   Fancy checkbox styling
+
+-------------------------------------------------------------- */
+
+.addremove input + span:before {
+  @extend button;
+  content: 'Add this';
+}
+
+.addremove input:checked + span:before {
+  content: 'Remove this';
+}
+
+.addremove input
+{
+  display: none;
+}
 
 /* --------------------------------------------------------------
 
