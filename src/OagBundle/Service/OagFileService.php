@@ -27,11 +27,7 @@ class OagFileService extends AbstractService {
      * @return string
      */
     public function getPath(OagFile $oagFile) {
-        if ($oagFile->getFileType() == OagFile::OAGFILE_IATI_DOCUMENT) {
-            $path = $this->getContainer()->getParameter('oagxml_directory');
-        } else {
-            $path = $this->getContainer()->getParameter('oagfiles_directory');
-        }
+        $path = $this->getContainer()->getParameter('oagxml_directory');
         $path .= '/' . $oagFile->getDocumentName();
         return $path;
     }

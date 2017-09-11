@@ -26,15 +26,6 @@ class OagFileType extends AbstractType {
         $builder->add(
             'documentName', FileType::class, array('label' => false)
         );
-        $builder->add('fileType', ChoiceType::class, array(
-            'label' => 'Type ',
-            'choices' => array(
-                'IATI document' => OagFile::OAGFILE_IATI_DOCUMENT,
-                'IATI source document' => OagFile::OAGFILE_IATI_SOURCE_DOCUMENT,
-                'Enhancement document' => OagFile::OAGFILE_IATI_ENHANCEMENT_DOCUMENT,
-            ),
-            )
-        );
     }
 
     public function configureOptions(OptionsResolver $resolver) {

@@ -9,12 +9,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints\Range;
 
 /**
- * OagFile
+ * EnhancementFile
  *
- * @ORM\Table(name="oag_file")
- * @ORM\Entity(repositoryClass="OagBundle\Repository\OagFileRepository")
+ * @ORM\Table(name="enhancement_file")
+ * @ORM\Entity(repositoryClass="OagBundle\Repository\EnhancementFileRepository")
  */
-class OagFile {
+class EnhancementFile {
 
     /**
      * @var int
@@ -24,6 +24,11 @@ class OagFile {
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="OagFile", mappedBy="enhancingDocuments")
+     * */
+    private $iatiParents;
 
     /**
      * @ORM\ManyToMany(targetEntity="OagBundle\Entity\SuggestedTag")
@@ -36,16 +41,18 @@ class OagFile {
     protected $geolocations;
 
     /**
-     * @ORM\ManyToMany(targetEntity="EnhancementFile", inversedBy="iatiParents")
-     */
-    private $enhancingDocuments;
-
-    /**
      * @var string
      *
      * @ORM\Column(name="documentName", type="string", length=1024)
      */
     private $documentName;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="mimeType", type="string", length=1024)
+     */
+    private $mimeType;
 
     /**
      * @var \DateTime
@@ -54,17 +61,9 @@ class OagFile {
      */
     private $uploadDate;
 
-    /**
-     * @var boolean
-     *
-     * @ORM\Column(name="coved", type="boolean")
-     */
-    private $coved;
-
     public function __construct() {
-        $this->coved = false;
         $this->suggestedTags = new ArrayCollection();
-        $this->enhancingDocuments = new ArrayCollection();
+        $this->iatiParents = new ArrayCollection();
         $this->geolocations = new ArrayCollection();
     }
 
@@ -82,7 +81,7 @@ class OagFile {
      *
      * @param string $path
      *
-     * @return OagFile
+     * @return EnhancementFile
      */
     public function setDocumentName($documentName) {
         $this->documentName = $documentName;
@@ -97,6 +96,28 @@ class OagFile {
      */
     public function getDocumentName() {
         return $this->documentName;
+    }
+
+    /**
+     * Set path
+     *
+     * @param string $path
+     *
+     * @return EnhancementFile
+     */
+    public function setMimeType($mimeType) {
+        $this->mimeType = $mimeType;
+
+        return $this;
+    }
+
+    /**
+     * Get path
+     *
+     * @return string
+     */
+    public function getMimeType() {
+        return $this->mimeType;
     }
 
     /**
@@ -185,45 +206,25 @@ class OagFile {
     }
 
     /**
-     * Get enhancing documents
+     * Get parent documents
      *
      * @return ArrayCollection
      */
-    public function getEnhancingDocuments() {
-        return $this->enhancingDocuments;
+    public function getIatiParents() {
+        return $this->iatiParents;
     }
 
     /**
-     * Set enhancements array
+     * Set IATI parents array
      *
      * @param ArrayCollection $iatiParents
      */
-    public function setEnhancingDocuments(ArrayCollection $enhancingDocuments) {
-        $this->enhancingDocuments = $enhancingDocuments;
-    }
-
-    public function addEnhancingDocument(EnhancementFile $file) {
-        if (!$this->hasEnhancingDocument($file)) {
-            $this->getEnhancingDocuments()->add($file);
-        }
-    }
-
-    public function removeEnhancingDocument(EnhancementFile $file) {
-        if ($this->hasEnhancingDocument($file)) {
-            $this->getEnhancingDocuments()->remove($file);
-        }
-    }
-
-    public function hasEnhancingDocument(EnhancementFile $file) {
-        return $this->getEnhancingDocuments()->contains($file);
-    }
-
-    public function clearEnhancingDocuments() {
-        $this->getEnhancingDocuments()->clear();
+    public function setIatiParents(ArrayCollection $iatiParents) {
+        $this->iatiParents = $iatiParents;
     }
 
     /**
-     * Gets the date the OagFile was uploaded.
+     * Gets the date the EnhancementFile was uploaded.
      *
      * @return \DateTime
      */
@@ -232,7 +233,7 @@ class OagFile {
     }
 
     /**
-     * Sets the date the OagFile was uploaded.
+     * Sets the date the EnhancementFile was uploaded.
      *
      * @param \DateTime $uploadDate
      */

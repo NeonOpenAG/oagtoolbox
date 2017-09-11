@@ -10,6 +10,7 @@ namespace OagBundle\Resources\Seed;
 
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
+use OagBundle\Entity\EnhancementFile;
 use OagBundle\Entity\OagFile;
 
 /**
@@ -20,37 +21,32 @@ use OagBundle\Entity\OagFile;
 class LoadFileData implements FixtureInterface {
 
     public function load(ObjectManager $em) {
-        $file = new OagFile();
+        $file = new EnhancementFile();
         $file->setDocumentName('animalfarm.txt');
-        $file->setFileType(OagFile::OAGFILE_IATI_ENHANCEMENT_DOCUMENT);
         $file->setMimeType('text/plain');
         $file->setUploadDate(new \DateTime('now'));
         $em->persist($file);
 
-        $file = new OagFile();
+        $file = new EnhancementFile();
         $file->setDocumentName('poobear.txt');
-        $file->setFileType(OagFile::OAGFILE_IATI_ENHANCEMENT_DOCUMENT);
         $file->setMimeType('text/plain');
         $file->setUploadDate(new \DateTime('now'));
         $em->persist($file);
 
-        $file = new OagFile();
+        $file = new EnhancementFile();
         $file->setDocumentName('threelittlepigs.txt');
-        $file->setFileType(OagFile::OAGFILE_IATI_ENHANCEMENT_DOCUMENT);
         $file->setMimeType('text/plain');
         $file->setUploadDate(new \DateTime('now'));
         $em->persist($file);
 
         $em->flush();
 
-        $repo = $em->getRepository('OagBundle:OagFile');
-        $animalfarm = $repo->findOneByDocumentName('animalfarm.txt');
-        $threelittlepigs = $repo->findOneByDocumentName('poobear.txt');
+        $enhFileRepo = $em->getRepository(EnhancementFile::class);
+        $animalfarm = $enhFileRepo->findOneByDocumentName('animalfarm.txt');
+        $threelittlepigs = $enhFileRepo->findOneByDocumentName('poobear.txt');
 
         $file = new OagFile();
         $file->setDocumentName('ifad-agrovoc-tag.xml');
-        $file->setFileType(OagFile::OAGFILE_IATI_DOCUMENT);
-        $file->setMimeType('application/xml');
         $file->addEnhancingDocument($animalfarm);
         $file->addEnhancingDocument($threelittlepigs);
         $file->setUploadDate(new \DateTime('now'));

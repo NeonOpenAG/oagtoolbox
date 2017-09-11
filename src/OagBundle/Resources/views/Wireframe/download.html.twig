@@ -15,7 +15,7 @@
     <a href="{{ path('oag_wireframe_downloadfile', { 'id': file.getId() }) }}"><button><em>download icon goes here</em></button></a>
     <section>
 	<p>Upload a version of your Activity file.</p>
-	{{ include('OagBundle::widgets/fileUploadWidget.html.twig', { 'form': uploadForm }) }}
+	<div>{{ form(uploadForm) }}</div>
     </section>
     <section>
 	<h1>Store</h1>

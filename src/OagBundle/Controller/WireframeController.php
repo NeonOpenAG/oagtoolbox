@@ -37,34 +37,29 @@ class WireframeController extends Controller {
         $em = $this->getDoctrine()->getEntityManager();
 
         $oagfile = new OagFile();
-        $oagfile->setFileType(OagFile::OAGFILE_IATI_SOURCE_DOCUMENT);
         $sourceUploadForm = $this->createForm(OagFileType::class, $oagfile);
         $sourceUploadForm->add('Upload', SubmitType::class, array(
             'attr' => array('class' => 'submit'),
         ));
 
-        if ($request) {
-            $sourceUploadForm->handleRequest($request);
+	$sourceUploadForm->handleRequest($request);
 
-            // TODO Check for too big files.
-            if ($sourceUploadForm->isSubmitted() && $sourceUploadForm->isValid()) {
-                $tmpFile = $oagfile->getDocumentName();
-                $oagfile->setMimeType(mime_content_type($tmpFile->getPathname()));
+	// TODO Check for too big files.
+	if ($sourceUploadForm->isSubmitted() && $sourceUploadForm->isValid()) {
+	    $tmpFile = $oagfile->getDocumentName();
+	    $filename = $tmpFile->getClientOriginalName();
 
-                $filename = $tmpFile->getClientOriginalName();
+	    $tmpFile->move(
+		$this->getParameter('oagfiles_directory'), $filename
+	    );
 
-                $tmpFile->move(
-                    $this->getParameter('oagfiles_directory'), $filename
-                );
+	    $oagfile->setDocumentName($filename);
+	    $oagfile->setUploadDate(new \DateTime('now'));
+	    $em->persist($oagfile);
+	    $em->flush();
 
-                $oagfile->setDocumentName($filename);
-                $oagfile->setUploadDate(new \DateTime('now'));
-                $em->persist($oagfile);
-                $em->flush();
-
-                return $this->redirect($this->generateUrl('oag_wireframe_improveyourdata', array('id' => $oagfile->getId())));
-            }
-        }
+	    return $this->redirect($this->generateUrl('oag_wireframe_improveyourdata', array('id' => $oagfile->getId())));
+	}
 
         $data = array(
             'source_upload_form' => $sourceUploadForm->createView()
@@ -83,7 +78,6 @@ class WireframeController extends Controller {
         $srvOagFile = $this->get(OagFileService::class);
 
         $oagfile = new OagFile();
-        $oagfile->setFileType(OagFile::OAGFILE_IATI_SOURCE_DOCUMENT);
         $sourceUploadForm = $this->createForm(OagFileType::class, $oagfile);
         $sourceUploadForm->add('Upload', SubmitType::class, array(
             'attr' => array('class' => 'submit'),
@@ -93,7 +87,6 @@ class WireframeController extends Controller {
         // TODO Check for too big files.
         if ($sourceUploadForm->isSubmitted() && $sourceUploadForm->isValid()) {
             $tmpFile = $oagfile->getDocumentName();
-            $oagfile->setMimeType(mime_content_type($tmpFile->getPathname()));
 
             $filename = $tmpFile->getClientOriginalName();
 
@@ -145,10 +138,6 @@ class WireframeController extends Controller {
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
     public function classifierAction(OagFile $file) {
-        if (!$file->hasFileType(OagFile::OAGFILE_IATI_DOCUMENT)) {
-            // TODO throw a reasonable error
-        }
-
         $srvIATI = $this->get(IATI::class);
         $root = $srvIATI->load($file);
 
@@ -163,10 +152,6 @@ class WireframeController extends Controller {
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
     public function classifierSuggestionAction(Request $request, OagFile $file, $activityId) {
-        if (!$file->hasFileType(OagFile::OAGFILE_IATI_DOCUMENT)) {
-            // TODO throw a reasonable error
-        }
-
         $em = $this->getDoctrine()->getManager();
         $srvOagFile = $this->get(OagFileService::class);
         $srvIATI = $this->get(IATI::class);
@@ -264,10 +249,6 @@ class WireframeController extends Controller {
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
     public function previewAction(OagFile $file) {
-        if (!$file->hasFileType(OagFile::OAGFILE_IATI_DOCUMENT)) {
-            // TODO throw a reasonable error
-        }
-
         $srvDPortal = $this->get(DPortal::class);
         $srvDPortal->visualise($file);
 
@@ -295,10 +276,6 @@ class WireframeController extends Controller {
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
     public function improveYourDataAction(OagFile $file) {
-        if (!$file->hasFileType(OagFile::OAGFILE_IATI_DOCUMENT)) {
-            // TODO throw a reasonable error
-        }
-
         $srvOagFile = $this->get(OagFileService::class);
 
         return array(
