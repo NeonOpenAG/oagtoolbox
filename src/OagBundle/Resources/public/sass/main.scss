@@ -50,9 +50,18 @@ a {
   }
 }
 
+ul {
+  padding: 0;
+  margin: 0;
+  li {
+    list-style-type: none;
+  }
+}
+
 button,
 .cta {
   background-color: $oag_purple;
+  letter-spacing: inherit;
   color: white;
   font-weight: bold;
   white-space: nowrap;
@@ -69,6 +78,9 @@ button,
     text-decoration: none;
     transform: translateY(-1px);
     box-shadow: 0 7px 14px rgba(50,50,93,.1), 0 3px 6px rgba(0,0,0,.08);
+  }
+  &:visited {
+    color: white;
   }
   &.back {
     background-color: white;
@@ -133,14 +145,11 @@ nav {
     float: right;
     ul {
       display: flex;
-      padding: 0;
-      margin: 0;
     }
     li {
       display: inline;
       padding: 0;
       margin-left: 5px;
-      list-style-type: none;
       a {
         color: $oag_dark;
         padding: 1.5em;
@@ -200,7 +209,25 @@ nav {
     color: $oag_offwhite;
   }
   &.margin {
-    margin-bottom: 3em;
+    margin-bottom: 2em;
+  }
+  .view:before {
+    font-family: FontAwesome;
+    color: $oag_offwhite;
+    margin-right: 0.6em;
+    content: "\f06e";
+  }
+  .check:before {
+    font-family: FontAwesome;
+    color: $oag_offwhite;
+    margin-right: 0.6em;
+    content: "\f046";
+  }
+  .download:before {
+    font-family: FontAwesome;
+    color: $oag_offwhite;
+    margin-right: 0.6em;
+    content: "\f019";
   }
 }
 
@@ -286,21 +313,70 @@ article {
 }
 
 .activity {
+  h1,
   h2,
   h3 {
     margin: 0;
   }
-  .title {
+  .heading {
     background-color: white;
     padding: 1.2em 1.5em;
     border-top-left-radius: 2px;
     border-top-right-radius: 2px;
+    &.summary {
+      padding: 1.5em 3em;
+    }
   }
-  .description {
+  .content-block {
     background-color: #f9f9fd;
     border-bottom-left-radius: 2px;
     border-bottom-right-radius: 2px;
-    padding: .5em 1.5em 4em 1.5em;
+    padding: .5em 1.5em 5.5em 1.5em;
+    &.summary {
+      padding: 2em;
+      ul li {
+        padding: 1em;
+      }
+      button {
+        font-family: $oag_font;
+        width: 200px;
+        margin-top: 0.5em;
+      }
+      .completed {
+        &:before {
+          font-family: FontAwesome;
+          color: $oag_green;
+          content: "\f059";
+          margin-right: 0.6em;
+        }
+        &:after {
+          font-family: FontAwesome;
+          font-size: 1.3em;
+          color: $oag_green;
+          content: "\f00c";
+          margin-left: 0.5em;
+        }
+      }
+      .tip {
+        &:before {
+          font-family: FontAwesome;
+          color: $oag_yellow;
+          content: "\f06a";
+          margin-right: 0.6em;
+        }
+      }
+      .improvements {
+        display: flex;
+        p {
+          width: 80%;
+          margin-top: 0.5em;
+          padding-right: 2em;
+        }
+        a {
+          justify-content: flex-end;
+        }
+      }
+    }
   }
   .view-suggestions {
     position: absolute;
@@ -309,7 +385,6 @@ article {
     margin-top: 0.5em;
   }
 }
-
 
 /* --------------------------------------------------------------
 
