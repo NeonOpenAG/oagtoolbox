@@ -6,12 +6,14 @@ use OagBundle\Service\DPortal;
 use OagBundle\Entity\OagFile;
 use RuntimeException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("/dportal")
+ * @Template
  */
 class DPortalController extends Controller {
 
@@ -30,10 +32,12 @@ class DPortalController extends Controller {
 
         $portal->visualise($file);
         $url = \str_replace(
-            'SERVER_HOST', $this->getRequest()->getHost(), $this->redirect($this->getParameter('oag')['dportal']['uri'])
+            'SERVER_HOST', $_SERVER['HTTP_HOST'], $this->getParameter('oag')['dportal']['uri']
         );
+        dump($url);
+        return array('url' => $url);
 
-        return $this->redirect($url);
+        // return $this->redirect($url);
     }
 
 }
