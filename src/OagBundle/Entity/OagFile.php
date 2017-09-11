@@ -75,6 +75,13 @@ class OagFile {
      */
     private $mimeType;
 
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="timestamp", type="datetime")
+     */
+    private $uploadDate;
+
     public function __construct() {
         $this->suggestedTags = new ArrayCollection();
         $this->iatiParents = new ArrayCollection();
@@ -302,6 +309,24 @@ class OagFile {
      */
     public function setFileType($fileType) {
         $this->fileType = $fileType;
+    }
+
+    /**
+     * Gets the date the OagFile was uploaded.
+     *
+     * @return \DateTime
+     */
+    public function getUploadDate() {
+        return $this->uploadDate;
+    }
+
+    /**
+     * Sets the date the OagFile was uploaded.
+     *
+     * @param \DateTime $uploadDate
+     */
+    public function setUploadDate(\DateTime $uploadDate) {
+        $this->uploadDate = $uploadDate;
     }
 
 }

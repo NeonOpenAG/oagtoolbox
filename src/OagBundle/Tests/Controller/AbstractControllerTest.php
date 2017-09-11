@@ -68,6 +68,7 @@ abstract class AbstractControllerTest extends WebTestCase {
       $oagfile = new OagFile();
       $oagfile->setDocumentName(basename($file));
       $oagfile->setMimeType(mime_content_type($file));
+      $oagfile->setUploadDate(new \DateTime('now'));
 
       $this->em->persist($oagfile);
     }
