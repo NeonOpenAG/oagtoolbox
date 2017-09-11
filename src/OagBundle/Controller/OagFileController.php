@@ -87,6 +87,7 @@ class OagFileController extends Controller
                 );
 
                 $oagfile->setDocumentName($filename);
+                $oagfile->setUploadDate(new \DateTime('now'));
                 $file->addEnhancingDocument($oagfile);
                 $em->persist($oagfile);
                 $em->flush();

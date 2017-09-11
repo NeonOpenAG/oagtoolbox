@@ -24,18 +24,21 @@ class LoadFileData implements FixtureInterface {
         $file->setDocumentName('animalfarm.txt');
         $file->setFileType(OagFile::OAGFILE_IATI_ENHANCEMENT_DOCUMENT);
         $file->setMimeType('text/plain');
+        $file->setUploadDate(new \DateTime('now'));
         $em->persist($file);
 
         $file = new OagFile();
         $file->setDocumentName('poobear.txt');
         $file->setFileType(OagFile::OAGFILE_IATI_ENHANCEMENT_DOCUMENT);
         $file->setMimeType('text/plain');
+        $file->setUploadDate(new \DateTime('now'));
         $em->persist($file);
 
         $file = new OagFile();
         $file->setDocumentName('threelittlepigs.txt');
         $file->setFileType(OagFile::OAGFILE_IATI_ENHANCEMENT_DOCUMENT);
         $file->setMimeType('text/plain');
+        $file->setUploadDate(new \DateTime('now'));
         $em->persist($file);
 
         $em->flush();
@@ -50,6 +53,7 @@ class LoadFileData implements FixtureInterface {
         $file->setMimeType('application/xml');
         $file->addEnhancingDocument($animalfarm);
         $file->addEnhancingDocument($threelittlepigs);
+        $file->setUploadDate(new \DateTime('now'));
         $em->persist($file);
 
         $em->flush();
