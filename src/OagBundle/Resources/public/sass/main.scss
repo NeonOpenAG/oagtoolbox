@@ -92,6 +92,32 @@ button,
   }
 }
 
+.view:before {
+  font-family: FontAwesome;
+  color: $oag_offwhite;
+  margin-right: 0.6em;
+  content: "\f06e";
+}
+
+.check:before {
+  font-family: FontAwesome;
+  color: $oag_offwhite;
+  margin-right: 0.6em;
+  content: "\f046";
+}
+
+.download:before {
+  font-family: FontAwesome;
+  color: $oag_title;
+  margin-right: 0.6em;
+  content: "\f019";
+}
+.delete:before {
+  font-family: FontAwesome;
+  color: $oag_red;
+  content: "\f057";
+}
+
 
 /* --------------------------------------------------------------
 
@@ -395,6 +421,19 @@ article {
 
 iframe {
   width: 100%;
+}
+
+
+/* --------------------------------------------------------------
+
+   Download page
+
+-------------------------------------------------------------- */
+
+table {
+  width: 100%;
+  td {
+  }
 }
 
 

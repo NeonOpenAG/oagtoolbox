@@ -25,10 +25,11 @@
 
                 <div class="content-block">
                   <p>This is the most recently uploaded version of your activity file.</p>
-                  <a href="{{ path('oag_wireframe_preview', { 'id': file.getId() }) }}"><button>Preview</button></a>
-                  <a href="{{ path('oag_wireframe_improveyourdata', { 'id': file.getId() }) }}"><button>Check + Improve</button></a>
-                  <a href="{{ path('oag_wireframe_download', { 'id': file.getId() }) }}"><button>Download</button></a>
-                  <a href="{{ path('oag_wireframe_downloadfile', { 'id': file.getId() }) }}"><button><em>download icon goes here</em></button></a>
+                  <div>
+                      <a href="{{ path('oag_wireframe_preview', { 'id': file.getId() }) }}" class="cta">Preview</a>
+                      <a href="{{ path('oag_wireframe_improveyourdata', { 'id': file.getId() }) }}" class="cta">Check and improve</a>
+                      <a href="{{ path('oag_wireframe_downloadfile', { 'id': file.getId() }) }}" class="cta">Download</a>
+                  </div>
 
                   <div class="upload-form">
                       <h3>Upload a version of your activity file</h3>
@@ -46,10 +47,10 @@
             </div>
 
             <article class="activity">
-                <div class="heading summary">
-                    <h1>Upload a version of your activity file</h1>
+                <div class="heading">
+                    <h2>Upload a version of your activity file</h2>
                 </div>
-                <div class="content-block summary">
+                <div class="content-block">
                     <!-- Table to show stored files -->
                     <table>
                         <tr>
@@ -61,11 +62,11 @@
                         </tr>
                         {% for otherFile in otherFiles %}
                         <tr>
-                            <td><a href="{{ path('oag_wireframe_deletefile', { id: otherFile.getId() }) }}"><em>delete icon goes here</em></a></td>
+                            <td><span class="delete"><a href="{{ path('oag_wireframe_deletefile', { id: otherFile.getId() }) }}"></a></span></td>
                             <td>{{ otherFile.getDocumentName() }}</td>
                             <td>{{ otherFile.getUploadDate|date }}</td>
                             <td>{{ srvOagFile.hasBeenImproved(otherFile) ? 'Yes' : 'No' }}</td>
-                            <td><a href="{{ path('oag_wireframe_downloadfile', { id: otherFile.getId() }) }}">Download</a></td>
+                            <td><span class="download"><a href="{{ path('oag_wireframe_downloadfile', { id: otherFile.getId() }) }}"></a></span></td>
                         </tr>
                         {% endfor %}
                     </table>
