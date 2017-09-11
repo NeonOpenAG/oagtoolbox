@@ -35,7 +35,7 @@ class DPortalController extends Controller {
             'SERVER_HOST', $_SERVER['HTTP_HOST'], $this->getParameter('oag')['dportal']['uri']
         );
 
-        return $this->redirect($url)
+        return $this->redirect($url);
     }
 
 }
