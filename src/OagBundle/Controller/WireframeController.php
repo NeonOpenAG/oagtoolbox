@@ -6,6 +6,7 @@ use OagBundle\Entity\Change;
 use OagBundle\Entity\OagFile;
 use OagBundle\Form\OagFileType;
 use OagBundle\Service\ChangeService;
+use OagBundle\Service\Classifier;
 use OagBundle\Service\DPortal;
 use OagBundle\Service\IATI;
 use OagBundle\Service\OagFileService;
@@ -35,6 +36,7 @@ class WireframeController extends Controller {
      */
     public function uploadAction(Request $request) {
         $em = $this->getDoctrine()->getEntityManager();
+        $srvClassifier = $this->get(Classifier::class);
 
         $oagfile = new OagFile();
         $sourceUploadForm = $this->createForm(OagFileType::class, $oagfile);
@@ -57,6 +59,8 @@ class WireframeController extends Controller {
 	    $oagfile->setUploadDate(new \DateTime('now'));
 	    $em->persist($oagfile);
 	    $em->flush();
+
+            $srvClassifier->classifyOagFile($oagfile);
 
 	    return $this->redirect($this->generateUrl('oag_wireframe_improveyourdata', array('id' => $oagfile->getId())));
 	}
@@ -98,6 +102,8 @@ class WireframeController extends Controller {
             $oagfile->setUploadDate(new \DateTime('now'));
             $em->persist($oagfile);
             $em->flush();
+
+            $srvClassifer->classifyOagFile($oagFile);
 
             return $this->redirect($this->generateUrl('oag_cove_oagfile', array('id' => $oagfile->getId())));
         }

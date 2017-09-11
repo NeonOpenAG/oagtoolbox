@@ -6,6 +6,7 @@ use OagBundle\Service\TextExtractor\TextifyService;
 use OagBundle\Service\TextExtractor\PDFExtractor;
 use OagBundle\Service\TextExtractor\RTFExtractor;
 use PhpOffice\PhpWord\IOFactory;
+use OagBundle\Entity\EnhancementFile;
 use OagBundle\Entity\OagFile;
 use OagBundle\Entity\Tag;
 use OagBundle\Entity\SuggestedTag;
@@ -178,41 +179,56 @@ class Classifier extends AbstractOagService {
 
         $oagFile->clearSuggestedTags();
 
-        if (($oagFile->getFileType() & OagFile::OAGFILE_IATI_DOCUMENT) === OagFile::OAGFILE_IATI_DOCUMENT) {
-            // IATI xml document
-            $rawXml = $srvOagFile->getContents($oagFile);
-            $jsonResp = $this->processXML($rawXml);
+        // IATI xml document
+        $rawXml = $srvOagFile->getContents($oagFile);
+        $jsonResp = $this->processXML($rawXml);
 
-            if ($jsonResp['status']) {
-                throw new \Exception('Classifier service could not classify file');
-            }
+        if ($jsonResp['status']) {
+            throw new \Exception('Classifier service could not classify file');
+        }
 
-            foreach ($jsonResp['data'] as $block) {
-                foreach ($block as $part) {
-                    foreach ($part as $activityId => $tags) {
-                        $this->persistTags($tags, $oagFile, $activityId);
-                    }
+        foreach ($jsonResp['data'] as $block) {
+            foreach ($block as $part) {
+                foreach ($part as $activityId => $tags) {
+                    $this->persistTags($tags, $oagFile, $activityId);
                 }
             }
-        } else if (($oagFile->getFileType() & OagFile::OAGFILE_IATI_ENHANCEMENT_DOCUMENT) === OagFile::OAGFILE_IATI_ENHANCEMENT_DOCUMENT) {
-            // enhancing/text document
-            $rawText = $srvTextify->stripOagFile($oagFile);
-
-            if ($rawText === false) {
-                // textifier failed
-                throw new \RuntimeException('Unsupported file type to strip text from');
-            }
-
-            $json = $srvClassifier->processString($rawText);
-
-            // TODO if $row['status'] == 0
-            $this->persistTags($json['data'], $oagFile);
-        } else {
-            throw new \RuntimeException('Unsupported OagFile type to classify');
         }
 
         $em = $this->getContainer()->get('doctrine')->getManager();
         $em->persist($oagFile);
+        $em->flush();
+    }
+
+
+    /**
+     * Classify an EnhancementFile and attach the resulting SuggestedTag objects
+     * to it.
+     *
+     * @param EnhancementFile $enhFile the file to classify
+     */
+    public function classifyEnhancementFile(EnhancementFile $enhFile) {
+        $srvClassifier = $this->getContainer()->get(Classifier::class);
+        $srvOagFile = $this->getContainer()->get(OagFileService::class);
+        $srvTextify = $this->getContainer()->get(TextifyService::class);
+
+        $enhFile->clearSuggestedTags();
+
+        // enhancing/text document
+        $rawText = $srvTextify->stripOagFile($enhFile);
+
+        if ($rawText === false) {
+            // textifier failed
+            throw new \RuntimeException('Unsupported file type to strip text from');
+        }
+
+        $json = $srvClassifier->processString($rawText);
+
+        // TODO if $row['status'] == 0
+        $this->persistTags($json['data'], $enhFile);
+
+        $em = $this->getContainer()->get('doctrine')->getManager();
+        $em->persist($enhFile);
         $em->flush();
     }
 
