@@ -13,6 +13,7 @@ env:
   matrix:
   - SYMFONY_VERSION="3.3.*" DB=sqlite
 before-install:
+- apt-get update
 - sudo apt install -y ruby-compass
 - ln -s /usr/bin/compass /usr/local/bin/compass
 - composer self-update
