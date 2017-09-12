@@ -41,7 +41,7 @@ twig:
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
     globals:
-        toolbox_title: "IATI Magic Box of Tricks"
+        toolbox_title: "Oatool"
 
 # Doctrine Configuration
 doctrine:
