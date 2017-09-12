@@ -583,9 +583,18 @@ iframe {
   }
 }
 
+.version {
+  display: flex;
+  margin: 2em 0 0.5em;
+  p {
+    color: $oag_dark;
+  }
+}
+
 .options {
   display: flex;
-  justify-content: flex-start;
+  justify-content: flex-end;
+  flex: 1;
   margin-bottom: 2em;
   a {
     margin:0 0.5em;
