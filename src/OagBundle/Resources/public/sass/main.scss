@@ -106,14 +106,16 @@ button,
   content: "\f046";
 }
 
-.download:before {
+.download-icon:before {
   font-family: FontAwesome;
+  font-size: 1.5em;
   color: $oag_title;
   margin-right: 0.6em;
   content: "\f019";
 }
 .delete:before {
   font-family: FontAwesome;
+  font-size: 1.5em;
   color: $oag_red;
   content: "\f057";
 }
@@ -430,6 +432,15 @@ iframe {
    Download page
 
 -------------------------------------------------------------- */
+
+.download {
+  .upload-form button {
+    position: relative;
+    margin-top: 2em;
+    bottom: initial;
+    left: initial;
+  }
+}
 
 .options {
   display: flex;

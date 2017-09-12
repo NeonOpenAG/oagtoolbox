@@ -17,7 +17,7 @@
                 <h1>Download</h1>
             </div>
 
-            <article class="activity">
+            <article class="activity download">
                 <div class="heading">
                     <h2>{{ file.getDocumentName() }}</h2>
                     <h3>Uploaded: {{ file.getUploadDate|date }}</h3>
@@ -66,7 +66,7 @@
                             <td>{{ otherFile.getDocumentName() }}</td>
                             <td>{{ otherFile.getUploadDate|date }}</td>
                             <td>{{ srvOagFile.hasBeenImproved(otherFile) ? 'Yes' : 'No' }}</td>
-                            <td><span class="download"><a href="{{ path('oag_wireframe_downloadfile', { id: otherFile.getId() }) }}"></a></span></td>
+                            <td><span class="download-icon"><a href="{{ path('oag_wireframe_downloadfile', { id: otherFile.getId() }) }}"></a></span></td>
                         </tr>
                         {% endfor %}
                     </table>
