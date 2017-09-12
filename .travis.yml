@@ -15,12 +15,9 @@ env:
 before-install:
 - composer self-update
 install:
-- sudo apt install -y rvm
-- sudo rvm install 2.0
-- sudo rvm use 2.3
 - git submodule update --init --recursive
-- sudo apt install -y ruby-compass
-- sudo ln -s /usr/bin/compass /usr/local/bin/sass
+- gem install sass --version "=3.2.12"
+- gem install compass --version "=0.12.2"
 - composer install -n
 script:
 - "./vendor/bin/simple-phpunit -c phpunit.xml"
