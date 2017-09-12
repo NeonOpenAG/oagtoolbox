@@ -61,10 +61,18 @@
             "php bin/console doctrine:database:create --env=test",
             "php bin/console doctrine:schema:create --env=test",
             "php bin/console -n doctrine:fixtures:load --fixtures=src/OagBundle/Resources/Seed/LoadFileData.php",
-            "php bin/console -n doctrine:fixtures:load --env=test --fixtures=src/OagBundle/Resources/Seed/LoadFileData.php"
+            "php bin/console -n doctrine:fixtures:load --env=test --fixtures=src/OagBundle/Resources/Seed/LoadFileData.php",
+            "php ./bin/console assetic:dump --force",
+            "php ./bin/console assets:install public --symlink --relative",
+            "php ./bin/console assets:install public --symlink --relative --env=dev",
+            "compass compile src/OagBundle/Resources/public/"
         ],
         "post-update-cmd": [
-            "@symfony-scripts"
+            "@symfony-scripts",
+            "php ./bin/console assetic:dump --force",
+            "php ./bin/console assets:install public --symlink --relative",
+            "php ./bin/console assets:install public --symlink --relative --env=dev",
+            "compass compile src/OagBundle/Resources/public/"
         ]
     },
     "config": {
