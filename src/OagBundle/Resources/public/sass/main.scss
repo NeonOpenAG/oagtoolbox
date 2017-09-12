@@ -1,5 +1,497 @@
-# Install these with
-# php ./bin/console assets:install public --symlink --relative
-body {
-    background: #cdcd00;
+@import 'vars';
+
+
+/* --------------------------------------------------------------
+
+   General styling
+
+-------------------------------------------------------------- */
+
+html, body {
+  height: 100%;
+  line-height: 1.5;
+  margin: 0;
+  font-family: $oag_font;
+  font-size: 1em;
+  color: $oag_title;
+  background: $oag_blue;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(150deg, $oag_blue 15%, $oag_purple 70%) fixed no-repeat;  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(150deg, $oag_blue 15%, $oag_purple 70%) fixed no-repeat; /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: $oag_dark;
+  font-weight: normal;
+}
+
+h1 {
+  font-size: 2.5em;
+}
+
+hr {
+  margin-bottom: 2em;
+  border: 1px solid $oag_hr;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  &:active,
+  &:visited {
+    color: $oag_grey;
+  }
+  &:hover {
+    color: $oag_link;
+  }
+}
+
+ul {
+  padding: 0;
+  margin: 0;
+  li {
+    list-style-type: none;
+  }
+}
+
+button,
+.cta {
+  background-color: $oag_purple;
+  letter-spacing: inherit;
+  color: white;
+  font-weight: bold;
+  white-space: nowrap;
+  display: inline-block;
+  padding: 1em 1.5em;
+  border: 0;
+  border-radius: 2px;
+  box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
+  cursor: pointer;
+  transition: all .15s ease;
+  &:hover {
+    background-color: $oag_purple_highlight;
+    color: white;
+    text-decoration: none;
+    transform: translateY(-1px);
+    box-shadow: 0 7px 14px rgba(50,50,93,.1), 0 3px 6px rgba(0,0,0,.08);
+  }
+  &:visited {
+    color: white;
+  }
+  &.back {
+    background-color: white;
+    color: $oag_title;
+    float: right;
+  }
+  &.back:hover {
+    color: $oag_dark;
+  }
+}
+
+
+/* --------------------------------------------------------------
+
+   Page layout
+
+-------------------------------------------------------------- */
+
+.block {
+  width: 1200px;
+}
+
+.content {
+  width: 1000px;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  padding: 3em;
+}
+
+
+/* --------------------------------------------------------------
+
+   Header
+
+-------------------------------------------------------------- */
+
+header {
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  padding: 0em 2em;
+  a {
+    &:visited {
+      color: $oag_dark;
+    }
+    &:hover {
+      color: $oag_grey;
+    }
+  }
+}
+
+nav {
+  width: 1200px;
+  line-height: 67px;
+  .logo {
+    float: left;
+  }
+  .nav-options {
+    float: right;
+    ul {
+      display: flex;
+    }
+    li {
+      display: inline;
+      padding: 0;
+      margin-left: 5px;
+      a {
+        color: $oag_dark;
+        padding: 1.5em;
+        transition: all 0.3s ease 0s;
+        &:hover {
+          color: black;
+        }
+      }
+      &:nth-child(1) > a {
+        box-shadow: inset 0px -6px 0px $oag_purple;
+        &:hover {
+          background-color: rgba($oag_purple, 0.1);
+          box-shadow: inset 0px -6px 0px $oag_purple_highlight;
+        }
+      }
+      &:nth-child(2) > a {
+        box-shadow: inset 0px -6px 0px $oag_green;
+        &:hover {
+          background-color: rgba($oag_green, 0.1);
+          box-shadow: inset 0px -6px 0px $oag_green_highlight;
+        }
+      }
+      &:nth-child(3) > a {
+        box-shadow: inset 0px -6px 0px $oag_blue;
+        &:hover {
+          background-color: rgba($oag_blue, 0.1);
+          box-shadow: inset 0px -6px 0px $oag_blue_highlight;
+        }
+      }
+    }
+  }
+}
+
+
+/* --------------------------------------------------------------
+
+   Upload page
+
+-------------------------------------------------------------- */
+
+.gradient {
+  height: 532px;
+  background: $oag_blue;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(150deg, $oag_blue 15%, $oag_purple 70%);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(150deg, $oag_blue 15%, $oag_purple 70%); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  h1 {
+    color: white;
+  }
+}
+
+.intro {
+  margin-bottom: 4em;
+  h1 {
+    color: white;
+  }
+  h2 {
+    color: $oag_offwhite;
+  }
+  &.margin {
+    margin-bottom: 2em;
+  }
+  .view:before {
+    font-family: FontAwesome;
+    color: $oag_offwhite;
+    margin-right: 0.6em;
+    content: "\f06e";
+  }
+  .check:before {
+    font-family: FontAwesome;
+    color: $oag_offwhite;
+    margin-right: 0.6em;
+    content: "\f046";
+  }
+  .download:before {
+    font-family: FontAwesome;
+    color: $oag_offwhite;
+    margin-right: 0.6em;
+    content: "\f019";
+  }
+}
+
+.instructions {
+  background-color: $oag_bg;
+  padding-top: 11em;
+  h1 {
+    color: $oag_purple;
+  }
+  h2 {
+    color: #585873;
+  }
+}
+
+.upload-form {
+  position: relative;
+  display: inline-block;
+  background-color: white;
+  padding: 1em 2em;
+  border: none;
+  border-radius: 2px;
+  box-shadow: 0 15px 35px rgba(50,50,93,.1), 0 5px 15px rgba(0,0,0,.07);
+  div {
+    margin-bottom: 1em;
+    &.jfilestyle {
+      input {
+        font-family: $oag_font;
+        font-size: 1em;
+      }
+      &.jfilestyle-corner {
+        font-family: $oag_font;
+        margin-top: 1em;
+        input {
+          border: 0;
+          &:first-child {
+            background-color: white;
+            padding: 1em;
+            // !important here to override the inline styling
+            width: 250px !important;
+            box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
+            border: 1px solid #dcdcdc;
+            height: 16px;
+          }
+        }
+        label {
+          font-family: $oag_font;
+          font-size: 1em;
+          border: 1px solid #dcdcdc;
+          height: 16px;
+          padding: 1em;
+          line-height: 1;
+          box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
+          color: $oag_title;
+          &:hover {
+            color: $oag_dark;
+          }
+        }
+      }
+    }
+  }
+  input {
+    margin-top: 1em;
+  }
+  button {
+    position: absolute;
+    bottom: 48px;
+    left: 460px;
+    font-family: $oag_font;
+  }
+}
+
+
+/* --------------------------------------------------------------
+
+   Classifier / geocoder page
+
+-------------------------------------------------------------- */
+
+article {
+  position: relative;
+  margin-bottom: 2em;
+  box-shadow: 0 15px 35px rgba(50,50,93,.1), 0 5px 15px rgba(0,0,0,.07);
+}
+
+.activity {
+  h1,
+  h2,
+  h3 {
+    margin: 0;
+  }
+  .heading {
+    background-color: white;
+    padding: 1.2em 1.5em;
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+    &.summary {
+      padding: 1.5em 3em;
+    }
+  }
+  .content-block {
+    background-color: #f9f9fd;
+    border-bottom-left-radius: 2px;
+    border-bottom-right-radius: 2px;
+    padding: .5em 1.5em 5.5em 1.5em;
+    &.summary {
+      padding: 2em;
+      ul li {
+        padding: 1em;
+      }
+      button {
+        font-family: $oag_font;
+        width: 200px;
+        margin-top: 0.5em;
+      }
+      .completed {
+        &:before {
+          font-family: FontAwesome;
+          color: $oag_green;
+          content: "\f059";
+          margin-right: 0.6em;
+        }
+        &:after {
+          font-family: FontAwesome;
+          font-size: 1.3em;
+          color: $oag_green;
+          content: "\f00c";
+          margin-left: 0.5em;
+        }
+      }
+      .tip {
+        &:before {
+          font-family: FontAwesome;
+          color: $oag_yellow;
+          content: "\f06a";
+          margin-right: 0.6em;
+        }
+      }
+      .improvements {
+        display: flex;
+        p {
+          width: 80%;
+          margin-top: 0.5em;
+          padding-right: 2em;
+        }
+        a {
+          justify-content: flex-end;
+        }
+      }
+    }
+  }
+  .view-suggestions {
+    position: absolute;
+    right: 24px;
+    bottom: 24px;
+    margin-top: 0.5em;
+  }
+}
+
+
+/* --------------------------------------------------------------
+
+   Preview page
+
+-------------------------------------------------------------- */
+
+iframe {
+  width: 100%;
+}
+
+
+/* --------------------------------------------------------------
+
+   Original CSS - will get to to this later
+
+-------------------------------------------------------------- */
+
+.associated-files .docname {
+  margin-top: 5px;
+  width: 250px;
+  display: inline-block;
+  border-bottom: 1px dotted;
+}
+
+.hidden-row {
+  display: none;
+}
+
+.flash-info {
+  background: $oag_green;
+  font-weight: bold;
+  color: white;
+  font-size: 110%;
+  padding: 3px;
+}
+
+.flash-error {
+  background: $oag_red;
+  font-weight: bold;
+  color: white;
+  font-size: 110%;
+  padding: 3px;
+}
+
+.ui-tooltip {
+  white-space: pre-line;
+}
+
+#existing-locations {
+  width: 100%;
+}
+
+#existing-map-block {
+  width: 100%;
+  height: 400px;
+  border: 1px solid;
+}
+
+#existing-map-block .leaflet-map-pane *+* {
+  margin: 0;
+}
+
+.leaflet-container .markerLabel img {
+  /* override map img max width none on img */
+  max-width: 100% !important;
+  margin-top: 6px;
+}
+
+/* Override body *+* margin */
+.leaflet-tile.leaflet-tile-loaded {
+  margin-top: 0;
+}
+
+.biglabel {
+  font-size: 105%;
+  font-weight: bolder;
+}
+
+#merge_activity_currentTags,
+#merge_activity_suggested {
+  margin-bottom: 20px;
+}
+
+/* --------------------------------------------------------------
+
+   Fancy checkbox styling
+
+-------------------------------------------------------------- */
+
+.addremove input + span:before {
+  @extend button;
+  content: 'Add this';
+}
+
+.addremove input:checked + span:before {
+  content: 'Remove this';
+}
+
+.addremove input
+{
+  display: none;
+}
+
+/* --------------------------------------------------------------
+
+   Media queries
+
+-------------------------------------------------------------- */

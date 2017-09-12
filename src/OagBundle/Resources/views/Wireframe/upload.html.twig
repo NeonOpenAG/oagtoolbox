@@ -1,0 +1,65 @@
+{% extends 'OagBundle::Default/index.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/oag/jquery-filestyle-1.5.1/src/jquery-filestyle.min.css') }}" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('bundles/oag/font-awesome/css/font-awesome.css') }}">
+{% endblock %}
+
+{% block title %}{{ toolbox_title }} - Upload your file{% endblock %}
+
+{% block body %}
+
+    <section class="center gradient">
+
+        <div class="content">
+
+            <div class="intro">
+                <h1>Using the {{ toolbox_title }} you can...</h1>
+
+                <h2><span class="view">View how your data will look to the world.</span></h2>
+
+                <h2><span class="check">Check what your data can be used for and improve it.</span></h2>
+
+                <h2><span class="download">Download your improved activity file.</span></h2>
+            </div>
+
+            <h1>Get started</h1>
+
+            <div class="upload-form">
+                <h3>Import a new source document</h3>
+                <hr>
+                <div>The imported document will be automatically processed with CoVE and added to the IATI document list above.</div>
+                <div>Currently only XML is supported.</div>
+                {{ include('OagBundle::widgets/fileUploadWidget.html.twig', { 'form': source_upload_form }) }}
+            </div>
+
+        </div>
+
+    </section>
+
+    <section class="center instructions">
+
+        <div class="content">
+
+            <h1>What can I upload?</h1>
+            <h2>A spreadsheet with the right columns.</h2>
+            <h2>XML that is IATI compliant - see instructions.</h2>
+
+        </div>
+
+    </section>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/oag/jquery-filestyle-1.5.1/src/jquery-filestyle.min.js') }}"></script>
+    <script>
+        $(function () {
+            $(document).tooltip();
+
+            $("#oag_file_documentName").jfilestyle();;
+        });
+    </script>
+{% endblock %}

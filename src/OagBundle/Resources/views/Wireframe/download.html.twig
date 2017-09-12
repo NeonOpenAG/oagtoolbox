@@ -1,0 +1,41 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}OagBundle:Wireframe:download{% endblock %}
+
+{% block body %}
+    <header>
+	<h1>Download</h1>
+	<h2>{{ file.getDocumentName() }}</h2>
+	<h3>Uploaded: {{ file.getUploadDate|date }}</h3>
+    </header>
+    <p>This is the most recently uploaded version of your activity file.</p>
+    <a href="{{ path('oag_wireframe_preview', { 'id': file.getId() }) }}"><button>Preview</button></a>
+    <a href="{{ path('oag_wireframe_improveyourdata', { 'id': file.getId() }) }}"><button>Check + Improve</button></a>
+    <a href="{{ path('oag_wireframe_download', { 'id': file.getId() }) }}"><button>Download</button></a>
+    <a href="{{ path('oag_wireframe_downloadfile', { 'id': file.getId() }) }}"><button><em>download icon goes here</em></button></a>
+    <section>
+	<p>Upload a version of your Activity file.</p>
+	{{ include('OagBundle::widgets/fileUploadWidget.html.twig', { 'form': uploadForm }) }}
+    </section>
+    <section>
+	<h1>Store</h1>
+	<table>
+	    <tr>
+                <th></th>
+		<th>File</th>
+		<th>Date</th>
+		<th>Improved</th>
+		<th>Download</th>
+	    </tr>
+	    {% for otherFile in otherFiles %}
+		<tr>
+		    <td><a href="{{ path('oag_wireframe_deletefile', { id: otherFile.getId() }) }}"><em>delete icon goes here</em></a></td>
+		    <td>{{ otherFile.getDocumentName() }}</td>
+		    <td>{{ otherFile.getUploadDate|date }}</td>
+		    <td>{{ srvOagFile.hasBeenImproved(otherFile) ? 'Yes' : 'No' }}</td>
+		    <td><a href="{{ path('oag_wireframe_downloadfile', { id: otherFile.getId() }) }}">Download</a></td>
+		</tr>
+	    {% endfor %}
+	</table>
+    </section>
+{% endblock %}

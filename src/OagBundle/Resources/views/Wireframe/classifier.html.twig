@@ -1,0 +1,33 @@
+{% extends "::base.html.twig" %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/oag/jquery-filestyle-1.5.1/src/jquery-filestyle.min.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block title %}Add agricultural classifications{% endblock %}
+
+{% block body %}
+
+    <div class="center">
+
+        <section class="block">
+
+            <div class="intro margin">
+                <h1>Add agricultural classifications</h1>
+                <h2>This tool 'reads' your files and suggests AGROVOC codes it believes match each activity ID.</h2>
+            </div>
+
+            {% for activity in activities %}
+                {{ include('OagBundle::widgets/activity.html.twig', { 'activity': activity, 'suggestRoute': path('oag_wireframe_classifiersuggestion', { 'id': file.getId(), 'activityId': activity.id }) }) }}
+            {% endfor %}
+
+	    <a class="cta back" href="{{ path('oag_wireframe_improveyourdata', { 'id': file.getId }) }}">
+		<button>Back</button>
+	    </a>
+
+        </section>
+
+    </div>
+
+{% endblock %}

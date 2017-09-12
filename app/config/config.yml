@@ -40,6 +40,8 @@ framework:
 twig:
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
+    globals:
+        toolbox_title: "IATI Magic Box of Tricks"
 
 # Doctrine Configuration
 doctrine:
@@ -72,3 +74,10 @@ swiftmailer:
     username: '%mailer_user%'
     password: '%mailer_password%'
     spool: { type: memory }
+
+# Assetic Configuration. Applies the `sass` filter to all `scss` files.
+assetic:
+    filters:
+        sass:
+            apply_to: ".scss$"
+            bin: /usr/local/bin/sass

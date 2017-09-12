@@ -22,20 +22,21 @@
     },
     "require": {
         "php": ">=5.5.9",
+        "asika/pdf2text": "1.*",
         "doctrine/doctrine-bundle": "^1.6",
+        "doctrine/doctrine-fixtures-bundle": "*",
         "doctrine/orm": "^2.5",
         "incenteev/composer-parameter-handler": "^2.0",
+        "league/flysystem-ziparchive": "1.0.3",
+        "phpoffice/phpword": "v0.13.*",
         "sensio/distribution-bundle": "^5.0.19",
         "sensio/framework-extra-bundle": "^3.0.2",
+        "symfony/assetic-bundle": "^2.8",
         "symfony/monolog-bundle": "^3.1.0",
         "symfony/polyfill-apcu": "^1.0",
         "symfony/swiftmailer-bundle": "^2.3.10",
         "symfony/symfony": "3.3.*",
-        "twig/twig": "^1.0||^2.0",
-        "asika/pdf2text": "1.*",
-        "phpoffice/phpword": "v0.13.*",
-        "league/flysystem-ziparchive": "1.0.3",
-        "doctrine/doctrine-fixtures-bundle": "*"
+        "twig/twig": "^1.0||^2.0"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",

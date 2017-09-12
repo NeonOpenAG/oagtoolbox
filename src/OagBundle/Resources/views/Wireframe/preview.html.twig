@@ -1,0 +1,30 @@
+{% extends "::base.html.twig" %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/oag/jquery-filestyle-1.5.1/src/jquery-filestyle.min.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block title %}Preview{% endblock %}
+
+{% block body %}
+
+    <div class="center">
+
+        <section class="block">
+
+            <div class="intro margin">
+                <h1>Preview Your File</h1>
+            </div>
+
+            <article class="activity">
+                <iframe src="{{ dPortalUri }}"></iframe>
+            </article>
+
+            <a href="#" class="cta back">Back</a>
+
+        </section>
+
+    </div>
+
+{% endblock %}
