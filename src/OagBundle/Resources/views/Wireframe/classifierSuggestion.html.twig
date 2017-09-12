@@ -12,19 +12,30 @@
                 <h1>Suggestions for...</h1>
             </div>
 
-            {{ include('OagBundle::widgets/activity.html.twig', { 'activity': activity, 'suggestRoute': path('oag_wireframe_classifiersuggestion', { 'id': file.getId(), 'activityId': activity.id }) }) }}
+            <article class="activity margin">
+              <div class="heading">
+                  <h2 >{{ activity.name }} </h2>
+                  <h3>Activity ID: {{ activity.id }}</h3>
+              </div>
 
-            {{ form_start(form) }}
-            {% for tag in form['tags'] %}
-            <div class="tags">
-                {{ form_label(tag) }}
-                <label class="addremove">{{ form_widget(tag) }}<span></span></label>
-            </div>
-            {% endfor %}
-            <div class="page-nav">
-                {{ form_row(form.back) }}{{ form_row(form.save) }}
-            </div>
-            {{ form_end(form) }}
+              <div class="content-block">
+                  <p>Description: {{ activity.description }}</p>
+
+                  <!-- TODO: Move this out somewhere other than activity.html.twig -->
+                  {{ form_start(form) }}
+                  {% for tag in form['tags'] %}
+                  <div class="tag-row">
+                      <div class="tag">{{ form_label(tag) }}</div>
+                      <label class="addremove">{{ form_widget(tag) }}<span></span></label>
+                  </div>
+                  {% endfor %}
+                  <div class="bottom-page-nav">
+                      {{ form_row(form.back) }}{{ form_row(form.save) }}
+                  </div>
+                  {{ form_end(form) }}
+
+              </div>
+            </acticle>
 
         </section>
 

@@ -7,8 +7,9 @@
     <div class="content-block">
         <p>Description: {{ activity.description }}</p>
 
+        <!-- TODO: Only show this if the user is on the classifier/geocoder pages and not the suggestion pages -->
         {% if suggestRoute is defined %}
-        <div class="page-nav"><a href="{{ suggestRoute }}" class="cta">View Suggestions</a></div>
+        <div class="view-suggestions"><a href="{{ suggestRoute }}" class="cta">View Suggestions</a></div>
         {% endif %}
     </div>
 </article>

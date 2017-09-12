@@ -60,6 +60,7 @@ ul {
 
 button,
 .cta {
+  font-family: $oag_font;
   background-color: $oag_purple;
   letter-spacing: inherit;
   color: white;
@@ -310,6 +311,9 @@ article {
   position: relative;
   margin-bottom: 2em;
   box-shadow: 0 15px 35px rgba(50,50,93,.1), 0 5px 15px rgba(0,0,0,.07);
+  &.margin {
+    margin-bottom: 3.3em;
+  }
 }
 
 .activity {
@@ -380,7 +384,7 @@ article {
   }
 }
 
-.page-nav {
+.view-suggestions {
   display: flex;
   justify-content: flex-end;
   div {
@@ -394,14 +398,46 @@ article {
 
 -------------------------------------------------------------- */
 
-.tags {
-  padding: 1em;
-  margin-bottom: 1em;
+form {
+  &:last-child .tag-row {
+    margin-bottom: 0;
+  }
+  .tag-row {
+  padding: 0;
+  margin: 1em 0;
   background-color: $oag_bg;
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid $oag_hr;
+  box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
+    .tag {
+      display: flex;
+      align-items: center;
+      font-size: 1.5em;
+      padding: 0 1em;
+    }
+  }
 }
+
+.bottom-page-nav {
+  position: absolute;
+  display: flex;
+  right: 0;
+  bottom: -75px;
+  button {
+    @extend .back;
+  }
+  div {
+    margin-left: 1em;
+    &:last-child button {
+      background-color: $oag_green;
+      color: white;
+      &:hover {
+        background-color: $oag_green_highlight;
+      }
+    }
+  }
+}
+
 
 /* --------------------------------------------------------------
 
@@ -409,19 +445,44 @@ article {
 
 -------------------------------------------------------------- */
 
-.addremove input {
-  display: none;
-}
 
-.addremove input + span:before {
-  @extend button;
-  background-color: $oag_green;
-  content: 'Add this';
-}
-
-.addremove input:checked + span:before {
-  background-color: $oag_red;
-  content: 'Remove this';
+.addremove {
+  input {
+    display: none;
+  }
+  span {
+    @extend button;
+    width: 98px;
+    text-align: center;
+  }
+  input + span {
+    background-color: $oag_green;
+    &:hover {
+      background-color: $oag_green_highlight;
+    }
+    &:before {
+      content: 'Add this';
+      transform: none;
+      &:hover {
+        transform: none;
+      }
+    }
+  }
+  input:checked + span {
+    background-color: $oag_title;
+    &:hover {
+      background-color: $oag_red;
+    }
+    &:before {
+      content: 'Remove this';
+      &:hover {
+        background-color: pink;
+      }
+    }
+  }
+  button:hover {
+    transform: none;
+  }
 }
 
 
