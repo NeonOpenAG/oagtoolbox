@@ -16,7 +16,7 @@ before-install:
 - composer self-update
 install:
 - git submodule update --init --recursive
-- sudo apt install ruby-compass
+- sudo apt install -y ruby-compass
 - ln -s /usr/bin/compass /usr/local/bin/sass
 - composer install -n
 script:
