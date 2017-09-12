@@ -24,16 +24,20 @@
                 </div>
 
                 <div class="content-block">
-                  <p>This is the most recently uploaded version of your activity file.</p>
-                  <div class="options">
-                      <a href="{{ path('oag_wireframe_preview', { 'id': file.getId() }) }}" class="cta">Preview</a>
-                      <a href="{{ path('oag_wireframe_improveyourdata', { 'id': file.getId() }) }}" class="cta">Check and improve</a>
-                      <a href="{{ path('oag_wireframe_downloadfile', { 'id': file.getId() }) }}" class="cta">Download</a>
+                  <div class="version">
+                      <p>This is the most recently uploaded version of your activity file.</p>
+                      <div class="options">
+                          <a href="{{ path('oag_wireframe_preview', { 'id': file.getId() }) }}" class="cta">Preview</a>
+                          <a href="{{ path('oag_wireframe_improveyourdata', { 'id': file.getId() }) }}" class="cta">Check and improve</a>
+                          <a href="{{ path('oag_wireframe_downloadfile', { 'id': file.getId() }) }}" class="cta">Download</a>
+                      </div>
                   </div>
 
                   <div class="upload-form">
                       <h3>Upload a version of your activity file</h3>
-                      {{ include('OagBundle::widgets/fileUploadWidget.html.twig', { 'form': uploadForm }) }}
+
+
+                      {{ include('OagBundle::widgets/fileUploadWidget.html.twig', { 'form': source_upload_form }) }}
                   </div>
                 </div>
 

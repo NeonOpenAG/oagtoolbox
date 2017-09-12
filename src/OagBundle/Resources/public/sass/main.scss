@@ -15,8 +15,8 @@ html, body {
   font-size: 1em;
   color: $oag_title;
   background: $oag_blue;  /* fallback for old browsers */
-  background: -webkit-linear-gradient(150deg, $oag_blue 15%, $oag_purple 70%) fixed no-repeat;  /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(150deg, $oag_blue 15%, $oag_purple 70%) fixed no-repeat; /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: -webkit-linear-gradient(150deg, $oag_blue 15%, $oag_purple 90%) fixed no-repeat;  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(150deg, $oag_blue 15%, $oag_purple 90%) fixed no-repeat; /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
 h1,
@@ -111,7 +111,6 @@ button,
   font-family: FontAwesome;
   font-size: 1.5em;
   color: $oag_title;
-  margin-right: 0.6em;
   content: "\f019";
 }
 .delete:before {
@@ -153,7 +152,7 @@ header {
   background-color: white;
   display: flex;
   justify-content: center;
-  padding: 0em 2em;
+  padding: 0em 3em;
   a {
     &:visited {
       color: $oag_dark;
@@ -222,8 +221,8 @@ nav {
 .gradient {
   height: 532px;
   background: $oag_blue;  /* fallback for old browsers */
-  background: -webkit-linear-gradient(150deg, $oag_blue 15%, $oag_purple 70%);  /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(150deg, $oag_blue 15%, $oag_purple 70%); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: -webkit-linear-gradient(150deg, $oag_blue 15%, $oag_purple 90%);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(150deg, $oag_blue 15%, $oag_purple 90%); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   h1 {
     color: white;
   }
@@ -471,6 +470,48 @@ form {
 
 /* --------------------------------------------------------------
 
+   Geocoder suggestions page
+
+-------------------------------------------------------------- */
+
+#geo-suggestions {
+  form {
+    margin-top: 2em;
+    &:last-child .tag-row {
+      margin-bottom: 0;
+    }
+    .tag-row {
+    padding: 0;
+    margin: 1em 0;
+    background-color: $oag_bg;
+    display: flex;
+    justify-content: space-between;
+    box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
+      .tag {
+        display: flex;
+        align-items: center;
+        font-size: 1.5em;
+        padding: 0 0 1em 0;
+      }
+    }
+  }
+  .info {
+    flex: 1;
+    padding: 2em;
+  }
+  span {
+    //margin: 2em;
+  }
+  #existing-map-block {
+    border: none;
+    background-color: #dbe5ea;
+    width: 600px;
+  }
+}
+
+
+/* --------------------------------------------------------------
+
    Fancy checkbox styling
 
 -------------------------------------------------------------- */
@@ -542,9 +583,18 @@ iframe {
   }
 }
 
+.version {
+  display: flex;
+  margin: 2em 0 0.5em;
+  p {
+    color: $oag_dark;
+  }
+}
+
 .options {
   display: flex;
-  justify-content: flex-start;
+  justify-content: flex-end;
+  flex: 1;
   margin-bottom: 2em;
   a {
     margin:0 0.5em;
