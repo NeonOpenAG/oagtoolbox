@@ -1,7 +1,31 @@
 {% extends "::base.html.twig" %}
 
-{% block title %}OagBundle:Wireframe:geocoder{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/oag/jquery-filestyle-1.5.1/src/jquery-filestyle.min.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block title %}Improve location information{% endblock %}
 
 {% block body %}
-<h1>Welcome to the Wireframe:geocoder page</h1>
+
+    <div class="center">
+
+        <section class="block">
+
+            <div class="intro margin">
+                <h1>Improve location information</h1>
+                <h2>This tool 'reads' your files and suggests geocodes codes it believes match each activity ID.</h2>
+            </div>
+
+            {% for activity in activities %}
+                {{ include('OagBundle::widgets/activity.html.twig', { 'activity': activity, 'suggestRoute': path('oag_wireframe_geocodersuggestion', { 'id': file.getId(), 'activityId': activity.id }) }) }}
+            {% endfor %}
+
+      	    <a class="cta back" href="{{ path('oag_wireframe_improveyourdata', { 'id': file.getId }) }}">Back</a>
+
+        </section>
+
+    </div>
+
 {% endblock %}
