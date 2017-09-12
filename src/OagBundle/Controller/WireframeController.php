@@ -214,7 +214,7 @@ class WireframeController extends Controller {
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('back')->isClicked()) {
-                return $this->redirect($this->generateUrl('oag_wireframe_classifier', array('id' => $file->getId()))); 
+                return $this->redirect($this->generateUrl('oag_wireframe_classifier', array('id' => $file->getId())));
             }
 
             $editedTags = $form->getData()['tags'];
@@ -249,7 +249,7 @@ class WireframeController extends Controller {
             $em->persist($change);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('oag_wireframe_classifier', array('id' => $file->getId()))); 
+            return $this->redirect($this->generateUrl('oag_wireframe_classifier', array('id' => $file->getId())));
         }
 
         return array(
