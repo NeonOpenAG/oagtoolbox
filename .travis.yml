@@ -15,6 +15,7 @@ env:
 before-install:
 - composer self-update
 install:
+- sudo apt install -y rvm
 - sudo rvm install 2.0
 - sudo rvm use 2.3
 - git submodule update --init --recursive
