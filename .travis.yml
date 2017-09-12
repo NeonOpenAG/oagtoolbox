@@ -14,6 +14,8 @@ env:
   - SYMFONY_VERSION="3.3.*" DB=sqlite
 before-install:
 - composer self-update
+- apt install ruby-compass
+- ln -s /usr/bin/compass /usr/local/bin/compass
 install:
 - git submodule update --init --recursive
 - composer install -n
