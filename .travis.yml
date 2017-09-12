@@ -15,6 +15,8 @@ env:
 before-install:
 - composer self-update
 install:
+- sudo rvm install 2.0
+- sudo rvm use 2.3
 - git submodule update --init --recursive
 - sudo apt install -y ruby-compass
 - sudo ln -s /usr/bin/compass /usr/local/bin/sass
