@@ -16,8 +16,8 @@ before-install:
 - composer self-update
 install:
 - git submodule update --init --recursive
-- gem install sass --version "=3.2.12"
-- gem install compass --version "=0.12.2"
+- sudo gem install sass --version "=3.2.12"
+- sudo gem install compass --version "=0.12.2"
 - composer install -n
 script:
 - "./vendor/bin/simple-phpunit -c phpunit.xml"
