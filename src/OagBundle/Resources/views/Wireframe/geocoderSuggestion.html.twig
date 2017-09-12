@@ -1,7 +1,45 @@
 {% extends "::base.html.twig" %}
 
-{% block title %}OagBundle:Wireframe:geocoderSuggestion{% endblock %}
+{% block title %}OagBundle:Wireframe:classifierSuggestion{% endblock %}
 
 {% block body %}
-<h1>Welcome to the Wireframe:geocoderSuggestion page</h1>
+
+    <div class="center" id="geo-suggestions">
+
+        <section class="block">
+
+            <div class="intro margin">
+                <h1>Suggestions for...</h1>
+            </div>
+
+            <article class="activity margin">
+              <div class="heading">
+                  <h2 >{{ activity.name }} </h2>
+                  <h3>Activity ID: {{ activity.id }}</h3>
+              </div>
+
+              <div class="content-block">
+                  <p>Description: {{ activity.description }}</p>
+
+                  <!-- TODO: Move this back out, but not to activity.html.twig -->
+                  {{ form_start(form) }}
+                  {% for tag in form['tags'] %}
+                  <div class="tag-row">
+                      <div id="existing-map-block">Map</div>
+                      <div class="tag">{{ form_label(tag) }}</div>
+                      <label class="addremove">{{ form_widget(tag) }}<span></span></label>
+                  </div>
+                  {% endfor %}
+                  <div class="bottom-page-nav">
+                      {{ form_row(form.back) }}{{ form_row(form.save) }}
+                  </div>
+                  {{ form_end(form) }}
+
+              </div>
+            </acticle>
+
+        </section>
+
+    </div>
+
 {% endblock %}

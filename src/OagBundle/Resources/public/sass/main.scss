@@ -471,6 +471,41 @@ form {
 
 /* --------------------------------------------------------------
 
+   Geocoder suggestions page
+
+-------------------------------------------------------------- */
+
+#geo-suggestions {
+  form {
+    margin-top: 2em;
+    &:last-child .tag-row {
+      margin-bottom: 0;
+    }
+    .tag-row {
+    padding: 0;
+    margin: 1em 0;
+    background-color: $oag_bg;
+    display: flex;
+    justify-content: space-between;
+    box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
+      .tag {
+        display: flex;
+        align-items: center;
+        font-size: 1.5em;
+        padding: 0 1em;
+      }
+    }
+  }
+  #existing-map-block {
+    border: none;
+    background-color: #dbe5ea;
+    width: 600px;
+  }
+}
+
+
+/* --------------------------------------------------------------
+
    Fancy checkbox styling
 
 -------------------------------------------------------------- */
