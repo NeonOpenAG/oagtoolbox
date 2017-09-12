@@ -25,9 +25,11 @@
                   {{ form_start(form) }}
                   {% for tag in form['tags'] %}
                   <div class="tag-row">
-                      <div id="existing-map-block">Map</div>
-                      <div class="tag">{{ form_label(tag) }}</div>
-                      <label class="addremove">{{ form_widget(tag) }}<span></span></label>
+                      <div id="existing-map-block"></div>
+                      <div class="info">
+                        <div class="tag">{{ form_label(tag) }}</div>
+                        <label class="addremove">{{ form_widget(tag) }}<span></span></label>
+                      </div>
                   </div>
                   {% endfor %}
                   <div class="bottom-page-nav">

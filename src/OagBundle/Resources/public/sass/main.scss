@@ -15,8 +15,8 @@ html, body {
   font-size: 1em;
   color: $oag_title;
   background: $oag_blue;  /* fallback for old browsers */
-  background: -webkit-linear-gradient(150deg, $oag_blue 15%, $oag_purple 70%) fixed no-repeat;  /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(150deg, $oag_blue 15%, $oag_purple 70%) fixed no-repeat; /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: -webkit-linear-gradient(150deg, $oag_blue 15%, $oag_purple 90%) fixed no-repeat;  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(150deg, $oag_blue 15%, $oag_purple 90%) fixed no-repeat; /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
 h1,
@@ -153,7 +153,7 @@ header {
   background-color: white;
   display: flex;
   justify-content: center;
-  padding: 0em 2em;
+  padding: 0em 3em;
   a {
     &:visited {
       color: $oag_dark;
@@ -222,8 +222,8 @@ nav {
 .gradient {
   height: 532px;
   background: $oag_blue;  /* fallback for old browsers */
-  background: -webkit-linear-gradient(150deg, $oag_blue 15%, $oag_purple 70%);  /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(150deg, $oag_blue 15%, $oag_purple 70%); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: -webkit-linear-gradient(150deg, $oag_blue 15%, $oag_purple 90%);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(150deg, $oag_blue 15%, $oag_purple 90%); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   h1 {
     color: white;
   }
@@ -492,9 +492,16 @@ form {
         display: flex;
         align-items: center;
         font-size: 1.5em;
-        padding: 0 1em;
+        padding: 0 0 1em 0;
       }
     }
+  }
+  .info {
+    flex: 1;
+    padding: 2em;
+  }
+  span {
+    //margin: 2em;
   }
   #existing-map-block {
     border: none;
