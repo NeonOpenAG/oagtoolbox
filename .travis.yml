@@ -16,7 +16,8 @@ before-install:
 - composer self-update
 install:
 - git submodule update --init --recursive
-- sudo gem install sass --no-user-install
+- sudo apt install ruby-compass
+- ln -s /usr/bin/compass /usr/local/bin/sass
 - composer install -n
 script:
 - "./vendor/bin/simple-phpunit -c phpunit.xml"
