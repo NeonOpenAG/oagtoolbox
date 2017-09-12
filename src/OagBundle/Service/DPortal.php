@@ -43,14 +43,24 @@ class DPortal extends AbstractOagService {
         }
         $xmlfile = $xmldir . '/' . $oagfile->getDocumentName();
 
-        $start = exec("openag start dportal");
-        $this->getContainer()->get('logger')->info(sprintf('Started dportal: "%s"', $start));
 
-        $reset = exec("openag reset dportal");
-        $this->getContainer()->get('logger')->info(sprintf('Reset dportal: "%s"', $xmlfile));
+        $return = 0;
+        $output = [];
 
-        $import = exec("openag import dportal " . $xmlfile);
-        $this->getContainer()->get('logger')->info(sprintf('Import dportal data: "%s"', $import));
+        $start = exec("openag start dportal", $output, $return);
+        $output[] = '-------------------------------';
+        $this->getContainer()->get('logger')->info(sprintf('Started dportal: "%s" (%d)', $start, $return));
+
+        $reset = exec("openag reset dportal", $output, $return);
+        $output[] = '-------------------------------';
+        $this->getContainer()->get('logger')->info(sprintf('Reset dportal: "%s" (%d)', $xmlfile, $return));
+
+        // $output = [];
+        $import = exec("openag import dportal " . $xmlfile, $output, $return);
+        $this->getContainer()->get('logger')->info(sprintf('Import dportal data: "%s" (%d)', $import, $return));
+        foreach ($output as $line) {
+            $this->getContainer()->get('logger')->debug($line);
+        }
     }
 
     public function getName() {
