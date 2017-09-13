@@ -271,8 +271,12 @@ class WireframeController extends Controller {
         $srvDPortal = $this->get(DPortal::class);
         $srvDPortal->visualise($file);
 
+        $uri = \str_replace(
+            'SERVER_HOST', $_SERVER['HTTP_HOST'], $this->getParameter('oag')['dportal']['uri']
+        );
+
         return array(
-            'dPortalUri' => $this->getParameter('oag')['dportal']['uri']
+            'dPortalUri' => $uri
         );
     }
 
