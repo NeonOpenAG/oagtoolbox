@@ -18,20 +18,12 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @Route("/wireframe")
  * @Template
  */
 class WireframeController extends Controller {
 
     /**
      * @Route("/")
-     */
-    public function indexAction() {
-        return array();
-    }
-
-    /**
-     * @Route("/upload")
      */
     public function uploadAction(Request $request) {
         $em = $this->getDoctrine()->getEntityManager();
@@ -137,7 +129,7 @@ class WireframeController extends Controller {
      */
     public function deleteFileAction(Request $request, OagFile $file) {
         // TODO implement
-        return $this->redirect($this->generateUrl('oag_wireframe_index', array('id' => $file->getId())));
+        return $this->redirect($this->generateUrl('oag_wireframe_upload'));
     }
 
     /**
