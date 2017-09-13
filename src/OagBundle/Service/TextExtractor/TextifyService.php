@@ -9,7 +9,7 @@
 namespace OagBundle\Service\TextExtractor;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use OagBundle\Service\OagFileService;
+use OagBundle\Service\EnhancementFileService;
 
 /**
  * Description of TextifyService
@@ -21,17 +21,17 @@ class TextifyService {
     private $container;
 
     /**
-     * Gets the raw text content of an OagFile.
+     * Gets the raw text content of an EnhancementFile.
      *
-     * @param OagFile $oagfile the file to get the text of
+     * @param EnhancementFile $enhFile the file to get the text of
      * @return string
      */
-    public function stripOagFile($oagFile) {
-        $srvOagFile = $this->container->get(OagFileService::class);
-        $path = $srvOagFile->getPath($oagFile);
+    public function stripEnhancementFile($enhancementFile) {
+        $srvEnhancementFile = $this->container->get(EnhancementFileService::class);
+        $path = $srvEnhancementFile->getPath($enhancementFile);
 //        $mimetype = mime_content_type($path);
 //        $this->container->get('logger')->info(sprintf('File %s mime type is %s', $path, $mimetype));
-        $mimetype = $oagFile->getMimeType();
+        $mimetype = $enhancementFile->getMimeType();
 
         switch ($mimetype) {
             case 'application/pdf':

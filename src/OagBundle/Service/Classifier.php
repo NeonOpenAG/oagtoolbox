@@ -209,13 +209,12 @@ class Classifier extends AbstractOagService {
      */
     public function classifyEnhancementFile(EnhancementFile $enhFile) {
         $srvClassifier = $this->getContainer()->get(Classifier::class);
-        $srvOagFile = $this->getContainer()->get(OagFileService::class);
         $srvTextify = $this->getContainer()->get(TextifyService::class);
 
         $enhFile->clearSuggestedTags();
 
         // enhancing/text document
-        $rawText = $srvTextify->stripOagFile($enhFile);
+        $rawText = $srvTextify->stripEnhancementFile($enhFile);
 
         if ($rawText === false) {
             // textifier failed
@@ -236,7 +235,7 @@ class Classifier extends AbstractOagService {
      * Persists Oag tags from API response to database.
      *
      * @param array $tags an array of tags, as represented by the Classifier's JSON
-     * @param OagFile $file the OagFile to suggest the tags to
+     * @param OagFile|EnhancementFile $file the OagFile or EnhancementFile to suggest the tags to
      * @param string $activityId the activity ID the tags apply to, if they are specific
      */
     private function persistTags($tags, $file, $activityId = null) {
@@ -278,6 +277,7 @@ class Classifier extends AbstractOagService {
                 $tag->setDescription($description);
                 $tag->setVocabulary($vocab, $vocabUri);
                 $em->persist($tag);
+                $em->flush();
             }
 
             $sugTag = new \OagBundle\Entity\SuggestedTag();
@@ -288,6 +288,7 @@ class Classifier extends AbstractOagService {
             }
 
             $em->persist($sugTag);
+            $em->flush();
             $file->addSuggestedTag($sugTag);
         }
     }

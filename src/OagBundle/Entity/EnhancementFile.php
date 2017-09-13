@@ -50,6 +50,13 @@ class EnhancementFile {
     /**
      * @var string
      *
+     * @ORM\Column(name="iatiActivityId", type="string", length=1024, nullable=true)
+     */
+    private $iatiActivityId;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="mimeType", type="string", length=1024)
      */
     private $mimeType;
@@ -65,6 +72,7 @@ class EnhancementFile {
         $this->suggestedTags = new ArrayCollection();
         $this->iatiParents = new ArrayCollection();
         $this->geolocations = new ArrayCollection();
+        $this->iatiActivityId = null;
     }
 
     /**
@@ -239,6 +247,14 @@ class EnhancementFile {
      */
     public function setUploadDate(\DateTime $uploadDate) {
         $this->uploadDate = $uploadDate;
+    }
+
+    public function getIatiActivityId() {
+        return $this->iatiActivityId;
+    }
+
+    public function setIatiActivityId($iatiActivityId) {
+        $this->iatiActivityId = $iatiActivityId;
     }
 
 }
