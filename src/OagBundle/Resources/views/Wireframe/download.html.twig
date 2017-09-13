@@ -37,7 +37,7 @@
                       <h3>Upload a version of your activity file</h3>
 
 
-                      {{ include('OagBundle::widgets/fileUploadWidget.html.twig', { 'form': source_upload_form }) }}
+                      {{ include('OagBundle::widgets/fileUploadWidget.html.twig', { 'form': uploadForm }) }}
                   </div>
                 </div>
 
@@ -81,4 +81,16 @@
 
       </div>
 
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/oag/jquery-filestyle-1.5.1/src/jquery-filestyle.min.js') }}"></script>
+    <script>
+        $(function () {
+            $(document).tooltip();
+
+            $("#oag_file_documentName").jfilestyle();;
+        });
+    </script>
 {% endblock %}
