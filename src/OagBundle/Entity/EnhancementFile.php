@@ -31,12 +31,12 @@ class EnhancementFile {
     private $iatiParents;
 
     /**
-     * @ORM\ManyToMany(targetEntity="OagBundle\Entity\SuggestedTag")
+     * @ORM\ManyToMany(targetEntity="OagBundle\Entity\SuggestedTag", cascade={"persist"})
      */
     protected $suggestedTags;
 
     /**
-     * @ORM\ManyToMany(targetEntity="OagBundle\Entity\Geolocation")
+     * @ORM\ManyToMany(targetEntity="OagBundle\Entity\Geolocation", cascade={"persist"})
      */
     protected $geolocations;
 
@@ -159,7 +159,7 @@ class EnhancementFile {
      * @param \OagBundle\Entity\SuggestedTag $activity
      */
     public function removeSuggestedTag(SuggestedTag $activity) {
-        if (!$this->hasSuggestedTag($activity)) {
+        if ($this->hasSuggestedTag($activity)) {
             $this->suggestedTags->removeElement($activity);
         }
     }

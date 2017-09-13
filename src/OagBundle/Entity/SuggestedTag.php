@@ -29,7 +29,7 @@ class SuggestedTag {
     private $confidence;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\OagBundle\Entity\Tag")
+     * @ORM\ManyToOne(targetEntity="\OagBundle\Entity\Tag", cascade={"persist"})
      */
     private $tag;
 

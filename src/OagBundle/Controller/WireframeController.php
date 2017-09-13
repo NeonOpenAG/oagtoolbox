@@ -185,7 +185,6 @@ class WireframeController extends Controller {
         // load all suggested tags
         $suggestedTags = $file->getSuggestedTags()->toArray();
         foreach ($file->getEnhancingDocuments() as $enhFile) {
-            dump($enhFile);
             // if it is only relevant to another activity, ignore
             if ((!is_null($enhFile)) && ($enhFile->getIatiActivityId() !== $activityId)) continue;
             $suggestedTags = array_merge($suggestedTags, $enhFile->getSuggestedTags()->toArray());
@@ -193,8 +192,8 @@ class WireframeController extends Controller {
 
         // derive the actual tags from these suggested tags
         $classifierTags = array();
-        foreach ($file->getSuggestedTags() as $sugTag) {
-            if (in_array($sugTag, $classifierTags) || in_array($sugTag->getTag(), $currentTags)) {
+        foreach ($suggestedTags as $sugTag) {
+            if (in_array($sugTag->getTag(), $classifierTags) || in_array($sugTag->getTag(), $currentTags)) {
                 // no duplicates
                 continue;
             }
@@ -229,9 +228,6 @@ class WireframeController extends Controller {
             $enhFile->setUploadDate(new \DateTime('now'));
             $enhFile->setIatiActivityId($activityId);
             $srvClassifier->classifyEnhancementFile($enhFile);
-
-            $em->persist($enhFile);
-            $em->flush();
 
             $file->addEnhancingDocument($enhFile);       
             $em->persist($file);

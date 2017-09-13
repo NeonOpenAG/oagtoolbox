@@ -11,7 +11,6 @@ use OagBundle\Entity\OagFile;
 use OagBundle\Entity\Tag;
 use OagBundle\Entity\SuggestedTag;
 use Symfony\Component\Cache\Simple\FilesystemCache;
-
 class Classifier extends AbstractOagService {
 
     public function processUri($sometext = '') {
@@ -108,8 +107,6 @@ class Classifier extends AbstractOagService {
 
     public function processString($contents) {
         if (!$this->isAvailable()) {
-            // TODO use correct fixture data, the current is not representative of
-            // output where just a string is processed
             return json_decode($this->getStringFixtureData(), true);
         }
 
@@ -276,8 +273,6 @@ class Classifier extends AbstractOagService {
                 $tag->setCode($code);
                 $tag->setDescription($description);
                 $tag->setVocabulary($vocab, $vocabUri);
-                $em->persist($tag);
-                $em->flush();
             }
 
             $sugTag = new \OagBundle\Entity\SuggestedTag();
@@ -287,8 +282,6 @@ class Classifier extends AbstractOagService {
                 $sugTag->setActivityId($activityId);
             }
 
-            $em->persist($sugTag);
-            $em->flush();
             $file->addSuggestedTag($sugTag);
         }
     }

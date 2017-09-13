@@ -26,17 +26,17 @@ class OagFile {
     private $id;
 
     /**
-     * @ORM\ManyToMany(targetEntity="OagBundle\Entity\SuggestedTag")
+     * @ORM\ManyToMany(targetEntity="OagBundle\Entity\SuggestedTag", cascade={"persist"})
      */
     protected $suggestedTags;
 
     /**
-     * @ORM\ManyToMany(targetEntity="OagBundle\Entity\Geolocation")
+     * @ORM\ManyToMany(targetEntity="OagBundle\Entity\Geolocation", cascade={"persist"})
      */
     protected $geolocations;
 
     /**
-     * @ORM\ManyToMany(targetEntity="EnhancementFile", inversedBy="iatiParents")
+     * @ORM\ManyToMany(targetEntity="EnhancementFile", inversedBy="iatiParents", cascade={"persist"})
      */
     private $enhancingDocuments;
 
@@ -130,7 +130,7 @@ class OagFile {
      * @param \OagBundle\Entity\SuggestedTag $activity
      */
     public function removeSuggestedTag(SuggestedTag $activity) {
-        if (!$this->hasSuggestedTag($activity)) {
+        if ($this->hasSuggestedTag($activity)) {
             $this->suggestedTags->removeElement($activity);
         }
     }
