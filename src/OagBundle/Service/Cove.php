@@ -99,11 +99,11 @@ class Cove extends AbstractAutoService {
                 if (!file_put_contents($xmlfile, $xml)) {
                     $this->get('session')->getFlashBag()->add('error', 'Unable to create XML file.');
                     $this->get('logger')->debug(sprintf('Unable to create XML file: %s', $xmlfile));
-                    return $this->redirectToRoute('oag_default_index');
+                    return $this->redirectToRoute('oag_wireframe_upload');
                 }
                 // else
                 if ($this->getContainer()->getParameter('unlink_files')) {
-                    unlink($path);
+                    unlink($srvOagFile->getPath($file));
                 }
 
                 $file->setDocumentName($filename);

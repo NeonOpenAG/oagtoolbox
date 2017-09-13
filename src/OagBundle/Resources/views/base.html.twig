@@ -21,15 +21,17 @@
 
         <header class="header">
             <nav class="header-nav">
-                <div class="logo"><a href="{{ path('oag_wireframe_index') }}">{{ toolbox_title }}</a></div>
+                <div class="logo"><a href="{{ path('oag_wireframe_upload') }}">{{ toolbox_title }}</a></div>
 
+		{% if file is defined %}
                 <div class="nav-options">
                     <ul>
-                        <li><a href="#">Preview</a></li>
-                        <li><a href="#">Check and improve</a></li>
-                        <li><a href="#">Download</a></li>
+                        <li><a href="{{ path('oag_wireframe_preview', { 'id': file.getId() }) }}">Preview</a></li>
+                        <li><a href="{{ path('oag_wireframe_improveyourdata', { 'id': file.getId() }) }}">Check and improve</a></li>
+                        <li><a href="{{ path('oag_wireframe_download', { 'id': file.getId() }) }}">Download</a></li>
                     </ul>
                 </div>
+		{% endif %}
 
                 <div id="menu">
                     {% block menu %}{% endblock %}

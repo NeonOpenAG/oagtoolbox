@@ -15,8 +15,8 @@ html, body {
   font-size: 1em;
   color: $oag_title;
   background: $oag_blue;  /* fallback for old browsers */
-  background: -webkit-linear-gradient(150deg, $oag_blue 15%, $oag_purple 70%) fixed no-repeat;  /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(150deg, $oag_blue 15%, $oag_purple 70%) fixed no-repeat; /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: -webkit-linear-gradient(150deg, $oag_blue 15%, $oag_purple 90%) fixed no-repeat;  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(150deg, $oag_blue 15%, $oag_purple 90%) fixed no-repeat; /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
 h1,
@@ -60,8 +60,10 @@ ul {
 
 button,
 .cta {
-  background-color: $oag_purple;
+  font-family: $oag_font;
+  background-color: $oag_grey;
   letter-spacing: inherit;
+  line-height: 24px;
   color: white;
   font-weight: bold;
   white-space: nowrap;
@@ -73,11 +75,12 @@ button,
   cursor: pointer;
   transition: all .15s ease;
   &:hover {
-    background-color: $oag_purple_highlight;
+    background-color: $oag_grey_highlight;
     color: white;
     text-decoration: none;
     transform: translateY(-1px);
-    box-shadow: 0 7px 14px rgba(50,50,93,.1), 0 3px 6px rgba(0,0,0,.08);
+    //box-shadow: 0 7px 14px rgba(50,50,93,.1), 0 3px 6px rgba(0,0,0,.08);
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
   }
   &:visited {
     color: white;
@@ -90,6 +93,33 @@ button,
   &.back:hover {
     color: $oag_dark;
   }
+}
+
+.view:before {
+  font-family: FontAwesome;
+  color: $oag_offwhite;
+  margin-right: 0.6em;
+  content: "\f06e";
+}
+
+.check:before {
+  font-family: FontAwesome;
+  color: $oag_offwhite;
+  margin-right: 0.6em;
+  content: "\f046";
+}
+
+.download-icon:before {
+  font-family: FontAwesome;
+  font-size: 1.5em;
+  color: $oag_title;
+  content: "\f019";
+}
+.delete:before {
+  font-family: FontAwesome;
+  font-size: 1.5em;
+  color: $oag_red;
+  content: "\f057";
 }
 
 
@@ -124,7 +154,7 @@ header {
   background-color: white;
   display: flex;
   justify-content: center;
-  padding: 0em 2em;
+  padding: 0em 3em;
   a {
     &:visited {
       color: $oag_dark;
@@ -193,8 +223,8 @@ nav {
 .gradient {
   height: 532px;
   background: $oag_blue;  /* fallback for old browsers */
-  background: -webkit-linear-gradient(150deg, $oag_blue 15%, $oag_purple 70%);  /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(150deg, $oag_blue 15%, $oag_purple 70%); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: -webkit-linear-gradient(150deg, $oag_blue 15%, $oag_purple 90%);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(150deg, $oag_blue 15%, $oag_purple 90%); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   h1 {
     color: white;
   }
@@ -250,6 +280,7 @@ nav {
   border: none;
   border-radius: 2px;
   box-shadow: 0 15px 35px rgba(50,50,93,.1), 0 5px 15px rgba(0,0,0,.07);
+  width: calc(100% - 4em);
   div {
     margin-bottom: 1em;
     &.jfilestyle {
@@ -296,6 +327,7 @@ nav {
     bottom: 48px;
     left: 460px;
     font-family: $oag_font;
+    line-height: 1.15;
   }
 }
 
@@ -310,6 +342,9 @@ article {
   position: relative;
   margin-bottom: 2em;
   box-shadow: 0 15px 35px rgba(50,50,93,.1), 0 5px 15px rgba(0,0,0,.07);
+  &.margin {
+    margin-bottom: 5em;
+  }
 }
 
 .activity {
@@ -331,7 +366,7 @@ article {
     background-color: #f9f9fd;
     border-bottom-left-radius: 2px;
     border-bottom-right-radius: 2px;
-    padding: .5em 1.5em 5.5em 1.5em;
+    padding: .5em 1.5em 1.5em 1.5em;
     &.summary {
       padding: 2em;
       ul li {
@@ -378,11 +413,149 @@ article {
       }
     }
   }
-  .view-suggestions {
-    position: absolute;
-    right: 24px;
-    bottom: 24px;
-    margin-top: 0.5em;
+}
+
+.view-suggestions {
+  display: flex;
+  justify-content: flex-end;
+  div {
+    margin-left: 1em;
+  }
+}
+
+/* --------------------------------------------------------------
+
+   Classifier suggestions page
+
+-------------------------------------------------------------- */
+
+form {
+  margin-top: 2em;
+  &:last-child .tag-row {
+    margin-bottom: 0;
+  }
+  .tag-row {
+  padding: 0;
+  margin: 1em 0;
+  background-color: $oag_bg;
+  display: flex;
+  justify-content: space-between;
+  box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
+    .tag {
+      display: flex;
+      align-items: center;
+      font-size: 1.5em;
+      padding: 0 1em;
+    }
+  }
+}
+
+.bottom-page-nav {
+  position: absolute;
+  display: flex;
+  right: 0;
+  bottom: -84px;
+  button {
+    @extend .back;
+  }
+  div {
+    margin-left: 1em;
+    &:last-child button {
+      background-color: $oag_green;
+      color: white;
+      &:hover {
+        background-color: $oag_green_highlight;
+      }
+    }
+  }
+}
+
+
+/* --------------------------------------------------------------
+
+   Geocoder suggestions page
+
+-------------------------------------------------------------- */
+
+#geo-suggestions {
+  form {
+    margin-top: 2em;
+    &:last-child .tag-row {
+      margin-bottom: 0;
+    }
+    .tag-row {
+    padding: 0;
+    margin: 1em 0;
+    background-color: $oag_bg;
+    display: flex;
+    justify-content: space-between;
+    box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
+      .tag {
+        display: flex;
+        align-items: center;
+        font-size: 1.5em;
+        padding: 0 0 1em 0;
+      }
+    }
+  }
+  .info {
+    flex: 1;
+    padding: 2em;
+  }
+  span {
+    //margin: 2em;
+  }
+  #existing-map-block {
+    border: none;
+    background-color: #dbe5ea;
+    width: 600px;
+  }
+}
+
+
+/* --------------------------------------------------------------
+
+   Fancy checkbox styling
+
+-------------------------------------------------------------- */
+
+
+.addremove {
+  input {
+    display: none;
+  }
+  span {
+    @extend button;
+    width: 98px;
+    text-align: center;
+  }
+  input + span {
+    background-color: $oag_green;
+    &:hover {
+      background-color: $oag_green_highlight;
+    }
+    &:before {
+      content: 'Add this';
+      transform: none;
+      &:hover {
+        transform: none;
+      }
+    }
+  }
+  input:checked + span {
+    background-color: $oag_title;
+    &:hover {
+      background-color: $oag_red;
+    }
+    &:before {
+      content: 'Remove this';
+      &:hover {
+        background-color: pink;
+      }
+    }
+  }
+  button:hover {
+    transform: none;
   }
 }
 
@@ -395,6 +568,62 @@ article {
 
 iframe {
   width: 100%;
+}
+
+
+/* --------------------------------------------------------------
+
+   Download page
+
+-------------------------------------------------------------- */
+
+.version {
+  display: flex;
+  margin: 2em 0 0.5em;
+  p {
+    color: $oag_dark;
+  }
+}
+
+.options {
+  display: flex;
+  justify-content: flex-end;
+  flex: 1;
+  margin-bottom: 2em;
+  a {
+    margin:0 0.5em;
+    &:nth-child(1) {
+      background-color: $oag_purple;
+    }
+    &:nth-child(2) {
+      background-color: $oag_green;
+    }
+    &:nth-child(3) {
+      background-color: $oag_blue;
+    }
+  }
+}
+table {
+  width: 100%;
+  th {
+    padding: 1em;
+    text-align: left;
+    &:nth-child(4),
+    &:nth-child(5) {
+      text-align: center;
+    }
+  }
+  td {
+    padding: 1em;
+    text-align: center;
+    &:nth-child(2),
+    &:nth-child(3) {
+      text-align: left;
+    }
+    &:nth-child(5):hover {
+      color: $oag_grey;
+    }
+  }
 }
 
 
@@ -420,7 +649,7 @@ iframe {
   font-weight: bold;
   color: white;
   font-size: 110%;
-  padding: 3px;
+  padding: 1em;
 }
 
 .flash-error {
@@ -428,7 +657,7 @@ iframe {
   font-weight: bold;
   color: white;
   font-size: 110%;
-  padding: 3px;
+  padding: 1em;
 }
 
 .ui-tooltip {
@@ -468,26 +697,6 @@ iframe {
 #merge_activity_currentTags,
 #merge_activity_suggested {
   margin-bottom: 20px;
-}
-
-/* --------------------------------------------------------------
-
-   Fancy checkbox styling
-
--------------------------------------------------------------- */
-
-.addremove input + span:before {
-  @extend button;
-  content: 'Add this';
-}
-
-.addremove input:checked + span:before {
-  content: 'Remove this';
-}
-
-.addremove input
-{
-  display: none;
 }
 
 /* --------------------------------------------------------------

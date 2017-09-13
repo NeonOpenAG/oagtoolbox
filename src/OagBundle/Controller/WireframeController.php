@@ -22,20 +22,12 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @Route("/wireframe")
  * @Template
  */
 class WireframeController extends Controller {
 
     /**
      * @Route("/")
-     */
-    public function indexAction() {
-        return array();
-    }
-
-    /**
-     * @Route("/upload")
      */
     public function uploadAction(Request $request) {
         $em = $this->getDoctrine()->getEntityManager();
@@ -146,7 +138,7 @@ class WireframeController extends Controller {
      */
     public function deleteFileAction(Request $request, OagFile $file) {
         // TODO implement
-        return $this->redirect($this->generateUrl('oag_wireframe_index', array('id' => $file->getId())));
+        return $this->redirect($this->generateUrl('oag_wireframe_upload'));
     }
 
     /**
@@ -233,7 +225,7 @@ class WireframeController extends Controller {
             $em->persist($file);
             $em->flush();
 
-            //return $this->redirect($this->generateUrl('oag_wireframe_classifiersuggestion', array('id' => $file->getId(), 'activityId' => $activityId)));
+            return $this->redirect($this->generateUrl('oag_wireframe_classifiersuggestion', array('id' => $file->getId(), 'activityId' => $activityId)));
         }
 
         $form = $this->createFormBuilder()
@@ -255,7 +247,7 @@ class WireframeController extends Controller {
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('back')->isClicked()) {
-                return $this->redirect($this->generateUrl('oag_wireframe_classifier', array('id' => $file->getId()))); 
+                return $this->redirect($this->generateUrl('oag_wireframe_classifier', array('id' => $file->getId())));
             }
 
             $editedTags = $form->getData()['tags'];
@@ -290,7 +282,7 @@ class WireframeController extends Controller {
             $em->persist($change);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('oag_wireframe_classifier', array('id' => $file->getId()))); 
+            return $this->redirect($this->generateUrl('oag_wireframe_classifier', array('id' => $file->getId())));
         }
 
         return array(
@@ -309,8 +301,13 @@ class WireframeController extends Controller {
         $srvDPortal = $this->get(DPortal::class);
         $srvDPortal->visualise($file);
 
+        $uri = \str_replace(
+            'SERVER_HOST', $_SERVER['HTTP_HOST'], $this->getParameter('oag')['dportal']['uri']
+        );
+
         return array(
-            'dPortalUri' => $this->getParameter('oag')['dportal']['uri']
+            'dPortalUri' => $uri,
+            'file' => $file
         );
     }
 
