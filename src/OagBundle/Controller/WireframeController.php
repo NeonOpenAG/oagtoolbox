@@ -129,7 +129,7 @@ class WireframeController extends Controller {
      */
     public function deleteFileAction(Request $request, OagFile $file) {
         // TODO implement
-        return $this->redirect($this->generateUrl('oag_wireframe_index', array('id' => $file->getId())));
+        return $this->redirect($this->generateUrl('oag_wireframe_upload'));
     }
 
     /**
