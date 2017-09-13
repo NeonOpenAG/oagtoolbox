@@ -1,4 +1,4 @@
-{% extends "::base.html.twig" %}
+{% extends "OagBundle::base.html.twig" %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -70,7 +70,7 @@
                             <td>{{ otherFile.getDocumentName() }}</td>
                             <td>{{ otherFile.getUploadDate|date }}</td>
                             <td>{{ srvOagFile.hasBeenImproved(otherFile) ? 'Yes' : 'No' }}</td>
-                            <td><span class="download-icon"><a href="{{ path('oag_wireframe_downloadfile', { id: otherFile.getId() }) }}"></a></span></td>
+                            <td><a href="{{ path('oag_wireframe_downloadfile', { id: otherFile.getId() }) }}"><span class="download-icon"></span></a></td>
                         </tr>
                         {% endfor %}
                     </table>
