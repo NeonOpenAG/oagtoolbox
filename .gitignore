@@ -27,4 +27,3 @@ web-server-pid
 .idea
 src/OagBundle/Resources/public/.sass-cache/
 src/OagBundle/Resources/public/stylesheets/main.css
-composer.lock
