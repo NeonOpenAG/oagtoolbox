@@ -274,7 +274,8 @@ nav {
   }
 }
 
-.upload-form {
+.upload-form,
+.upload-info {
   position: relative;
   display: inline-block;
   background-color: white;
@@ -453,17 +454,9 @@ form {
 }
 
 .upload-info {
-  margin: 3em 0;
-  input {
-    font-family: inherit;
-    line-height: 22px;
-    padding: 1em 1.5em;
-    background-color: white;
-    color: $oag_dark;
-    border: 1px solid #dcdcdc;
-    margin-right: 0.8em;
-    width: 300px;
-  }
+  background-color: transparent;
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .bottom-page-nav {
