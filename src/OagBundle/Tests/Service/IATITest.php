@@ -125,15 +125,12 @@ class IATITest extends TestCase {
             ->method('getActivityTitle');
         $srvIATI->expects($this->once())
             ->method('getActivityTags');
-        $srvIATI->expects($this->once())
-            ->method('getActivityLocations');
 
         # Assert that the correct keys are used in the summary array.
         $summarisedActivity = $srvIATI->summariseActivityToArray($activity);
         $this->assertArrayHasKey('id', $summarisedActivity);
         $this->assertArrayHasKey('name', $summarisedActivity);
         $this->assertArrayHasKey('tags', $summarisedActivity);
-        $this->assertArrayHasKey('locations', $summarisedActivity);
     }
 
     public function testSummariseToArray() {
