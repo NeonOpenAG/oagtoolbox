@@ -79,8 +79,8 @@ button,
     color: white;
     text-decoration: none;
     transform: translateY(-1px);
-    //box-shadow: 0 7px 14px rgba(50,50,93,.1), 0 3px 6px rgba(0,0,0,.08);
-    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+    box-shadow: 0 7px 14px rgba(50,50,93,.1), 0 3px 6px rgba(0,0,0,.08);
+    //box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
   }
   &:visited {
     color: white;
@@ -170,6 +170,8 @@ nav {
   line-height: 67px;
   .logo {
     float: left;
+    text-transform: uppercase;
+    font-weight: bold;
   }
   .nav-options {
     float: right;
@@ -272,7 +274,8 @@ nav {
   }
 }
 
-.upload-form {
+.upload-form,
+.upload-info {
   position: relative;
   display: inline-block;
   background-color: white;
@@ -448,6 +451,12 @@ form {
       padding: 0 1em;
     }
   }
+}
+
+.upload-info {
+  background-color: transparent;
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .bottom-page-nav {
