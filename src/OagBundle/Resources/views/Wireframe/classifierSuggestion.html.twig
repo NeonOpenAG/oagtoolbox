@@ -1,5 +1,10 @@
 {% extends "OagBundle::base.html.twig" %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/oag/jquery-filestyle-1.5.1/src/jquery-filestyle.min.css') }}" rel="stylesheet" />
+{% endblock %}
+
 {% block title %}OagBundle:Wireframe:classifierSuggestion{% endblock %}
 
 {% block body %}
@@ -34,9 +39,9 @@
                   </div>
                   {{ form_end(form) }}
 
-                  <div class="upload-info">
-                      <h2>Got any project info to match this Activity ID you want the tool to read?</h2>
-
+                  <div class="upload-form">
+                      <h3>Got any project info to match this Activity ID you want the tool to read?</h3>
+                      <hr>
                       {{ form(enhancementUploadForm) }}
                   </div>
 
@@ -47,4 +52,16 @@
 
     </div>
 
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/oag/jquery-filestyle-1.5.1/src/jquery-filestyle.min.js') }}"></script>
+    <script>
+        $(function () {
+            $(document).tooltip();
+
+            $("#enhancement_file_documentName").jfilestyle();;
+        });
+    </script>
 {% endblock %}
