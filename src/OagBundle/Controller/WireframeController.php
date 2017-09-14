@@ -27,6 +27,16 @@ use Symfony\Component\HttpFoundation\Request;
 class WireframeController extends Controller {
 
     /**
+     * @Route("/gc/{id}")
+     * @ParamConverter("file", class="OagBundle:OagFile")
+     */
+    public function gcTest(OagFile $file) {
+        $srvGeocoder = $this->get(\OagBundle\Service\Geocoder::class);
+        dump($srvGeocoder->geocodeOagFile($file));
+        return array();
+    }
+
+    /**
      * @Route("/")
      */
     public function uploadAction(Request $request) {

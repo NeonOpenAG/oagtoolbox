@@ -24,6 +24,9 @@ class Geolocation
     /**
      * @var string
      *
+     * Corresponding IATI activity, if the suggestion is less generic than
+     * 'applicable to the entire file of activities'.
+     *
      * @ORM\Column(name="iatiActivityId", type="string", length=255, nullable=true)
      */
     private $iatiActivityId;
@@ -31,19 +34,9 @@ class Geolocation
     /**
      * @var string
      *
-     * @ORM\Column(name="geolocationId", type="string", length=255)
-     */
-    private $geolocationId;
-
-    /**
-     * @var string
+     * The name of the location.
      *
-     * @ORM\Column(name="vocabId", type="string", length=255)
-     */
-    private $vocabId;
-
-    /**
-     * @var string
+     * XPath: ./name/narrative
      *
      * @ORM\Column(name="name", type="string", length=255)
      */
@@ -52,66 +45,38 @@ class Geolocation
     /**
      * @var string
      *
-     * @ORM\Column(name="adminCode1Code", type="string", length=255)
+     * XPath: ./location-id/@code
+     *
+     * @ORM\Column(name="locationIdCode", type="string", length=255)
      */
-    private $adminCode1Code;
+    private $locationIdCode;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="adminCode1Name", type="string", length=255)
+     * XPath: ./location-id/@vocabulary
+     *
+     * @ORM\Column(name="locationIdVocab", type="string", length=255)
      */
-    private $adminCode1Name;
+    private $locationIdVocab;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="adminCode2Code", type="string", length=255)
+     * XPath: ./point/pos (first half)
+     *
+     * @ORM\Column(name="pointPosLat", type="decimal", precision=14, scale=12)
      */
-    private $adminCode2Code;
+    private $pointPosLat;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="adminCode2Name", type="string", length=255)
-     */
-    private $adminCode2Name;
-
-    /**
-     * @var string
+     * XPath: ./point/pos (second half)
      *
-     * @ORM\Column(name="latitude", type="decimal", precision=14, scale=12)
+     * @ORM\Column(name="pointPosLong", type="decimal", precision=14, scale=12)
      */
-    private $latitude;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="longitude", type="decimal", precision=14, scale=12)
-     */
-    private $longitude;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="exactness", type="string", length=255)
-     */
-    private $exactness;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="class", type="string", length=255)
-     */
-    private $class;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="description", type="string", length=255)
-     */
-    private $description;
-
+    private $pointPosLong;
 
     /**
      * Get id
@@ -148,54 +113,6 @@ class Geolocation
     }
 
     /**
-     * Set geolocationId
-     *
-     * @param string $geolocationId
-     *
-     * @return Geolocation
-     */
-    public function setGeolocationId($geolocationId)
-    {
-        $this->geolocationId = $geolocationId;
-
-        return $this;
-    }
-
-    /**
-     * Get geolocationId
-     *
-     * @return string
-     */
-    public function getGeolocationId()
-    {
-        return $this->geolocationId;
-    }
-
-    /**
-     * Set vocabId
-     *
-     * @param string $vocabId
-     *
-     * @return Geolocation
-     */
-    public function setVocabId($vocabId)
-    {
-        $this->vocabId = $vocabId;
-
-        return $this;
-    }
-
-    /**
-     * Get vocabId
-     *
-     * @return string
-     */
-    public function getVocabId()
-    {
-        return $this->vocabId;
-    }
-
-    /**
      * Set name
      *
      * @param string $name
@@ -220,219 +137,100 @@ class Geolocation
     }
 
     /**
-     * Set adminCode1Code
+     * Set locationIdCode
      *
-     * @param string $adminCode1Code
+     * @param string $locationIdCode
      *
      * @return Geolocation
      */
-    public function setAdminCode1Code($adminCode1Code)
+    public function setLocationIdCode($locationIdCode)
     {
-        $this->adminCode1Code = $adminCode1Code;
+        $this->locationIdCode = $locationIdCode;
 
         return $this;
     }
 
     /**
-     * Get adminCode1Code
+     * Get locationIdCode
      *
      * @return string
      */
-    public function getAdminCode1Code()
+    public function getLocationIdCode()
     {
-        return $this->adminCode1Code;
+        return $this->locationIdCode;
     }
 
     /**
-     * Set adminCode1Name
+     * Set locationIdVocab
      *
-     * @param string $adminCode1Name
+     * @param string $locationIdVocab
      *
      * @return Geolocation
      */
-    public function setAdminCode1Name($adminCode1Name)
+    public function setLocationIdVocab($locationIdVocab)
     {
-        $this->adminCode1Name = $adminCode1Name;
+        $this->locationIdVocab = $locationIdVocab;
 
         return $this;
     }
 
     /**
-     * Get adminCode1Name
+     * Get locationIdVocab
      *
      * @return string
      */
-    public function getAdminCode1Name()
+    public function getLocationIdVocab()
     {
-        return $this->adminCode1Name;
+        return $this->locationIdVocab;
     }
 
     /**
-     * Set adminCode2Code
+     * Set pointPosLat
      *
-     * @param string $adminCode2Code
+     * @param string $pointPosLat
      *
      * @return Geolocation
      */
-    public function setAdminCode2Code($adminCode2Code)
+    public function setPointPosLat($pointPosLat)
     {
-        $this->adminCode2Code = $adminCode2Code;
+        $this->pointPosLat = $pointPosLat;
 
         return $this;
     }
 
     /**
-     * Get adminCode2Code
+     * Get pointPosLat
      *
      * @return string
      */
-    public function getAdminCode2Code()
+    public function getPointPosLat()
     {
-        return $this->adminCode2Code;
+        return $this->pointPosLat;
     }
 
     /**
-     * Set adminCode2Name
+     * Set pointPosLong
      *
-     * @param string $adminCode2Name
+     * @param string $pointPosLong
      *
      * @return Geolocation
      */
-    public function setAdminCode2Name($adminCode2Name)
+    public function setPointPosLong($pointPosLong)
     {
-        $this->adminCode2Name = $adminCode2Name;
+        $this->pointPosLong = $pointPosLong;
 
         return $this;
     }
 
     /**
-     * Get adminCode2Name
+     * Get pointPosLong
      *
      * @return string
      */
-    public function getAdminCode2Name()
+    public function getPointPosLong()
     {
-        return $this->adminCode2Name;
+        return $this->pointPosLong;
     }
 
-    /**
-     * Set latitude
-     *
-     * @param string $latitude
-     *
-     * @return Geolocation
-     */
-    public function setLatitude($latitude)
-    {
-        $this->latitude = $latitude;
-
-        return $this;
-    }
-
-    /**
-     * Get latitude
-     *
-     * @return string
-     */
-    public function getLatitude()
-    {
-        return $this->latitude;
-    }
-
-    /**
-     * Set longitude
-     *
-     * @param string $longitude
-     *
-     * @return Geolocation
-     */
-    public function setLongitude($longitude)
-    {
-        $this->longitude = $longitude;
-
-        return $this;
-    }
-
-    /**
-     * Get longitude
-     *
-     * @return string
-     */
-    public function getLongitude()
-    {
-        return $this->longitude;
-    }
-
-    /**
-     * Set exactness
-     *
-     * @param string $exactness
-     *
-     * @return Geolocation
-     */
-    public function setExactness($exactness)
-    {
-        $this->exactness = $exactness;
-
-        return $this;
-    }
-
-    /**
-     * Get exactness
-     *
-     * @return string
-     */
-    public function getExactness()
-    {
-        return $this->exactness;
-    }
-
-    /**
-     * Set class
-     *
-     * @param string $class
-     *
-     * @return Geolocation
-     */
-    public function setClass($class)
-    {
-        $this->class = $class;
-
-        return $this;
-    }
-
-    /**
-     * Get class
-     *
-     * @return string
-     */
-    public function getClass()
-    {
-        return $this->class;
-    }
-
-    /**
-     * Set description
-     *
-     * @param string $description
-     *
-     * @return Geolocation
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * Get description
-     *
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
 }
 

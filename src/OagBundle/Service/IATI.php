@@ -255,44 +255,6 @@ class IATI extends AbstractService {
     }
 
     /**
-     * Creates a definition array to be provided to the NeonMap service,
-     * summarising any location data in the activity that can be visualised
-     * on a map.
-     *
-     * This method's purpose is purely to format data in a way that NeonMap
-     * likes; if a better home is found for it than this service, it would travel
-     * freely.
-     *
-     * @param \SimpleXMLElement $activity
-     * @return array see code
-     */
-    public function getActivityMapData($activity) {
-        $activityDetail = $this->summariseActivityToArray($activity);
-
-        $locations = $activityDetail['locations'];
-        $location_data = array();
-        foreach ($locations as $location) {
-            $location_data[] = array(
-                "id" => $activityDetail['id'],
-                "type" => "Feature",
-                "geometry" => array(
-                    "type" => "Point",
-                    "coordinates" => $location['lonlat'],
-                ),
-                'properties' => array(
-                    'title' => $location['description'],
-                    'nid' => $location['code'],
-                ),
-            );
-        }
-
-        return $map_data = array(
-            "type" => "FeatureCollection",
-            "features" => $location_data,
-        );
-    }
-
-    /**
      * Get the information on the tags contained in an activity, from prior
      * classification.
      *
@@ -404,103 +366,25 @@ class IATI extends AbstractService {
     }
 
     /**
-     * Gets summarised representations of the locations in the activity as
-     * associative arrays.
-     *
-     * @param \SimpleXMLElement $activity
-     * @return array see code
-     */
-    public function getActivityLocations($activity) {
-        $currentLocations = array();
-        foreach ($activity->xpath('./location') as $currentLocation) {
-            $description = (string) $currentLocation->xpath('./name/narrative[1]')[0];
-            $code = (string) $currentLocation->xpath('location-id')[0]['code'];
-            $vocabulary = (string) $currentLocation->xpath('location-id')[0]['vocabulary'];
-            $pos = (string)$currentLocation->xpath('point/pos')[0];
-            $lonlat = explode(' ', $pos);
-
-            $currentLocations[] = array(
-                'description' => $description,
-                'code' => $code,
-                'vocabulary' => $vocabulary,
-                'lonlat' => $lonlat,
-            );
-        }
-        return $currentLocations;
-    }
-
-    /**
      * Add a location to an activity in the XML, effectively geocoding it.
      * 
      * @param \SimpleXMLElement $activity
-     * @param array $json a representation of the location's properties, as returned from the Geocoder service
+     * @param Geolocation $geoloc
      */
-    public function addActivityLocation($activity, $json) {
-        // $location is the JSON assoc-array describing a location as returned by
-        // the Geocoder API
-        // TODO what is "rollback"?
-        // TODO should we check if it already exists?
-
+    public function addActivityLocation($activity, $geoloc) {
         $location = $activity->addChild('location');
 
         $name = $location->addChild('name');
-        $name->narrative[] = $json['name'];
+        $name->narrative[] = $geoloc->getName();
 
         $locId = $location->addChild('location-id');
-        $locId->addAttribute('vocabulary', $this->getContainer()->getParameter('geocoder')['id_vocabulary']);
-        $locId->addAttribute('code', $json['id']);
+        $locId->addAtrribute('code', $geoloc->getLocationIdCode());
+        $locId->addAtrribute('vocabulary', $geoloc->getLocationIdVocab());
 
-        if ($json['geometry']['type'] === 'Point') {
-            $point = $location->addChild('point');
-            $point->addAttribute('srsName', 'http://www.opengis.net/def/crs/EPSG/0/4326');
-            $point->pos[] = implode(' ', $json['geometry']['coordinates']);
-        } else {
-            // TODO what other possibilites are there?
-        }
-
-        $featDeg = $location->addChild('feature-designation');
-        $featDeg->addAttribute('code', $json['featureDesignation']['code']);
-
-        // TODO is $json['type'] relevant?
-
-        $actDescript = $location->addChild('activity-description');
-        $actDescript->narrative[] = $json['activityDescription'];
-
-        $locClass = $location->addChild('location-class');
-        $locClass->addAttribute('code', $json['locationClass']['code']);
-
-        $exactness = $location->addChild('exactness');
-        $exactness->addAttribute('code', $json['exactness']['code']);
-
-        // TODO is $json['country'] relevant?
-        // TODO check that this isn't dynamic - assuming not, as it is not an array
-        $admin1 = $location->addChild('administrative');
-        $admin1->addAttribute('code', $json['admin1']['code']);
-        $admin1->addAttribute('level', "1");
-        $admin1->addAttribute('vocabulary', $this->getContainer()->getParameter('geocoder')['admin_1_vocabulary']);
-
-        $admin2 = $location->addChild('administrative');
-        $admin2->addAttribute('code', $json['admin2']['code']);
-        $admin2->addAttribute('level', "2");
-        $admin2->addAttribute('vocabulary', $this->getContainer()->getParameter('geocoder')['admin_2_vocabulary']);
-    }
-
-    /**
-     * Remove an activity location from the XML.
-     *
-     * TODO IMPORTANT - vocabulary should be added to ensure locations are uniquely identified
-     *
-     * @param string $code the unique code of the location within the vocabulary
-     */
-    public function removeActivityLocation($activity, $code) { // TODO $vocabulary
-        $location = $activity->xpath("./location/location-id[@code='$code']/..");
-
-        if (count($location) < 1) {
-            return;
-        }
-
-        $location = $location[0];
-        unset($location[0]);
+        $point = $location->addChild('point');
+        $lat = $geoloc->getPointPosLat();
+        $lng = $geoloc->getPointPosLong();
+        $point->pos[] = "$lat $lng";
     }
 
 }
