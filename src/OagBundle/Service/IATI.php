@@ -97,7 +97,6 @@ class IATI extends AbstractService {
      *   array['name'] Activity Name.
      *   array['description'] Activity Description.
      *   array['tags'] Activity Tags.
-     *   array['locations'] Activity Locations.
      */
     public function summariseActivityToArray(\SimpleXMLElement $activity) {
         $simpActivity = array();
@@ -105,7 +104,6 @@ class IATI extends AbstractService {
         $simpActivity['name'] = $this->getActivityTitle($activity);
         $simpActivity['description'] = $this->getActivityDescription($activity);
         $simpActivity['tags'] = $this->getActivityTags($activity);
-        $simpActivity['locations'] = $this->getActivityLocations($activity);
         return $simpActivity;
     }
 
@@ -371,7 +369,7 @@ class IATI extends AbstractService {
      * @param \SimpleXMLElement $activity
      * @param Geolocation $geoloc
      */
-    public function addActivityLocation($activity, $geoloc) {
+    public function addActivityGeolocation($activity, $geoloc) {
         $location = $activity->addChild('location');
 
         $name = $location->addChild('name');
