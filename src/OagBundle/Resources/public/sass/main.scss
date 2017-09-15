@@ -283,6 +283,13 @@ nav {
       }
     }
   }
+  .info p {
+    &:before {
+      font-family: FontAwesome;
+      margin-right: 0.6em;
+      content: "\f05a";
+    }
+  }
 }
 
 .upload-form,
