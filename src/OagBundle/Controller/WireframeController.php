@@ -316,7 +316,7 @@ class WireframeController extends Controller {
      */
     public function geocoderSuggestionAction(Request $request, OagFile $file, $activityId) {
         $em = $this->getDoctrine()->getManager();
-        $srvGeocoder = $this->get(Classifier::class);
+        $srvGeocoder = $this->get(Geocoder::class);
         $srvGeoJson = $this->get(GeoJson::class);
         $srvIATI = $this->get(IATI::class);
         $srvOagFile = $this->get(OagFileService::class);

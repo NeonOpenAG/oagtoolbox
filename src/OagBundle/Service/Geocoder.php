@@ -2,6 +2,7 @@
 
 namespace OagBundle\Service;
 
+use OagBundle\Entity\EnhancementFile;
 use OagBundle\Entity\Geolocation;
 use OagBundle\Entity\OagFile;
 use OagBundle\Service\CSV;
@@ -93,8 +94,8 @@ class Geocoder extends AbstractAutoService {
      * @param EnhancementFile $file the file to process
      */
     public function geocodeEnhancementFile(EnhancementFile $file) {
-        $em = $this->get('doctrine')->getManager();
-        $geolocRepo = $this->get('doctrine')->getRepository(Geolocation::class);
+        $em = $this->getContainer()->get('doctrine')->getManager();
+        $geolocRepo = $this->getContainer()->get('doctrine')->getRepository(Geolocation::class);
         $srvEnhancementFile = $this->getContainer()->get(EnhancementFileService::class);
 
         $xml = $srvEnhancementFile->getContents($file);
