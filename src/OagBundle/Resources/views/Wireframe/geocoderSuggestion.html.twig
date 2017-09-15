@@ -13,35 +13,51 @@
             </div>
 
             <article class="activity margin">
-              <div class="heading">
-                  <h2 >{{ activity.name }} </h2>
-                  <h3>Activity ID: {{ activity.id }}</h3>
-              </div>
+                <div class="heading">
+                    <h2 >{{ activity.name }} </h2>
+                    <h3>Activity ID: {{ activity.id }}</h3>
+                </div>
 
-              <div class="content-block">
-                  <p>Description: {{ activity.description }}</p>
+                <div class="content-block">
+                    <p>Description: {{ activity.description }}</p>
 
-                  <!-- TODO: Move this back out, but not to activity.html.twig -->
-                  {{ form_start(form) }}
-                  {% for tag in form['tags'] %}
-                  <div class="tag-row">
-                      <div id="existing-map-block"></div>
-                      <div class="info">
-                        <div class="tag">{{ form_label(tag) }}</div>
-                        <label class="addremove">{{ form_widget(tag) }}<span></span></label>
-                      </div>
-                  </div>
-                  {% endfor %}
-                  <div class="bottom-page-nav">
-                      {{ form_row(form.back) }}{{ form_row(form.save) }}
-                  </div>
-                  {{ form_end(form) }}
+                    <!-- TODO: Move this back out, but not to activity.html.twig -->
+                    {{ form_start(form) }}
+                    {% for tag in form['tags'] %}
+                    <div class="tag-row">
+                        <div class="suggested-map-block" data-geojson='{{ tag.vars.attr['data-geojson'] }}'></div>
 
-              </div>
+                        <div class="info">
+                          <div class="tag">{{ form_label(tag) }}</div>
+                          <label class="addremove">{{ form_widget(tag) }}<span></span></label>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    <div class="bottom-page-nav">
+                        {{ form_row(form.back) }}{{ form_row(form.save) }}
+                    </div>
+                    {{ form_end(form) }}
+
+                </div>
             </acticle>
 
         </section>
 
     </div>
 
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/oag/neonmap/dist/neonmap.js') }}"></script>
+    <script>
+        $( document ).ready(function() {
+            $('.suggested-map-block').neonmap({image_path: "{{ asset('bundles/oag/neonmap/dist/images') }}" });
+        });
+    </script>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/oag/neonmap/dist/neonmap.css') }}" rel="stylesheet" />
 {% endblock %}

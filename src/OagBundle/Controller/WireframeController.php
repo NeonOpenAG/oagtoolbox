@@ -12,6 +12,7 @@ use OagBundle\Service\Classifier;
 use OagBundle\Service\Cove;
 use OagBundle\Service\DPortal;
 use OagBundle\Service\Geocoder;
+use OagBundle\Service\GeoJson;
 use OagBundle\Service\IATI;
 use OagBundle\Service\OagFileService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -317,6 +318,7 @@ class WireframeController extends Controller {
     public function geocoderSuggestionAction(Request $request, OagFile $file, $activityId) {
         $em = $this->getDoctrine()->getManager();
         $srvGeocoder = $this->get(Classifier::class);
+        $srvGeoJson = $this->get(GeoJson::class);
         $srvIATI = $this->get(IATI::class);
         $srvOagFile = $this->get(OagFileService::class);
 
@@ -375,6 +377,11 @@ class WireframeController extends Controller {
                 'choice_label' => function ($value, $key, $index) {
                     $name = $value->getName();
                     return "$name";
+                },
+                'choice_attr' => function ($value, $key, $index) use ($srvGeoJson) {
+                    return array(
+                        'data-geojson' => json_encode($srvGeoJson->getGeoJson(array($value)), JSON_HEX_APOS + JSON_HEX_TAG + JSON_HEX_AMP + JSON_HEX_QUOT)
+                    );
                 }
             ))
             ->add('back', SubmitType::class)
