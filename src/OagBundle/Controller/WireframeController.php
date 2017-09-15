@@ -11,6 +11,7 @@ use OagBundle\Service\ChangeService;
 use OagBundle\Service\Classifier;
 use OagBundle\Service\Cove;
 use OagBundle\Service\DPortal;
+use OagBundle\Service\Geocoder;
 use OagBundle\Service\IATI;
 use OagBundle\Service\OagFileService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -33,6 +34,7 @@ class WireframeController extends Controller {
         $em = $this->getDoctrine()->getEntityManager();
         $srvCove = $this->get(Cove::class);
         $srvClassifier = $this->get(Classifier::class);
+        $srvGeocoder = $this->get(Geocoder::class);
 
         $oagfile = new OagFile();
         $sourceUploadForm = $this->createForm(OagFileType::class, $oagfile);
@@ -60,6 +62,7 @@ class WireframeController extends Controller {
                 // TODO CoVE failed
             }
             $srvClassifier->classifyOagFile($oagfile);
+            $srvGeocoder->geocodeOagFile($oagfile);
 
 	    return $this->redirect($this->generateUrl('oag_wireframe_improveyourdata', array('id' => $oagfile->getId())));
 	}
@@ -221,7 +224,7 @@ class WireframeController extends Controller {
             $enhFile->setIatiActivityId($activityId);
             $srvClassifier->classifyEnhancementFile($enhFile);
 
-            $file->addEnhancingDocument($enhFile);       
+            $file->addEnhancingDocument($enhFile);
             $em->persist($file);
             $em->flush();
 
@@ -294,6 +297,131 @@ class WireframeController extends Controller {
     }
 
     /**
+     * @Route("/geocoder/{id}")
+     * @ParamConverter("file", class="OagBundle:OagFile")
+     */
+    public function geocoderAction(OagFile $file) {
+        $srvIATI = $this->get(IATI::class);
+        $root = $srvIATI->load($file);
+
+        return array(
+            'file' => $file,
+            'activities' => $srvIATI->summariseToArray($root)
+        );
+    }
+
+    /**
+     * @Route("/geocoder/{id}/{activityId}")
+     * @ParamConverter("file", class="OagBundle:OagFile")
+     */
+    public function geocoderSuggestionAction(Request $request, OagFile $file, $activityId) {
+        $em = $this->getDoctrine()->getManager();
+        $srvGeocoder = $this->get(Classifier::class);
+        $srvIATI = $this->get(IATI::class);
+        $srvOagFile = $this->get(OagFileService::class);
+
+        $root = $srvIATI->load($file);
+        $activity = $srvIATI->getActivityById($root, $activityId);
+
+        if (is_null($activity)) {
+            // TODO throw a reasonable error
+        }
+
+        // load all suggested tags
+        $geocoderGeolocs = $file->getGeolocations()->toArray();
+        foreach ($file->getEnhancingDocuments() as $enhFile) {
+            // if it is only relevant to another activity, ignore
+            if ((!is_null($enhFile)) && ($enhFile->getIatiActivityId() !== $activityId)) continue;
+            $geocoderGeolocs = array_merge($geocoderGeolocs, $enhFile->getGeolocations()->toArray());
+        }
+        // no duplicates please
+        $geocoderGeolocs = array_unique($geocoderGeolocs, SORT_REGULAR);
+
+        // enhancement upload form
+        $enhFile = new EnhancementFile();
+        $enhUploadForm = $this->createForm(EnhancementFileType::class, $enhFile);
+        $enhUploadForm->add('Upload', SubmitType::class, array(
+            'attr' => array('class' => 'submit'),
+        ));
+        $enhUploadForm->handleRequest($request);
+        if ($enhUploadForm->isSubmitted() && $enhUploadForm->isValid()) {
+            $tmpFile = $enhFile->getDocumentName();
+            $enhFile->setMimeType(mime_content_type($tmpFile->getPathName()));
+
+            $filename = $tmpFile->getClientOriginalName();
+
+            $tmpFile->move(
+                $this->getParameter('oagfiles_directory'), $filename
+            );
+
+            $enhFile->setDocumentName($filename);
+            $enhFile->setUploadDate(new \DateTime('now'));
+            $enhFile->setIatiActivityId($activityId);
+            $srvGeocoder->geocodeEnhancementFile($enhFile);
+
+            $file->addEnhancingDocument($enhFile);
+            $em->persist($file);
+            $em->flush();
+
+            return $this->redirect($this->generateUrl('oag_wireframe_geocodersuggestion', array('id' => $file->getId(), 'activityId' => $activityId)));
+        }
+
+        $form = $this->createFormBuilder()
+            ->add('tags', ChoiceType::class, array(
+                'expanded' => true,
+                'multiple' => true,
+                'choices' => $geocoderGeolocs,
+                'data' => array(),
+                'choice_label' => function ($value, $key, $index) {
+                    $name = $value->getName();
+                    return "$name";
+                }
+            ))
+            ->add('back', SubmitType::class)
+            ->add('save', SubmitType::class)
+            ->getForm();
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('back')->isClicked()) {
+                return $this->redirect($this->generateUrl('oag_wireframe_geocoder', array('id' => $file->getId())));
+            }
+
+            $editedTags = $form->getData()['tags'];
+
+            // tags to add
+            $toAdd = array();
+            foreach ($geocoderGeolocs as $suggestedGeoloc) {
+                if (in_array($suggestedGeoloc, $editedTags)) {
+                    $srvIATI->addActivityGeolocation($activity, $suggestedGeoloc);
+                    $toAdd[] = $suggestedGeoloc;
+                }
+            }
+
+            $resultXML = $srvIATI->toXML($root);
+            $srvOagFile->setContents($file, $resultXML);
+
+            //$change = new Change();
+            //$change->setAddedTags($toAdd);
+            //$change->setRemovedTags($toRemove);
+            //$change->setFile($file);
+            //$change->setActivityId($activityId);
+            //$change->setTimestamp(new \DateTime('now'));
+            //$em->persist($change);
+            //$em->flush();
+
+            return $this->redirect($this->generateUrl('oag_wireframe_geocoder', array('id' => $file->getId())));
+        }
+
+        return array(
+            'file' => $file,
+            'activity' => $srvIATI->summariseActivityToArray($activity),
+            'form' => $form->createView(),
+            'enhancementUploadForm' => $enhUploadForm->createView()
+        );
+    }
+
+    /**
      * @Route("/preview/{id}")
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
@@ -309,20 +437,6 @@ class WireframeController extends Controller {
             'dPortalUri' => $uri,
             'file' => $file
         );
-    }
-
-    /**
-     * @Route("/geocoder")
-     */
-    public function geocoderAction() {
-        return array();
-    }
-
-    /**
-     * @Route("/geocoderSuggestion")
-     */
-    public function geocoderSuggestionAction() {
-        return array();
     }
 
     /**

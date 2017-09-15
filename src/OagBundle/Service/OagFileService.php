@@ -91,7 +91,7 @@ class OagFileService extends AbstractService {
      */
     public function hasBeenGeocoded(OagFile $oagFile) {
         // TODO implement
-        return true;
+        return false;
     }
 
     /**

@@ -63,6 +63,15 @@ class Geolocation
     /**
      * @var string
      *
+     * XPath: ./feature-designation/@code
+     *
+     * @ORM\Column(name="featureDesignation", type="string", length=255)
+     */
+    private $featureDesignation;
+
+    /**
+     * @var string
+     *
      * XPath: ./point/pos (first half)
      *
      * @ORM\Column(name="pointPosLat", type="decimal", precision=14, scale=12)
@@ -182,6 +191,30 @@ class Geolocation
     public function getLocationIdVocab()
     {
         return $this->locationIdVocab;
+    }
+
+    /**
+     * Set featureDesignation
+     *
+     * @param string $featureDesignation
+     *
+     * @return Geolocation
+     */
+    public function setFeatureDesignation($featureDesignation)
+    {
+        $this->featureDesignation = $featureDesignation;
+
+        return $this;
+    }
+
+    /**
+     * Get featureDesignation
+     *
+     * @return string
+     */
+    public function getFeatureDesignation()
+    {
+        return $this->featureDesignation;
     }
 
     /**

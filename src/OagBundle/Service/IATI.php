@@ -376,8 +376,11 @@ class IATI extends AbstractService {
         $name->narrative[] = $geoloc->getName();
 
         $locId = $location->addChild('location-id');
-        $locId->addAtrribute('code', $geoloc->getLocationIdCode());
-        $locId->addAtrribute('vocabulary', $geoloc->getLocationIdVocab());
+        $locId->addAttribute('code', $geoloc->getLocationIdCode());
+        $locId->addAttribute('vocabulary', $geoloc->getLocationIdVocab());
+
+        $featureDes = $location->addChild('feature-designation');
+        $featureDes->addAttribute('code', $geoloc->getFeatureDesignation());
 
         $point = $location->addChild('point');
         $lat = $geoloc->getPointPosLat();
