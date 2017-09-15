@@ -21,15 +21,40 @@
                 <div class="heading summary">
                     <h1>Right now, your data...</h1>
                 </div>
+
                 <div class="content-block summary">
                     <ul>
-                        <li><h2><span class="completed">Works for most people comparing IATI data</span></h2></li>
-                        <li><h2><span class="completed">Helps show traceability</span></h2></li>
+                        <li>
+                            <h2 class="completed">Works for most people comparing IATI data</h2>
+                            <div class="info">
+                                <p>This is some more info, explaining in a bit more detail how your data works for most people
+                                  comparing IATI data. Quam doloribus ut quisquam suscipit consectetur ab quasi.</p>
+                            </div>
+                        </li>
+                        <li>
+                          <h2 class="completed">Helps show traceability</h2>
+                          <div class="info">
+                              <p>This is some more info, explaining in a bit more detail how your data helps show
+                                traceability. Quam doloribus ut quisquam suscipit consectetur ab quasi.</p>
+                          </div>
+                        </li>
                         {% if classified %}
-                        <li><h2><span class="completed">Accusamus adipisci voluptatem aperiam rerum occaecati incidunt fuga provident</span></h2></li>
+                        <li>
+                            <h2 class="completed">Accusamus adipisci voluptatem aperiam rerum occaecati incidunt fuga provident</h2>
+                            <div class="info">
+                              <p>This is some more info, explaining in a bit more detail how your data is classified .Quam doloribus
+                                ut quisquam suscipit consectetur ab quasi.</p>
+                            </div>
+                        </li>
                         {% endif %}
                         {% if geocoded %}
-                        <li><h2><span class="completed">Shows exactly where your work helps people</span></h2></li>
+                        <li>
+                            <h2 class="completed">Shows exactly where your work helps people</h2>
+                            <div class="info">
+                                <p>This is some more info, explaining in a bit more detail how your work helps people.
+                                  Quam doloribus ut quisquam suscipit consectetur ab quasi.</p>
+                            </div>
+                        </li>
                         {% endif %}
                     </ul>
                 </div>
@@ -45,7 +70,8 @@
                         {% if not classified %}
                         <li><h2><span class="tip">Find AG projects to fund</span></h2>
                             <div class="improvements">
-                                <p>Atque repellat nesciunt unde. Provident quam dolores ipsam debitis harum. Omnis modi et eveniet autem. Earum est perferendis officia voluptatem quae.</p>
+                                <p>Atque repellat nesciunt unde. Provident quam dolores ipsam debitis harum. Omnis modi et eveniet autem. Earum est perferendis
+                                  officia voluptatem quae.</p>
                                 <a href="{{ path('oag_wireframe_classifier', { 'id': file.getId() }) }}"><button>Use Our Classifier</button></a>
                             </div>
                         </li>
@@ -53,7 +79,8 @@
                         {% if not geocoded %}
                         <li><h2><span class="tip">Find partners on the ground</span></h2>
                             <div class="improvements">
-                                <p>In eius et enim. Quam doloribus ut quisquam suscipit consectetur ab quasi. Provident fugiat explicabo est rerum. Eveniet ut quisquam et omnis rerum dolores corrupti architecto. Facere in ipsa soluta.</p>
+                                <p>In eius et enim. Quam doloribus ut quisquam suscipit consectetur ab quasi. Provident fugiat explicabo est rerum. Eveniet ut
+                                  quisquam et omnis rerum dolores corrupti architecto. Facere in ipsa soluta.</p>
                                 <a href="{{ path('oag_wireframe_geocoder', { 'id': file.getId() }) }}"><button>Use Our Geocoder</button></a>
                             </div>
                         </li>
@@ -67,4 +94,25 @@
 
     </div>
 
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript" src="{{ asset('bundles/oag/jquery-filestyle-1.5.1/src/jquery-filestyle.min.js') }}"></script>
+    <script>
+        $('.info').hide();
+        $('.completed').on('click', function() {
+            var $this = $(this),
+            $next = $this.next();
+
+            var $last = $('div:visible', $this.parents('ul'));
+
+            if ($last.length) {
+                $last.slideUp('fast');
+            }
+
+            if ($last.parents('li').index() !== $this.parent().index()) {
+                $next.slideDown('fast');
+            }
+        });
+    </script>
 {% endblock %}

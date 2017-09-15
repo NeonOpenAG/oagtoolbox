@@ -25,6 +25,7 @@ h3,
 h4,
 h5,
 h6 {
+  cursor: default;
   color: $oag_dark;
   font-weight: normal;
 }
@@ -402,6 +403,7 @@ article {
         margin-top: 0.5em;
       }
       .completed {
+        cursor: pointer;
         &:before {
           font-family: FontAwesome;
           color: $oag_green;
@@ -424,7 +426,8 @@ article {
           margin-right: 0.6em;
         }
       }
-      .improvements {
+      .improvements,
+      .info {
         display: flex;
         p {
           width: 80%;
