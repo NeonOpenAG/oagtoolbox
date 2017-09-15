@@ -475,6 +475,17 @@ form {
   background-color: transparent;
   border-radius: 0;
   box-shadow: none;
+  padding: 4em 0 0 0;
+  button {
+    bottom: 31px;
+    left: 428px;
+  }
+  hr {
+    margin-bottom: 1em;
+  }
+  form {
+    margin-top: 1em;
+  }
 }
 
 .bottom-page-nav {
