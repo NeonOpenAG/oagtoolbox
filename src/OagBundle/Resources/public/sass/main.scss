@@ -265,12 +265,30 @@ nav {
 
 .instructions {
   background-color: $oag_bg;
-  padding-top: 11em;
-  h1 {
-    color: $oag_purple;
-  }
+  padding-top: 12em;
   h2 {
     color: #585873;
+  }
+  .template {
+    display: flex;
+    h2 {
+      margin: 0.5em 0;
+    }
+    button {
+      margin-left: 1.5em;
+      span:before {
+        font-family: FontAwesome;
+        margin-right: 0.6em;
+        content: "\f019";
+      }
+    }
+  }
+  .info p {
+    &:before {
+      font-family: FontAwesome;
+      margin-right: 0.6em;
+      content: "\f05a";
+    }
   }
 }
 
