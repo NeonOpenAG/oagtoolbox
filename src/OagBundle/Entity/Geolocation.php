@@ -10,8 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="geolocation")
  * @ORM\Entity(repositoryClass="OagBundle\Repository\GeolocationRepository")
  */
-class Geolocation
-{
+class Geolocation {
+
     /**
      * @var int
      *

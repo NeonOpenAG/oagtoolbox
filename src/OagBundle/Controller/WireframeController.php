@@ -7,7 +7,6 @@ use OagBundle\Entity\OagFile;
 use OagBundle\Entity\EnhancementFile;
 use OagBundle\Form\EnhancementFileType;
 use OagBundle\Form\OagFileType;
-use OagBundle\Service\ChangeService;
 use OagBundle\Service\Classifier;
 use OagBundle\Service\Cove;
 use OagBundle\Service\DPortal;
@@ -408,14 +407,13 @@ class WireframeController extends Controller {
             $resultXML = $srvIATI->toXML($root);
             $srvOagFile->setContents($file, $resultXML);
 
-            //$change = new Change();
-            //$change->setAddedTags($toAdd);
-            //$change->setRemovedTags($toRemove);
-            //$change->setFile($file);
-            //$change->setActivityId($activityId);
-            //$change->setTimestamp(new \DateTime('now'));
-            //$em->persist($change);
-            //$em->flush();
+            $change = new Change();
+            $change->setAddedGeolocs($toAdd);
+            $change->setFile($file);
+            $change->setActivityId($activityId);
+            $change->setTimestamp(new \DateTime('now'));
+            $em->persist($change);
+            $em->flush();
 
             return $this->redirect($this->generateUrl('oag_wireframe_geocoder', array('id' => $file->getId())));
         }
