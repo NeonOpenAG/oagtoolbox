@@ -328,6 +328,9 @@ class WireframeController extends Controller {
             // TODO throw a reasonable error
         }
 
+        // get these but only to display them, not to add/remove them as with the classifier
+        $currentLocations = $srvIATI->getActivityLocations($activity);
+
         // load all suggested tags
         $geocoderGeolocs = $file->getGeolocations()->toArray();
         foreach ($file->getEnhancingDocuments() as $enhFile) {
@@ -422,6 +425,7 @@ class WireframeController extends Controller {
             'file' => $file,
             'activity' => $srvIATI->summariseActivityToArray($activity),
             'form' => $form->createView(),
+            'currentLocations' => $currentLocations,
             'enhancementUploadForm' => $enhUploadForm->createView()
         );
     }

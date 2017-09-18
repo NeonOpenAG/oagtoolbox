@@ -36,11 +36,11 @@ class IATI extends AbstractService {
     }
 
     /**
-     * Perform an xpath but with an additional namespace defined.
+     * Perform an xpath but prioritising different localisations.
      *
      * @param \SimpleXMLElement $activity the activity to xpath within
      * @param string $xpathQuery
-     * @param string $namespace the name of the namespace
+     * @param string $namespace
      * @return \SimpleXMLElement[]
      */
     public function xpathNS(\SimpleXMLElement $activity, $xpathQuery, $namespace = 'openag') {
@@ -186,26 +186,7 @@ class IATI extends AbstractService {
      * @return string|null
      */
     public function getActivityTitle($activity) {
-        $preference = array(
-            './title/narrative[not(@xml:lang)]',
-            './title/narrative[@xml:lang="en"]', // TODO make this configurable
-            './title/narrative'
-        );
-
-        foreach ($preference as $path) {
-            $finds = $activity->xpath($path);
-            foreach ($finds as $found) {
-                // we found a narrative of this type
-                $name = (string) $found;
-                if (strlen($name) == 0) {
-                    // some activities have empty narratives, for reasons unknown
-                    continue;
-                }
-                return $name;
-            }
-        }
-
-        return null;
+        return $this->getNarrative($activity, 'title');
     }
 
     /**
@@ -222,30 +203,16 @@ class IATI extends AbstractService {
      */
     public function getActivityDescription($activity) {
         $descPreference = array(
-            './description[not(@type)]',
-            './description[@type=1]',
-            './description'
-        );
-
-        $narrativePreference = array(
-            './narrative[not(@xml:lang)]',
-            './narrative[@xml:lang="en"]', // TODO make this configurable
-            './narrative'
+            'description[not(@type)]',
+            'description[@type=1]',
+            'description'
         );
 
         foreach ($descPreference as $descPath) {
-            // use the first or look again
-            $descs = $activity->xpath($descPath);
-            if (count($descs) === 0) continue;
-            $desc = $descs[0];
+            $narrative = $this->getNarrative($activity, $descPath);
 
-            foreach ($narrativePreference as $narrativePath) {
-                // use the first or look again
-                $narratives = $desc->xpath($narrativePath);
-                if (count($narratives) === 0) continue;
-                $narrative = $narratives[0];
-
-                return (string) $narrative;
+            if (!is_null($narrative)) {
+                return $narrative;
             }
         }
 
@@ -386,6 +353,100 @@ class IATI extends AbstractService {
         $lat = $geoloc->getPointPosLat();
         $lng = $geoloc->getPointPosLong();
         $point->pos[] = "$lat $lng";
+    }
+
+    /**
+     * Get a summary of an activity's location nodes. Note the distinction
+     * between Geolocation and Location in the method's name: this method does
+     * not return Geolocation objects, just location tags summarised in
+     * associative arrays.
+     *
+     * @param \SimpleXMLElement $activity
+     * @return array[]
+     */
+    public function getActivityLocations($activity) {
+        $locations = array();
+
+        foreach ($activity->xpath('./location') as $location) {
+            /*
+             * TODO
+             * There are other attributes available to us here.
+             * http://iatistandard.org/202/activity-standard/iati-activities/iati-activity/location/
+             * The rest should be added here as required.
+             */
+
+            $simple = array();
+            $simple['name'] = $this->getNarrative($location, 'name');
+            $simple['description'] = $this->getNarrative($location, 'description');
+            $simple['activity-description'] = $this->getNarrative($location, 'activity-description');
+
+            // <point><pos>
+            if (count($activity->xpath('./point/pos')) > 0) {
+                $string = (string) $activity->xpath('./point/pos')[0];
+                $coords = array_map('floatval', explode(' ', $string));
+                $simple['point'] = array('pos' => $coords);
+            }
+
+            // <administrative> elements
+            $simple['administrative'] = array();
+            foreach ($activity->xpath('./administrative') as $admin) {
+                $adminArray = array(
+                    'code' => (string) $admin->attributes()['code'],
+                    'vocabulary' => (string) $admin->attributes()['vocabulary']
+                );
+
+                if (array_key_exists('level', $admin->attributes())) {
+                    $adminArray['level'] = intval((string) $admin->attributes()['level']);
+                }
+
+                $simple['administrative'][] = $adminArray;
+            }
+
+            // <location-class>
+            if (count($activity->xpath('./location-class/@code')) > 0) {
+                $simple['location-class'] = (string) $activity->xpath('./location-class/@code');
+            }
+
+            // <feature-designation>
+            if (count($activity->xpath('./feature-designation/@code')) > 0) {
+                $simple['feature-designation'] = (string) $activity->xpath('./feature-designation/@code');
+            }
+
+            // getNarrative may return null, remove these entries entirely
+            $simple = array_filter($simple, function ($val) { return !is_null($val); });
+
+            $locations[] = $simple;
+        }
+
+        return $locations;
+    }
+
+    /**
+     * Get the narrative of an XML element, holding preference to specific
+     * languages.
+     *
+     * @param \SimpleXMLElement $element
+     * @param string the element name to get the narrative of
+     * @return \SimpleXMLElement[]
+     */
+    public function getNarrative(\SimpleXMLElement $element, $elementName) {
+        $preference = array(
+            "./$elementName/narrative[not(@xml:lang)]",
+            "./$elementName/narrative[@xml:lang=\"en\"]", // TODO make this configurable
+            "./$elementName/narrative"
+        );
+
+        foreach ($preference as $potential) {
+            $results = $element->xpath($potential);
+            foreach ($results as $found) {
+                $string = (string) $found;
+                if (strlen($string) > 0) {
+                    return $string;
+                }
+            }
+        }
+
+        return null;
     }
 
 }

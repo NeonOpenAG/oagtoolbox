@@ -23,13 +23,34 @@
 
                     <!-- TODO: Move this back out, but not to activity.html.twig -->
                     {{ form_start(form) }}
+
+                    {% for location in currentLocations %}
+                    <div class="tag-row">
+                        {# <div class="suggested-map-block" data-geojson='{{ tag.vars.attr['data-geojson'] }}'></div> #}
+
+                        <div class="info">
+                            {% if location.name is defined %} 
+                                <div class="tag">{{ location.name }}</div>
+                            {% endif %}
+
+                            {% if location.description is defined %} 
+                                <p>{{ location.description }}</p>
+                            {% endif %}
+
+                            {% if location['activity-description'] is defined %} 
+                                <p>{{ location['activity-description'] }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+
                     {% for tag in form['tags'] %}
                     <div class="tag-row">
                         <div class="suggested-map-block" data-geojson='{{ tag.vars.attr['data-geojson'] }}'></div>
 
                         <div class="info">
-                          <div class="tag">{{ form_label(tag) }}</div>
-                          <label class="addremove">{{ form_widget(tag) }}<span></span></label>
+                            <div class="tag">{{ form_label(tag) }}</div>
+                            <label class="addremove">{{ form_widget(tag) }}<span></span></label>
                         </div>
                     </div>
                     {% endfor %}
