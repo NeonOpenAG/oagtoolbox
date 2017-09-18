@@ -53,6 +53,18 @@ class Change {
     private $removedTags;
 
     /**
+     * @ORM\ManyToMany(targetEntity="OagBundle\Entity\Geolocation")
+     * @ORM\JoinTable(name="change_geoloc_add")
+     */
+    private $addedGeolocs;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="OagBundle\Entity\Geolocation")
+     * @ORM\JoinTable(name="change_geoloc_remove")
+     */
+    private $removedGeolocs;
+
+    /**
      * Get id
      *
      * @return int
@@ -138,7 +150,7 @@ class Change {
     }
 
     /**
-     * @return ArrayCollection|array
+     * @return ArrayCollection
      */
     public function getAddedTags() {
         return $this->addedTags;
@@ -155,10 +167,44 @@ class Change {
     }
 
     /**
-     * @return ArrayCollection|array
+     * @return ArrayCollection
      */
     public function getRemovedTags() {
         return $this->removedTags;
+    }
+
+    /**
+     * @param ArrayCollection|array $addedGeolocs
+     */
+    public function setAddedGeolocs($addedGeolocs) {
+        if (is_array($addedGeolocs)) {
+            $addedGeolocs = new ArrayCollection($addedGeolocs);
+        }
+        $this->addedGeolocs = $addedGeolocs;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getAddedGeolocs() {
+        return $this->addedGeolocs;
+    }
+
+    /**
+     * @param ArrayCollection|array $removedGeolocs
+     */
+    public function setRemovedGeolocs($removedGeolocs) {
+        if (is_array($removedGeolocs)) {
+            $removedGeolocs = new ArrayCollection($removedGeolocs);
+        }
+        $this->removedGeolocs = $removedGeolocs;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getRemovedGeolocs() {
+        return $this->removedGeolocs;
     }
 
 }

@@ -522,7 +522,7 @@ form {
 -------------------------------------------------------------- */
 
 #geo-suggestions {
-  form {
+  form[name=form] {
     margin-top: 2em;
     &:last-child .tag-row {
       margin-bottom: 0;
@@ -549,7 +549,7 @@ form {
   span {
     //margin: 2em;
   }
-  #existing-map-block {
+  .suggested-map-block {
     border: none;
     background-color: #dbe5ea;
     width: 600px;

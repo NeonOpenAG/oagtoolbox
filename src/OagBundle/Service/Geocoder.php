@@ -2,6 +2,7 @@
 
 namespace OagBundle\Service;
 
+use OagBundle\Entity\EnhancementFile;
 use OagBundle\Entity\Geolocation;
 use OagBundle\Entity\OagFile;
 use OagBundle\Service\CSV;
@@ -50,11 +51,54 @@ class Geocoder extends AbstractAutoService {
      * @param OagFile $file the file to process
      */
     public function geocodeOagFile(OagFile $file) {
-        $em = $this->get('doctrine')->getManager();
-        $geolocRepo = $this->get('doctrine')->getRepository(Geolocation::class);
+        $em = $this->getContainer()->get('doctrine')->getManager();
+        $geolocRepo = $this->getContainer()->get('doctrine')->getRepository(Geolocation::class);
         $srvOagFile = $this->getContainer()->get(OagFileService::class);
 
         $xml = $srvOagFile->getContents($file);
+        $locations = $this->processXML($xml);
+
+        $file->clearGeolocations();
+
+        foreach ($locations as $location) {
+            $locationIdCode = $location['geonameId'];
+            $locationIdVocab = $this->getContainer()->getParameter('geocoder')['id_vocabulary'];
+
+            $geoloc = $geolocRepo->findOneBy(array(
+                'locationIdCode' => $locationIdCode,
+                'locationIdVocab' => $locationIdVocab
+            ));
+
+            if (!$geoloc) {
+                $geoloc = new Geolocation();
+                $geoloc->setName($location['toponymName']);
+                $geoloc->setLocationIdCode($locationIdCode);
+                $geoloc->setLocationIdVocab($locationIdVocab);
+                $geoloc->setFeatureDesignation($location['fcode']);
+                $geoloc->setPointPosLat($location['lat']);
+                $geoloc->setPointPosLong($location['lng']);
+                // TODO admin
+            }
+
+            $file->addGeolocation($geoloc);
+        }
+
+        $em->persist($file);
+        $em->flush();
+    }
+
+    /**
+     * Process an EnhancementFile and persist the results as Geolocation
+     * objects, attached to the EnhancementFile.
+     *
+     * @param EnhancementFile $file the file to process
+     */
+    public function geocodeEnhancementFile(EnhancementFile $file) {
+        $em = $this->getContainer()->get('doctrine')->getManager();
+        $geolocRepo = $this->getContainer()->get('doctrine')->getRepository(Geolocation::class);
+        $srvEnhancementFile = $this->getContainer()->get(EnhancementFileService::class);
+
+        $xml = $srvEnhancementFile->getContents($file);
         $locations = $this->processXML($xml);
 
         $file->clearGeolocations();

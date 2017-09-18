@@ -10,8 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="geolocation")
  * @ORM\Entity(repositoryClass="OagBundle\Repository\GeolocationRepository")
  */
-class Geolocation
-{
+class Geolocation {
+
     /**
      * @var int
      *
@@ -59,6 +59,15 @@ class Geolocation
      * @ORM\Column(name="locationIdVocab", type="string", length=255)
      */
     private $locationIdVocab;
+
+    /**
+     * @var string
+     *
+     * XPath: ./feature-designation/@code
+     *
+     * @ORM\Column(name="featureDesignation", type="string", length=255)
+     */
+    private $featureDesignation;
 
     /**
      * @var string
@@ -182,6 +191,28 @@ class Geolocation
     public function getLocationIdVocab()
     {
         return $this->locationIdVocab;
+    }
+
+    /**
+     * Set featureDesignation
+     *
+     * @param string $featureDesignation
+     *
+     * @return Geolocation
+     */
+    public function setFeatureDesignation($featureDesignation)
+    {
+        $this->featureDesignation = $featureDesignation;
+    }
+
+    /**
+     * Get featureDesignation
+     *
+     * @return string
+     */
+    public function getFeatureDesignation()
+    {
+        return $this->featureDesignation;
     }
 
     /**
