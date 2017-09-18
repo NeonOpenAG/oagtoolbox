@@ -32,15 +32,32 @@ class GeoJson extends AbstractService {
     }
 
     /**
-     * Get a Geojson set of data fit for NeonMap from a series of Geolocations.
+     * Get a GeoJson feature from some basic properties.
      *
-     * @param Geolocation[] $geolocs
+     * @param Geolocation $Geoloc
      * @return array
      */
-    public function getGeojson($geolocs) {
+    public function featureFromCoords($long, $lat) {
+        return array(
+            'type' => 'Feature',
+            'geometry' => array(
+                'type' => 'Point',
+                'coordinates' => array($long, $lat)
+            ),
+            'properties' => array()
+        );
+    }
+
+    /**
+     * Get a GeoJson feature collection from a list of GeoJson features.
+     * 
+     * @param array[] $features
+     * @return array
+     */
+    public function featureCollection($features) {
         return array(
             'type' => 'FeatureCollection',
-            'features' => array_map(array($this, 'featureFromGeoloc'), $geolocs)
+            'features' => $features
         );
     }
 

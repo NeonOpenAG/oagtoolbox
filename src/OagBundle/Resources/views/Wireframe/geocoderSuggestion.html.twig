@@ -26,7 +26,9 @@
 
                     {% for location in currentLocations %}
                     <div class="tag-row">
-                        {# <div class="suggested-map-block" data-geojson='{{ tag.vars.attr['data-geojson'] }}'></div> #}
+                        {% if loop.index0 in currentLocationsMaps|keys %}
+                            <div class="suggested-map-block" data-geojson='{{ currentLocationsMaps[loop.index0] }}'></div>
+                        {% endif %}
 
                         <div class="info">
                             {% if location.name is defined %} 

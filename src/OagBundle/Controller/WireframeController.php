@@ -330,6 +330,15 @@ class WireframeController extends Controller {
 
         // get these but only to display them, not to add/remove them as with the classifier
         $currentLocations = $srvIATI->getActivityLocations($activity);
+        $currentLocationsMaps = array();
+        foreach ($currentLocations as $index => $curLoc) {
+            if (array_key_exists('point', $curLoc)) {
+                $pos = $curLoc['point']['pos'];
+                $feature = $srvGeoJson->featureFromCoords($pos[1], $pos[0]);
+                $featureColl = $srvGeoJson->featureCollection(array($feature));
+                $currentLocationsMaps[$index] = json_encode($featureColl, JSON_HEX_APOS + JSON_HEX_TAG + JSON_HEX_AMP + JSON_HEX_QUOT);
+            }
+        }
 
         // load all suggested tags
         $geocoderGeolocs = $file->getGeolocations()->toArray();
@@ -381,8 +390,10 @@ class WireframeController extends Controller {
                     return "$name";
                 },
                 'choice_attr' => function ($value, $key, $index) use ($srvGeoJson) {
+                    $feature = $srvGeoJson->featureFromGeoloc($value);
+                    $featureColl = $srvGeoJson->featureCollection(array($feature));
                     return array(
-                        'data-geojson' => json_encode($srvGeoJson->getGeoJson(array($value)), JSON_HEX_APOS + JSON_HEX_TAG + JSON_HEX_AMP + JSON_HEX_QUOT)
+                        'data-geojson' => json_encode($featureColl, JSON_HEX_APOS + JSON_HEX_TAG + JSON_HEX_AMP + JSON_HEX_QUOT)
                     );
                 }
             ))
@@ -426,6 +437,7 @@ class WireframeController extends Controller {
             'activity' => $srvIATI->summariseActivityToArray($activity),
             'form' => $form->createView(),
             'currentLocations' => $currentLocations,
+            'currentLocationsMaps' => $currentLocationsMaps,
             'enhancementUploadForm' => $enhUploadForm->createView()
         );
     }

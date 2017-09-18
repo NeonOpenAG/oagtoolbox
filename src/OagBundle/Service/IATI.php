@@ -381,15 +381,15 @@ class IATI extends AbstractService {
             $simple['activity-description'] = $this->getNarrative($location, 'activity-description');
 
             // <point><pos>
-            if (count($activity->xpath('./point/pos')) > 0) {
-                $string = (string) $activity->xpath('./point/pos')[0];
+            if (count($location->xpath('./point/pos')) > 0) {
+                $string = (string) $location->xpath('./point/pos')[0];
                 $coords = array_map('floatval', explode(' ', $string));
                 $simple['point'] = array('pos' => $coords);
             }
 
             // <administrative> elements
             $simple['administrative'] = array();
-            foreach ($activity->xpath('./administrative') as $admin) {
+            foreach ($location->xpath('./administrative') as $admin) {
                 $adminArray = array(
                     'code' => (string) $admin->attributes()['code'],
                     'vocabulary' => (string) $admin->attributes()['vocabulary']
@@ -403,13 +403,13 @@ class IATI extends AbstractService {
             }
 
             // <location-class>
-            if (count($activity->xpath('./location-class/@code')) > 0) {
-                $simple['location-class'] = (string) $activity->xpath('./location-class/@code');
+            if (count($location->xpath('./location-class/@code')) > 0) {
+                $simple['location-class'] = (string) $location->xpath('./location-class/@code')[0];
             }
 
             // <feature-designation>
-            if (count($activity->xpath('./feature-designation/@code')) > 0) {
-                $simple['feature-designation'] = (string) $activity->xpath('./feature-designation/@code');
+            if (count($location->xpath('./feature-designation/@code')) > 0) {
+                $simple['feature-designation'] = (string) $location->xpath('./feature-designation/@code')[0];
             }
 
             // getNarrative may return null, remove these entries entirely
