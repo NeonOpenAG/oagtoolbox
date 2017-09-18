@@ -617,6 +617,7 @@ form {
 
 -------------------------------------------------------------- */
 
+.preview.block,
 iframe {
   width: 100%;
 }
@@ -633,6 +634,7 @@ iframe {
   margin: 2em 0 0.5em;
   p {
     color: $oag_dark;
+    margin-right: 0.5em;
   }
 }
 
@@ -757,6 +759,78 @@ table {
 
 -------------------------------------------------------------- */
 
+@media (max-width: 1020px) {
+  .version {
+    display: block;
+    .options {
+      display: block;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+
+  .content-block.download {
+    padding: 1.5em;
+  }
+
+	/* Force table to not be like tables anymore */
+	table, thead, tbody, th, td, tr {
+		display: block;
+	}
+
+	/* Hide table headers (but not display: none;, for accessibility) */
+	thead tr {
+		position: absolute;
+		top: -9999px;
+		left: -9999px;
+	}
+
+	tr {
+    margin-bottom: 0.5em;
+    box-shadow: 0 7px 14px rgba(50,50,93,.1), 0 3px 6px rgba(0,0,0,.08);
+    background-color: white;
+  }
+
+table td {
+		/* Behave  like a "row" */
+		border: none;
+		border-bottom: 1px solid #eee;
+		position: relative;
+		padding-left: 30%;
+    text-align: right;
+    &:nth-child(2),
+    &:nth-child(3) {
+      text-align: right;
+    }
+	}
+
+	td:before {
+		/* Now like a table header */
+		position: absolute;
+		/* Top/left values mimic padding */
+		left: 0;
+		width: 19%;
+    padding-left: 1em;
+		white-space: nowrap;
+    text-align: left;
+	}
+
+	/*
+	Label the data
+	*/
+	td:nth-of-type(1):before { content: "Delete"; }
+	td:nth-of-type(2):before { content: "File name"; }
+	td:nth-of-type(3):before { content: "Date"; }
+	td:nth-of-type(4):before { content: "Improved?"; }
+	td:nth-of-type(5):before { content: "Download"; }
+
+  .delete:before,
+  .download-icon:before {
+    font-size: 1em;
+  }
+}
+
 @media (max-width: 768px) {
   nav
   .block,
@@ -808,6 +882,22 @@ table {
       }
     }
   }
+  .options a {
+    width: calc(100% - 4em);
+    margin-bottom: 0.5em;
+    text-align: center;
+  }
+}
+
+@media (max-width: 611px) {
+  .upload-form {
+    div.jfilestyle.jfilestyle-corner input:first-child {
+      width: 42% !important;
+    }
+    button {
+      width: 100%;
+    }
+  }
 }
 
 @media (max-width: 563px) {
@@ -826,12 +916,6 @@ table {
   .upload-form {
     padding: 1em;
     width: calc(100% - 2em);
-    div.jfilestyle.jfilestyle-corner input:first-child {
-      width: 42% !important;
-    }
-    button {
-      width: 100%;
-    }
   }
   .view-suggestions {
     justify-content: center;
@@ -841,16 +925,28 @@ table {
   }
 }
 
+@media (max-width: 409px) {
+  .upload-form {
+    div.jfilestyle.jfilestyle-corner input:first-child {
+      width: 29% !important;
+    }
+  }
+}
+
 @media (max-width: 360px) {
   .block {
     padding: 0.5em;
     .intro.margin {
       padding: 1em;
+      margin-bottom: 0;
     }
   }
   .upload-form {
     div.jfilestyle.jfilestyle-corner input:first-child {
       width: 31% !important;
     }
+  }
+  .content-block.download {
+    padding: 0.5em;
   }
 }
