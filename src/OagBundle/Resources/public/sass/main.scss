@@ -25,6 +25,7 @@ h3,
 h4,
 h5,
 h6 {
+  cursor: default;
   color: $oag_dark;
   font-weight: normal;
 }
@@ -79,8 +80,8 @@ button,
     color: white;
     text-decoration: none;
     transform: translateY(-1px);
-    //box-shadow: 0 7px 14px rgba(50,50,93,.1), 0 3px 6px rgba(0,0,0,.08);
-    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+    box-shadow: 0 7px 14px rgba(50,50,93,.1), 0 3px 6px rgba(0,0,0,.08);
+    //box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
   }
   &:visited {
     color: white;
@@ -170,6 +171,8 @@ nav {
   line-height: 67px;
   .logo {
     float: left;
+    text-transform: uppercase;
+    font-weight: bold;
   }
   .nav-options {
     float: right;
@@ -263,16 +266,35 @@ nav {
 
 .instructions {
   background-color: $oag_bg;
-  padding-top: 11em;
-  h1 {
-    color: $oag_purple;
-  }
+  padding-top: 12em;
   h2 {
     color: #585873;
   }
+  .template {
+    display: flex;
+    h2 {
+      margin: 0.5em 0;
+    }
+    button {
+      margin-left: 1.5em;
+      span:before {
+        font-family: FontAwesome;
+        margin-right: 0.6em;
+        content: "\f019";
+      }
+    }
+  }
+  .info p {
+    &:before {
+      font-family: FontAwesome;
+      margin-right: 0.6em;
+      content: "\f05a";
+    }
+  }
 }
 
-.upload-form {
+.upload-form,
+.upload-info {
   position: relative;
   display: inline-block;
   background-color: white;
@@ -353,6 +375,9 @@ article {
   h3 {
     margin: 0;
   }
+  .upload-form h3 {
+    margin: 1em 0;
+  }
   .heading {
     background-color: white;
     padding: 1.2em 1.5em;
@@ -378,6 +403,7 @@ article {
         margin-top: 0.5em;
       }
       .completed {
+        cursor: pointer;
         &:before {
           font-family: FontAwesome;
           color: $oag_green;
@@ -400,7 +426,8 @@ article {
           margin-right: 0.6em;
         }
       }
-      .improvements {
+      .improvements,
+      .info {
         display: flex;
         p {
           width: 80%;
@@ -447,6 +474,23 @@ form {
       font-size: 1.5em;
       padding: 0 1em;
     }
+  }
+}
+
+.upload-info {
+  background-color: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 4em 0 0 0;
+  button {
+    bottom: 31px;
+    left: 428px;
+  }
+  hr {
+    margin-bottom: 1em;
+  }
+  form {
+    margin-top: 1em;
   }
 }
 

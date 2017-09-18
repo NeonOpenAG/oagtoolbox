@@ -203,8 +203,6 @@ class Geolocation {
     public function setFeatureDesignation($featureDesignation)
     {
         $this->featureDesignation = $featureDesignation;
-
-        return $this;
     }
 
     /**
