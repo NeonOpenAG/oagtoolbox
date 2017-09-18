@@ -522,7 +522,7 @@ form {
 -------------------------------------------------------------- */
 
 #geo-suggestions {
-  form {
+  form[name=form] {
     margin-top: 2em;
     &:last-child .tag-row {
       margin-bottom: 0;

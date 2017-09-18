@@ -1,5 +1,11 @@
 {% extends "OagBundle::base.html.twig" %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/oag/neonmap/dist/neonmap.css') }}" rel="stylesheet" />
+    <link href="{{ asset('bundles/oag/jquery-filestyle-1.5.1/src/jquery-filestyle.min.css') }}" rel="stylesheet" />
+{% endblock %}
+
 {% block title %}OagBundle:Wireframe:classifierSuggestion{% endblock %}
 
 {% block body %}
@@ -61,13 +67,14 @@
                     </div>
                     {{ form_end(form) }}
 
+                    <div class="upload-info">
+                        <h3>Got any project info to match this Activity ID you want the tool to read?</h3>
+                        <hr>
+                        <div>{{ form(enhancementUploadForm) }}</div>
+                    </div>
+
                 </div>
             </acticle>
-
-            <section>
-                <p>Got any project info to match this activity ID you want the tool to read?</p>
-                {{ form(enhancementUploadForm) }}
-            </section>
 
         </section>
 
@@ -83,9 +90,12 @@
             $('.suggested-map-block').neonmap({image_path: "{{ asset('bundles/oag/neonmap/dist/images') }}" });
         });
     </script>
-{% endblock %}
+    <script type="text/javascript" src="{{ asset('bundles/oag/jquery-filestyle-1.5.1/src/jquery-filestyle.min.js') }}"></script>
+    <script>
+        $(function () {
+            $(document).tooltip();
 
-{% block stylesheets %}
-    {{ parent() }}
-    <link href="{{ asset('bundles/oag/neonmap/dist/neonmap.css') }}" rel="stylesheet" />
+            $("#enhancement_file_documentName").jfilestyle();;
+        });
+    </script>
 {% endblock %}
