@@ -267,9 +267,6 @@ nav {
 .instructions {
   background-color: $oag_bg;
   padding-top: 12em;
-  h2 {
-    color: #585873;
-  }
   .template {
     display: flex;
     h2 {
@@ -289,6 +286,7 @@ nav {
       font-family: FontAwesome;
       margin-right: 0.6em;
       content: "\f05a";
+      color: $oag_green;
     }
   }
 }
@@ -743,8 +741,43 @@ table {
   margin-bottom: 20px;
 }
 
+
 /* --------------------------------------------------------------
 
    Media queries
 
 -------------------------------------------------------------- */
+
+@media (max-width: 768px) {
+  .gradient {
+    height: initial;
+  }
+  .upload-form button {
+    position: initial;
+  }
+  .instructions {
+    padding-top: 3em;
+    .template {
+      display: block;
+      button {
+        margin-left: 0;
+        float: none;
+        margin-bottom: 1em;
+      }
+    }
+  }
+}
+
+@media (max-width: 563px) {
+  .center.gradient {
+    padding: 0;
+  }
+  .upload-form {
+    div.jfilestyle.jfilestyle-corner input:first-child {
+      width: 39% !important;
+    }
+    button {
+      width: 100%;
+    }
+  }
+}
