@@ -15,8 +15,8 @@ html, body {
   font-size: 1em;
   color: $oag_title;
   background: $oag_blue;  /* fallback for old browsers */
-  background: -webkit-linear-gradient(150deg, $oag_blue 15%, $oag_purple 70%) fixed no-repeat;  /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(150deg, $oag_blue 15%, $oag_purple 70%) fixed no-repeat; /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: -webkit-linear-gradient(150deg, $oag_blue 15%, $oag_purple 90%) fixed no-repeat;  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(150deg, $oag_blue 15%, $oag_purple 90%) fixed no-repeat; /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
 h1,
@@ -25,6 +25,7 @@ h3,
 h4,
 h5,
 h6 {
+  cursor: default;
   color: $oag_dark;
   font-weight: normal;
 }
@@ -60,8 +61,10 @@ ul {
 
 button,
 .cta {
-  background-color: $oag_purple;
+  font-family: $oag_font;
+  background-color: $oag_grey;
   letter-spacing: inherit;
+  line-height: 24px;
   color: white;
   font-weight: bold;
   white-space: nowrap;
@@ -73,7 +76,7 @@ button,
   cursor: pointer;
   transition: all .15s ease;
   &:hover {
-    background-color: $oag_purple_highlight;
+    background-color: $oag_grey_highlight;
     color: white;
     text-decoration: none;
     transform: translateY(-1px);
@@ -92,6 +95,33 @@ button,
   }
 }
 
+.view:before {
+  font-family: FontAwesome;
+  color: $oag_offwhite;
+  margin-right: 0.6em;
+  content: "\f06e";
+}
+
+.check:before {
+  font-family: FontAwesome;
+  color: $oag_offwhite;
+  margin-right: 0.6em;
+  content: "\f046";
+}
+
+.download-icon:before {
+  font-family: FontAwesome;
+  font-size: 1.5em;
+  color: $oag_title;
+  content: "\f019";
+}
+.delete:before {
+  font-family: FontAwesome;
+  font-size: 1.5em;
+  color: $oag_red;
+  content: "\f057";
+}
+
 
 /* --------------------------------------------------------------
 
@@ -100,11 +130,11 @@ button,
 -------------------------------------------------------------- */
 
 .block {
-  width: 1200px;
+  max-width: 1200px;
 }
 
 .content {
-  width: 1000px;
+  max-width: 1000px;
 }
 
 .center {
@@ -124,7 +154,7 @@ header {
   background-color: white;
   display: flex;
   justify-content: center;
-  padding: 0em 2em;
+  padding: 0em 3em;
   a {
     &:visited {
       color: $oag_dark;
@@ -140,6 +170,8 @@ nav {
   line-height: 67px;
   .logo {
     float: left;
+    text-transform: uppercase;
+    font-weight: bold;
   }
   .nav-options {
     float: right;
@@ -160,6 +192,9 @@ nav {
       }
       &:nth-child(1) > a {
         box-shadow: inset 0px -6px 0px $oag_purple;
+        &:before {
+          content: "Preview";
+        }
         &:hover {
           background-color: rgba($oag_purple, 0.1);
           box-shadow: inset 0px -6px 0px $oag_purple_highlight;
@@ -167,6 +202,9 @@ nav {
       }
       &:nth-child(2) > a {
         box-shadow: inset 0px -6px 0px $oag_green;
+        &:before {
+          content: "Check and improve";
+        }
         &:hover {
           background-color: rgba($oag_green, 0.1);
           box-shadow: inset 0px -6px 0px $oag_green_highlight;
@@ -174,6 +212,9 @@ nav {
       }
       &:nth-child(3) > a {
         box-shadow: inset 0px -6px 0px $oag_blue;
+        &:before {
+          content: "Download";
+        }
         &:hover {
           background-color: rgba($oag_blue, 0.1);
           box-shadow: inset 0px -6px 0px $oag_blue_highlight;
@@ -193,8 +234,8 @@ nav {
 .gradient {
   height: 532px;
   background: $oag_blue;  /* fallback for old browsers */
-  background: -webkit-linear-gradient(150deg, $oag_blue 15%, $oag_purple 70%);  /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(150deg, $oag_blue 15%, $oag_purple 70%); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: -webkit-linear-gradient(150deg, $oag_blue 15%, $oag_purple 90%);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(150deg, $oag_blue 15%, $oag_purple 90%); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   h1 {
     color: white;
   }
@@ -233,16 +274,32 @@ nav {
 
 .instructions {
   background-color: $oag_bg;
-  padding-top: 11em;
-  h1 {
-    color: $oag_purple;
+  padding-top: 12em;
+  .template {
+    display: flex;
+    h2 {
+      margin: 0.5em 0;
+    }
+    button {
+      margin-left: 1.5em;
+      span:before {
+        font-family: FontAwesome;
+        margin-right: 0.6em;
+        content: "\f019";
+      }
+    }
   }
-  h2 {
-    color: #585873;
+  .info p {
+    &:before {
+      font-family: FontAwesome;
+      margin-right: 0.6em;
+      content: "\f05a";
+    }
   }
 }
 
-.upload-form {
+.upload-form,
+.upload-info {
   position: relative;
   display: inline-block;
   background-color: white;
@@ -250,9 +307,11 @@ nav {
   border: none;
   border-radius: 2px;
   box-shadow: 0 15px 35px rgba(50,50,93,.1), 0 5px 15px rgba(0,0,0,.07);
+  width: calc(100% - 4em);
   div {
     margin-bottom: 1em;
     &.jfilestyle {
+      box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
       input {
         font-family: $oag_font;
         font-size: 1em;
@@ -267,7 +326,6 @@ nav {
             padding: 1em;
             // !important here to override the inline styling
             width: 250px !important;
-            box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
             border: 1px solid #dcdcdc;
             height: 16px;
           }
@@ -279,7 +337,6 @@ nav {
           height: 16px;
           padding: 1em;
           line-height: 1;
-          box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
           color: $oag_title;
           &:hover {
             color: $oag_dark;
@@ -296,6 +353,7 @@ nav {
     bottom: 48px;
     left: 460px;
     font-family: $oag_font;
+    line-height: 1.15;
   }
 }
 
@@ -310,6 +368,9 @@ article {
   position: relative;
   margin-bottom: 2em;
   box-shadow: 0 15px 35px rgba(50,50,93,.1), 0 5px 15px rgba(0,0,0,.07);
+  &.margin {
+    margin-bottom: 5em;
+  }
 }
 
 .activity {
@@ -318,6 +379,10 @@ article {
   h3 {
     margin: 0;
   }
+  .upload-form,
+  .upload-info h3 {
+    margin: 1em 0;
+  }
   .heading {
     background-color: white;
     padding: 1.2em 1.5em;
@@ -325,13 +390,16 @@ article {
     border-top-right-radius: 2px;
     &.summary {
       padding: 1.5em 3em;
+      h2 {
+        font-size: 2em;
+      }
     }
   }
   .content-block {
     background-color: #f9f9fd;
     border-bottom-left-radius: 2px;
     border-bottom-right-radius: 2px;
-    padding: .5em 1.5em 5.5em 1.5em;
+    padding: .5em 1.5em 1.5em 1.5em;
     &.summary {
       padding: 2em;
       ul li {
@@ -343,6 +411,7 @@ article {
         margin-top: 0.5em;
       }
       .completed {
+        cursor: pointer;
         &:before {
           font-family: FontAwesome;
           color: $oag_green;
@@ -365,7 +434,8 @@ article {
           margin-right: 0.6em;
         }
       }
-      .improvements {
+      .improvements,
+      .info {
         display: flex;
         p {
           width: 80%;
@@ -378,11 +448,166 @@ article {
       }
     }
   }
-  .view-suggestions {
-    position: absolute;
-    right: 24px;
-    bottom: 24px;
-    margin-top: 0.5em;
+}
+
+.view-suggestions {
+  display: flex;
+  justify-content: flex-end;
+  div {
+    margin-left: 1em;
+  }
+}
+
+/* --------------------------------------------------------------
+
+   Classifier suggestions page
+
+-------------------------------------------------------------- */
+
+form {
+  margin-top: 2em;
+  &:last-child .tag-row {
+    margin-bottom: 0;
+  }
+  .tag-row {
+  padding: 0;
+  margin: 1em 0;
+  background-color: $oag_bg;
+  display: flex;
+  justify-content: space-between;
+  box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
+    .tag {
+      display: flex;
+      align-items: center;
+      font-size: 1.5em;
+      padding: 0 1em;
+    }
+  }
+}
+
+.upload-info {
+  background-color: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 4em 0 0 0;
+  button {
+    bottom: 31px;
+    left: 428px;
+  }
+  hr {
+    margin-bottom: 1em;
+  }
+  form {
+    margin-top: 1em;
+  }
+}
+
+.bottom-page-nav {
+  position: absolute;
+  display: flex;
+  right: 0;
+  bottom: -84px;
+  button {
+    @extend .back;
+  }
+  div {
+    margin-left: 1em;
+    &:last-child button {
+      background-color: $oag_green;
+      color: white;
+      &:hover {
+        background-color: $oag_green_highlight;
+      }
+    }
+  }
+}
+
+
+/* --------------------------------------------------------------
+
+   Geocoder suggestions page
+
+-------------------------------------------------------------- */
+
+#geo-suggestions {
+  form[name=form] {
+    margin-top: 2em;
+    &:last-child .tag-row {
+      margin-bottom: 0;
+    }
+    .tag-row {
+    padding: 0;
+    margin: 1em 0;
+    background-color: $oag_bg;
+    display: flex;
+    justify-content: space-between;
+    box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
+      .tag {
+        display: flex;
+        align-items: center;
+        font-size: 1.5em;
+        padding: 0 0 1em 0;
+      }
+    }
+  }
+  .info {
+    flex: 1;
+    padding: 2em;
+  }
+  span {
+    //margin: 2em;
+  }
+  .suggested-map-block {
+    border: none;
+    background-color: #dbe5ea;
+    width: 600px;
+  }
+}
+
+
+/* --------------------------------------------------------------
+
+   Fancy checkbox styling
+
+-------------------------------------------------------------- */
+
+
+.addremove {
+  input {
+    display: none;
+  }
+  span {
+    @extend button;
+    width: 98px;
+    text-align: center;
+  }
+  input + span {
+    background-color: $oag_green;
+    &:hover {
+      background-color: $oag_green_highlight;
+    }
+    &:before {
+      content: 'Add this';
+      transform: none;
+      &:hover {
+        transform: none;
+      }
+    }
+  }
+  input:checked + span {
+    background-color: $oag_title;
+    &:hover {
+      background-color: $oag_red;
+    }
+    &:before {
+      content: 'Remove this';
+      &:hover {
+        background-color: pink;
+      }
+    }
+  }
+  button:hover {
+    transform: none;
   }
 }
 
@@ -393,8 +618,67 @@ article {
 
 -------------------------------------------------------------- */
 
+.preview.block,
 iframe {
   width: 100%;
+}
+
+
+/* --------------------------------------------------------------
+
+   Download page
+
+-------------------------------------------------------------- */
+
+.version {
+  display: flex;
+  margin: 2em 0 0.5em;
+  p {
+    color: $oag_dark;
+    margin-right: 0.5em;
+  }
+}
+
+.options {
+  display: flex;
+  justify-content: flex-end;
+  flex: 1;
+  margin-bottom: 2em;
+  a {
+    margin:0 0.5em;
+    &:nth-child(1) {
+      background-color: $oag_purple;
+    }
+    &:nth-child(2) {
+      background-color: $oag_green;
+    }
+    &:nth-child(3) {
+      background-color: $oag_blue;
+    }
+  }
+}
+
+table {
+  width: 100%;
+  th {
+    padding: 1em;
+    text-align: left;
+    &:nth-child(4),
+    &:nth-child(5) {
+      text-align: center;
+    }
+  }
+  td {
+    padding: 1em;
+    text-align: center;
+    &:nth-child(2),
+    &:nth-child(3) {
+      text-align: left;
+    }
+    &:nth-child(5):hover {
+      color: $oag_grey;
+    }
+  }
 }
 
 
@@ -420,7 +704,7 @@ iframe {
   font-weight: bold;
   color: white;
   font-size: 110%;
-  padding: 3px;
+  padding: 1em;
 }
 
 .flash-error {
@@ -428,7 +712,7 @@ iframe {
   font-weight: bold;
   color: white;
   font-size: 110%;
-  padding: 3px;
+  padding: 1em;
 }
 
 .ui-tooltip {
@@ -470,28 +754,244 @@ iframe {
   margin-bottom: 20px;
 }
 
-/* --------------------------------------------------------------
-
-   Fancy checkbox styling
-
--------------------------------------------------------------- */
-
-.addremove input + span:before {
-  @extend button;
-  content: 'Add this';
-}
-
-.addremove input:checked + span:before {
-  content: 'Remove this';
-}
-
-.addremove input
-{
-  display: none;
-}
 
 /* --------------------------------------------------------------
 
    Media queries
 
 -------------------------------------------------------------- */
+
+@media (max-width: 1020px) {
+  .version,
+  .version .options {
+    display: block;
+  }
+  .activity .content-block.summary {
+    .improvements {
+      display: block;
+      p {
+        width: initial;
+        padding-right: 0;
+      }
+    }
+    ul li {
+      margin-bottom: 1em;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+
+  .content-block.download {
+    padding: 1.5em;
+  }
+
+  /* Responsive table */
+  table, thead, tbody, th, td, tr {
+    display: block;
+  }
+
+  /* Hide table headers (but not display: none; for accessibility) */
+  thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+
+  tr {
+    margin-bottom: 0.5em;
+    box-shadow: 0 7px 14px rgba(50,50,93,.1), 0 3px 6px rgba(0,0,0,.08);
+    background-color: white;
+  }
+
+  table td {
+    /* Behave like a "row" */
+    border: none;
+    border-bottom: 1px solid #eee;
+    position: relative;
+    padding-left: 30%;
+    text-align: right;
+    &:nth-child(2),
+    &:nth-child(3) {
+      text-align: right;
+    }
+    &:before {
+      /* Now like a table header */
+      position: absolute;
+      left: 0;
+      width: 19%;
+      padding-left: 1em;
+      white-space: nowrap;
+      text-align: left;
+    }
+    &:nth-of-type(1):before {
+      content: "Delete";
+    }
+    &:nth-of-type(2):before {
+      content: "File name";
+    }
+    &:nth-of-type(3):before {
+      content: "Date";
+    }
+    &:nth-of-type(4):before {
+      content: "Improved?";
+    }
+    &:nth-of-type(5):before {
+      content: "Download";
+    }
+    .delete:before,
+    .download-icon:before {
+      font-size: 1em;
+    }
+  }
+
+  nav
+  .block,
+  .content {
+    width: 100%
+  }
+  .gradient {
+    height: initial;
+  }
+  .upload-form button,
+  .upload-info button {
+    position: initial;
+  }
+  .instructions {
+    padding-top: 3em;
+    .template {
+      display: block;
+      button {
+        margin-left: 0;
+        float: none;
+        margin-bottom: 1em;
+      }
+    }
+  }
+}
+
+@media (max-width: 660px) {
+  header {
+    padding: 0em 2em;
+    nav {
+      display: block;
+      margin: 0 auto;
+      justify-content: center;
+      line-height: 51px;
+      .logo {
+        display: flex;
+        justify-content: center;
+        float: none;
+        padding-top: 0.5em;
+      }
+      .nav-options {
+        float: none;
+        display: flex;
+        justify-content: center;
+        li {
+          a {
+            padding: 1em;
+          }
+        }
+      }
+    }
+  }
+  .options a {
+    width: calc(100% - 4em);
+    margin-bottom: 0.5em;
+    text-align: center;
+  }
+}
+
+@media (max-width: 611px) {
+  h1 {
+    font-size: 2em;
+  }
+  .upload-info {
+    width: 100%;
+  }
+  .upload-form,
+  .upload-info {
+    div.jfilestyle.jfilestyle-corner {
+      display: flex;
+      width: 100%;
+      label {
+        width: 87px;
+      }
+      input:first-child {
+        width: 100% !important;
+        & ~ span {
+          justify-content: flex-end;
+        }
+      }
+    }
+    button {
+      width: 100%;
+    }
+  }
+}
+
+@media (max-width: 563px) {
+  nav .nav-options li:nth-child(2) > a:before {
+    content: "Check";
+  }
+  .center {
+    padding: 0;
+  }
+  .block,
+  .content {
+    padding: 2em;
+  }
+  .view-suggestions {
+    justify-content: center;
+  }
+  #oag_file input,
+  .upload-info input {
+    width: 100%;
+  }
+  form .tag-row .tag {
+    font-size: 0.9em;
+  }
+  .addremove span {
+    width: 87px;
+    font-size: 0.9em;
+  }
+  .version ~ .upload-form {
+    background-color: transparent;
+    box-shadow: none;
+    padding: 0;
+    width: 100%;
+  }
+}
+
+@media (max-width: 409px) {
+  .activity .content-block.summary {
+    padding: 1em;
+    button {
+      width: 100%;
+    }
+  }
+  .activity .heading.summary {
+    padding: 2em;
+  }
+}
+
+@media (max-width: 360px) {
+  .block {
+    padding: 0.5em 0.5em 2em 0.5em;
+    .intro.margin {
+      padding: 1em;
+      margin-bottom: 0;
+    }
+  }
+  .content-block.download {
+    padding: 0.5em;
+  }
+  .upload-form {
+    padding: 1em;
+    width: calc(100% - 2em);
+  }
+  .activity .heading.summary h2 {
+    font-size: 1.5em;
+  }
+}

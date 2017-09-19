@@ -4,9 +4,14 @@ namespace OagBundle\Controller;
 
 use OagBundle\Entity\Change;
 use OagBundle\Entity\OagFile;
+use OagBundle\Entity\EnhancementFile;
+use OagBundle\Form\EnhancementFileType;
 use OagBundle\Form\OagFileType;
-use OagBundle\Service\ChangeService;
+use OagBundle\Service\Classifier;
+use OagBundle\Service\Cove;
 use OagBundle\Service\DPortal;
+use OagBundle\Service\Geocoder;
+use OagBundle\Service\GeoJson;
 use OagBundle\Service\IATI;
 use OagBundle\Service\OagFileService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -18,7 +23,6 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @Route("/wireframe")
  * @Template
  */
 class WireframeController extends Controller {
@@ -26,45 +30,42 @@ class WireframeController extends Controller {
     /**
      * @Route("/")
      */
-    public function indexAction() {
-        return array();
-    }
-
-    /**
-     * @Route("/upload")
-     */
     public function uploadAction(Request $request) {
         $em = $this->getDoctrine()->getEntityManager();
+        $srvCove = $this->get(Cove::class);
+        $srvClassifier = $this->get(Classifier::class);
+        $srvGeocoder = $this->get(Geocoder::class);
 
         $oagfile = new OagFile();
-        $oagfile->setFileType(OagFile::OAGFILE_IATI_SOURCE_DOCUMENT);
         $sourceUploadForm = $this->createForm(OagFileType::class, $oagfile);
         $sourceUploadForm->add('Upload', SubmitType::class, array(
             'attr' => array('class' => 'submit'),
         ));
 
-        if ($request) {
-            $sourceUploadForm->handleRequest($request);
+	$sourceUploadForm->handleRequest($request);
 
-            // TODO Check for too big files.
-            if ($sourceUploadForm->isSubmitted() && $sourceUploadForm->isValid()) {
-                $tmpFile = $oagfile->getDocumentName();
-                $oagfile->setMimeType(mime_content_type($tmpFile->getPathname()));
+	// TODO Check for too big files.
+	if ($sourceUploadForm->isSubmitted() && $sourceUploadForm->isValid()) {
+	    $tmpFile = $oagfile->getDocumentName();
+	    $filename = $tmpFile->getClientOriginalName();
 
-                $filename = $tmpFile->getClientOriginalName();
+	    $tmpFile->move(
+		$this->getParameter('oagfiles_directory'), $filename
+	    );
 
-                $tmpFile->move(
-                    $this->getParameter('oagfiles_directory'), $filename
-                );
+	    $oagfile->setDocumentName($filename);
+	    $oagfile->setUploadDate(new \DateTime('now'));
+	    $em->persist($oagfile);
+	    $em->flush();
 
-                $oagfile->setDocumentName($filename);
-                $oagfile->setUploadDate(new \DateTime('now'));
-                $em->persist($oagfile);
-                $em->flush();
-
-                return $this->redirect($this->generateUrl('oag_wireframe_improveyourdata', array('id' => $oagfile->getId())));
+            if (!$srvCove->validateOagFile($oagfile)) {
+                // TODO CoVE failed
             }
-        }
+            $srvClassifier->classifyOagFile($oagfile);
+            $srvGeocoder->geocodeOagFile($oagfile);
+
+	    return $this->redirect($this->generateUrl('oag_wireframe_improveyourdata', array('id' => $oagfile->getId())));
+	}
 
         $data = array(
             'source_upload_form' => $sourceUploadForm->createView()
@@ -83,7 +84,6 @@ class WireframeController extends Controller {
         $srvOagFile = $this->get(OagFileService::class);
 
         $oagfile = new OagFile();
-        $oagfile->setFileType(OagFile::OAGFILE_IATI_SOURCE_DOCUMENT);
         $sourceUploadForm = $this->createForm(OagFileType::class, $oagfile);
         $sourceUploadForm->add('Upload', SubmitType::class, array(
             'attr' => array('class' => 'submit'),
@@ -93,7 +93,6 @@ class WireframeController extends Controller {
         // TODO Check for too big files.
         if ($sourceUploadForm->isSubmitted() && $sourceUploadForm->isValid()) {
             $tmpFile = $oagfile->getDocumentName();
-            $oagfile->setMimeType(mime_content_type($tmpFile->getPathname()));
 
             $filename = $tmpFile->getClientOriginalName();
 
@@ -106,7 +105,12 @@ class WireframeController extends Controller {
             $em->persist($oagfile);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('oag_cove_oagfile', array('id' => $oagfile->getId())));
+            if (!$srvCove->validateOagFile($oagfile)) {
+                // TODO CoVE failed
+            }
+            $srvClassifier->classifyOagFile($oagfile);
+
+	    return $this->redirect($this->generateUrl('oag_wireframe_improveyourdata', array('id' => $oagfile->getId())));
         }
 
         return array(
@@ -137,7 +141,7 @@ class WireframeController extends Controller {
      */
     public function deleteFileAction(Request $request, OagFile $file) {
         // TODO implement
-        return $this->redirect($this->generateUrl('oag_wireframe_index', array('id' => $file->getId())));
+        return $this->redirect($this->generateUrl('oag_wireframe_upload'));
     }
 
     /**
@@ -145,10 +149,6 @@ class WireframeController extends Controller {
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
     public function classifierAction(OagFile $file) {
-        if (!$file->hasFileType(OagFile::OAGFILE_IATI_DOCUMENT)) {
-            // TODO throw a reasonable error
-        }
-
         $srvIATI = $this->get(IATI::class);
         $root = $srvIATI->load($file);
 
@@ -163,13 +163,10 @@ class WireframeController extends Controller {
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
     public function classifierSuggestionAction(Request $request, OagFile $file, $activityId) {
-        if (!$file->hasFileType(OagFile::OAGFILE_IATI_DOCUMENT)) {
-            // TODO throw a reasonable error
-        }
-
         $em = $this->getDoctrine()->getManager();
-        $srvOagFile = $this->get(OagFileService::class);
+        $srvClassifier = $this->get(Classifier::class);
         $srvIATI = $this->get(IATI::class);
+        $srvOagFile = $this->get(OagFileService::class);
 
         $root = $srvIATI->load($file);
         $activity = $srvIATI->getActivityById($root, $activityId);
@@ -179,9 +176,19 @@ class WireframeController extends Controller {
         }
 
         $currentTags = $srvIATI->getActivityTags($activity);
-        $suggestedTags = array();
-        foreach ($file->getSuggestedTags() as $sugTag) {
-            if (in_array($sugTag, $suggestedTags) || in_array($sugTag->getTag(), $currentTags)) {
+
+        // load all suggested tags
+        $suggestedTags = $file->getSuggestedTags()->toArray();
+        foreach ($file->getEnhancingDocuments() as $enhFile) {
+            // if it is only relevant to another activity, ignore
+            if ((!is_null($enhFile)) && ($enhFile->getIatiActivityId() !== $activityId)) continue;
+            $suggestedTags = array_merge($suggestedTags, $enhFile->getSuggestedTags()->toArray());
+        }
+
+        // derive the actual tags from these suggested tags
+        $classifierTags = array();
+        foreach ($suggestedTags as $sugTag) {
+            if (in_array($sugTag->getTag(), $classifierTags) || in_array($sugTag->getTag(), $currentTags)) {
                 // no duplicates
                 continue;
             }
@@ -191,9 +198,38 @@ class WireframeController extends Controller {
                 continue;
             }
 
-            $suggestedTags[] = $sugTag->getTag();
+            $classifierTags[] = $sugTag->getTag();
         }
-        $allTags = array_merge($currentTags, $suggestedTags);
+        $allTags = array_merge($currentTags, $classifierTags);
+
+        // enhancement upload form
+        $enhFile = new EnhancementFile();
+        $enhUploadForm = $this->createForm(EnhancementFileType::class, $enhFile);
+        $enhUploadForm->add('Upload', SubmitType::class, array(
+            'attr' => array('class' => 'submit'),
+        ));
+        $enhUploadForm->handleRequest($request);
+        if ($enhUploadForm->isSubmitted() && $enhUploadForm->isValid()) {
+            $tmpFile = $enhFile->getDocumentName();
+            $enhFile->setMimeType(mime_content_type($tmpFile->getPathName()));
+
+            $filename = $tmpFile->getClientOriginalName();
+
+            $tmpFile->move(
+                $this->getParameter('oagfiles_directory'), $filename
+            );
+
+            $enhFile->setDocumentName($filename);
+            $enhFile->setUploadDate(new \DateTime('now'));
+            $enhFile->setIatiActivityId($activityId);
+            $srvClassifier->classifyEnhancementFile($enhFile);
+
+            $file->addEnhancingDocument($enhFile);
+            $em->persist($file);
+            $em->flush();
+
+            return $this->redirect($this->generateUrl('oag_wireframe_classifiersuggestion', array('id' => $file->getId(), 'activityId' => $activityId)));
+        }
 
         $form = $this->createFormBuilder()
             ->add('tags', ChoiceType::class, array(
@@ -214,7 +250,7 @@ class WireframeController extends Controller {
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('back')->isClicked()) {
-                return $this->redirect($this->generateUrl('oag_wireframe_classifier', array('id' => $file->getId()))); 
+                return $this->redirect($this->generateUrl('oag_wireframe_classifier', array('id' => $file->getId())));
             }
 
             $editedTags = $form->getData()['tags'];
@@ -230,7 +266,7 @@ class WireframeController extends Controller {
 
             // have any suggsted tags been added
             $toAdd = array();
-            foreach ($suggestedTags as $suggestedTag) {
+            foreach ($classifierTags as $suggestedTag) {
                 if (in_array($suggestedTag, $editedTags)) {
                     $srvIATI->addActivityTag($activity, $suggestedTag);
                     $toAdd[] = $suggestedTag;
@@ -249,13 +285,160 @@ class WireframeController extends Controller {
             $em->persist($change);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('oag_wireframe_classifier', array('id' => $file->getId()))); 
+            return $this->redirect($this->generateUrl('oag_wireframe_classifier', array('id' => $file->getId())));
         }
 
         return array(
             'file' => $file,
             'activity' => $srvIATI->summariseActivityToArray($activity),
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'enhancementUploadForm' => $enhUploadForm->createView()
+        );
+    }
+
+    /**
+     * @Route("/geocoder/{id}")
+     * @ParamConverter("file", class="OagBundle:OagFile")
+     */
+    public function geocoderAction(OagFile $file) {
+        $srvIATI = $this->get(IATI::class);
+        $root = $srvIATI->load($file);
+
+        return array(
+            'file' => $file,
+            'activities' => $srvIATI->summariseToArray($root)
+        );
+    }
+
+    /**
+     * @Route("/geocoder/{id}/{activityId}")
+     * @ParamConverter("file", class="OagBundle:OagFile")
+     */
+    public function geocoderSuggestionAction(Request $request, OagFile $file, $activityId) {
+        $em = $this->getDoctrine()->getManager();
+        $srvGeocoder = $this->get(Geocoder::class);
+        $srvGeoJson = $this->get(GeoJson::class);
+        $srvIATI = $this->get(IATI::class);
+        $srvOagFile = $this->get(OagFileService::class);
+
+        $root = $srvIATI->load($file);
+        $activity = $srvIATI->getActivityById($root, $activityId);
+
+        if (is_null($activity)) {
+            // TODO throw a reasonable error
+        }
+
+        // get these but only to display them, not to add/remove them as with the classifier
+        $currentLocations = $srvIATI->getActivityLocations($activity);
+        $currentLocationsMaps = array();
+        foreach ($currentLocations as $index => $curLoc) {
+            if (array_key_exists('point', $curLoc)) {
+                $pos = $curLoc['point']['pos'];
+                $feature = $srvGeoJson->featureFromCoords($pos[1], $pos[0]);
+                $featureColl = $srvGeoJson->featureCollection(array($feature));
+                $currentLocationsMaps[$index] = json_encode($featureColl, JSON_HEX_APOS + JSON_HEX_TAG + JSON_HEX_AMP + JSON_HEX_QUOT);
+            }
+        }
+
+        // load all suggested tags
+        $geocoderGeolocs = $file->getGeolocations()->toArray();
+        foreach ($file->getEnhancingDocuments() as $enhFile) {
+            // if it is only relevant to another activity, ignore
+            if ((!is_null($enhFile)) && ($enhFile->getIatiActivityId() !== $activityId)) continue;
+            $geocoderGeolocs = array_merge($geocoderGeolocs, $enhFile->getGeolocations()->toArray());
+        }
+        // no duplicates please
+        $geocoderGeolocs = array_unique($geocoderGeolocs, SORT_REGULAR);
+
+        // enhancement upload form
+        $enhFile = new EnhancementFile();
+        $enhUploadForm = $this->createForm(EnhancementFileType::class, $enhFile);
+        $enhUploadForm->add('Upload', SubmitType::class, array(
+            'attr' => array('class' => 'submit'),
+        ));
+        $enhUploadForm->handleRequest($request);
+        if ($enhUploadForm->isSubmitted() && $enhUploadForm->isValid()) {
+            $tmpFile = $enhFile->getDocumentName();
+            $enhFile->setMimeType(mime_content_type($tmpFile->getPathName()));
+
+            $filename = $tmpFile->getClientOriginalName();
+
+            $tmpFile->move(
+                $this->getParameter('oagfiles_directory'), $filename
+            );
+
+            $enhFile->setDocumentName($filename);
+            $enhFile->setUploadDate(new \DateTime('now'));
+            $enhFile->setIatiActivityId($activityId);
+            $srvGeocoder->geocodeEnhancementFile($enhFile);
+
+            $file->addEnhancingDocument($enhFile);
+            $em->persist($file);
+            $em->flush();
+
+            return $this->redirect($this->generateUrl('oag_wireframe_geocodersuggestion', array('id' => $file->getId(), 'activityId' => $activityId)));
+        }
+
+        $form = $this->createFormBuilder()
+            ->add('tags', ChoiceType::class, array(
+                'expanded' => true,
+                'multiple' => true,
+                'choices' => $geocoderGeolocs,
+                'data' => array(),
+                'choice_label' => function ($value, $key, $index) {
+                    $name = $value->getName();
+                    return "$name";
+                },
+                'choice_attr' => function ($value, $key, $index) use ($srvGeoJson) {
+                    $feature = $srvGeoJson->featureFromGeoloc($value);
+                    $featureColl = $srvGeoJson->featureCollection(array($feature));
+                    return array(
+                        'data-geojson' => json_encode($featureColl, JSON_HEX_APOS + JSON_HEX_TAG + JSON_HEX_AMP + JSON_HEX_QUOT)
+                    );
+                }
+            ))
+            ->add('back', SubmitType::class)
+            ->add('save', SubmitType::class)
+            ->getForm();
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('back')->isClicked()) {
+                return $this->redirect($this->generateUrl('oag_wireframe_geocoder', array('id' => $file->getId())));
+            }
+
+            $editedTags = $form->getData()['tags'];
+
+            // tags to add
+            $toAdd = array();
+            foreach ($geocoderGeolocs as $suggestedGeoloc) {
+                if (in_array($suggestedGeoloc, $editedTags)) {
+                    $srvIATI->addActivityGeolocation($activity, $suggestedGeoloc);
+                    $toAdd[] = $suggestedGeoloc;
+                }
+            }
+
+            $resultXML = $srvIATI->toXML($root);
+            $srvOagFile->setContents($file, $resultXML);
+
+            $change = new Change();
+            $change->setAddedGeolocs($toAdd);
+            $change->setFile($file);
+            $change->setActivityId($activityId);
+            $change->setTimestamp(new \DateTime('now'));
+            $em->persist($change);
+            $em->flush();
+
+            return $this->redirect($this->generateUrl('oag_wireframe_geocoder', array('id' => $file->getId())));
+        }
+
+        return array(
+            'file' => $file,
+            'activity' => $srvIATI->summariseActivityToArray($activity),
+            'form' => $form->createView(),
+            'currentLocations' => $currentLocations,
+            'currentLocationsMaps' => $currentLocationsMaps,
+            'enhancementUploadForm' => $enhUploadForm->createView()
         );
     }
 
@@ -264,30 +447,17 @@ class WireframeController extends Controller {
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
     public function previewAction(OagFile $file) {
-        if (!$file->hasFileType(OagFile::OAGFILE_IATI_DOCUMENT)) {
-            // TODO throw a reasonable error
-        }
-
         $srvDPortal = $this->get(DPortal::class);
         $srvDPortal->visualise($file);
 
-        return array(
-            'dPortalUri' => $this->getParameter('oag')['dportal']['uri']
+        $uri = \str_replace(
+            'SERVER_HOST', $_SERVER['HTTP_HOST'], $this->getParameter('oag')['dportal']['uri']
         );
-    }
 
-    /**
-     * @Route("/geocoder")
-     */
-    public function geocoderAction() {
-        return array();
-    }
-
-    /**
-     * @Route("/geocoderSuggestion")
-     */
-    public function geocoderSuggestionAction() {
-        return array();
+        return array(
+            'dPortalUri' => $uri,
+            'file' => $file
+        );
     }
 
     /**
@@ -295,10 +465,6 @@ class WireframeController extends Controller {
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
     public function improveYourDataAction(OagFile $file) {
-        if (!$file->hasFileType(OagFile::OAGFILE_IATI_DOCUMENT)) {
-            // TODO throw a reasonable error
-        }
-
         $srvOagFile = $this->get(OagFileService::class);
 
         return array(

@@ -54,13 +54,13 @@ class OagFileServiceTest extends TestCase {
 
         $oagFile = new OagFile();
         $oagFile->setDocumentName('iatidoc.txt');
-        $oagFile->setFileType(OagFile::OAGFILE_IATI_DOCUMENT);
 
+        $oagFile->setCoved(true);
         $path = $fileService->getPath($oagFile);
         $expectedPath = '/' . $oagFile->getDocumentName();
         $this->assertEquals($expectedPath, $path);
 
-        $oagFile->setFileType(OagFile::OAGFILE_IATI_ENHANCEMENT_DOCUMENT);
+        $oagFile->setCoved(false);
         $path = $fileService->getPath($oagFile);
         $this->assertEquals($expectedPath, $path);
     }

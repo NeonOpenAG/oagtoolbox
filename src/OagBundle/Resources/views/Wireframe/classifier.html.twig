@@ -1,4 +1,4 @@
-{% extends "::base.html.twig" %}
+{% extends "OagBundle::base.html.twig" %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -22,9 +22,7 @@
                 {{ include('OagBundle::widgets/activity.html.twig', { 'activity': activity, 'suggestRoute': path('oag_wireframe_classifiersuggestion', { 'id': file.getId(), 'activityId': activity.id }) }) }}
             {% endfor %}
 
-	    <a class="cta back" href="{{ path('oag_wireframe_improveyourdata', { 'id': file.getId }) }}">
-		<button>Back</button>
-	    </a>
+      	    <a class="cta back" href="{{ path('oag_wireframe_improveyourdata', { 'id': file.getId }) }}">Back</a>
 
         </section>
 

@@ -31,7 +31,7 @@
                 <hr>
                 <div>The imported document will be automatically processed with CoVE and added to the IATI document list above.</div>
                 <div>Currently only XML is supported.</div>
-                {{ include('OagBundle::widgets/fileUploadWidget.html.twig', { 'form': source_upload_form }) }}
+                {{ form(source_upload_form) }}
             </div>
 
         </div>
@@ -43,8 +43,20 @@
         <div class="content">
 
             <h1>What can I upload?</h1>
-            <h2>A spreadsheet with the right columns.</h2>
-            <h2>XML that is IATI compliant - see instructions.</h2>
+            <div class="template">
+                <h2>A spreadsheet with the right columns</h2>
+                <a href="{{ asset('bundles/oag/iati/iati-template.xlsx') }}">
+                    <button class="back cta"><span>Get template</span></button>
+                </a>
+            </div>
+            <div class="info">
+                <h2>XML that is IATI compliant</h2>
+                <p>Here's how to make your XML IATI compliant: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                  nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
+                  eu fugiat nulla pariatur.
+                </p>
+            </div>
 
         </div>
 

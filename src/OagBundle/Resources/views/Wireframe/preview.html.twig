@@ -1,4 +1,4 @@
-{% extends "::base.html.twig" %}
+{% extends "OagBundle::base.html.twig" %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -11,7 +11,7 @@
 
     <div class="center">
 
-        <section class="block">
+        <section class="preview block">
 
             <div class="intro margin">
                 <h1>Preview Your File</h1>
@@ -20,8 +20,6 @@
             <article class="activity">
                 <iframe src="{{ dPortalUri }}"></iframe>
             </article>
-
-            <a href="#" class="cta back">Back</a>
 
         </section>
 

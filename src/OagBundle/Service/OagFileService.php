@@ -27,7 +27,7 @@ class OagFileService extends AbstractService {
      * @return string
      */
     public function getPath(OagFile $oagFile) {
-        if ($oagFile->getFileType() == OagFile::OAGFILE_IATI_DOCUMENT) {
+        if ($oagFile->isCoved()) {
             $path = $this->getContainer()->getParameter('oagxml_directory');
         } else {
             $path = $this->getContainer()->getParameter('oagfiles_directory');
@@ -72,26 +72,37 @@ class OagFileService extends AbstractService {
      * @return boolean
      */
     public function hasBeenClassified(OagFile $file) {
-        $srvChange = $this->getContainer()->get(ChangeService::class);
         $changeRepo = $this->getContainer()->get('doctrine')->getRepository(Change::class);
 
         $changes = $changeRepo->findBy(array( 'file' => $file ));
-        $flattened = $srvChange->flatten($changes);
 
-        $classified = count($flattened->getAddedTags()) > 0 || count($flattened->getRemovedTags()) > 0;
+        foreach ($changes as $change) {
+            if (count($change->getAddedTags()) > 0 || count($change->getRemovedTags()) > 0) {
+                return true;
+            }
+        }
 
-        return $classified;
+        return false;
     }
 
     /**
-     * Gets whether the file has been geocoded. Geocoded is currently undefined.
+     * Gets whether the file has been geocoded. Geocoding is currently defined
+     * as a single net change to the locations of the IATI file.
      *
      * @param OagFile $oagFile
      * @return boolean
      */
-    public function hasBeenGeocoded(OagFile $oagFile) {
-        // TODO implement
-        return true;
+    public function hasBeenGeocoded(OagFile $file) {
+        $changeRepo = $this->getContainer()->get('doctrine')->getRepository(Change::class);
+        $changes = $changeRepo->findBy(array( 'file' => $file ));
+
+        foreach ($changes as $change) {
+            if (count($change->getAddedGeolocs()) > 0 || count($change->getRemovedGeolocs()) > 0) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

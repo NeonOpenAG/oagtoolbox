@@ -6,11 +6,11 @@ use OagBundle\Service\TextExtractor\TextifyService;
 use OagBundle\Service\TextExtractor\PDFExtractor;
 use OagBundle\Service\TextExtractor\RTFExtractor;
 use PhpOffice\PhpWord\IOFactory;
+use OagBundle\Entity\EnhancementFile;
 use OagBundle\Entity\OagFile;
 use OagBundle\Entity\Tag;
 use OagBundle\Entity\SuggestedTag;
 use Symfony\Component\Cache\Simple\FilesystemCache;
-
 class Classifier extends AbstractOagService {
 
     public function processUri($sometext = '') {
@@ -107,8 +107,6 @@ class Classifier extends AbstractOagService {
 
     public function processString($contents) {
         if (!$this->isAvailable()) {
-            // TODO use correct fixture data, the current is not representative of
-            // output where just a string is processed
             return json_decode($this->getStringFixtureData(), true);
         }
 
@@ -178,37 +176,20 @@ class Classifier extends AbstractOagService {
 
         $oagFile->clearSuggestedTags();
 
-        if (($oagFile->getFileType() & OagFile::OAGFILE_IATI_DOCUMENT) === OagFile::OAGFILE_IATI_DOCUMENT) {
-            // IATI xml document
-            $rawXml = $srvOagFile->getContents($oagFile);
-            $jsonResp = $this->processXML($rawXml);
+        // IATI xml document
+        $rawXml = $srvOagFile->getContents($oagFile);
+        $jsonResp = $this->processXML($rawXml);
 
-            if ($jsonResp['status']) {
-                throw new \Exception('Classifier service could not classify file');
-            }
+        if ($jsonResp['status']) {
+            throw new \Exception('Classifier service could not classify file');
+        }
 
-            foreach ($jsonResp['data'] as $block) {
-                foreach ($block as $part) {
-                    foreach ($part as $activityId => $tags) {
-                        $this->persistTags($tags, $oagFile, $activityId);
-                    }
+        foreach ($jsonResp['data'] as $block) {
+            foreach ($block as $part) {
+                foreach ($part as $activityId => $tags) {
+                    $this->persistTags($tags, $oagFile, $activityId);
                 }
             }
-        } else if (($oagFile->getFileType() & OagFile::OAGFILE_IATI_ENHANCEMENT_DOCUMENT) === OagFile::OAGFILE_IATI_ENHANCEMENT_DOCUMENT) {
-            // enhancing/text document
-            $rawText = $srvTextify->stripOagFile($oagFile);
-
-            if ($rawText === false) {
-                // textifier failed
-                throw new \RuntimeException('Unsupported file type to strip text from');
-            }
-
-            $json = $srvClassifier->processString($rawText);
-
-            // TODO if $row['status'] == 0
-            $this->persistTags($json['data'], $oagFile);
-        } else {
-            throw new \RuntimeException('Unsupported OagFile type to classify');
         }
 
         $em = $this->getContainer()->get('doctrine')->getManager();
@@ -216,11 +197,42 @@ class Classifier extends AbstractOagService {
         $em->flush();
     }
 
+
+    /**
+     * Classify an EnhancementFile and attach the resulting SuggestedTag objects
+     * to it.
+     *
+     * @param EnhancementFile $enhFile the file to classify
+     */
+    public function classifyEnhancementFile(EnhancementFile $enhFile) {
+        $srvClassifier = $this->getContainer()->get(Classifier::class);
+        $srvTextify = $this->getContainer()->get(TextifyService::class);
+
+        $enhFile->clearSuggestedTags();
+
+        // enhancing/text document
+        $rawText = $srvTextify->stripEnhancementFile($enhFile);
+
+        if ($rawText === false) {
+            // textifier failed
+            throw new \RuntimeException('Unsupported file type to strip text from');
+        }
+
+        $json = $srvClassifier->processString($rawText);
+
+        // TODO if $row['status'] == 0
+        $this->persistTags($json['data'], $enhFile);
+
+        $em = $this->getContainer()->get('doctrine')->getManager();
+        $em->persist($enhFile);
+        $em->flush();
+    }
+
     /**
      * Persists Oag tags from API response to database.
      *
      * @param array $tags an array of tags, as represented by the Classifier's JSON
-     * @param OagFile $file the OagFile to suggest the tags to
+     * @param OagFile|EnhancementFile $file the OagFile or EnhancementFile to suggest the tags to
      * @param string $activityId the activity ID the tags apply to, if they are specific
      */
     private function persistTags($tags, $file, $activityId = null) {
@@ -261,7 +273,6 @@ class Classifier extends AbstractOagService {
                 $tag->setCode($code);
                 $tag->setDescription($description);
                 $tag->setVocabulary($vocab, $vocabUri);
-                $em->persist($tag);
             }
 
             $sugTag = new \OagBundle\Entity\SuggestedTag();
@@ -271,7 +282,6 @@ class Classifier extends AbstractOagService {
                 $sugTag->setActivityId($activityId);
             }
 
-            $em->persist($sugTag);
             $file->addSuggestedTag($sugTag);
         }
     }
