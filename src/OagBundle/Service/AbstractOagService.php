@@ -52,6 +52,16 @@ abstract class AbstractOagService extends AbstractService {
             return false;
         }
     }
+    
+    public function isCsv($mimetype) {
+        $mimes = array('application/vnd.ms-excel', 'text/plain', 'text/csv', 'text/tsv');
+        return in_array($mimetype, $mimes);
+    }
+
+    public function isXml($mimetype) {
+        $mimes = array('application/xml', 'text/xml', 'text/html');
+        return in_array($mimetype, $mimes);
+    }
 
     abstract function getName();
 }

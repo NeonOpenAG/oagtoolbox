@@ -14,9 +14,29 @@ class Cove extends AbstractAutoService {
         return $this->autocodeXml($data);
     }
 
-    public function processString($text) {
+    public function processString($contents) {
+        $oag = $this->getContainer()->getParameter('oag');
+        $cmd = $oag[$this->getName()]['csv'];
+        $this->getContainer()->get('logger')->debug(
+            sprintf('Command: %s', $cmd)
+        );
+        
+        return $this->_process($contents, $cmd);
+    }
+
+    public function processXML($contents) {
+        $oag = $this->getContainer()->getParameter('oag');
+        $cmd = $oag[$this->getName()]['xml'];
+        $this->getContainer()->get('logger')->debug(
+            sprintf('Command: %s', $cmd)
+        );
+        
+        return $this->_process($contents, $cmd);
+    }
+    
+    private function _process($contents, $cmd) {
         if (!$this->isAvailable()) {
-            $this->getContainer()->get('session')->getFlashBag()->add("warning", "CoVE docker not available, using fixtures.");
+            $this->getContainer()->get('session')->getFlashBag()->add("warning", $this->getName() . " docker not available, using fixtures.");
             return json_encode($this->getFixtureData(), true);
         }
 
@@ -26,17 +46,11 @@ class Cove extends AbstractAutoService {
             2 => array("pipe", "w"),
         );
 
-        $oag = $this->getContainer()->getParameter('oag');
-        $cmd = $oag['cove']['cmd'];
-        $this->getContainer()->get('logger')->debug(
-            sprintf('Command: %s', $cmd)
-        );
-
         $process = proc_open($cmd, $descriptorspec, $pipes);
 
         if (is_resource($process)) {
-            $this->getContainer()->get('logger')->info(sprintf('Writting %d bytes of data', strlen($text)));
-            fwrite($pipes[0], $text);
+            $this->getContainer()->get('logger')->info(sprintf('Writting %d bytes of data', strlen($contents)));
+            fwrite($pipes[0], $contents);
             fclose($pipes[0]);
 
             $xml = stream_get_contents($pipes[1]);
@@ -62,11 +76,6 @@ class Cove extends AbstractAutoService {
         }
     }
 
-    public function processXML($contents) {
-        // TODO - implement fetching this result from CoVE
-        return json_encode($this->getFixtureData(), true);
-    }
-
     /**
      * Process on OagFile with CoVE.
      *
@@ -79,7 +88,17 @@ class Cove extends AbstractAutoService {
         $this->getContainer()->get('logger')->debug(sprintf('Processing %s using CoVE', $file->getDocumentName()));
         // TODO - for bigger files we might need send as Uri
         $contents = $srvOagFile->getContents($file);
-        $json = $this->processString($contents);
+        
+        // Is this XMNL or CSV
+        $oagFileDir = $this->getContainer()->getParameter('oagfiles_directory');
+        $mimetype = mime_content_type($oagFileDir . '/' . $file->getDocumentName());
+        if ($this->isCsv($mimetype)) {
+            $json = $this->processString($contents);
+        } elseif ($this->isXml($mimetype)) {
+            $json = $this->processXML($contents);
+        } else {
+            throw new \RuntimeException($this->getName() . ' only accepts XML or CSV');
+        }
 
         $err = array_filter($json['err'] ?? array());
         $status = $json['status'];
