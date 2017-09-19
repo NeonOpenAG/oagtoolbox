@@ -773,14 +773,14 @@ table {
 
   /* Responsive table */
   table, thead, tbody, th, td, tr {
-  	display: block;
+    display: block;
   }
 
   /* Hide table headers (but not display: none; for accessibility) */
   thead tr {
-  	position: absolute;
-  	top: -9999px;
-  	left: -9999px;
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
   }
 
   tr {
@@ -790,11 +790,11 @@ table {
   }
 
   table td {
-		/* Behave like a "row" */
-		border: none;
-		border-bottom: 1px solid #eee;
-		position: relative;
-		padding-left: 30%;
+    /* Behave like a "row" */
+    border: none;
+    border-bottom: 1px solid #eee;
+    position: relative;
+    padding-left: 30%;
     text-align: right;
     &:nth-child(2),
     &:nth-child(3) {
@@ -828,7 +828,7 @@ table {
     .download-icon:before {
       font-size: 1em;
     }
-	}
+  }
 
   nav
   .block,
