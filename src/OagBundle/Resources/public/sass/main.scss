@@ -766,11 +766,16 @@ table {
   .version .options {
     display: block;
   }
-  .activity .content-block.summary .improvements {
-    display: block;
-    p {
-      width: initial;
-      padding-right: 0;
+  .activity .content-block.summary {
+    .improvements {
+      display: block;
+      p {
+        width: initial;
+        padding-right: 0;
+      }
+    }
+    ul li {
+      margin-bottom: 1em;
     }
   }
 }
@@ -899,6 +904,9 @@ table {
 }
 
 @media (max-width: 611px) {
+  h1 {
+    font-size: 2em;
+  }
   .upload-info {
     width: 100%;
   }
