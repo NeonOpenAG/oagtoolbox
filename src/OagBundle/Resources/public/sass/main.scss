@@ -81,7 +81,6 @@ button,
     text-decoration: none;
     transform: translateY(-1px);
     box-shadow: 0 7px 14px rgba(50,50,93,.1), 0 3px 6px rgba(0,0,0,.08);
-    //box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
   }
   &:visited {
     color: white;
@@ -295,7 +294,6 @@ nav {
       font-family: FontAwesome;
       margin-right: 0.6em;
       content: "\f05a";
-      color: $oag_green;
     }
   }
 }
@@ -313,6 +311,7 @@ nav {
   div {
     margin-bottom: 1em;
     &.jfilestyle {
+      box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
       input {
         font-family: $oag_font;
         font-size: 1em;
@@ -327,7 +326,6 @@ nav {
             padding: 1em;
             // !important here to override the inline styling
             width: 250px !important;
-            box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
             border: 1px solid #dcdcdc;
             height: 16px;
           }
@@ -339,7 +337,6 @@ nav {
           height: 16px;
           padding: 1em;
           line-height: 1;
-          box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
           color: $oag_title;
           &:hover {
             color: $oag_dark;
@@ -382,7 +379,8 @@ article {
   h3 {
     margin: 0;
   }
-  .upload-form h3 {
+  .upload-form,
+  .upload-info h3 {
     margin: 1em 0;
   }
   .heading {
@@ -656,6 +654,7 @@ iframe {
     }
   }
 }
+
 table {
   width: 100%;
   th {
@@ -774,12 +773,11 @@ table {
     padding: 1.5em;
   }
 
-	/* Force table to not be like tables anymore */
 	table, thead, tbody, th, td, tr {
 		display: block;
 	}
 
-	/* Hide table headers (but not display: none;, for accessibility) */
+	/* Hide table headers (but not display: none; for accessibility) */
 	thead tr {
 		position: absolute;
 		top: -9999px;
@@ -803,32 +801,36 @@ table td {
     &:nth-child(3) {
       text-align: right;
     }
+    &:before {
+      /* Now like a table header */
+      position: absolute;
+      /* Top/left values mimic padding */
+      left: 0;
+      width: 19%;
+      padding-left: 1em;
+      white-space: nowrap;
+      text-align: left;
+    }
+    &:nth-of-type(1):before {
+      content: "Delete";
+    }
+    &:nth-of-type(2):before {
+      content: "File name";
+    }
+    &:nth-of-type(3):before {
+      content: "Date";
+    }
+    &:nth-of-type(4):before {
+      content: "Improved?";
+    }
+    &:nth-of-type(5):before {
+      content: "Download";
+    }
+    .delete:before,
+    .download-icon:before {
+      font-size: 1em;
+    }
 	}
-
-	td:before {
-		/* Now like a table header */
-		position: absolute;
-		/* Top/left values mimic padding */
-		left: 0;
-		width: 19%;
-    padding-left: 1em;
-		white-space: nowrap;
-    text-align: left;
-	}
-
-	/*
-	Label the data
-	*/
-	td:nth-of-type(1):before { content: "Delete"; }
-	td:nth-of-type(2):before { content: "File name"; }
-	td:nth-of-type(3):before { content: "Date"; }
-	td:nth-of-type(4):before { content: "Improved?"; }
-	td:nth-of-type(5):before { content: "Download"; }
-
-  .delete:before,
-  .download-icon:before {
-    font-size: 1em;
-  }
 
   nav
   .block,
@@ -889,17 +891,27 @@ table td {
 }
 
 @media (max-width: 611px) {
+  .upload-info {
+    width: 100%;
+  }
   .upload-form,
   .upload-info {
-    div.jfilestyle.jfilestyle-corner input:first-child {
-      width: 42% !important;
+    div.jfilestyle.jfilestyle-corner {
+      display: flex;
+      width: 100%;
+      label {
+        width: 87px;
+      }
+      input:first-child {
+        width: 100% !important;
+        & ~ span {
+          justify-content: flex-end;
+        }
+      }
     }
     button {
       width: 100%;
     }
-  }
-  .upload-info {
-    width: 100%;
   }
 }
 
@@ -910,34 +922,33 @@ table td {
   .center {
     padding: 0;
   }
-  .block {
-    padding: 2em;
-  }
+  .block,
   .content {
     padding: 2em;
-  }
-  .upload-form {
-    padding: 1em;
-    width: calc(100% - 2em);
   }
   .view-suggestions {
     justify-content: center;
   }
-  #oag_file input {
+  #oag_file input,
+  .upload-info input {
     width: 100%;
   }
   form .tag-row .tag {
     font-size: 1em;
   }
+  .addremove span {
+    width: 75px;
+    font-size: 0.8em;
+  }
+  .version ~ .upload-form {
+    background-color: transparent;
+    box-shadow: none;
+    padding: 0;
+    width: 100%;
+  }
 }
 
 @media (max-width: 409px) {
-  .upload-form,
-  .upload-info {
-    div.jfilestyle.jfilestyle-corner input:first-child {
-      width: 29% !important;
-    }
-  }
   form .tag-row .tag {
     font-size: 0.8em;
   }
@@ -945,19 +956,17 @@ table td {
 
 @media (max-width: 360px) {
   .block {
-    padding: 0.5em;
+    padding: 0.5em 0.5em 2em 0.5em;
     .intro.margin {
       padding: 1em;
       margin-bottom: 0;
     }
   }
-  .upload-form,
-  .upload-info {
-    div.jfilestyle.jfilestyle-corner input:first-child {
-      width: 31% !important;
-    }
-  }
   .content-block.download {
     padding: 0.5em;
+  }
+  .upload-form {
+    padding: 1em;
+    width: calc(100% - 2em);
   }
 }
