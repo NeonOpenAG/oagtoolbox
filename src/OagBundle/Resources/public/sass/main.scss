@@ -285,6 +285,7 @@ nav {
   }
   .template {
     display: flex;
+    margin-bottom: 1.5em;
     button {
       margin-left: 1.5em;
       span:before {
@@ -293,6 +294,9 @@ nav {
         content: "\f019";
       }
     }
+  }
+  .content div {
+    margin-bottom: 1.5em;
   }
 }
 
@@ -511,7 +515,7 @@ form {
   position: absolute;
   display: flex;
   right: 0;
-  bottom: -84px;
+  bottom: -92px;
   button {
     @extend .back;
   }
@@ -890,8 +894,13 @@ table {
       justify-content: space-between;
     }
   }
-  #improve-your-data article:last-child {
-    margin-bottom: 0;
+  article {
+    &:last-child {
+      margin-bottom: 0;
+    }
+    &.margin {
+      margin-bottom: 5em;
+    }
   }
 }
 
@@ -991,6 +1000,9 @@ table {
     padding: 0;
     width: 100%;
   }
+  .bottom-page-nav {
+    bottom: -85px;
+  }
 }
 
 @media (max-width: 409px) {
@@ -1007,7 +1019,7 @@ table {
 
 @media (max-width: 360px) {
   .block {
-    padding: 0.5em 0.5em 2em 0.5em;
+    padding: 0.5em;
     .intro.margin {
       padding: 1em;
       margin-bottom: 0;
@@ -1023,15 +1035,28 @@ table {
   .activity .heading.summary h2 {
     font-size: 1.5em;
   }
-  #improve-your-data {
-    .block {
-      padding: 0.5em;
+  #improve-your-data .block {
+    padding: 0.5em;
+  }
+  article {
+    margin-bottom: 0.5em;
+    &:last-child {
+      margin-bottom: 0;
     }
-    article {
-      margin-bottom: 0.5em;
-      &:last-child {
-        margin-bottom: 0;
-      }
+  }
+  #classifier-suggestions article,
+  #geo-suggestions article {
+    margin-bottom: 4.1em;
+  }
+  #geo-suggestions {
+    .info {
+      padding: 1em;
+    }
+  }
+  .bottom-page-nav {
+    bottom: -65px;
+    div {
+      margin-left: 0.5em;
     }
   }
 }
