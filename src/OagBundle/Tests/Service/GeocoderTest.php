@@ -1,5 +1,6 @@
 <?php
 
+use OagBundle\Service\CSV;
 use OagBundle\Service\Geocoder;
 use Symfony\Bundle\WebProfilerBundle\Tests\TestCase;
 
@@ -14,14 +15,15 @@ class GeocoderTest extends TestCase {
     }
 
     public function testGetFixtureData() {
-        $classifier = $this->container->get(Geocoder::class);
-        $classifier->setContainer($this->container);
-        $data = $classifier->getFixtureData();
+        $srvCsv = $this->container->get(CSV::class);
+        $geocoder = $this->container->get(Geocoder::class);
 
-        $json = json_decode($data, true);
+        $geocoder->setContainer($this->container);
+        $tsv = $geocoder->getFixtureData();
+        $parsed = $srvCsv->toArray($tsv, "\t");
 
-        $this->assertNotNull($json, 'No JSON returned from the geocoder');
-        $this->assertTrue(count($json) >= 1);
+        $this->assertInternalType('array', $parsed);
+        $this->assertGreaterThan(0, count($parsed));
     }
 
 }
