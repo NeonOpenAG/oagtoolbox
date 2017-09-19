@@ -246,7 +246,7 @@ class OagFile {
 
     public function clearChanges() {
         foreach ($this->changes as $change) {
-            $this->change->setFile(null);
+            $change->setFile(null);
         }
         $this->changes->clear();
     }

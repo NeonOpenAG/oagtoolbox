@@ -144,9 +144,7 @@ class WireframeController extends Controller {
         $em->remove($file);
         $em->flush();
 
-        // TODO tidy up after ourselves, see OAG-144
-
-        return $this->redirect($request->headers->get('referer'));
+        return $this->redirect($this->generateUrl('oag_wireframe_upload'));
     }
 
     /**
