@@ -140,8 +140,13 @@ class WireframeController extends Controller {
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
     public function deleteFileAction(Request $request, OagFile $file) {
-        // TODO implement
-        return $this->redirect($this->generateUrl('oag_wireframe_upload'));
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($file);
+        $em->flush();
+
+        // TODO tidy up after ourselves, see OAG-144
+
+        return $this->redirect($request->headers->get('referer'));
     }
 
     /**
