@@ -950,11 +950,11 @@ table {
     width: 100%;
   }
   form .tag-row .tag {
-    font-size: 1em;
+    font-size: 0.9em;
   }
   .addremove span {
-    width: 75px;
-    font-size: 0.8em;
+    width: 87px;
+    font-size: 0.9em;
   }
   .version ~ .upload-form {
     background-color: transparent;
@@ -965,9 +965,6 @@ table {
 }
 
 @media (max-width: 409px) {
-  form .tag-row .tag {
-    font-size: 0.8em;
-  }
   .activity .content-block.summary {
     padding: 1em;
     button {

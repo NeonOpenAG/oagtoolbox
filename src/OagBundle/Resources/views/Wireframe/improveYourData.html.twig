@@ -76,6 +76,7 @@
                             </div>
                         </li>
                         {% endif %}
+                        {% if not geocoded %}
                         <li><h2><span class="tip">Find partners on the ground</span></h2>
                             <div class="improvements">
                                 <p>In eius et enim. Quam doloribus ut quisquam suscipit consectetur ab quasi. Provident fugiat explicabo est rerum. Eveniet ut
@@ -83,7 +84,7 @@
                                 <a href="{{ path('oag_wireframe_geocoder', { 'id': file.getId() }) }}"><button>Use Our Geocoder</button></a>
                             </div>
                         </li>
-
+                        {% endif %}
                     </ul>
                 </div>
             </article>
