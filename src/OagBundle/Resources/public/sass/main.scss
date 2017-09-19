@@ -356,6 +356,9 @@ nav {
     line-height: 1.15;
   }
 }
+.upload-info {
+  width: 100%;
+}
 
 
 /* --------------------------------------------------------------
@@ -445,6 +448,10 @@ article {
         a {
           justify-content: flex-end;
         }
+      }
+      .info p {
+        width: 100%;
+        padding-right: 0;
       }
     }
   }
@@ -554,13 +561,11 @@ form {
     flex: 1;
     padding: 2em;
   }
-  span {
-    //margin: 2em;
-  }
   .suggested-map-block {
     border: none;
     background-color: #dbe5ea;
     width: 600px;
+    height: 250px;
   }
 }
 
@@ -700,7 +705,7 @@ table {
 }
 
 .flash-info {
-  background: $oag_green;
+  background: #c2cf7d;
   font-weight: bold;
   color: white;
   font-size: 110%;
@@ -777,6 +782,9 @@ table {
     ul li {
       margin-bottom: 1em;
     }
+  }
+  #geo-suggestions .suggested-map-block {
+    width: 50%;
   }
 }
 
@@ -868,6 +876,25 @@ table {
       }
     }
   }
+
+  #geo-suggestions {
+    form[name=form] .tag-row {
+      display: block;
+      .tag {
+        padding-bottom: 0;
+      }
+    }
+    .suggested-map-block {
+      width: 100%;
+    }
+    .info {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+  #improve-your-data article:last-child {
+    margin-bottom: 0;
+  }
 }
 
 @media (max-width: 660px) {
@@ -928,6 +955,10 @@ table {
     button {
       width: 100%;
     }
+  }
+  #geo-suggestions form[name=form] .tag-row .tag {
+    font-size: 1em;
+    margin-right: 1em;
   }
 }
 
@@ -993,5 +1024,16 @@ table {
   }
   .activity .heading.summary h2 {
     font-size: 1.5em;
+  }
+  #improve-your-data {
+    .block {
+      padding: 0.5em;
+    }
+    article {
+      margin-bottom: 0.5em;
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
   }
 }
