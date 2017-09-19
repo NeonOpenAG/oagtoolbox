@@ -36,11 +36,11 @@ class IATI extends AbstractService {
     }
 
     /**
-     * Perform an xpath but with an additional namespace defined.
+     * Perform an xpath but prioritising different localisations.
      *
      * @param \SimpleXMLElement $activity the activity to xpath within
      * @param string $xpathQuery
-     * @param string $namespace the name of the namespace
+     * @param string $namespace
      * @return \SimpleXMLElement[]
      */
     public function xpathNS(\SimpleXMLElement $activity, $xpathQuery, $namespace = 'openag') {
@@ -97,7 +97,6 @@ class IATI extends AbstractService {
      *   array['name'] Activity Name.
      *   array['description'] Activity Description.
      *   array['tags'] Activity Tags.
-     *   array['locations'] Activity Locations.
      */
     public function summariseActivityToArray(\SimpleXMLElement $activity) {
         $simpActivity = array();
@@ -105,7 +104,6 @@ class IATI extends AbstractService {
         $simpActivity['name'] = $this->getActivityTitle($activity);
         $simpActivity['description'] = $this->getActivityDescription($activity);
         $simpActivity['tags'] = $this->getActivityTags($activity);
-        $simpActivity['locations'] = $this->getActivityLocations($activity);
         return $simpActivity;
     }
 
@@ -188,26 +186,7 @@ class IATI extends AbstractService {
      * @return string|null
      */
     public function getActivityTitle($activity) {
-        $preference = array(
-            './title/narrative[not(@xml:lang)]',
-            './title/narrative[@xml:lang="en"]', // TODO make this configurable
-            './title/narrative'
-        );
-
-        foreach ($preference as $path) {
-            $finds = $activity->xpath($path);
-            foreach ($finds as $found) {
-                // we found a narrative of this type
-                $name = (string) $found;
-                if (strlen($name) == 0) {
-                    // some activities have empty narratives, for reasons unknown
-                    continue;
-                }
-                return $name;
-            }
-        }
-
-        return null;
+        return $this->getNarrative($activity, 'title');
     }
 
     /**
@@ -224,72 +203,20 @@ class IATI extends AbstractService {
      */
     public function getActivityDescription($activity) {
         $descPreference = array(
-            './description[not(@type)]',
-            './description[@type=1]',
-            './description'
-        );
-
-        $narrativePreference = array(
-            './narrative[not(@xml:lang)]',
-            './narrative[@xml:lang="en"]', // TODO make this configurable
-            './narrative'
+            'description[not(@type)]',
+            'description[@type=1]',
+            'description'
         );
 
         foreach ($descPreference as $descPath) {
-            // use the first or look again
-            $descs = $activity->xpath($descPath);
-            if (count($descs) === 0) continue;
-            $desc = $descs[0];
+            $narrative = $this->getNarrative($activity, $descPath);
 
-            foreach ($narrativePreference as $narrativePath) {
-                // use the first or look again
-                $narratives = $desc->xpath($narrativePath);
-                if (count($narratives) === 0) continue;
-                $narrative = $narratives[0];
-
-                return (string) $narrative;
+            if (!is_null($narrative)) {
+                return $narrative;
             }
         }
 
         return null;
-    }
-
-    /**
-     * Creates a definition array to be provided to the NeonMap service,
-     * summarising any location data in the activity that can be visualised
-     * on a map.
-     *
-     * This method's purpose is purely to format data in a way that NeonMap
-     * likes; if a better home is found for it than this service, it would travel
-     * freely.
-     *
-     * @param \SimpleXMLElement $activity
-     * @return array see code
-     */
-    public function getActivityMapData($activity) {
-        $activityDetail = $this->summariseActivityToArray($activity);
-
-        $locations = $activityDetail['locations'];
-        $location_data = array();
-        foreach ($locations as $location) {
-            $location_data[] = array(
-                "id" => $activityDetail['id'],
-                "type" => "Feature",
-                "geometry" => array(
-                    "type" => "Point",
-                    "coordinates" => $location['lonlat'],
-                ),
-                'properties' => array(
-                    'title' => $location['description'],
-                    'nid' => $location['code'],
-                ),
-            );
-        }
-
-        return $map_data = array(
-            "type" => "FeatureCollection",
-            "features" => $location_data,
-        );
     }
 
     /**
@@ -404,103 +331,122 @@ class IATI extends AbstractService {
     }
 
     /**
-     * Gets summarised representations of the locations in the activity as
-     * associative arrays.
-     *
-     * @param \SimpleXMLElement $activity
-     * @return array see code
-     */
-    public function getActivityLocations($activity) {
-        $currentLocations = array();
-        foreach ($activity->xpath('./location') as $currentLocation) {
-            $description = (string) $currentLocation->xpath('./name/narrative[1]')[0];
-            $code = (string) $currentLocation->xpath('location-id')[0]['code'];
-            $vocabulary = (string) $currentLocation->xpath('location-id')[0]['vocabulary'];
-            $pos = (string)$currentLocation->xpath('point/pos')[0];
-            $lonlat = explode(' ', $pos);
-
-            $currentLocations[] = array(
-                'description' => $description,
-                'code' => $code,
-                'vocabulary' => $vocabulary,
-                'lonlat' => $lonlat,
-            );
-        }
-        return $currentLocations;
-    }
-
-    /**
      * Add a location to an activity in the XML, effectively geocoding it.
      * 
      * @param \SimpleXMLElement $activity
-     * @param array $json a representation of the location's properties, as returned from the Geocoder service
+     * @param Geolocation $geoloc
      */
-    public function addActivityLocation($activity, $json) {
-        // $location is the JSON assoc-array describing a location as returned by
-        // the Geocoder API
-        // TODO what is "rollback"?
-        // TODO should we check if it already exists?
-
+    public function addActivityGeolocation($activity, $geoloc) {
         $location = $activity->addChild('location');
 
         $name = $location->addChild('name');
-        $name->narrative[] = $json['name'];
+        $name->narrative[] = $geoloc->getName();
 
         $locId = $location->addChild('location-id');
-        $locId->addAttribute('vocabulary', $this->getContainer()->getParameter('geocoder')['id_vocabulary']);
-        $locId->addAttribute('code', $json['id']);
+        $locId->addAttribute('code', $geoloc->getLocationIdCode());
+        $locId->addAttribute('vocabulary', $geoloc->getLocationIdVocab());
 
-        if ($json['geometry']['type'] === 'Point') {
-            $point = $location->addChild('point');
-            $point->addAttribute('srsName', 'http://www.opengis.net/def/crs/EPSG/0/4326');
-            $point->pos[] = implode(' ', $json['geometry']['coordinates']);
-        } else {
-            // TODO what other possibilites are there?
-        }
+        $featureDes = $location->addChild('feature-designation');
+        $featureDes->addAttribute('code', $geoloc->getFeatureDesignation());
 
-        $featDeg = $location->addChild('feature-designation');
-        $featDeg->addAttribute('code', $json['featureDesignation']['code']);
-
-        // TODO is $json['type'] relevant?
-
-        $actDescript = $location->addChild('activity-description');
-        $actDescript->narrative[] = $json['activityDescription'];
-
-        $locClass = $location->addChild('location-class');
-        $locClass->addAttribute('code', $json['locationClass']['code']);
-
-        $exactness = $location->addChild('exactness');
-        $exactness->addAttribute('code', $json['exactness']['code']);
-
-        // TODO is $json['country'] relevant?
-        // TODO check that this isn't dynamic - assuming not, as it is not an array
-        $admin1 = $location->addChild('administrative');
-        $admin1->addAttribute('code', $json['admin1']['code']);
-        $admin1->addAttribute('level', "1");
-        $admin1->addAttribute('vocabulary', $this->getContainer()->getParameter('geocoder')['admin_1_vocabulary']);
-
-        $admin2 = $location->addChild('administrative');
-        $admin2->addAttribute('code', $json['admin2']['code']);
-        $admin2->addAttribute('level', "2");
-        $admin2->addAttribute('vocabulary', $this->getContainer()->getParameter('geocoder')['admin_2_vocabulary']);
+        $point = $location->addChild('point');
+        $lat = $geoloc->getPointPosLat();
+        $lng = $geoloc->getPointPosLong();
+        $point->pos[] = "$lat $lng";
     }
 
     /**
-     * Remove an activity location from the XML.
+     * Get a summary of an activity's location nodes. Note the distinction
+     * between Geolocation and Location in the method's name: this method does
+     * not return Geolocation objects, just location tags summarised in
+     * associative arrays.
      *
-     * TODO IMPORTANT - vocabulary should be added to ensure locations are uniquely identified
-     *
-     * @param string $code the unique code of the location within the vocabulary
+     * @param \SimpleXMLElement $activity
+     * @return array[]
      */
-    public function removeActivityLocation($activity, $code) { // TODO $vocabulary
-        $location = $activity->xpath("./location/location-id[@code='$code']/..");
+    public function getActivityLocations($activity) {
+        $locations = array();
 
-        if (count($location) < 1) {
-            return;
+        foreach ($activity->xpath('./location') as $location) {
+            /*
+             * TODO
+             * There are other attributes available to us here.
+             * http://iatistandard.org/202/activity-standard/iati-activities/iati-activity/location/
+             * The rest should be added here as required.
+             */
+
+            $simple = array();
+            $simple['name'] = $this->getNarrative($location, 'name');
+            $simple['description'] = $this->getNarrative($location, 'description');
+            $simple['activity-description'] = $this->getNarrative($location, 'activity-description');
+
+            // <point><pos>
+            if (count($location->xpath('./point/pos')) > 0) {
+                $string = (string) $location->xpath('./point/pos')[0];
+                $coords = array_map('floatval', explode(' ', $string));
+                $simple['point'] = array('pos' => $coords);
+            }
+
+            // <administrative> elements
+            $simple['administrative'] = array();
+            foreach ($location->xpath('./administrative') as $admin) {
+                $adminArray = array(
+                    'code' => (string) $admin->attributes()['code'],
+                    'vocabulary' => (string) $admin->attributes()['vocabulary']
+                );
+
+                if (array_key_exists('level', $admin->attributes())) {
+                    $adminArray['level'] = intval((string) $admin->attributes()['level']);
+                }
+
+                $simple['administrative'][] = $adminArray;
+            }
+
+            // <location-class>
+            if (count($location->xpath('./location-class/@code')) > 0) {
+                $simple['location-class'] = (string) $location->xpath('./location-class/@code')[0];
+            }
+
+            // <feature-designation>
+            if (count($location->xpath('./feature-designation/@code')) > 0) {
+                $simple['feature-designation'] = (string) $location->xpath('./feature-designation/@code')[0];
+            }
+
+            // getNarrative may return null, remove these entries entirely
+            $simple = array_filter($simple, function ($val) { return !is_null($val); });
+
+            $locations[] = $simple;
         }
 
-        $location = $location[0];
-        unset($location[0]);
+        return $locations;
+    }
+
+    /**
+     * Get the narrative of an XML element, holding preference to specific
+     * languages.
+     *
+     * @param \SimpleXMLElement $element
+     * @param string the element name to get the narrative of
+     * @return \SimpleXMLElement[]
+     */
+    public function getNarrative(\SimpleXMLElement $element, $elementName) {
+        $preference = array(
+            "./$elementName/narrative[not(@xml:lang)]",
+            "./$elementName/narrative[@xml:lang=\"en\"]", // TODO make this configurable
+            "./$elementName/narrative"
+        );
+
+        foreach ($preference as $potential) {
+            $results = $element->xpath($potential);
+            foreach ($results as $found) {
+                $string = (string) $found;
+                if (strlen($string) > 0) {
+                    return $string;
+                }
+            }
+        }
+
+        return null;
     }
 
 }
