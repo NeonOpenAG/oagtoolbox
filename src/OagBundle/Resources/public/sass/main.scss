@@ -759,11 +759,9 @@ table {
 -------------------------------------------------------------- */
 
 @media (max-width: 1020px) {
-  .version {
+  .version,
+  .version .options {
     display: block;
-    .options {
-      display: block;
-    }
   }
 }
 
@@ -773,25 +771,26 @@ table {
     padding: 1.5em;
   }
 
-	table, thead, tbody, th, td, tr {
-		display: block;
-	}
+  /* Responsive table */
+  table, thead, tbody, th, td, tr {
+  	display: block;
+  }
 
-	/* Hide table headers (but not display: none; for accessibility) */
-	thead tr {
-		position: absolute;
-		top: -9999px;
-		left: -9999px;
-	}
+  /* Hide table headers (but not display: none; for accessibility) */
+  thead tr {
+  	position: absolute;
+  	top: -9999px;
+  	left: -9999px;
+  }
 
-	tr {
+  tr {
     margin-bottom: 0.5em;
     box-shadow: 0 7px 14px rgba(50,50,93,.1), 0 3px 6px rgba(0,0,0,.08);
     background-color: white;
   }
 
-table td {
-		/* Behave  like a "row" */
+  table td {
+		/* Behave like a "row" */
 		border: none;
 		border-bottom: 1px solid #eee;
 		position: relative;
@@ -804,7 +803,6 @@ table td {
     &:before {
       /* Now like a table header */
       position: absolute;
-      /* Top/left values mimic padding */
       left: 0;
       width: 19%;
       padding-left: 1em;

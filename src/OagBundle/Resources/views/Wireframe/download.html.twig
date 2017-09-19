@@ -55,14 +55,16 @@
                 </div>
                 <div class="content-block download">
                     <!-- Table to show stored files -->
-                    <table><thead>
-                        <tr>
-                            <th></th>
-                            <th>File</th>
-                            <th>Date</th>
-                            <th>Improved</th>
-                            <th>Download</th>
-                        </tr></thead>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>File</th>
+                                <th>Date</th>
+                                <th>Improved</th>
+                                <th>Download</th>
+                            </tr>
+                        </thead>
                         {% for otherFile in otherFiles %}
                         <tr>
                             <td><span class="delete"><a href="{{ path('oag_wireframe_deletefile', { id: otherFile.getId() }) }}"></a></span></td>
