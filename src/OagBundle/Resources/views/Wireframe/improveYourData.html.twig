@@ -19,7 +19,7 @@
 
             <article class="activity">
                 <div class="heading summary">
-                    <h1>Right now, your data...</h1>
+                    <h2>Right now, your data...</h2>
                 </div>
 
                 <div class="content-block summary">
@@ -63,7 +63,7 @@
             {% if (not geocoded) or (not classified) %}
             <article class="activity">
                 <div class="heading summary">
-                    <h1>Improve your data to help people...</h1>
+                    <h2>Improve your data to help people...</h2>
                 </div>
                 <div class="content-block summary">
                     <ul>
@@ -76,7 +76,6 @@
                             </div>
                         </li>
                         {% endif %}
-                        {% if not geocoded %}
                         <li><h2><span class="tip">Find partners on the ground</span></h2>
                             <div class="improvements">
                                 <p>In eius et enim. Quam doloribus ut quisquam suscipit consectetur ab quasi. Provident fugiat explicabo est rerum. Eveniet ut
@@ -84,7 +83,7 @@
                                 <a href="{{ path('oag_wireframe_geocoder', { 'id': file.getId() }) }}"><button>Use Our Geocoder</button></a>
                             </div>
                         </li>
-                        {% endif %}
+
                     </ul>
                 </div>
             </article>

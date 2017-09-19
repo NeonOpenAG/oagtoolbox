@@ -390,6 +390,9 @@ article {
     border-top-right-radius: 2px;
     &.summary {
       padding: 1.5em 3em;
+      h2 {
+        font-size: 2em;
+      }
     }
   }
   .content-block {
@@ -763,6 +766,13 @@ table {
   .version .options {
     display: block;
   }
+  .activity .content-block.summary .improvements {
+    display: block;
+    p {
+      width: initial;
+      padding-right: 0;
+    }
+  }
 }
 
 @media (max-width: 768px) {
@@ -950,6 +960,15 @@ table {
   form .tag-row .tag {
     font-size: 0.8em;
   }
+  .activity .content-block.summary {
+    padding: 1em;
+    button {
+      width: 100%;
+    }
+  }
+  .activity .heading.summary {
+    padding: 2em;
+  }
 }
 
 @media (max-width: 360px) {
@@ -966,5 +985,8 @@ table {
   .upload-form {
     padding: 1em;
     width: calc(100% - 2em);
+  }
+  .activity .heading.summary h2 {
+    font-size: 1.5em;
   }
 }
