@@ -658,9 +658,17 @@ form {
 
 -------------------------------------------------------------- */
 
-.preview.block,
+.preview {
+  .block {
+    width: 100%;
+  }
+}
 iframe {
+  padding: 0;
+  margin: 0;
   width: 100%;
+  height: 800px;
+  border: 0;
 }
 
 
