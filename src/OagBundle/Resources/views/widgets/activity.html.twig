@@ -8,7 +8,7 @@
         <p>Description: {{ activity.description }}</p>
 
         {% if suggestRoute is defined %}
-        <div class="view-suggestions"><a href="{{ suggestRoute }}" class="cta">View Suggestions</a></div>
+        <div class="view-suggestions"><a href="{{ suggestRoute }}" class="cta">{{ actionName }}</a></div>
         {% endif %}
     </div>
 </article>

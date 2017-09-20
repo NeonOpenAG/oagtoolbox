@@ -2,17 +2,17 @@
 
 namespace OagBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use OagBundle\Entity\SuggestedTag;
-use OagBundle\Entity\FileType;
-use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Validator\Constraints\Range;
 
 /**
  * OagFile
  *
  * @ORM\Table(name="oag_file")
  * @ORM\Entity(repositoryClass="OagBundle\Repository\OagFileRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class OagFile {
 
@@ -41,6 +41,11 @@ class OagFile {
     private $enhancingDocuments;
 
     /**
+     * @ORM\OneToMany(targetEntity="OagBundle\Entity\Change", mappedBy="file")
+     */
+    private $changes;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="documentName", type="string", length=1024)
@@ -66,6 +71,7 @@ class OagFile {
         $this->suggestedTags = new ArrayCollection();
         $this->enhancingDocuments = new ArrayCollection();
         $this->geolocations = new ArrayCollection();
+        $this->changes = new ArrayCollection();
     }
 
     /**
@@ -223,6 +229,30 @@ class OagFile {
     }
 
     /**
+     * @return \OagBundle\Entity\Change[]
+     */
+    public function getChanges() {
+        return $this->changes;
+    }
+
+    /**
+     * @param \OagBundle\Entity\Change $change
+     */
+    public function addChange($change) {
+        if (!$this->changes->contains($change)) {
+            $this->changes->add($change);
+        }
+    }
+
+    public function clearChanges() {
+        foreach ($this->changes as $change) {
+            $change->setFile(null);
+        }
+        $this->changes->clear();
+    }
+
+
+    /**
      * Gets the date the OagFile was uploaded.
      *
      * @return \DateTime
@@ -246,6 +276,19 @@ class OagFile {
 
     public function setCoved($coved) {
         $this->coved = $coved;
+    }
+
+    /**
+     * @ORM\PreRemove
+     */
+    public function tidyUp(LifecycleEventArgs $args) {
+        // NOTE: this just removes the relationships, not the entities themselves
+        $this->clearSuggestedTags();
+        $this->clearGeolocations();
+        $this->clearEnhancingDocuments();
+        $this->clearChanges();
+        $args->getObjectManager()->persist($this);
+        $args->getObjectManager()->flush($this);
     }
 
 }
