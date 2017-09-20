@@ -137,6 +137,7 @@ class WireframeController extends Controller {
     public function deleteFileAction(Request $request, OagFile $previous, OagFile $toDelete) {
         $em = $this->getDoctrine()->getManager();
         $oagFileRepo = $this->getDoctrine()->getRepository(OagFile::class);
+        $srvOagFile = $this->get(OagFileService::class);
 
         $em->remove($toDelete);
         $em->flush();
@@ -146,18 +147,8 @@ class WireframeController extends Controller {
             return $this->redirect($this->generateUrl('oag_wireframe_upload'));
         } else if ($previous->getId() === $toDelete->getId()) {
             // they deleted the file of the page they're on, redirect to the most recent file
-            $files = $oagFileRepo->findAll();
-            usort($files, function ($a, $b) {
-                if ($a->getUploadDate() < $b->getUploadDate()) {
-                    // $a happened before $b
-                    return -1;
-                } elseif ($a->getUploadDate() > $b->getUploadDate()) {
-                    // $b happened before $a
-                    return 1;
-                }
-                return 0;
-            });
-            return $this->redirect($this->generateUrl('oag_wireframe_download', array('id' => end($files)->getId())));
+            $latest = $srvOagFile->getMostRecent();
+            return $this->redirect($this->generateUrl('oag_wireframe_download', array('id' => $latest->getId())));
         }
 
         // they deleted another file

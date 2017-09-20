@@ -123,7 +123,7 @@ class OagFileService extends AbstractService {
         }
 
         usort($files, function ($a, $b) {
-            if ($a->getTimestamp() < $b->getTimestamp()) {
+            if ($a->getUploadDate() < $b->getUploadDate()) {
                 // $a happened before $b
                 return -1;
             } elseif ($a->getTimestamp() > $b->getTimestamp()) {
