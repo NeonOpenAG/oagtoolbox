@@ -151,10 +151,37 @@ class WireframeController extends Controller {
     public function classifierAction(OagFile $file) {
         $srvIATI = $this->get(IATI::class);
         $root = $srvIATI->load($file);
+        $activities = $srvIATI->summariseToArray($root);
+
+        // work out which activities have suggested locations
+        $haveSuggested = array();
+        foreach ($activities as $activity) {
+            $suggestedTags = array();
+
+            // suggested on the OagFile for that activity
+            foreach ($file->getSuggestedTags()->toArray() as $generic) {
+                if (is_null($generic->getActivityId()) || $generic->getActivityId() === $activity['id']) {
+                    $suggestedTags[] = $generic;
+                }
+            }
+
+            // suggested in an EnhancementFile for that activity
+            foreach ($file->getEnhancingDocuments() as $enhFile) {
+                // if it is only relevant to another activity, ignore
+                if ((!is_null($enhFile)) && ($enhFile->getIatiActivityId() !== $activity['id'])) continue;
+                $suggestedTags = array_merge($suggestedTags, $enhFile->getSuggestedTags()->toArray());
+            }
+
+            // has at least one suggested location
+            if (count($suggestedTags) > 0) {
+                $haveSuggested[] = $activity['id'];
+            }
+        }
 
         return array(
             'file' => $file,
-            'activities' => $srvIATI->summariseToArray($root)
+            'activities' => $activities,
+            'haveSuggested' => $haveSuggested
         );
     }
 
@@ -206,7 +233,7 @@ class WireframeController extends Controller {
         $enhFile = new EnhancementFile();
         $enhUploadForm = $this->createForm(EnhancementFileType::class, $enhFile);
         $enhUploadForm->add('Upload', SubmitType::class, array(
-            'attr' => array('class' => 'submit'),
+            'attr' => array('class' => 'submit')
         ));
         $enhUploadForm->handleRequest($request);
         if ($enhUploadForm->isSubmitted() && $enhUploadForm->isValid()) {
@@ -303,10 +330,37 @@ class WireframeController extends Controller {
     public function geocoderAction(OagFile $file) {
         $srvIATI = $this->get(IATI::class);
         $root = $srvIATI->load($file);
+        $activities = $srvIATI->summariseToArray($root);
+
+        // work out which activities have suggested locations
+        $haveSuggested = array();
+        foreach ($activities as $activityId => $activity) {
+            $geocoderGeolocs = array();
+
+            // suggested on the OagFile for that activity
+            foreach ($file->getGeolocations()->toArray() as $generic) {
+                if (is_null($generic->getIatiActivityId()) || $generic->getIatiActivityId() === $activity['id']) {
+                    $geocoderGeolocs[] = $generic;
+                }
+            }
+
+            // suggested in an EnhancementFile for that activity
+            foreach ($file->getEnhancingDocuments() as $enhFile) {
+                // if it is only relevant to another activity, ignore
+                if ((!is_null($enhFile)) && ($enhFile->getIatiActivityId() !== $activityId)) continue;
+                $geocoderGeolocs = array_merge($geocoderGeolocs, $enhFile->getGeolocations()->toArray());
+            }
+
+            // has at least one suggested location
+            if (count($geocoderGeolocs) > 0) {// has at least one suggested location
+                $haveSuggested[] = $activity['id'];
+            }
+        }
 
         return array(
             'file' => $file,
-            'activities' => $srvIATI->summariseToArray($root)
+            'activities' => $activities,
+            'haveSuggested' => $haveSuggested
         );
     }
 
