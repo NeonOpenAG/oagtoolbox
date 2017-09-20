@@ -232,12 +232,34 @@ nav {
 -------------------------------------------------------------- */
 
 .gradient {
-  height: 532px;
   background: $oag_blue;  /* fallback for old browsers */
   background: -webkit-linear-gradient(150deg, $oag_blue 15%, $oag_purple 90%);  /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(150deg, $oag_blue 15%, $oag_purple 90%); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   h1 {
-    color: white;
+    color: $oag_title;
+    margin: 0;
+  }
+  form {
+    margin-top: 0;
+  }
+  .upload-form {
+    display: flex;
+    padding: 2em;
+    max-width: 100%;
+    div {
+      margin-bottom: 0;
+    }
+    button {
+      bottom: 38px;
+      left: 714px;
+    }
+    div.jfilestyle.jfilestyle-corner {
+      margin-top: 0;
+    }
+    .upload {
+      margin-left: 2em;
+      padding-top: 4px;
+    }
   }
 }
 
@@ -272,7 +294,6 @@ nav {
 
 .instructions {
   background-color: $oag_bg;
-  padding-top: 12em;
   h2 {
     margin: 0.5em 0;
     &:before {
@@ -822,10 +843,25 @@ table {
       max-width: 20px;
     }
   }
+  .gradient {
+    .upload-form {
+      display: block;
+      button {
+        bottom: 32px;
+        left: 456px;
+      }
+      div.jfilestyle.jfilestyle-corner {
+        margin-top: 1em;
+      }
+      .upload {
+        margin-left: 0;
+        padding-top: 0;
+      }
+    }
+  }
 }
 
 @media (max-width: 768px) {
-
   .content-block.download {
     padding: 1.5em;
   }
@@ -891,14 +927,10 @@ table {
       font-size: 1em;
     }
   }
-
   nav
   .block,
   .content {
     width: 100%
-  }
-  .gradient {
-    height: initial;
   }
   .upload-form button,
   .upload-info button {
@@ -915,7 +947,6 @@ table {
       }
     }
   }
-
   #geo-suggestions {
     form[name=form] .tag-row {
       display: block;
@@ -938,6 +969,9 @@ table {
     &.margin {
       margin-bottom: 5em;
     }
+  }
+  .gradient .upload-form div.jfilestyle.jfilestyle-corner {
+    margin-bottom: 1em;
   }
 }
 
@@ -1043,8 +1077,8 @@ table {
   .bottom-page-nav {
     bottom: -85px;
   }
-  #geo-suggestions .info {
-    padding: 1em;
+  .gradient .upload-form .upload {
+    padding: 0;
   }
 }
 
