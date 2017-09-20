@@ -679,6 +679,20 @@ iframe {
   }
 }
 
+.upload-form.download {
+  background-color: transparent;
+  box-shadow: none;
+  padding: 0;
+  width: 100%;
+  h1 {
+    color: $oag_title;
+  }
+  button {
+    bottom: 31px;
+    left: 428px;
+  }
+}
+
 .options {
   display: flex;
   justify-content: flex-end;
@@ -1002,8 +1016,8 @@ table {
     }
   }
   .options a {
-    width: calc(100% - 4em);
-    margin-bottom: 0.5em;
+    width: calc(100% - 3em);
+    margin: 0 0 0.5em 0;
     text-align: center;
   }
   .upload-info div textarea {
@@ -1068,7 +1082,7 @@ table {
     width: 87px;
     font-size: 0.9em;
   }
-  .version ~ .upload-form {
+  .upload-form.download {
     background-color: transparent;
     box-shadow: none;
     padding: 0;
