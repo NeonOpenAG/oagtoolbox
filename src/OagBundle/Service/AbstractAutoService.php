@@ -10,14 +10,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 abstract class AbstractAutoService extends AbstractOagService {
 
     /**
-     * Process the contents at the given URI.
-     *
-     * @param string $sometext the URI
-     * @return array the json response
-     */
-    abstract function processUri($sometext);
-
-    /**
      * Process the contents as raw text.
      *
      * @param string $sometext the text
