@@ -34,6 +34,7 @@
                         <label class="addremove">{{ form_widget(tag) }}<span></span></label>
                     </div>
                     {% endfor %}
+                    {% do form['tags'].setRendered %}
                     <div class="bottom-page-nav">
                         {{ form_row(form.back) }}{{ form_row(form.save) }}
                     </div>
@@ -42,10 +43,7 @@
                     <div class="upload-info">
                         <h3>Got any project info to match this Activity ID you want the tool to read?</h3>
                         <hr>
-                        <div>{{ form(enhancementUploadForm) }}</div>
-                    </div>
-                    <div class="upload-info">
-                        {{ form(pasteTextForm) }}
+                        <div>{{ form(pasteTextForm) }}</div>
                     </div>
 
               </div>
