@@ -36,6 +36,7 @@ class WireframeController extends Controller {
         $srvCove = $this->get(Cove::class);
         $srvClassifier = $this->get(Classifier::class);
         $srvGeocoder = $this->get(Geocoder::class);
+        $srvOagFile = $this->get(OagFileService::class);
 
         $oagfile = new OagFile();
         $sourceUploadForm = $this->createForm(OagFileType::class, $oagfile);
@@ -71,6 +72,10 @@ class WireframeController extends Controller {
         $data = array(
             'source_upload_form' => $sourceUploadForm->createView()
         );
+
+        if (!is_null($srvOagFile->getMostRecent())) {
+            $data['file'] = $srvOagFile->getMostRecent();
+        }
 
         return $data;
     }
