@@ -138,10 +138,11 @@ class Cove extends AbstractAutoService {
             } else {
                 $this->getContainer()->get('session')->getFlashBag()->add('error', 'CoVE returned data that was not XML.');
             }
-        }
-        // CoVE returned with an error, spit out stderr
-        foreach ($err as $line) {
-            $this->getContainer()->get('session')->getFlashBag()->add('error', $line);
+        } else {
+            // CoVE returned with an error, spit out stderr
+            foreach ($err as $line) {
+                $this->getContainer()->get('session')->getFlashBag()->add('error', $line);
+            }
         }
 
         return false;
