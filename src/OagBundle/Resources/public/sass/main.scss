@@ -130,11 +130,11 @@ button,
 -------------------------------------------------------------- */
 
 .block {
-  max-width: 1200px;
+  width: 1200px;
 }
 
 .content {
-  max-width: 1000px;
+  width: 1000px;
 }
 
 .center {
@@ -243,11 +243,9 @@ nav {
 
 .intro {
   margin-bottom: 4em;
-  h1 {
-    color: white;
-  }
+  h1,
   h2 {
-    color: $oag_offwhite;
+    color: white;
   }
   &.margin {
     margin-bottom: 2em;
@@ -275,11 +273,19 @@ nav {
 .instructions {
   background-color: $oag_bg;
   padding-top: 12em;
+  h2 {
+    margin: 0.5em 0;
+    &:before {
+      font-family: FontAwesome;
+      content: "\f058";
+      font-size: 1em;
+      color: $oag_title;
+      margin-right: 0.6em;
+    }
+  }
   .template {
     display: flex;
-    h2 {
-      margin: 0.5em 0;
-    }
+    margin-bottom: 1.5em;
     button {
       margin-left: 1.5em;
       span:before {
@@ -289,12 +295,8 @@ nav {
       }
     }
   }
-  .info p {
-    &:before {
-      font-family: FontAwesome;
-      margin-right: 0.6em;
-      content: "\f05a";
-    }
+  .content div {
+    margin-bottom: 1.5em;
   }
 }
 
@@ -355,6 +357,9 @@ nav {
     font-family: $oag_font;
     line-height: 1.15;
   }
+}
+.upload-info {
+  width: 100%;
 }
 
 
@@ -446,6 +451,10 @@ article {
           justify-content: flex-end;
         }
       }
+      .info p {
+        width: 100%;
+        padding-right: 0;
+      }
     }
   }
 }
@@ -506,7 +515,7 @@ form {
   position: absolute;
   display: flex;
   right: 0;
-  bottom: -84px;
+  bottom: -92px;
   button {
     @extend .back;
   }
@@ -554,13 +563,11 @@ form {
     flex: 1;
     padding: 2em;
   }
-  span {
-    //margin: 2em;
-  }
   .suggested-map-block {
     border: none;
     background-color: #dbe5ea;
     width: 600px;
+    height: 250px;
   }
 }
 
@@ -700,7 +707,7 @@ table {
 }
 
 .flash-info {
-  background: $oag_green;
+  background: #c2cf7d;
   font-weight: bold;
   color: white;
   font-size: 110%;
@@ -778,6 +785,31 @@ table {
       margin-bottom: 1em;
     }
   }
+  #geo-suggestions .suggested-map-block {
+    width: 50%;
+  }
+  table td {
+    &:nth-child(1) {
+      word-wrap: break-word;
+      max-width: 20px;
+    }
+    &:nth-child(2) {
+      word-wrap: break-word;
+      max-width: 100px;
+    }
+    &:nth-child(3) {
+      word-wrap: break-word;
+      max-width: 100px;
+    }
+    &:nth-child(4) {
+      word-wrap: break-word;
+      max-width: 20px;
+    }
+    &:nth-child(5) {
+      word-wrap: break-word;
+      max-width: 20px;
+    }
+  }
 }
 
 @media (max-width: 768px) {
@@ -811,6 +843,9 @@ table {
     position: relative;
     padding-left: 30%;
     text-align: right;
+    &:nth-child(n) {
+      max-width: initial;
+    }
     &:nth-child(2),
     &:nth-child(3) {
       text-align: right;
@@ -866,6 +901,30 @@ table {
         float: none;
         margin-bottom: 1em;
       }
+    }
+  }
+
+  #geo-suggestions {
+    form[name=form] .tag-row {
+      display: block;
+      .tag {
+        padding-bottom: 0;
+      }
+    }
+    .suggested-map-block {
+      width: 100%;
+    }
+    .info {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+  article {
+    &:last-child {
+      margin-bottom: 0;
+    }
+    &.margin {
+      margin-bottom: 5em;
     }
   }
 }
@@ -929,6 +988,10 @@ table {
       width: 100%;
     }
   }
+  #geo-suggestions form[name=form] .tag-row .tag {
+    font-size: 1em;
+    margin-right: 1em;
+  }
 }
 
 @media (max-width: 563px) {
@@ -962,6 +1025,9 @@ table {
     padding: 0;
     width: 100%;
   }
+  .bottom-page-nav {
+    bottom: -85px;
+  }
 }
 
 @media (max-width: 409px) {
@@ -978,7 +1044,7 @@ table {
 
 @media (max-width: 360px) {
   .block {
-    padding: 0.5em 0.5em 2em 0.5em;
+    padding: 0.5em;
     .intro.margin {
       padding: 1em;
       margin-bottom: 0;
@@ -993,5 +1059,29 @@ table {
   }
   .activity .heading.summary h2 {
     font-size: 1.5em;
+  }
+  #improve-your-data .block {
+    padding: 0.5em;
+  }
+  article {
+    margin-bottom: 0.5em;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  #classifier-suggestions article,
+  #geo-suggestions article {
+    margin-bottom: 4.1em;
+  }
+  #geo-suggestions {
+    .info {
+      padding: 1em;
+    }
+  }
+  .bottom-page-nav {
+    bottom: -65px;
+    div {
+      margin-left: 0.5em;
+    }
   }
 }

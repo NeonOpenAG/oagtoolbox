@@ -9,7 +9,7 @@
 
 {% block body %}
 
-    <div class="center">
+    <div class="center" id="download">
 
         <section class="block">
 
@@ -17,7 +17,7 @@
                 <h1>Download</h1>
             </div>
 
-            <article class="activity download">
+            <article class="activity">
                 <div class="heading">
                     <h2>{{ file.getDocumentName() }}</h2>
                     <h3>Uploaded: {{ file.getUploadDate|date }}</h3>
