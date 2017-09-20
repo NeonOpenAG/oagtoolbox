@@ -20,6 +20,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -122,6 +123,43 @@ class WireframeController extends Controller {
     }
 
     /**
+     * Delete an IATI file (from the download page).
+     *
+     * @Route("/download/{previous_id}/deleteFile/{to_delete_id}")
+     * @ParamConverter("previous", class="OagBundle:OagFile", options={"id" = "previous_id"})
+     * @ParamConverter("toDelete", class="OagBundle:OagFile", options={"id" = "to_delete_id"})
+     */
+    public function deleteFileAction(Request $request, OagFile $previous, OagFile $toDelete) {
+        $em = $this->getDoctrine()->getManager();
+        $oagFileRepo = $this->getDoctrine()->getRepository(OagFile::class);
+
+        $em->remove($toDelete);
+        $em->flush();
+
+        if (count($oagFileRepo->findAll()) === 0) {
+            // they deleted the last file, redirect to upload
+            return $this->redirect($this->generateUrl('oag_wireframe_upload'));
+        } else if ($previous->getId() === $toDelete->getId()) {
+            // they deleted the file of the page they're on, redirect to the most recent file
+            $files = $oagFileRepo->findAll();
+            usort($files, function ($a, $b) {
+                if ($a->getUploadDate() < $b->getUploadDate()) {
+                    // $a happened before $b
+                    return -1;
+                } elseif ($a->getUploadDate() > $b->getUploadDate()) {
+                    // $b happened before $a
+                    return 1;
+                }
+                return 0;
+            });
+            return $this->redirect($this->generateUrl('oag_wireframe_download', array('id' => end($files)->getId())));
+        }
+
+        // they deleted another file
+        return $this->redirect($this->generateUrl('oag_wireframe_download', array('id' => $previous->getId())));
+    }
+
+    /**
      * Download an IATI file.
      *
      * @Route("/downloadFile/{id}")
@@ -131,17 +169,6 @@ class WireframeController extends Controller {
         $srvOagFile = $this->get(OagFileService::class);
 
         return $this->file($srvOagFile->getPath($file));
-    }
-
-    /**
-     * Delete an IATI file.
-     *
-     * @Route("/deleteFile/{id}")
-     * @ParamConverter("file", class="OagBundle:OagFile")
-     */
-    public function deleteFileAction(Request $request, OagFile $file) {
-        // TODO implement
-        return $this->redirect($this->generateUrl('oag_wireframe_upload'));
     }
 
     /**
@@ -229,7 +256,7 @@ class WireframeController extends Controller {
         }
         $allTags = array_merge($currentTags, $classifierTags);
 
-        // enhancement upload form
+        // enhancement file upload form
         $enhFile = new EnhancementFile();
         $enhUploadForm = $this->createForm(EnhancementFileType::class, $enhFile);
         $enhUploadForm->add('Upload', SubmitType::class, array(
@@ -258,6 +285,21 @@ class WireframeController extends Controller {
             return $this->redirect($this->generateUrl('oag_wireframe_classifiersuggestion', array('id' => $file->getId(), 'activityId' => $activityId)));
         }
 
+        // paste text form
+        $pasteTextForm = $this->createFormBuilder()
+            ->add('text', TextareaType::class, array(
+                'attr' => array('placeholder' => 'Copy & Paste Text')
+            ))
+            ->add('read', SubmitType::class)
+            ->getForm();
+        $pasteTextForm->handleRequest($request);
+        if ($pasteTextForm->isSubmitted() && $pasteTextForm->isValid()) {
+            $data = $pasteTextForm->getData();
+            $srvClassifier->classifyOagFileFromText($file, $data['text'], $activityId);
+            return $this->redirect($this->generateUrl('oag_wireframe_classifiersuggestion', array('id' => $file->getId(), 'activityId' => $activityId)));
+        }
+
+        // tags add/remove form
         $form = $this->createFormBuilder()
             ->add('tags', ChoiceType::class, array(
                 'expanded' => true,
@@ -319,7 +361,8 @@ class WireframeController extends Controller {
             'file' => $file,
             'activity' => $srvIATI->summariseActivityToArray($activity),
             'form' => $form->createView(),
-            'enhancementUploadForm' => $enhUploadForm->createView()
+            'enhancementUploadForm' => $enhUploadForm->createView(),
+            'pasteTextForm' => $pasteTextForm->createView()
         );
     }
 
@@ -433,6 +476,22 @@ class WireframeController extends Controller {
             return $this->redirect($this->generateUrl('oag_wireframe_geocodersuggestion', array('id' => $file->getId(), 'activityId' => $activityId)));
         }
 
+
+        // paste text form
+        $pasteTextForm = $this->createFormBuilder()
+            ->add('text', TextareaType::class, array(
+                'attr' => array('placeholder' => 'Copy & Paste Text')
+            ))
+            ->add('read', SubmitType::class)
+            ->getForm();
+        $pasteTextForm->handleRequest($request);
+        if ($pasteTextForm->isSubmitted() && $pasteTextForm->isValid()) {
+            $data = $pasteTextForm->getData();
+            $srvGeocoder->geocodeOagFileFromText($file, $data['text'], $activityId);
+            return $this->redirect($this->generateUrl('oag_wireframe_geocodersuggestion', array('id' => $file->getId(), 'activityId' => $activityId)));
+        }
+
+        // geocoder add/remove form
         $form = $this->createFormBuilder()
             ->add('tags', ChoiceType::class, array(
                 'expanded' => true,
@@ -492,7 +551,8 @@ class WireframeController extends Controller {
             'form' => $form->createView(),
             'currentLocations' => $currentLocations,
             'currentLocationsMaps' => $currentLocationsMaps,
-            'enhancementUploadForm' => $enhUploadForm->createView()
+            'enhancementUploadForm' => $enhUploadForm->createView(),
+            'pasteTextForm' => $pasteTextForm->createView()
         );
     }
 

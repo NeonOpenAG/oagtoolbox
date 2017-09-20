@@ -72,11 +72,7 @@ class OagFileService extends AbstractService {
      * @return boolean
      */
     public function hasBeenClassified(OagFile $file) {
-        $changeRepo = $this->getContainer()->get('doctrine')->getRepository(Change::class);
-
-        $changes = $changeRepo->findBy(array( 'file' => $file ));
-
-        foreach ($changes as $change) {
+        foreach ($file->getChanges() as $change) {
             if (count($change->getAddedTags()) > 0 || count($change->getRemovedTags()) > 0) {
                 return true;
             }
@@ -93,10 +89,7 @@ class OagFileService extends AbstractService {
      * @return boolean
      */
     public function hasBeenGeocoded(OagFile $file) {
-        $changeRepo = $this->getContainer()->get('doctrine')->getRepository(Change::class);
-        $changes = $changeRepo->findBy(array( 'file' => $file ));
-
-        foreach ($changes as $change) {
+        foreach ($file->getChanges() as $change) {
             if (count($change->getAddedGeolocs()) > 0 || count($change->getRemovedGeolocs()) > 0) {
                 return true;
             }
