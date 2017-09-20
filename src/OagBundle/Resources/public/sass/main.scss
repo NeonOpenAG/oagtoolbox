@@ -232,12 +232,33 @@ nav {
 -------------------------------------------------------------- */
 
 .gradient {
-  height: 532px;
   background: $oag_blue;  /* fallback for old browsers */
   background: -webkit-linear-gradient(150deg, $oag_blue 15%, $oag_purple 90%);  /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(150deg, $oag_blue 15%, $oag_purple 90%); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   h1 {
-    color: white;
+    color: $oag_title;
+    margin: 0;
+  }
+  form {
+    margin-top: 0;
+  }
+  .upload-form {
+    display: flex;
+    padding: 2em;
+    div {
+      margin-bottom: 0;
+    }
+    button {
+      bottom: 38px;
+      left: 714px;
+    }
+    div.jfilestyle.jfilestyle-corner {
+      margin-top: 0;
+    }
+    .b {
+      margin-left: 2em;
+      padding-top: 4px;
+    }
   }
 }
 
@@ -272,7 +293,6 @@ nav {
 
 .instructions {
   background-color: $oag_bg;
-  padding-top: 12em;
   h2 {
     margin: 0.5em 0;
     &:before {
