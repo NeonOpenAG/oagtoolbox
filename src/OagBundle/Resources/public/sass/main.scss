@@ -889,8 +889,9 @@ table {
     border: none;
     border-bottom: 1px solid #eee;
     position: relative;
-    padding-left: 30%;
     text-align: right;
+    word-break: break-all;
+    padding-left: 8em;
     &:nth-child(n) {
       max-width: initial;
     }
@@ -902,7 +903,6 @@ table {
       /* Now like a table header */
       position: absolute;
       left: 0;
-      width: 19%;
       padding-left: 1em;
       white-space: nowrap;
       text-align: left;
