@@ -19,7 +19,11 @@
             </div>
 
             {% for activity in activities %}
-                {{ include('OagBundle::widgets/activity.html.twig', { 'activity': activity, 'suggestRoute': path('oag_wireframe_classifiersuggestion', { 'id': file.getId(), 'activityId': activity.id }) }) }}
+                {{ include('OagBundle::widgets/activity.html.twig', {
+                    'activity': activity,
+                    'suggestRoute': path('oag_wireframe_classifiersuggestion', { 'id': file.getId(), 'activityId': activity.id }),
+                    'actionName': (activity.id in haveSuggested) ? 'Show suggestions' : 'Add more information'
+                }) }}
             {% endfor %}
 
       	    <a class="cta back" href="{{ path('oag_wireframe_improveyourdata', { 'id': file.getId }) }}">Back</a>

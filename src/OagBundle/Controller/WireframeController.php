@@ -128,6 +128,43 @@ class WireframeController extends Controller {
     }
 
     /**
+     * Delete an IATI file (from the download page).
+     *
+     * @Route("/download/{previous_id}/deleteFile/{to_delete_id}")
+     * @ParamConverter("previous", class="OagBundle:OagFile", options={"id" = "previous_id"})
+     * @ParamConverter("toDelete", class="OagBundle:OagFile", options={"id" = "to_delete_id"})
+     */
+    public function deleteFileAction(Request $request, OagFile $previous, OagFile $toDelete) {
+        $em = $this->getDoctrine()->getManager();
+        $oagFileRepo = $this->getDoctrine()->getRepository(OagFile::class);
+
+        $em->remove($toDelete);
+        $em->flush();
+
+        if (count($oagFileRepo->findAll()) === 0) {
+            // they deleted the last file, redirect to upload
+            return $this->redirect($this->generateUrl('oag_wireframe_upload'));
+        } else if ($previous->getId() === $toDelete->getId()) {
+            // they deleted the file of the page they're on, redirect to the most recent file
+            $files = $oagFileRepo->findAll();
+            usort($files, function ($a, $b) {
+                if ($a->getUploadDate() < $b->getUploadDate()) {
+                    // $a happened before $b
+                    return -1;
+                } elseif ($a->getUploadDate() > $b->getUploadDate()) {
+                    // $b happened before $a
+                    return 1;
+                }
+                return 0;
+            });
+            return $this->redirect($this->generateUrl('oag_wireframe_download', array('id' => end($files)->getId())));
+        }
+
+        // they deleted another file
+        return $this->redirect($this->generateUrl('oag_wireframe_download', array('id' => $previous->getId())));
+    }
+
+    /**
      * Download an IATI file.
      *
      * @Route("/downloadFile/{id}")
@@ -140,27 +177,43 @@ class WireframeController extends Controller {
     }
 
     /**
-     * Delete an IATI file.
-     *
-     * @Route("/deleteFile/{id}")
-     * @ParamConverter("file", class="OagBundle:OagFile")
-     */
-    public function deleteFileAction(Request $request, OagFile $file) {
-        // TODO implement
-        return $this->redirect($this->generateUrl('oag_wireframe_upload'));
-    }
-
-    /**
      * @Route("/classifier/{id}")
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
     public function classifierAction(OagFile $file) {
         $srvIATI = $this->get(IATI::class);
         $root = $srvIATI->load($file);
+        $activities = $srvIATI->summariseToArray($root);
+
+        // work out which activities have suggested locations
+        $haveSuggested = array();
+        foreach ($activities as $activity) {
+            $suggestedTags = array();
+
+            // suggested on the OagFile for that activity
+            foreach ($file->getSuggestedTags()->toArray() as $generic) {
+                if (is_null($generic->getActivityId()) || $generic->getActivityId() === $activity['id']) {
+                    $suggestedTags[] = $generic;
+                }
+            }
+
+            // suggested in an EnhancementFile for that activity
+            foreach ($file->getEnhancingDocuments() as $enhFile) {
+                // if it is only relevant to another activity, ignore
+                if ((!is_null($enhFile)) && ($enhFile->getIatiActivityId() !== $activity['id'])) continue;
+                $suggestedTags = array_merge($suggestedTags, $enhFile->getSuggestedTags()->toArray());
+            }
+
+            // has at least one suggested location
+            if (count($suggestedTags) > 0) {
+                $haveSuggested[] = $activity['id'];
+            }
+        }
 
         return array(
             'file' => $file,
-            'activities' => $srvIATI->summariseToArray($root)
+            'activities' => $activities,
+            'haveSuggested' => $haveSuggested
         );
     }
 
@@ -212,7 +265,7 @@ class WireframeController extends Controller {
         $enhFile = new EnhancementFile();
         $enhUploadForm = $this->createForm(EnhancementFileType::class, $enhFile);
         $enhUploadForm->add('Upload', SubmitType::class, array(
-            'attr' => array('class' => 'submit'),
+            'attr' => array('class' => 'submit')
         ));
         $enhUploadForm->handleRequest($request);
         if ($enhUploadForm->isSubmitted() && $enhUploadForm->isValid()) {
@@ -325,10 +378,37 @@ class WireframeController extends Controller {
     public function geocoderAction(OagFile $file) {
         $srvIATI = $this->get(IATI::class);
         $root = $srvIATI->load($file);
+        $activities = $srvIATI->summariseToArray($root);
+
+        // work out which activities have suggested locations
+        $haveSuggested = array();
+        foreach ($activities as $activityId => $activity) {
+            $geocoderGeolocs = array();
+
+            // suggested on the OagFile for that activity
+            foreach ($file->getGeolocations()->toArray() as $generic) {
+                if (is_null($generic->getIatiActivityId()) || $generic->getIatiActivityId() === $activity['id']) {
+                    $geocoderGeolocs[] = $generic;
+                }
+            }
+
+            // suggested in an EnhancementFile for that activity
+            foreach ($file->getEnhancingDocuments() as $enhFile) {
+                // if it is only relevant to another activity, ignore
+                if ((!is_null($enhFile)) && ($enhFile->getIatiActivityId() !== $activityId)) continue;
+                $geocoderGeolocs = array_merge($geocoderGeolocs, $enhFile->getGeolocations()->toArray());
+            }
+
+            // has at least one suggested location
+            if (count($geocoderGeolocs) > 0) {// has at least one suggested location
+                $haveSuggested[] = $activity['id'];
+            }
+        }
 
         return array(
             'file' => $file,
-            'activities' => $srvIATI->summariseToArray($root)
+            'activities' => $activities,
+            'haveSuggested' => $haveSuggested
         );
     }
 
