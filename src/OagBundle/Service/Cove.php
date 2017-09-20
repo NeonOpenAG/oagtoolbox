@@ -6,7 +6,7 @@ namespace OagBundle\Service;
 
 use OagBundle\Entity\OagFile;
 
-class Cove extends AbstractAutoService {
+class Cove extends AbstractOagService {
 
     public function processUri($uri) {
         // TODO - fetch file, cache it, check content type, decode and then pass to cove line at a time
@@ -14,27 +14,13 @@ class Cove extends AbstractAutoService {
         return $this->autocodeXml($data);
     }
 
-    public function processString($contents) {
+    public function process($contents, $filename) {
         $oag = $this->getContainer()->getParameter('oag');
-        $cmd = $oag[$this->getName()]['csv'];
+        $cmd = str_replace('{FILENAME}', $filename, $oag['cove']['cmd']);
         $this->getContainer()->get('logger')->debug(
             sprintf('Command: %s', $cmd)
         );
         
-        return $this->_process($contents, $cmd);
-    }
-
-    public function processXML($contents) {
-        $oag = $this->getContainer()->getParameter('oag');
-        $cmd = $oag[$this->getName()]['xml'];
-        $this->getContainer()->get('logger')->debug(
-            sprintf('Command: %s', $cmd)
-        );
-        
-        return $this->_process($contents, $cmd);
-    }
-    
-    private function _process($contents, $cmd) {
         if (!$this->isAvailable()) {
             $this->getContainer()->get('session')->getFlashBag()->add("warning", $this->getName() . " docker not available, using fixtures.");
             return json_encode($this->getFixtureData(), true);
@@ -90,17 +76,7 @@ class Cove extends AbstractAutoService {
         $this->getContainer()->get('logger')->debug(sprintf('Processing %s using CoVE', $file->getDocumentName()));
         // TODO - for bigger files we might need send as Uri
         $contents = $srvOagFile->getContents($file);
-        
-        // Is this XMNL or CSV
-        $oagFileDir = $this->getContainer()->getParameter('oagfiles_directory');
-        $mimetype = mime_content_type($oagFileDir . '/' . $file->getDocumentName());
-        if ($this->isCsv($mimetype)) {
-            $json = $this->processString($contents);
-        } elseif ($this->isXml($mimetype)) {
-            $json = $this->processXML($contents);
-        } else {
-            throw new \RuntimeException($this->getName() . ' only accepts XML or CSV');
-        }
+        $json = $this->process($contents, $file->getDocumentName());
 
         $err = array_filter($json['err'] ?? array());
         $status = $json['status'];
