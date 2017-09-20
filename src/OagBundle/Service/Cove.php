@@ -55,7 +55,7 @@ class Cove extends AbstractOagService {
                 'status' => $return_value,
             );
             
-            $this->getContainer()->get('logger')->debug($err);
+            $this->getContainer()->get('logger')->debug('Error: ' . $err);
 
             return $data;
         } else {

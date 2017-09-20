@@ -3,17 +3,21 @@
 namespace OagBundle\EventListener;
 
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\PostResponseEvent;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Docker\Docker;                   
+use Docker\API\Model\ContainerConfig;
 
-class DockerCleanupListener {
+class StartupListener {
 
     private $container;
 
-    public function onKernelTerminate(PostResponseEvent $event) {
-        exec('docker rm $(docker ps --filter=status=exited --filter=status=created -q)');
-        exec('docker rmi $(docker images -a --filter=dangling=true -q)');
+    public function onKernelRequest(GetResponseEvent $event) {
+        $this->getContainer()->get('logger')->debug(
+            'Here'
+        );
+        
     }
 
     /**
