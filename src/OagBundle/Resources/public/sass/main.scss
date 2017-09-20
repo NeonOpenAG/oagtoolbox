@@ -245,6 +245,7 @@ nav {
   .upload-form {
     display: flex;
     padding: 2em;
+    max-width: 100%;
     div {
       margin-bottom: 0;
     }
@@ -255,7 +256,7 @@ nav {
     div.jfilestyle.jfilestyle-corner {
       margin-top: 0;
     }
-    .b {
+    .upload {
       margin-left: 2em;
       padding-top: 4px;
     }
@@ -830,10 +831,25 @@ table {
       max-width: 20px;
     }
   }
+  .gradient {
+    .upload-form {
+      display: block;
+      button {
+        bottom: 32px;
+        left: 456px;
+      }
+      div.jfilestyle.jfilestyle-corner {
+        margin-top: 1em;
+      }
+      .upload {
+        margin-left: 0;
+        padding-top: 0;
+      }
+    }
+  }
 }
 
 @media (max-width: 768px) {
-
   .content-block.download {
     padding: 1.5em;
   }
@@ -899,14 +915,10 @@ table {
       font-size: 1em;
     }
   }
-
   nav
   .block,
   .content {
     width: 100%
-  }
-  .gradient {
-    height: initial;
   }
   .upload-form button,
   .upload-info button {
@@ -923,7 +935,6 @@ table {
       }
     }
   }
-
   #geo-suggestions {
     form[name=form] .tag-row {
       display: block;
@@ -946,6 +957,9 @@ table {
     &.margin {
       margin-bottom: 5em;
     }
+  }
+  .gradient .upload-form div.jfilestyle.jfilestyle-corner {
+    margin-bottom: 1em;
   }
 }
 
@@ -1047,6 +1061,9 @@ table {
   }
   .bottom-page-nav {
     bottom: -85px;
+  }
+  .gradient .upload-form .upload {
+    padding: 0;
   }
 }
 
