@@ -36,7 +36,7 @@ class Change {
     private $activityId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\OagBundle\Entity\OagFile")
+     * @ORM\ManyToOne(targetEntity="\OagBundle\Entity\OagFile", inversedBy="changes")
      */
     private $file;
 
