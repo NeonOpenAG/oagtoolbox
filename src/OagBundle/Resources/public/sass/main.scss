@@ -762,11 +762,15 @@ table {
 }
 
 .flash-info {
-  background: #c2cf7d;
+  background: $oag_success;
   font-weight: bold;
   color: white;
   font-size: 110%;
   padding: 1em;
+  text-align: center;
+  &:before {
+    content: "Success: ";
+  }
 }
 
 .flash-error {
@@ -775,6 +779,10 @@ table {
   color: white;
   font-size: 110%;
   padding: 1em;
+  text-align: center;
+  &:before {
+    content: "Error: ";
+  }
 }
 
 .ui-tooltip {
