@@ -20,6 +20,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -202,7 +203,7 @@ class WireframeController extends Controller {
         }
         $allTags = array_merge($currentTags, $classifierTags);
 
-        // enhancement upload form
+        // enhancement file upload form
         $enhFile = new EnhancementFile();
         $enhUploadForm = $this->createForm(EnhancementFileType::class, $enhFile);
         $enhUploadForm->add('Upload', SubmitType::class, array(
@@ -231,6 +232,21 @@ class WireframeController extends Controller {
             return $this->redirect($this->generateUrl('oag_wireframe_classifiersuggestion', array('id' => $file->getId(), 'activityId' => $activityId)));
         }
 
+        // paste text form
+        $pasteTextForm = $this->createFormBuilder()
+            ->add('text', TextareaType::class, array(
+                'attr' => array('placeholder' => 'Copy & Paste Text')
+            ))
+            ->add('read', SubmitType::class)
+            ->getForm();
+        $pasteTextForm->handleRequest($request);
+        if ($pasteTextForm->isSubmitted() && $pasteTextForm->isValid()) {
+            $data = $pasteTextForm->getData();
+            $srvClassifier->classifyOagFileFromText($file, $data['text'], $activityId);
+            return $this->redirect($this->generateUrl('oag_wireframe_classifiersuggestion', array('id' => $file->getId(), 'activityId' => $activityId)));
+        }
+
+        // tags add/remove form
         $form = $this->createFormBuilder()
             ->add('tags', ChoiceType::class, array(
                 'expanded' => true,
@@ -292,7 +308,8 @@ class WireframeController extends Controller {
             'file' => $file,
             'activity' => $srvIATI->summariseActivityToArray($activity),
             'form' => $form->createView(),
-            'enhancementUploadForm' => $enhUploadForm->createView()
+            'enhancementUploadForm' => $enhUploadForm->createView(),
+            'pasteTextForm' => $pasteTextForm->createView()
         );
     }
 
@@ -379,6 +396,22 @@ class WireframeController extends Controller {
             return $this->redirect($this->generateUrl('oag_wireframe_geocodersuggestion', array('id' => $file->getId(), 'activityId' => $activityId)));
         }
 
+
+        // paste text form
+        $pasteTextForm = $this->createFormBuilder()
+            ->add('text', TextareaType::class, array(
+                'attr' => array('placeholder' => 'Copy & Paste Text')
+            ))
+            ->add('read', SubmitType::class)
+            ->getForm();
+        $pasteTextForm->handleRequest($request);
+        if ($pasteTextForm->isSubmitted() && $pasteTextForm->isValid()) {
+            $data = $pasteTextForm->getData();
+            $srvGeocoder->geocodeOagFileFromText($file, $data['text'], $activityId);
+            return $this->redirect($this->generateUrl('oag_wireframe_geocodersuggestion', array('id' => $file->getId(), 'activityId' => $activityId)));
+        }
+
+        // geocoder add/remove form
         $form = $this->createFormBuilder()
             ->add('tags', ChoiceType::class, array(
                 'expanded' => true,
@@ -438,7 +471,8 @@ class WireframeController extends Controller {
             'form' => $form->createView(),
             'currentLocations' => $currentLocations,
             'currentLocationsMaps' => $currentLocationsMaps,
-            'enhancementUploadForm' => $enhUploadForm->createView()
+            'enhancementUploadForm' => $enhUploadForm->createView(),
+            'pasteTextForm' => $pasteTextForm->createView()
         );
     }
 
