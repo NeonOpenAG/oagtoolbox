@@ -65,7 +65,7 @@
                         </tr>
                         {% for otherFile in otherFiles %}
                         <tr>
-                            <td><a href="{{ path('oag_wireframe_deletefile', { id: otherFile.getId() }) }}"><span class="delete"></span></a></td>
+                            <td><a href="{{ path('oag_wireframe_deletefile', { previous_id: file.getId(), to_delete_id: otherFile.getId() }) }}"><span class="delete"></span></a></td>
                             <td>{{ otherFile.getDocumentName() }}</td>
                             <td>{{ otherFile.getUploadDate|date }}</td>
                             <td>{{ srvOagFile.hasBeenImproved(otherFile) ? 'Yes' : 'No' }}</td>

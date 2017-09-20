@@ -122,6 +122,43 @@ class WireframeController extends Controller {
     }
 
     /**
+     * Delete an IATI file (from the download page).
+     *
+     * @Route("/download/{previous_id}/deleteFile/{to_delete_id}")
+     * @ParamConverter("previous", class="OagBundle:OagFile", options={"id" = "previous_id"})
+     * @ParamConverter("toDelete", class="OagBundle:OagFile", options={"id" = "to_delete_id"})
+     */
+    public function deleteFileAction(Request $request, OagFile $previous, OagFile $toDelete) {
+        $em = $this->getDoctrine()->getManager();
+        $oagFileRepo = $this->getDoctrine()->getRepository(OagFile::class);
+
+        $em->remove($toDelete);
+        $em->flush();
+
+        if (count($oagFileRepo->findAll()) === 0) {
+            // they deleted the last file, redirect to upload
+            return $this->redirect($this->generateUrl('oag_wireframe_upload'));
+        } else if ($previous->getId() === $toDelete->getId()) {
+            // they deleted the file of the page they're on, redirect to the most recent file
+            $files = $oagFileRepo->findAll();
+            usort($files, function ($a, $b) {
+                if ($a->getUploadDate() < $b->getUploadDate()) {
+                    // $a happened before $b
+                    return -1;
+                } elseif ($a->getUploadDate() > $b->getUploadDate()) {
+                    // $b happened before $a
+                    return 1;
+                }
+                return 0;
+            });
+            return $this->redirect($this->generateUrl('oag_wireframe_download', array('id' => end($files)->getId())));
+        }
+
+        // they deleted another file
+        return $this->redirect($this->generateUrl('oag_wireframe_download', array('id' => $previous->getId())));
+    }
+
+    /**
      * Download an IATI file.
      *
      * @Route("/downloadFile/{id}")
@@ -131,20 +168,6 @@ class WireframeController extends Controller {
         $srvOagFile = $this->get(OagFileService::class);
 
         return $this->file($srvOagFile->getPath($file));
-    }
-
-    /**
-     * Delete an IATI file.
-     *
-     * @Route("/deleteFile/{id}")
-     * @ParamConverter("file", class="OagBundle:OagFile")
-     */
-    public function deleteFileAction(Request $request, OagFile $file) {
-        $em = $this->getDoctrine()->getManager();
-        $em->remove($file);
-        $em->flush();
-
-        return $this->redirect($this->generateUrl('oag_wireframe_upload'));
     }
 
     /**
