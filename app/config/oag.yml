@@ -1,7 +1,7 @@
 parameters:
     oag:
         cove:
-            cmd: "docker run -i -e PROCESS_DATA=true openagdata/cove /usr/local/bin/process.sh"
+            cmd: docker exec -i --env FILENAME="{FILENAME}" openag_cove /usr/local/bin/process.sh
         geocoder:
             uri: http://localhost
         autogeocoder:
