@@ -658,9 +658,20 @@ form {
 
 -------------------------------------------------------------- */
 
-.preview.block,
+.preview {
+  .block {
+    width: 100%;
+  }
+  article {
+    background-color: $oag_bg;
+  }
+}
 iframe {
+  padding: 0;
+  margin: 0;
   width: 100%;
+  height: 800px;
+  border: 0;
 }
 
 
