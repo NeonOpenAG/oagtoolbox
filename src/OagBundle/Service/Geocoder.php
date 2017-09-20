@@ -6,6 +6,7 @@ use OagBundle\Entity\EnhancementFile;
 use OagBundle\Entity\Geolocation;
 use OagBundle\Entity\OagFile;
 use OagBundle\Service\CSV;
+use OagBundle\Service\TextExtractor\TextifyService;
 
 class Geocoder extends AbstractAutoService {
 
@@ -88,6 +89,51 @@ class Geocoder extends AbstractAutoService {
     }
 
     /**
+     * Process text and attach the resulting Geolocation suggestions to an IATI
+     * file.
+     *
+     * @param OagFile $file
+     * @param string $text
+     * @param string $activityId if the text is specific
+     */
+    public function geocodeOagFileFromText(OagFile $file, $text, $activityId = null) {
+        $em = $this->getContainer()->get('doctrine')->getManager();
+        $geolocRepo = $this->getContainer()->get('doctrine')->getRepository(Geolocation::class);
+        $srvEnhancementFile = $this->getContainer()->get(EnhancementFileService::class);
+
+        $locations = $this->processString($text);
+
+        $file->clearGeolocations();
+
+        foreach ($locations as $location) {
+            $locationIdCode = $location['geonameId'];
+            $locationIdVocab = $this->getContainer()->getParameter('geocoder')['id_vocabulary'];
+
+            $geoloc = $geolocRepo->findOneBy(array(
+                'locationIdCode' => $locationIdCode,
+                'locationIdVocab' => $locationIdVocab
+            ));
+
+            if (!$geoloc) {
+                $geoloc = new Geolocation();
+                $geoloc->setName($location['toponymName']);
+                $geoloc->setLocationIdCode($locationIdCode);
+                $geoloc->setLocationIdVocab($locationIdVocab);
+                $geoloc->setFeatureLocationCode($location['fcode']);
+                $geoloc->setFeatureLocationName($location['fcodeName']);
+                $geoloc->setPointPosLat($location['lat']);
+                $geoloc->setPointPosLong($location['lng']);
+                // TODO admin
+            }
+
+            $file->addGeolocation($geoloc);
+        }
+
+        $em->persist($file);
+        $em->flush();
+    }
+
+    /**
      * Process an EnhancementFile and persist the results as Geolocation
      * objects, attached to the EnhancementFile.
      *
@@ -96,10 +142,18 @@ class Geocoder extends AbstractAutoService {
     public function geocodeEnhancementFile(EnhancementFile $file) {
         $em = $this->getContainer()->get('doctrine')->getManager();
         $geolocRepo = $this->getContainer()->get('doctrine')->getRepository(Geolocation::class);
+        $srvTextify = $this->getContainer()->get(TextifyService::class);
         $srvEnhancementFile = $this->getContainer()->get(EnhancementFileService::class);
 
-        $xml = $srvEnhancementFile->getContents($file);
-        $locations = $this->processXML($xml);
+        // enhancing/text document
+        $rawText = $srvTextify->stripEnhancementFile($file);
+
+        if ($rawText === false) {
+            // textifier failed
+            throw new \RuntimeException('Unsupported file type to strip text from');
+        }
+
+        $locations = $this->processString($rawText);
 
         $file->clearGeolocations();
 
