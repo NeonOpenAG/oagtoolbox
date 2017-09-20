@@ -312,6 +312,18 @@ nav {
   width: calc(100% - 4em);
   div {
     margin-bottom: 1em;
+    label {
+      display: none;
+    }
+    textarea {
+      border-radius: 2px;
+      width: 474px;
+      font-family: $oag_font;
+      border: 1px solid #dcdcdc;
+      height: 16px;
+      background-color: white;
+      padding: 1em;
+    }
     &.jfilestyle {
       box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
       input {
@@ -500,14 +512,14 @@ form {
   box-shadow: none;
   padding: 4em 0 0 0;
   button {
-    bottom: 31px;
-    left: 428px;
+    bottom: 23px;
+    left: 532px;
   }
   hr {
     margin-bottom: 1em;
   }
   form {
-    margin-top: 1em;
+    margin-top: 2em;
   }
 }
 
@@ -960,6 +972,9 @@ table {
     margin-bottom: 0.5em;
     text-align: center;
   }
+  .upload-info div textarea {
+    width: calc(100% - 2em);
+  }
 }
 
 @media (max-width: 611px) {
@@ -1027,6 +1042,9 @@ table {
   }
   .bottom-page-nav {
     bottom: -85px;
+  }
+  #geo-suggestions .info {
+    padding: 1em;
   }
 }
 
