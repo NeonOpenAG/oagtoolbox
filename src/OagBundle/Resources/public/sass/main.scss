@@ -244,14 +244,15 @@ nav {
   }
   .upload-form {
     display: flex;
+    justify-content: center;
     padding: 2em;
     max-width: 100%;
     div {
       margin-bottom: 0;
     }
     button {
-      bottom: 38px;
-      left: 714px;
+      position: initial;
+      margin-left: 2em;
     }
     div.jfilestyle.jfilestyle-corner {
       margin-top: 0;
@@ -259,6 +260,9 @@ nav {
     .upload {
       margin-left: 2em;
       padding-top: 4px;
+    }
+    #oag_file {
+      display: flex;
     }
   }
 }
@@ -338,7 +342,7 @@ nav {
     }
     textarea {
       border-radius: 2px;
-      width: 474px;
+      width: 450px;
       font-family: $oag_font;
       border: 1px solid #dcdcdc;
       height: 16px;
@@ -384,15 +388,18 @@ nav {
     margin-top: 1em;
   }
   button {
-    position: absolute;
-    bottom: 48px;
-    left: 460px;
     font-family: $oag_font;
     line-height: 1.15;
   }
 }
 .upload-info {
   width: 100%;
+  form > div {
+    display: flex;
+    button {
+      margin-left: 2em;
+    }
+  }
 }
 
 
@@ -532,10 +539,6 @@ form {
   border-radius: 0;
   box-shadow: none;
   padding: 4em 0 0 0;
-  button {
-    bottom: 23px;
-    left: 532px;
-  }
   hr {
     margin-bottom: 1em;
   }
@@ -618,7 +621,7 @@ form {
   }
   span {
     @extend button;
-    width: 98px;
+    width: 105px;
     text-align: center;
   }
   input + span {
@@ -691,13 +694,19 @@ iframe {
   background-color: transparent;
   box-shadow: none;
   padding: 0;
+  margin-bottom: 0;
   width: 100%;
   h1 {
     color: $oag_title;
   }
+  #oag_file {
+    display: flex;
+  }
+  div.jfilestyle.jfilestyle-corner {
+    margin-top: 0;
+  }
   button {
-    bottom: 31px;
-    left: 428px;
+    margin-left: 2em;
   }
 }
 
@@ -762,15 +771,11 @@ table {
 }
 
 .flash-info {
-  background: $oag_success;
+  background: #c2cf7d;
   font-weight: bold;
   color: white;
   font-size: 110%;
   padding: 1em;
-  text-align: center;
-  &:before {
-    content: "Success! ";
-  }
 }
 
 .flash-error {
@@ -779,10 +784,6 @@ table {
   color: white;
   font-size: 110%;
   padding: 1em;
-  text-align: center;
-  &:before {
-    content: "Error: ";
-  }
 }
 
 .ui-tooltip {
@@ -877,8 +878,10 @@ table {
     .upload-form {
       display: block;
       button {
+        position: absolute;
         bottom: 32px;
-        left: 456px;
+        left: 460px;
+        margin-left: 0;
       }
       div.jfilestyle.jfilestyle-corner {
         margin-top: 1em;
@@ -1000,8 +1003,35 @@ table {
       margin-bottom: 5em;
     }
   }
-  .gradient .upload-form div.jfilestyle.jfilestyle-corner {
-    margin-bottom: 1em;
+  .gradient .upload-form {
+    #oag_file {
+      display: block;
+    }
+    button {
+      position: initial;
+    }
+    div.jfilestyle.jfilestyle-corner {
+      margin-bottom: 1em;
+    }
+  }
+  .upload-info {
+    form > div {
+      display: block;
+      button {
+        margin-left: 0;
+      }
+    }
+  }
+}
+
+@media (max-width: 700px) {
+  .upload-form.download {
+    #oag_file {
+      display: block;
+    }
+    button {
+      margin-left: 0;
+    }
   }
 }
 
@@ -1095,7 +1125,7 @@ table {
     font-size: 0.9em;
   }
   .addremove span {
-    width: 87px;
+    width: 95px;
     font-size: 0.9em;
   }
   .upload-form.download {
@@ -1109,6 +1139,9 @@ table {
   }
   .gradient .upload-form .upload {
     padding: 0;
+  }
+  .upload-form div.jfilestyle.jfilestyle-corner input:first-child {
+    width: calc(100% - 151px) !important;
   }
 }
 
@@ -1165,5 +1198,9 @@ table {
     div {
       margin-left: 0.5em;
     }
+  }
+  .gradient .upload-form {
+    padding: 1em;
+    width: calc(100% - 2em);
   }
 }
