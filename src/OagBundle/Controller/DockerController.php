@@ -19,11 +19,13 @@ class DockerController extends Controller
     public function listAction()
     {
         $srvDocker = $this->get(Docker::class);
-        $response = $srvDocker->listContainers();
-        $chunked = preg_split("#\n\s*\n#Uis", $response);
-        $json = $chunked;
-        $data = json_decode($json[1], TRUE);
-        return array('json' => json_encode($data, JSON_PRETTY_PRINT));
+        $containers = $srvDocker->listContainers();
+        
+        $data = [
+            'containers' => $containers,
+            'json' => json_encode($containers, JSON_PRETTY_PRINT),
+        ];
+        return $data;
     }
 
     /**
