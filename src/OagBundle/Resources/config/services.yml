@@ -18,9 +18,3 @@ services:
             - { name: kernel.event_listener, event: kernel.request }
         calls:
             - [setContainer, ['@service_container']]
-
-    oag.exit_listener:
-        class: OagBundle\EventListener\DockerCleanupListener
-        tags:
-            - { name: kernel.event_listener, event: kernel.terminate }
-        calls:
