@@ -23,7 +23,7 @@ class Docker extends AbstractOagService {
         $errno = 0;
         $errstr = '';
         $sock = stream_socket_client("unix:///var/run/docker.sock", $errno, $errstr);
-        $msg = "GET " . $path . " HTTP/1.1\r\n";
+        $msg = "GET " . $path . " HTTP/1.0\r\n";
         $msg .= "Content-Type: application/json\r\n";
         $msg .= "HOST: 0.0.0.0\r\n";
         $msg .= $path;

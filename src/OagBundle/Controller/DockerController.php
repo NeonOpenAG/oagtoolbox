@@ -20,7 +20,8 @@ class DockerController extends Controller
     {
         $srvDocker = $this->get(Docker::class);
         $response = $srvDocker->listContainers();
-        $json = preg_split("#\n\s*\n#Uis", $response);
+        $chunked = preg_split("#\n\s*\n#Uis", $response);
+        $json = $chunked;
         $data = json_decode($json[1], TRUE);
         return array('json' => json_encode($data, JSON_PRETTY_PRINT));
     }
