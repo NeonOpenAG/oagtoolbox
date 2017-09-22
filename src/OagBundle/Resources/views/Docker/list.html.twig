@@ -1,0 +1,38 @@
+{% extends "OagBundle::base.html.twig" %}
+
+{% block title %}OagBundle:Docker:list{% endblock %}
+
+{% block body %}
+<h1>Welcome to the Docker:list page</h1>
+
+<table style='background: white; padding: 10px; border: black solid 2px; color: black;'>
+    <thead>
+        <tr>
+            <th>CONTAINER ID</th>
+            <th>IMAGE</th>
+            <th>COMMAND</th>
+            <th>CREATED</th>
+            <th>STATUS</th>
+            <th>PORTS</th>
+            <th>NAMES</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for container in containers %}
+        <tr>
+            <th>{{ container.container_id }}</th>
+            <th>{{ container.image }}</th>
+            <th>{{ container.command }}</th>
+            <th>{{ container.created }}</th>
+            <th>{{ container.status }}</th>
+            <th>{{ container.ports }}</th>
+            <th>{{ container.names }}</th>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<pre style='background: white; padding: 10px; border: black solid 2px; color: black;'>
+  {{ json }}
+</pre>
+{% endblock %}
