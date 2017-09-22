@@ -15,15 +15,12 @@ class GeocoderTest extends TestCase {
     }
 
     public function testGetStringFixtureData() {
-        $srvCsv = $this->container->get(CSV::class);
-        $geocoder = $this->container->get(Geocoder::class);
-
-        $geocoder->setContainer($this->container);
-        $tsv = $geocoder->getStringFixtureData();
-        $parsed = $srvCsv->toArray($tsv, "\t");
-
-        $this->assertInternalType('array', $parsed);
-        $this->assertGreaterThan(0, count($parsed));
+        $classifier = $this->container->get(Geocoder::class);
+        $classifier->setContainer($this->container);
+        $data = $classifier->getStringFixtureData();
+        $json = json_decode($data, true);
+        $this->assertNotNull($json, 'No JSON returned from the geocoder');
+        $this->assertTrue(count($json) >= 1);
     }
 
     public function testGetXMLFixtureData() {

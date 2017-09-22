@@ -1,0 +1,77 @@
+[
+    {
+        "project_id": "/tmp/test.txt",
+        "locations": [
+            {
+                "name": "Brong-Ahafo",
+                "id": 2302547,
+                "admin3": {
+                    "name": "",
+                    "code": ""
+                },
+                "country": {
+                    "name": "Ghana",
+                    "code": "GH"
+                },
+                "admin2": {
+                    "name": "",
+                    "code": ""
+                },
+                "admin4": {
+                    "name": "",
+                    "code": ""
+                },
+                "geometry": {
+                    "coordinates": [
+                        "-1.5",
+                        "7.75"
+                    ],
+                    "type": "Point"
+                },
+                "featureDesignation": {
+                    "name": "first-order administrative division",
+                    "code": "ADM1"
+                },
+                "admin1": {
+                    "name": "Brong-Ahafo",
+                    "code": "03"
+                }
+            },
+            {
+                "name": "Upper East Region",
+                "id": 2294291,
+                "admin3": {
+                    "name": "",
+                    "code": ""
+                },
+                "country": {
+                    "name": "Ghana",
+                    "code": "GH"
+                },
+                "admin2": {
+                    "name": "",
+                    "code": ""
+                },
+                "admin4": {
+                    "name": "",
+                    "code": ""
+                },
+                "geometry": {
+                    "coordinates": [
+                        "-0.75",
+                        "10.75"
+                    ],
+                    "type": "Point"
+                },
+                "featureDesignation": {
+                    "name": "first-order administrative division",
+                    "code": "ADM1"
+                },
+                "admin1": {
+                    "name": "Upper East",
+                    "code": "10"
+                }
+            }
+        ]
+    }
+]
