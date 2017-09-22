@@ -14,8 +14,7 @@ class StartupListener {
         $srvDocker = $this->getContainer()->get(Docker::class);
         $containers = $srvDocker->listContainers();
         
-        // $_containers = ['cove', 'dportal', 'nerserver', 'geocode'];
-        $_containers = ['nerserver', 'geocode'];
+        $_containers = ['cove', 'dportal', 'nerserver', 'geocode'];
         
         foreach ($_containers as $container) {
             if (array_key_exists('openag_' . $container, $containers)) {

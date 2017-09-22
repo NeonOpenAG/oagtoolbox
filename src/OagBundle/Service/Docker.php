@@ -19,105 +19,45 @@ class Docker extends AbstractOagService {
     protected $body;
     
     public function createCove() {
-        $payload = '{
-            "Image": "openagdata/cove",
-            "ExposedPorts": {
-              "8000/tcp": {}
-            },
-            "HostConfig": {
-              "PortBindings": {
-                "8000/tcp": [
-                  {
-                    "HostPort": "8000"
-                  }
-                ]
-              },
-              "RestartPolicy": {
-                "Name": "always"
-              }
-            }
-          }';
+        $payload = '{ "Image": "openagdata/cove", "ExposedPorts": { "8000/tcp": {} }, "HostConfig": { "PortBindings": { "8000/tcp": [ { "HostPort": "8000" } ] }, "RestartPolicy": { "Name": "always" } } }';
         
         $data = $this->apiPost("http:/v1.30/containers/create?name=openag_cove", $payload);
         return $data;
     }
     
-    public function createDportal() {
-        $payload = '{
-            "Image": "openagdata/dportal",
-            "ExposedPorts": {
-              "8011/tcp": {},
-              "1408/tcp": {}
-            },
-            "HostConfig": {
-              "PortBindings": {
-                "8011/tcp": [
-                  {
-                    "HostPort": "8011"
-                  }
-                ],
-                "1408/tcp": [
-                  {
-                    "HostPort": "1408"
-                  }
-                ]
-              },
-              "RestartPolicy": {
-                "Name": "always"
-              }
-            }
-          }';
+  public function createDportal() {
+ $payload = '{ "Image": "openagdata/dportal", "Tty": true, "ExposedPorts": { "8011/tcp": {}, "1408/tcp": {} }, "HostConfig": { "PortBindings": { "8011/tcp": [ { "HostPort": "8011" } ], "1408/tcp": [ { "HostPort": "1408" } ] }, "RestartPolicy": { "Name": "always" } } }';
         
         $data = $this->apiPost("http:/v1.30/containers/create?name=openag_dportal", $payload);
         return $data;
     }
     
     public function createNerserver() {
-        $payload = '{
-            "Image": "openagdata/nerserver",
-            "ExposedPorts": {
-              "9000/tcp": {}
-            },
-            "HostConfig": {
-              "PortBindings": {
-                "9000/tcp": [
-                  {
-                    "HostPort": "9000"
-                  }
-                ]
-              },
-              "RestartPolicy": {
-                "Name": "always"
-              }
-            }
-          }';
+        $payload = '{ "Image": "openagdata/nerserver", "ExposedPorts": { "9000/tcp": {} }, "HostConfig": { "PortBindings": { "9000/tcp": [ { "HostPort": "9000" } ] }, "RestartPolicy": { "Name": "always" } } }';
         
         $data = $this->apiPost("http:/v1.30/containers/create?name=openag_nerserver", $payload);
         return $data;
     }
     
     public function createGeocode() {
-        $payload = '{
-            "Image": "openagdata/geocoder",
-            "Tty": "true",
-            "ExposedPorts": {
-              "8010/tcp": {}
-            },
-            "HostConfig": {
-              "PortBindings": {
-                "8010/tcp": [
-                  {
-                    "HostPort": "8010"
-                  }
-                ]
-              },
-              "RestartPolicy": {
-                "Name": "always"
-              },
-              "Links": 
-                [ "/openag_nerserver:/openag_geocoder/openag_nerserver" ]
-            }
-          }';
+    $payload = '{
+	"Image": "openagdata/geocoder",
+	"Tty": true,
+	"ExposedPorts": {
+		"8010/tcp": {}
+	},
+	"HostConfig": {
+		"PortBindings": {
+			"8010/tcp": [{
+				"HostPort": "8010"
+			}]
+		},
+		"RestartPolicy": {
+			"Name": "always"
+		},
+		"Links": ["/openag_nerserver:/openag_geocoder/openag_nerserver"]
+	}
+}';
         
         $data = $this->apiPost("http:/v1.30/containers/create?name=openag_geocoder", $payload);
         return $data;
