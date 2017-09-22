@@ -11,10 +11,10 @@ services:
         class: OagBundle\Twig\OagExtension
         tags:
             - { name: twig.extension }
-
-    oag.exit_listener:
-        class: OagBundle\EventListener\DockerCleanupListener
+      
+    oag.startup_listener:
+        class: OagBundle\EventListener\StartupListener
         tags:
-            - { name: kernel.event_listener, event: kernel.terminate }
+            - { name: kernel.event_listener, event: kernel.request }
         calls:
             - [setContainer, ['@service_container']]

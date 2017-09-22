@@ -32,7 +32,7 @@ class WireframeController extends Controller {
      * @Route("/")
      */
     public function uploadAction(Request $request) {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $srvCove = $this->get(Cove::class);
         $srvClassifier = $this->get(Classifier::class);
         $srvGeocoder = $this->get(Geocoder::class);
