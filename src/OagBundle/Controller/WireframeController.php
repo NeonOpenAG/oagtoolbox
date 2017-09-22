@@ -36,6 +36,7 @@ class WireframeController extends Controller {
         $srvCove = $this->get(Cove::class);
         $srvClassifier = $this->get(Classifier::class);
         $srvGeocoder = $this->get(Geocoder::class);
+        $srvOagFile = $this->get(OagFileService::class);
 
         $oagfile = new OagFile();
         $sourceUploadForm = $this->createForm(OagFileType::class, $oagfile);
@@ -72,6 +73,10 @@ class WireframeController extends Controller {
             'source_upload_form' => $sourceUploadForm->createView()
         );
 
+        if (!is_null($srvOagFile->getMostRecent())) {
+            $data['file'] = $srvOagFile->getMostRecent();
+        }
+
         return $data;
     }
 
@@ -82,6 +87,9 @@ class WireframeController extends Controller {
     public function downloadAction(Request $request, OagFile $file) {
         $em = $this->getDoctrine()->getManager();
         $fileRepo = $this->getDoctrine()->getRepository(OagFile::class);
+        $srvClassifier = $this->get(Classifier::class);
+        $srvCove = $this->get(Cove::class);
+        $srvGeocoder = $this->get(Geocoder::class);
         $srvOagFile = $this->get(OagFileService::class);
 
         $oagfile = new OagFile();
@@ -110,6 +118,7 @@ class WireframeController extends Controller {
                 // TODO CoVE failed
             }
             $srvClassifier->classifyOagFile($oagfile);
+            $srvGeocoder->geocodeOagFile($oagfile);
 
 	    return $this->redirect($this->generateUrl('oag_wireframe_improveyourdata', array('id' => $oagfile->getId())));
         }
@@ -132,6 +141,7 @@ class WireframeController extends Controller {
     public function deleteFileAction(Request $request, OagFile $previous, OagFile $toDelete) {
         $em = $this->getDoctrine()->getManager();
         $oagFileRepo = $this->getDoctrine()->getRepository(OagFile::class);
+        $srvOagFile = $this->get(OagFileService::class);
 
         $em->remove($toDelete);
         $em->flush();
@@ -141,18 +151,8 @@ class WireframeController extends Controller {
             return $this->redirect($this->generateUrl('oag_wireframe_upload'));
         } else if ($previous->getId() === $toDelete->getId()) {
             // they deleted the file of the page they're on, redirect to the most recent file
-            $files = $oagFileRepo->findAll();
-            usort($files, function ($a, $b) {
-                if ($a->getUploadDate() < $b->getUploadDate()) {
-                    // $a happened before $b
-                    return -1;
-                } elseif ($a->getUploadDate() > $b->getUploadDate()) {
-                    // $b happened before $a
-                    return 1;
-                }
-                return 0;
-            });
-            return $this->redirect($this->generateUrl('oag_wireframe_download', array('id' => end($files)->getId())));
+            $latest = $srvOagFile->getMostRecent();
+            return $this->redirect($this->generateUrl('oag_wireframe_download', array('id' => $latest->getId())));
         }
 
         // they deleted another file
@@ -195,7 +195,7 @@ class WireframeController extends Controller {
             // suggested in an EnhancementFile for that activity
             foreach ($file->getEnhancingDocuments() as $enhFile) {
                 // if it is only relevant to another activity, ignore
-                if ((!is_null($enhFile)) && ($enhFile->getIatiActivityId() !== $activity['id'])) continue;
+                if ((!is_null($enhFile->getIatiActivityId())) && ($enhFile->getIatiActivityId() !== $activity['id'])) continue;
                 $suggestedTags = array_merge($suggestedTags, $enhFile->getSuggestedTags()->toArray());
             }
 
@@ -235,7 +235,7 @@ class WireframeController extends Controller {
         $suggestedTags = $file->getSuggestedTags()->toArray();
         foreach ($file->getEnhancingDocuments() as $enhFile) {
             // if it is only relevant to another activity, ignore
-            if ((!is_null($enhFile)) && ($enhFile->getIatiActivityId() !== $activityId)) continue;
+            if ((!is_null($enhFile->getIatiActivityId())) && ($enhFile->getIatiActivityId() !== $activityId)) continue;
             $suggestedTags = array_merge($suggestedTags, $enhFile->getSuggestedTags()->toArray());
         }
 
@@ -377,7 +377,7 @@ class WireframeController extends Controller {
 
         // work out which activities have suggested locations
         $haveSuggested = array();
-        foreach ($activities as $activityId => $activity) {
+        foreach ($activities as $activity) {
             $geocoderGeolocs = array();
 
             // suggested on the OagFile for that activity
@@ -390,7 +390,7 @@ class WireframeController extends Controller {
             // suggested in an EnhancementFile for that activity
             foreach ($file->getEnhancingDocuments() as $enhFile) {
                 // if it is only relevant to another activity, ignore
-                if ((!is_null($enhFile)) && ($enhFile->getIatiActivityId() !== $activityId)) continue;
+                if ((!is_null($enhFile->getIatiActivityId())) && ($enhFile->getIatiActivityId() !== $activity['id'])) continue;
                 $geocoderGeolocs = array_merge($geocoderGeolocs, $enhFile->getGeolocations()->toArray());
             }
 
@@ -438,12 +438,22 @@ class WireframeController extends Controller {
         }
 
         // load all suggested tags
-        $geocoderGeolocs = $file->getGeolocations()->toArray();
+        $geocoderGeolocs[] = array();
+
+        // suggested on the OagFile for that activity
+        foreach ($file->getGeolocations()->toArray() as $generic) {
+            if (is_null($generic->getIatiActivityId()) || $generic->getIatiActivityId() === $activityId) {
+                $geocoderGeolocs[] = $generic;
+            }
+        }
+
+        // suggested in an EnhancementFile for that activity
         foreach ($file->getEnhancingDocuments() as $enhFile) {
             // if it is only relevant to another activity, ignore
-            if ((!is_null($enhFile)) && ($enhFile->getIatiActivityId() !== $activityId)) continue;
+            if ((!is_null($enhFile->getIatiActivityId())) && ($enhFile->getIatiActivityId() !== $activityId)) continue;
             $geocoderGeolocs = array_merge($geocoderGeolocs, $enhFile->getGeolocations()->toArray());
         }
+
         // no duplicates please
         $geocoderGeolocs = array_unique($geocoderGeolocs, SORT_REGULAR);
 
