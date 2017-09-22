@@ -84,10 +84,6 @@ class Docker extends AbstractOagService {
      * @return array
      */
     private function apiPost($path, $payload = false) {
-        if (!file_exists('/var/run/docker.sock')) {
-            // This is filthy but the docker stuff does no run on travis
-            return [];
-        }
         $errno = 0;
         $errstr = '';
         $sock = stream_socket_client("unix:///var/run/docker.sock", $errno, $errstr);
@@ -116,6 +112,8 @@ class Docker extends AbstractOagService {
         $this->getContainer()->get('logger')->debug($data);
 
         list($this->header, $this->body) = explode("\r\n\r\n", $data, 2);
+        
+        $this->getContainer()->get('logger')->debug($this->body);
         return json_decode($this->body, true);
     }
     
@@ -179,10 +177,6 @@ class Docker extends AbstractOagService {
      * @return array
      */
     private function apiGet($path) {
-        if (!file_exists('/var/run/docker.sock')) {
-            // This is filthy but the docker stuff does no run on travis
-            return [];
-        }
         $errno = 0;
         $errstr = '';
         $sock = stream_socket_client("unix:///var/run/docker.sock", $errno, $errstr);
@@ -200,6 +194,8 @@ class Docker extends AbstractOagService {
         }
 
         list($this->header, $this->body) = explode("\r\n\r\n", $data, 2);
+        
+        $this->getContainer()->get('logger')->debug($this->body);
         return json_decode($this->body, true);
     }
 

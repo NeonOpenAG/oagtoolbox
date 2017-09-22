@@ -11,6 +11,10 @@ class StartupListener {
     private $container;
 
     public function onKernelRequest(GetResponseEvent $event) {
+        if ($this->getContainer()->get('kernel')->getEnvironment() == "test") {
+            // Skip this in the test env
+            return;
+        }
         $srvDocker = $this->getContainer()->get(Docker::class);
         $containers = $srvDocker->listContainers();
         
