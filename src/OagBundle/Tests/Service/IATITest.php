@@ -61,8 +61,8 @@ class IATITest extends TestCase {
         $tags = $srvIATI->xpathNS($activity, './openag:tag');
         $justAdded = end($tags);
         $this->assertEquals(
-            $tag,
-            $justAdded,
+            $tag->asXML(),
+            $justAdded->asXML(),
             'Check that namespaced tag is found correctly.'
         );
     }
@@ -76,16 +76,12 @@ class IATITest extends TestCase {
         $root = $srvIATI->parseXML($iatiFileString);
         $this->assertInstanceOf('SimpleXMLElement', $root);
 
-        # Ensure that the namspace was added to each activity.
-        $activities = $root->xpath('/iati-activities/iati-activity');
-        foreach ($activities as $activity) {
-            $activityDocAttributes = $activity->getDocNamespaces(FALSE, FALSE);
-            $this->assertArrayHasKey(
-                'openag',
-                $activityDocAttributes,
-                'Activities have openag namespace.'
-            );
-        }
+        # ensure that the namespace was added to the root <iati-activities> element
+        $this->assertArrayHasKey(
+            'openag',
+            $root->getDocNamespaces(FALSE, FALSE),
+            'Activities have openag namespace.'
+        );
 
         # Check that the method logs when expected.
 
