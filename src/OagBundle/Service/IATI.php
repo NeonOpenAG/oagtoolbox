@@ -63,12 +63,12 @@ class IATI extends AbstractService {
             $root = new \SimpleXMLElement($string, self::LIBXML_OPTIONS);
             $activities = $this->getActivities($root);
             $namespaceUri =  $this->getContainer()->getParameter('classifier')['namespace_uri'];
-            foreach ($activities as $activity) {
-                $activityDocNamespaces = $activity->getDocNamespaces(FALSE, FALSE);
-                if(!array_key_exists('openag', $activityDocNamespaces)) {
-                    $activity->addAttribute('xmlns:xmlns:openag', $namespaceUri);
-                }
+
+            // add the namespace URI to the root <iati-activities> element, if needed
+            if(!array_key_exists('openag', $root->getDocNamespaces(FALSE, FALSE))) {
+                $activity->addAttribute('xmlns:xmlns:openag', $namespaceUri);
             }
+
             return $root;
         } catch (\Exception $ex) {
             $this->getContainer()->get('logger')->error('Failed to parse XML: ' . substr($string, 0, 30));
