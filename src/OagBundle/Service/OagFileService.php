@@ -109,4 +109,31 @@ class OagFileService extends AbstractService {
         return $this->hasBeenClassified($oagFile) && $this->hasBeenGeocoded($oagFile);
     }
 
+    /**
+     * Gets the most recent file uploaded to the toolbox.
+     *
+     * @return OagFile|null null if no files are uploaded
+     */
+    public function getMostRecent() {
+        $oagFileRepo = $this->getContainer()->get('doctrine')->getRepository(OagFile::class);
+        $files = $oagFileRepo->findAll();
+
+        if (count($files) === 0) {
+            return null;
+        }
+
+        usort($files, function ($a, $b) {
+            if ($a->getUploadDate() < $b->getUploadDate()) {
+                // $a happened before $b
+                return -1;
+            } elseif ($a->getTimestamp() > $b->getTimestamp()) {
+                // $b happened before $a
+                return 1;
+            }
+            return 0;
+        });
+
+        return end($files);
+    }
+
 }
