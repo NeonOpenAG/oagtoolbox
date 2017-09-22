@@ -114,9 +114,6 @@ button,
   font-size: 1.5em;
   color: $oag_title;
   content: "\f019";
-  &:hover {
-    color: pink;
-  }
 }
 .delete:before {
   font-family: FontAwesome;
