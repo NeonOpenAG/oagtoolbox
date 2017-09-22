@@ -27,25 +27,4 @@ class DockerController extends Controller
         ];
         return $data;
     }
-
-    /**
-     * @Route("/start")
-     */
-    public function startAction()
-    {
-        return $this->render('OagBundle:Docker:start.html.twig', array(
-            // ...
-        ));
-    }
-
-    /**
-     * @Route("/stop")
-     */
-    public function stopAction()
-    {
-        return $this->render('OagBundle:Docker:stop.html.twig', array(
-            // ...
-        ));
-    }
-
 }
