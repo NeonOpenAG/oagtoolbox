@@ -246,7 +246,7 @@ div.jfilestyle.jfilestyle-corner {
     color: $oag_title;
   }
   form {
-    margin-top: 0;
+    margin: 0;
   }
   .upload-form {
     display: flex;
@@ -537,6 +537,7 @@ form {
       align-items: center;
       font-size: 1.3em;
       padding: 0 1em;
+      word-break: break-all;
     }
   }
 }
@@ -583,23 +584,11 @@ form {
 
 #geo-suggestions {
   form[name=form] {
-    margin-top: 2em;
     &:last-child .tag-row {
       margin-bottom: 0;
     }
-    .tag-row {
-    padding: 0;
-    margin: 1em 0;
-    background-color: $oag_bg;
-    display: flex;
-    justify-content: space-between;
-    box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
-      .tag {
-        display: flex;
-        align-items: center;
-        font-size: 1.5em;
-        padding: 0 0 1em 0;
-      }
+    .tag-row .tag {
+      padding: 0 0 1em 0;
     }
   }
   .info {
@@ -1026,6 +1015,7 @@ table {
       display: block;
       .tag {
         padding-bottom: 0;
+        font-size: 1em;
       }
     }
     .suggested-map-block {
@@ -1206,8 +1196,13 @@ table {
   .bottom-page-nav {
     bottom: -85px;
   }
-  .gradient .upload-form .upload {
-    padding: 0;
+  .gradient .upload-form {
+    .upload {
+      padding: 0;
+    }
+    div.jfilestyle.jfilestyle-corner input:first-child {
+      width: calc(100% - 150px) !important;
+    }
   }
   .upload-form div.jfilestyle.jfilestyle-corner input:first-child,
   .upload-form.download div.jfilestyle.jfilestyle-corner input:first-child {
@@ -1221,20 +1216,30 @@ table {
       padding: 1em;
     }
   }
-  .activity .content-block.summary {
-    padding: 1em;
-    button {
-      width: 100%;
+  .activity {
+    .content-block.summary {
+      padding: 1em;
+      button {
+        width: 100%;
+      }
+    }
+    .heading.summary {
+      padding: 1.5em;
     }
   }
-  .activity .heading.summary {
-    padding: 1.5em;
+  #geo-suggestions {
+    .info {
+      display: block;
+    }
+    form[name=form] .tag-row .tag {
+      margin-bottom: 0.5em;
+    }
   }
 }
 
 @media (max-width: 360px) {
   .block {
-    padding: 0.5em;
+    padding: 1em;
     .intro.margin {
       margin-bottom: 0;
     }
@@ -1246,11 +1251,8 @@ table {
   .activity .heading.summary h2 {
     font-size: 1.5em;
   }
-  #improve-your-data .block {
-    padding: 0.5em;
-  }
   article {
-    margin-bottom: 0.5em;
+    margin-bottom: 0.8em;
     &:last-child {
       margin-bottom: 0;
     }
@@ -1265,7 +1267,7 @@ table {
     }
   }
   .bottom-page-nav {
-    bottom: -65px;
+    bottom: -69px;
     div {
       margin-left: 0.5em;
     }
