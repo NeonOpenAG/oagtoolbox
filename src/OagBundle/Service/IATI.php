@@ -66,7 +66,7 @@ class IATI extends AbstractService {
 
             // add the namespace URI to the root <iati-activities> element, if needed
             if(!array_key_exists('openag', $root->getDocNamespaces(FALSE, FALSE))) {
-                $activity->addAttribute('xmlns:xmlns:openag', $namespaceUri);
+                $root->addAttribute('xmlns:xmlns:openag', $namespaceUri);
             }
 
             return $root;
