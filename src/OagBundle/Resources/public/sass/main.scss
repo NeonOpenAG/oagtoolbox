@@ -114,6 +114,9 @@ button,
   font-size: 1.5em;
   color: $oag_title;
   content: "\f019";
+  &:hover {
+    color: pink;
+  }
 }
 .delete:before {
   font-family: FontAwesome;
@@ -255,7 +258,7 @@ div.jfilestyle.jfilestyle-corner {
     }
     button {
       position: initial;
-      margin-left: 2em;
+      margin-left: 1.3em;
     }
     div.jfilestyle.jfilestyle-corner {
       margin-top: 0;
@@ -400,7 +403,7 @@ div.jfilestyle.jfilestyle-corner {
   form > div {
     display: flex;
     button {
-      margin-left: 2em;
+      margin-left: 1.3em;
     }
   }
 }
@@ -691,38 +694,52 @@ form {
 
 .version {
   display: flex;
-  margin: 2em 0 0.5em;
+  justify-content: space-between;
   p {
     color: $oag_dark;
     margin-right: 0.5em;
   }
 }
 
+h2.file-name {
+  word-break: break-all;
+}
+
+.content-block.download {
+  padding: 1.5em;
+}
+
 .upload-form.download {
   background-color: transparent;
   box-shadow: none;
   padding: 0;
-  margin-bottom: 0;
+  margin: 0;
   width: 100%;
   h1 {
-    color: $oag_title;
+    color: $oag_dark;
+    font-size: 1.5em;
   }
   #oag_file {
     display: flex;
+    margin-bottom: 0;
+  }
+  div {
+    margin-bottom: 0;
   }
   div.jfilestyle.jfilestyle-corner {
     margin-top: 0;
   }
   button {
-    margin-left: 2em;
+    margin-left: 1.3em;
+  }
+  form {
+    margin: 0;
+    padding: 0.5em 0;
   }
 }
 
 .options {
-  display: flex;
-  justify-content: flex-end;
-  flex: 1;
-  margin-bottom: 2em;
+  margin: 0;
   a {
     margin:0 0.5em;
     &:nth-child(1) {
@@ -840,11 +857,22 @@ table {
 
 -------------------------------------------------------------- */
 
-@media (max-width: 1020px) {
+@media (max-width: 1146px) {
   .version,
   .version .options {
     display: block;
   }
+  .options a {
+    &:first-child {
+      margin-left: 0;
+    }
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+@media (max-width: 1020px) {
   .activity .content-block.summary {
     .improvements {
       display: block;
@@ -907,6 +935,9 @@ table {
 @media (max-width: 768px) {
   h2 {
     font-size: 1.2em;
+  }
+  h3 {
+    font-size: 1em;
   }
   .activity .heading.summary h2 {
     font-size: 1.5em;
@@ -1026,42 +1057,48 @@ table {
 }
 
 @media (max-width: 700px) {
-  .gradient .upload-form {
+  .gradient .upload-form,
+  .upload-form.download {
+    div.jfilestyle.jfilestyle-corner {
+      display: flex;
+      margin-bottom: 1em;
+      width: 100%;
+      label {
+        width: 87px;
+      }
+      input:first-child {
+        width: 100% !important;
+        & ~ span {
+          justify-content: flex-end;
+        }
+      }
+    }
     #oag_file {
       display: block;
+      margin-bottom: 0;
     }
     button {
       position: initial;
-    }
-  }
-  .upload-form.download {
-    #oag_file {
-      display: block;
-    }
-    button {
+      width: 100%;
       margin-left: 0;
     }
-  }
-  .gradient {
-    .upload-form {
-      div.jfilestyle.jfilestyle-corner {
-        display: flex;
-        margin-bottom: 1em;
-        width: 100%;
-        label {
-          width: 87px;
-        }
-        input:first-child {
-          width: 100% !important;
-          & ~ span {
-            justify-content: flex-end;
-          }
-        }
-      }
-      button {
-        width: 100%;
-      }
+    &:last-child div {
+      margin-bottom: 0;
     }
+  }
+  .upload-form.download form {
+    padding: 0;
+  }
+  .options a {
+    width: calc(100% - 3em);
+    margin: 0 0 0.5em 0;
+    text-align: center;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  .upload-info div textarea {
+    width: calc(100% - 2em);
   }
 }
 
@@ -1090,14 +1127,6 @@ table {
         }
       }
     }
-  }
-  .options a {
-    width: calc(100% - 3em);
-    margin: 0 0 0.5em 0;
-    text-align: center;
-  }
-  .upload-info div textarea {
-    width: calc(100% - 2em);
   }
 }
 
@@ -1170,12 +1199,18 @@ table {
   .gradient .upload-form .upload {
     padding: 0;
   }
-  .upload-form div.jfilestyle.jfilestyle-corner input:first-child {
-    width: calc(100% - 151px) !important;
+  .upload-form div.jfilestyle.jfilestyle-corner input:first-child,
+  .upload-form.download div.jfilestyle.jfilestyle-corner input:first-child {
+    width: calc(100% - 150px) !important;
   }
 }
 
-@media (max-width: 412px) {
+@media (max-width: 450px) {
+  #download {
+    .block {
+      padding: 1em;
+    }
+  }
   .activity .content-block.summary {
     padding: 1em;
     button {
@@ -1191,12 +1226,8 @@ table {
   .block {
     padding: 0.5em;
     .intro.margin {
-      padding: 1em;
       margin-bottom: 0;
     }
-  }
-  .content-block.download {
-    padding: 0.5em;
   }
   .upload-form {
     padding: 1em;
