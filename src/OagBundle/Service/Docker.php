@@ -84,6 +84,10 @@ class Docker extends AbstractOagService {
      * @return array
      */
     private function apiPost($path, $payload = false) {
+        if (!file_exists('/var/run/docker.sock')) {
+            // This is filthy but the docker stuff does no run on travis
+            return [];
+        }
         $errno = 0;
         $errstr = '';
         $sock = stream_socket_client("unix:///var/run/docker.sock", $errno, $errstr);
@@ -175,6 +179,10 @@ class Docker extends AbstractOagService {
      * @return array
      */
     private function apiGet($path) {
+        if (!file_exists('/var/run/docker.sock')) {
+            // This is filthy but the docker stuff does no run on travis
+            return [];
+        }
         $errno = 0;
         $errstr = '';
         $sock = stream_socket_client("unix:///var/run/docker.sock", $errno, $errstr);
