@@ -348,12 +348,13 @@ div.jfilestyle.jfilestyle-corner {
     }
     textarea {
       border-radius: 2px;
-      width: 450px;
+      width: 620px;
       font-family: $oag_font;
       border: 1px solid #dcdcdc;
-      height: 16px;
+      height: 100px;
       background-color: white;
       padding: 1em;
+      margin-bottom: 1em;
     }
     &.jfilestyle {
       box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
@@ -400,11 +401,8 @@ div.jfilestyle.jfilestyle-corner {
 }
 .upload-info {
   width: 100%;
-  form > div {
-    display: flex;
-    button {
-      margin-left: 1.3em;
-    }
+  div {
+    margin-bottom: 0;
   }
 }
 
@@ -523,7 +521,7 @@ article {
 -------------------------------------------------------------- */
 
 form {
-  margin-top: 2em;
+  margin: 2em 0 3em;
   &:last-child .tag-row {
     margin-bottom: 0;
   }
@@ -537,7 +535,7 @@ form {
     .tag {
       display: flex;
       align-items: center;
-      font-size: 1.5em;
+      font-size: 1.3em;
       padding: 0 1em;
     }
   }
@@ -547,12 +545,12 @@ form {
   background-color: transparent;
   border-radius: 0;
   box-shadow: none;
-  padding: 4em 0 0 0;
+  padding:0;
   hr {
     margin-bottom: 1em;
   }
   form {
-    margin-top: 2em;
+    margin: 2em 0 0;
   }
 }
 
@@ -630,7 +628,7 @@ form {
   }
   span {
     @extend button;
-    width: 105px;
+    width: 100px;
     text-align: center;
   }
   input + span {
@@ -1052,7 +1050,17 @@ table {
       button {
         margin-left: 0;
       }
+      textarea {
+        width: calc(100% - 2em);
+      }
     }
+  }
+  .addremove span {
+    padding: 0.7em;
+    font-size: 0.85em;
+  }
+  form .tag-row .tag {
+    font-size: 1em;
   }
 }
 
@@ -1097,8 +1105,13 @@ table {
       margin-bottom: 0;
     }
   }
-  .upload-info div textarea {
-    width: calc(100% - 2em);
+  .upload-info {
+    div textarea {
+      width: calc(100% - 2em);
+    }
+    button {
+      width: 100%;
+    }
   }
 }
 
@@ -1151,9 +1164,6 @@ table {
           justify-content: flex-end;
         }
       }
-    }
-    button {
-      width: 100%;
     }
   }
   #geo-suggestions form[name=form] .tag-row .tag {
