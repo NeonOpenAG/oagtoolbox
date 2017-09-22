@@ -10,30 +10,24 @@ use OagBundle\Service\TextExtractor\TextifyService;
 
 class Geocoder extends AbstractAutoService {
 
-    public function processUri($sometext) {
-        // TODO implement non-fixture process
-        $csvService = $this->getContainer()->get(CSV::class);
-        return $csvService->toArray($this->getFixtureData(), "\t");
-    }
-
     public function processString($sometext) {
         // TODO implement non-fixture process
         $csvService = $this->getContainer()->get(CSV::class);
-        return $csvService->toArray($this->getFixtureData(), "\t");
+        return $csvService->toArray($this->getStringFixtureData(), "\t");
     }
 
     public function processXML($contents) {
         // TODO implement non-fixture process
-        // TODO how to do this per-activity?
-        $csvService = $this->getContainer()->get(CSV::class);
-        return $csvService->toArray($this->getFixtureData(), "\t");
+        $json = json_decode($this->getXMLFixtureData(), true);
+        $locations = array_column($json, 'locations', 'project_id'); // format as $activityId => $location[]
+        return $locations;
     }
 
     public function getName() {
         return 'geocoder';
     }
 
-    public function getFixtureData() {
+    public function getStringFixtureData() {
         $kernel = $this->getContainer()->get('kernel');
         $path = $kernel->locateResource('@OagBundle/Resources/fixtures/geocoder.tsv');
         $contents = file_get_contents($path);
@@ -41,8 +35,12 @@ class Geocoder extends AbstractAutoService {
         return $contents;
     }
 
-    public function processOagFile(OagFile $file) {
-        return $this->getFixtureData();
+    public function getXMLFixtureData() {
+        $kernel = $this->getContainer()->get('kernel');
+        $path = $kernel->locateResource('@OagBundle/Resources/fixtures/geocoder.json');
+        $contents = file_get_contents($path);
+
+        return $contents;
     }
 
     /**
@@ -57,31 +55,29 @@ class Geocoder extends AbstractAutoService {
         $srvOagFile = $this->getContainer()->get(OagFileService::class);
 
         $xml = $srvOagFile->getContents($file);
-        $locations = $this->processXML($xml);
+        $activities = $this->processXML($xml);
 
         $file->clearGeolocations();
 
-        foreach ($locations as $location) {
-            $locationIdCode = $location['geonameId'];
-            $locationIdVocab = $this->getContainer()->getParameter('geocoder')['id_vocabulary'];
+        foreach ($activities as $activityId => $locations) {
+            foreach ($locations as $location) {
+                $locationIdCode = strval($location['id']);
+                $locationIdVocab = $this->getContainer()->getParameter('geocoder')['id_vocabulary'];
 
-            $geoloc = $geolocRepo->findOneBy(array(
-                'locationIdCode' => $locationIdCode,
-                'locationIdVocab' => $locationIdVocab
-            ));
-
-            if (!$geoloc) {
                 $geoloc = new Geolocation();
-                $geoloc->setName($location['toponymName']);
+                $geoloc->setName($location['name']);
                 $geoloc->setLocationIdCode($locationIdCode);
                 $geoloc->setLocationIdVocab($locationIdVocab);
-                $geoloc->setFeatureDesignation($location['fcode']);
-                $geoloc->setPointPosLat($location['lat']);
-                $geoloc->setPointPosLong($location['lng']);
-                // TODO admin
-            }
+                $geoloc->setFeatureDesignation($location['featureDesignation']['code']);
+                $geoloc->setPointPosLong($location['geometry']['coordinates'][0]);
+                $geoloc->setPointPosLat($location['geometry']['coordinates'][1]);
+                // TODO admin1..4
+                // TODO country
 
-            $file->addGeolocation($geoloc);
+                $geoloc->setIatiActivityId($activityId);
+
+                $file->addGeolocation($geoloc);
+            }
         }
 
         $em->persist($file);
@@ -109,21 +105,17 @@ class Geocoder extends AbstractAutoService {
             $locationIdCode = $location['geonameId'];
             $locationIdVocab = $this->getContainer()->getParameter('geocoder')['id_vocabulary'];
 
-            $geoloc = $geolocRepo->findOneBy(array(
-                'locationIdCode' => $locationIdCode,
-                'locationIdVocab' => $locationIdVocab
-            ));
+            $geoloc = new Geolocation();
+            $geoloc->setName($location['toponymName']);
+            $geoloc->setLocationIdCode($locationIdCode);
+            $geoloc->setLocationIdVocab($locationIdVocab);
+            $geoloc->setFeatureDesignation($location['fcode']);
+            $geoloc->setPointPosLat($location['lat']);
+            $geoloc->setPointPosLong($location['lng']);
+            // TODO admin
 
-            if (!$geoloc) {
-                $geoloc = new Geolocation();
-                $geoloc->setName($location['toponymName']);
-                $geoloc->setLocationIdCode($locationIdCode);
-                $geoloc->setLocationIdVocab($locationIdVocab);
-                $geoloc->setFeatureLocationCode($location['fcode']);
-                $geoloc->setFeatureLocationName($location['fcodeName']);
-                $geoloc->setPointPosLat($location['lat']);
-                $geoloc->setPointPosLong($location['lng']);
-                // TODO admin
+            if (!is_null($activityId)) {
+                $geoloc->setIatiActivityId($activityId);
             }
 
             $file->addGeolocation($geoloc);
@@ -166,17 +158,15 @@ class Geocoder extends AbstractAutoService {
                 'locationIdVocab' => $locationIdVocab
             ));
 
-            if (!$geoloc) {
-                $geoloc = new Geolocation();
-                $geoloc->setName($location['toponymName']);
-                $geoloc->setLocationIdCode($locationIdCode);
-                $geoloc->setLocationIdVocab($locationIdVocab);
-                $geoloc->setFeatureLocationCode($location['fcode']);
-                $geoloc->setFeatureLocationName($location['fcodeName']);
-                $geoloc->setPointPosLat($location['lat']);
-                $geoloc->setPointPosLong($location['lng']);
-                // TODO admin
-            }
+            $geoloc = new Geolocation();
+            $geoloc->setName($location['toponymName']);
+            $geoloc->setLocationIdCode($locationIdCode);
+            $geoloc->setLocationIdVocab($locationIdVocab);
+            $geoloc->setFeatureLocationCode($location['fcode']);
+            $geoloc->setFeatureLocationName($location['fcodeName']);
+            $geoloc->setPointPosLat($location['lat']);
+            $geoloc->setPointPosLong($location['lng']);
+            // TODO admin
 
             $file->addGeolocation($geoloc);
         }
