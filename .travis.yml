@@ -16,7 +16,7 @@ before-install:
 - composer self-update
 install:
 - sudo apt install -y docker.io
-- chmod 777 /var/run/docker.sock
+- sudo chmod 777 /var/run/docker.sock
 - git submodule update --init --recursive
 - composer install -n
 script:
