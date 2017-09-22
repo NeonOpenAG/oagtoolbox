@@ -31,7 +31,7 @@ h6 {
 }
 
 h1 {
-  font-size: 2.5em;
+  font-size: 2em;
 }
 
 hr {
@@ -231,13 +231,16 @@ nav {
 
 -------------------------------------------------------------- */
 
+div.jfilestyle.jfilestyle-corner {
+  border-radius: 2px;
+}
+
 .gradient {
   background: $oag_blue;  /* fallback for old browsers */
   background: -webkit-linear-gradient(150deg, $oag_blue 15%, $oag_purple 90%);  /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(150deg, $oag_blue 15%, $oag_purple 90%); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   h1 {
     color: $oag_title;
-    margin: 0;
   }
   form {
     margin-top: 0;
@@ -245,7 +248,7 @@ nav {
   .upload-form {
     display: flex;
     justify-content: center;
-    padding: 2em;
+    padding: 1.5em;
     max-width: 100%;
     div {
       margin-bottom: 0;
@@ -259,7 +262,7 @@ nav {
     }
     .upload {
       margin-left: 2em;
-      padding-top: 4px;
+      padding-top: 20px;
     }
     #oag_file {
       display: flex;
@@ -268,7 +271,7 @@ nav {
 }
 
 .intro {
-  margin-bottom: 4em;
+  margin-bottom: 4.5em;
   h1,
   h2 {
     color: white;
@@ -434,9 +437,9 @@ article {
     border-top-left-radius: 2px;
     border-top-right-radius: 2px;
     &.summary {
-      padding: 1.5em 3em;
+      padding: 1.5em 2.5em;
       h2 {
-        font-size: 2em;
+        font-size: 1.8em;
       }
     }
   }
@@ -446,9 +449,12 @@ article {
     border-bottom-right-radius: 2px;
     padding: .5em 1.5em 1.5em 1.5em;
     &.summary {
-      padding: 2em;
+      padding: 1.5em 2em;
       ul li {
-        padding: 1em;
+        padding: 0.5em;
+        &:last-child {
+          margin: 0;
+        }
       }
       button {
         font-family: $oag_font;
@@ -661,19 +667,21 @@ form {
 
 -------------------------------------------------------------- */
 
-.preview {
+#preview {
   .block {
     width: 100%;
   }
+  article {
+    height: 800px;
+  }
+  iframe {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 800px;
+    border: 0;
+  }
 }
-iframe {
-  padding: 0;
-  margin: 0;
-  width: 100%;
-  height: 800px;
-  border: 0;
-}
-
 
 /* --------------------------------------------------------------
 
@@ -840,13 +848,11 @@ table {
   .activity .content-block.summary {
     .improvements {
       display: block;
+      margin-bottom: 1em;
       p {
         width: initial;
         padding-right: 0;
       }
-    }
-    ul li {
-      margin-bottom: 1em;
     }
   }
   #geo-suggestions .suggested-map-block {
@@ -877,6 +883,10 @@ table {
   .gradient {
     .upload-form {
       display: block;
+      padding: 2em;
+      h1 {
+        margin: 0;
+      }
       button {
         position: absolute;
         bottom: 32px;
@@ -895,28 +905,30 @@ table {
 }
 
 @media (max-width: 768px) {
+  h2 {
+    font-size: 1.2em;
+  }
+  .activity .heading.summary h2 {
+    font-size: 1.5em;
+  }
   .content-block.download {
     padding: 1.5em;
   }
-
   /* Responsive table */
   table, thead, tbody, th, td, tr {
     display: block;
   }
-
   /* Hide table headers (but not display: none; for accessibility) */
   thead tr {
     position: absolute;
     top: -9999px;
     left: -9999px;
   }
-
   tr {
     margin-bottom: 0.5em;
     box-shadow: 0 7px 14px rgba(50,50,93,.1), 0 3px 6px rgba(0,0,0,.08);
     background-color: white;
   }
-
   table td {
     /* Behave like a "row" */
     border: none;
@@ -1003,17 +1015,6 @@ table {
       margin-bottom: 5em;
     }
   }
-  .gradient .upload-form {
-    #oag_file {
-      display: block;
-    }
-    button {
-      position: initial;
-    }
-    div.jfilestyle.jfilestyle-corner {
-      margin-bottom: 1em;
-    }
-  }
   .upload-info {
     form > div {
       display: block;
@@ -1025,12 +1026,41 @@ table {
 }
 
 @media (max-width: 700px) {
+  .gradient .upload-form {
+    #oag_file {
+      display: block;
+    }
+    button {
+      position: initial;
+    }
+  }
   .upload-form.download {
     #oag_file {
       display: block;
     }
     button {
       margin-left: 0;
+    }
+  }
+  .gradient {
+    .upload-form {
+      div.jfilestyle.jfilestyle-corner {
+        display: flex;
+        margin-bottom: 1em;
+        width: 100%;
+        label {
+          width: 87px;
+        }
+        input:first-child {
+          width: 100% !important;
+          & ~ span {
+            justify-content: flex-end;
+          }
+        }
+      }
+      button {
+        width: 100%;
+      }
     }
   }
 }
@@ -1073,7 +1103,7 @@ table {
 
 @media (max-width: 611px) {
   h1 {
-    font-size: 2em;
+    font-size: 1.8em;
   }
   .upload-info {
     width: 100%;
@@ -1145,7 +1175,7 @@ table {
   }
 }
 
-@media (max-width: 409px) {
+@media (max-width: 412px) {
   .activity .content-block.summary {
     padding: 1em;
     button {
@@ -1153,7 +1183,7 @@ table {
     }
   }
   .activity .heading.summary {
-    padding: 2em;
+    padding: 1.5em;
   }
 }
 
