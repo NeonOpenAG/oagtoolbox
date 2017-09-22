@@ -46,7 +46,7 @@ class LoadFileData implements FixtureInterface {
         $threelittlepigs = $enhFileRepo->findOneByDocumentName('poobear.txt');
 
         $file = new OagFile();
-        $file->setDocumentName('ifad-agrovoc-tag.xml');
+        $file->setDocumentName('after_enrichment_activities.xml');
         $file->addEnhancingDocument($animalfarm);
         $file->addEnhancingDocument($threelittlepigs);
         $file->setUploadDate(new \DateTime('now'));
