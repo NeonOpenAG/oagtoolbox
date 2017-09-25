@@ -32,7 +32,7 @@ class WireframeController extends Controller {
      * @Route("/")
      */
     public function uploadAction(Request $request) {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $srvCove = $this->get(Cove::class);
         $srvClassifier = $this->get(Classifier::class);
         $srvGeocoder = $this->get(Geocoder::class);
@@ -87,6 +87,9 @@ class WireframeController extends Controller {
     public function downloadAction(Request $request, OagFile $file) {
         $em = $this->getDoctrine()->getManager();
         $fileRepo = $this->getDoctrine()->getRepository(OagFile::class);
+        $srvClassifier = $this->get(Classifier::class);
+        $srvCove = $this->get(Cove::class);
+        $srvGeocoder = $this->get(Geocoder::class);
         $srvOagFile = $this->get(OagFileService::class);
 
         $oagfile = new OagFile();
@@ -115,6 +118,7 @@ class WireframeController extends Controller {
                 // TODO CoVE failed
             }
             $srvClassifier->classifyOagFile($oagfile);
+            $srvGeocoder->geocodeOagFile($oagfile);
 
 	    return $this->redirect($this->generateUrl('oag_wireframe_improveyourdata', array('id' => $oagfile->getId())));
         }
@@ -191,7 +195,7 @@ class WireframeController extends Controller {
             // suggested in an EnhancementFile for that activity
             foreach ($file->getEnhancingDocuments() as $enhFile) {
                 // if it is only relevant to another activity, ignore
-                if ((!is_null($enhFile)) && ($enhFile->getIatiActivityId() !== $activity['id'])) continue;
+                if ((!is_null($enhFile->getIatiActivityId())) && ($enhFile->getIatiActivityId() !== $activity['id'])) continue;
                 $suggestedTags = array_merge($suggestedTags, $enhFile->getSuggestedTags()->toArray());
             }
 
@@ -231,7 +235,7 @@ class WireframeController extends Controller {
         $suggestedTags = $file->getSuggestedTags()->toArray();
         foreach ($file->getEnhancingDocuments() as $enhFile) {
             // if it is only relevant to another activity, ignore
-            if ((!is_null($enhFile)) && ($enhFile->getIatiActivityId() !== $activityId)) continue;
+            if ((!is_null($enhFile->getIatiActivityId())) && ($enhFile->getIatiActivityId() !== $activityId)) continue;
             $suggestedTags = array_merge($suggestedTags, $enhFile->getSuggestedTags()->toArray());
         }
 
@@ -373,7 +377,7 @@ class WireframeController extends Controller {
 
         // work out which activities have suggested locations
         $haveSuggested = array();
-        foreach ($activities as $activityId => $activity) {
+        foreach ($activities as $activity) {
             $geocoderGeolocs = array();
 
             // suggested on the OagFile for that activity
@@ -386,7 +390,7 @@ class WireframeController extends Controller {
             // suggested in an EnhancementFile for that activity
             foreach ($file->getEnhancingDocuments() as $enhFile) {
                 // if it is only relevant to another activity, ignore
-                if ((!is_null($enhFile)) && ($enhFile->getIatiActivityId() !== $activityId)) continue;
+                if ((!is_null($enhFile->getIatiActivityId())) && ($enhFile->getIatiActivityId() !== $activity['id'])) continue;
                 $geocoderGeolocs = array_merge($geocoderGeolocs, $enhFile->getGeolocations()->toArray());
             }
 
@@ -434,12 +438,22 @@ class WireframeController extends Controller {
         }
 
         // load all suggested tags
-        $geocoderGeolocs = $file->getGeolocations()->toArray();
+        $geocoderGeolocs[] = array();
+
+        // suggested on the OagFile for that activity
+        foreach ($file->getGeolocations()->toArray() as $generic) {
+            if (is_null($generic->getIatiActivityId()) || $generic->getIatiActivityId() === $activityId) {
+                $geocoderGeolocs[] = $generic;
+            }
+        }
+
+        // suggested in an EnhancementFile for that activity
         foreach ($file->getEnhancingDocuments() as $enhFile) {
             // if it is only relevant to another activity, ignore
-            if ((!is_null($enhFile)) && ($enhFile->getIatiActivityId() !== $activityId)) continue;
+            if ((!is_null($enhFile->getIatiActivityId())) && ($enhFile->getIatiActivityId() !== $activityId)) continue;
             $geocoderGeolocs = array_merge($geocoderGeolocs, $enhFile->getGeolocations()->toArray());
         }
+
         // no duplicates please
         $geocoderGeolocs = array_unique($geocoderGeolocs, SORT_REGULAR);
 
