@@ -41,7 +41,7 @@ twig:
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
     globals:
-        toolbox_title: "Oatool"
+        toolbox_title: "Open Aid Publishers Toolchain"
 
 # Doctrine Configuration
 doctrine:

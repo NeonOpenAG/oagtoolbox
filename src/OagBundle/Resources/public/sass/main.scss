@@ -916,6 +916,34 @@ table {
   }
 }
 
+@media (max-width: 870px) {
+  header {
+    padding: 0em 2em;
+    nav {
+      display: block;
+      margin: 0 auto;
+      justify-content: center;
+      line-height: 51px;
+      .logo {
+        display: flex;
+        justify-content: center;
+        float: none;
+        padding-top: 0.5em;
+      }
+      .nav-options {
+        float: none;
+        display: flex;
+        justify-content: center;
+        li {
+          a {
+            padding: 1em;
+          }
+        }
+      }
+    }
+  }
+}
+
 @media (max-width: 768px) {
   h2 {
     font-size: 1.2em;
@@ -1102,34 +1130,6 @@ table {
   }
 }
 
-@media (max-width: 660px) {
-  header {
-    padding: 0em 2em;
-    nav {
-      display: block;
-      margin: 0 auto;
-      justify-content: center;
-      line-height: 51px;
-      .logo {
-        display: flex;
-        justify-content: center;
-        float: none;
-        padding-top: 0.5em;
-      }
-      .nav-options {
-        float: none;
-        display: flex;
-        justify-content: center;
-        li {
-          a {
-            padding: 1em;
-          }
-        }
-      }
-    }
-  }
-}
-
 @media (max-width: 611px) {
   h1 {
     font-size: 1.8em;
@@ -1235,6 +1235,9 @@ table {
 }
 
 @media (max-width: 360px) {
+  .logo {
+    font-size: 0.9em;
+  }
   .block {
     padding: 1em;
     .intro.margin {
