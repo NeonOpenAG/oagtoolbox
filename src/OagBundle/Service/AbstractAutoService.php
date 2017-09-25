@@ -15,7 +15,7 @@ abstract class AbstractAutoService extends AbstractOagService {
      * @param string $sometext the text
      * @return array the json response
      */
-    abstract function processString($sometext);
+    abstract function processString($sometext, $filename, $country);
 
     /**
      * Process the XML.
@@ -23,5 +23,5 @@ abstract class AbstractAutoService extends AbstractOagService {
      * @param string $sometext the xml
      * @return array the json response
      */
-    abstract function processXML($somexml);
+    abstract function processXML($somexml, $filename);
 }

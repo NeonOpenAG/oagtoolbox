@@ -4,9 +4,8 @@ parameters:
         cove:
             cmd: docker exec -i --env FILENAME="{FILENAME}" openag_cove /usr/local/bin/process.sh
         geocoder:
-            uri: http://localhost
-        autogeocoder:
-            uri: http://localhost
+            # cmd: docker exec -i -e FILENAME=/tmp/test.xml -e COUNTRY=GH openag_geocoder /usr/local/bin/process.sh
+            cmd: docker exec -i -e FILENAME="{FILENAME}" -e COUNTRY="{COUNTRY}" openag_geocoder /usr/local/bin/process.sh
         dportal:
             uri: http://SERVER_HOST:8011/ctrack.html?search&year_min=1960&year=1960&year_max=2019&year=2019#view=main
         classifier:

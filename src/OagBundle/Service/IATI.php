@@ -267,6 +267,20 @@ class IATI extends AbstractService {
         return $currentTags;
     }
 
+    
+    /**
+     * Get the ID of an IATI activity.
+     *
+     * @param \SimpleXMLElement $activity
+     * @return string
+     */
+    public function getActivityCountryCode($activity) {
+        $element = $activity->xpath('./recipient-country')[0];
+        $code = (string) $element->attributes()['code'];
+        
+        return $code;
+    }
+    
     /**
      * Add a tag to the activity, effectively classifying it in the XML.
      *
