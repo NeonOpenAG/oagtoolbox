@@ -31,7 +31,7 @@ h6 {
 }
 
 h1 {
-  font-size: 2.5em;
+  font-size: 2em;
 }
 
 hr {
@@ -231,35 +231,38 @@ nav {
 
 -------------------------------------------------------------- */
 
+div.jfilestyle.jfilestyle-corner {
+  border-radius: 2px;
+}
+
 .gradient {
   background: $oag_blue;  /* fallback for old browsers */
   background: -webkit-linear-gradient(150deg, $oag_blue 15%, $oag_purple 90%);  /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(150deg, $oag_blue 15%, $oag_purple 90%); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   h1 {
     color: $oag_title;
-    margin: 0;
   }
   form {
-    margin-top: 0;
+    margin: 0;
   }
   .upload-form {
     display: flex;
     justify-content: center;
-    padding: 2em;
+    padding: 1.5em;
     max-width: 100%;
     div {
       margin-bottom: 0;
     }
     button {
       position: initial;
-      margin-left: 2em;
+      margin-left: 1.3em;
     }
     div.jfilestyle.jfilestyle-corner {
       margin-top: 0;
     }
     .upload {
       margin-left: 2em;
-      padding-top: 4px;
+      padding-top: 20px;
     }
     #oag_file {
       display: flex;
@@ -268,7 +271,7 @@ nav {
 }
 
 .intro {
-  margin-bottom: 4em;
+  margin-bottom: 4.5em;
   h1,
   h2 {
     color: white;
@@ -342,12 +345,13 @@ nav {
     }
     textarea {
       border-radius: 2px;
-      width: 450px;
+      width: 620px;
       font-family: $oag_font;
       border: 1px solid #dcdcdc;
-      height: 16px;
+      height: 100px;
       background-color: white;
       padding: 1em;
+      margin-bottom: 1em;
     }
     &.jfilestyle {
       box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
@@ -394,11 +398,8 @@ nav {
 }
 .upload-info {
   width: 100%;
-  form > div {
-    display: flex;
-    button {
-      margin-left: 2em;
-    }
+  div {
+    margin-bottom: 0;
   }
 }
 
@@ -434,9 +435,9 @@ article {
     border-top-left-radius: 2px;
     border-top-right-radius: 2px;
     &.summary {
-      padding: 1.5em 3em;
+      padding: 1.5em 2.5em;
       h2 {
-        font-size: 2em;
+        font-size: 1.8em;
       }
     }
   }
@@ -446,9 +447,12 @@ article {
     border-bottom-right-radius: 2px;
     padding: .5em 1.5em 1.5em 1.5em;
     &.summary {
-      padding: 2em;
+      padding: 1.5em 2em;
       ul li {
-        padding: 1em;
+        padding: 0.5em;
+        &:last-child {
+          margin: 0;
+        }
       }
       button {
         font-family: $oag_font;
@@ -514,7 +518,7 @@ article {
 -------------------------------------------------------------- */
 
 form {
-  margin-top: 2em;
+  margin: 2em 0 3em;
   &:last-child .tag-row {
     margin-bottom: 0;
   }
@@ -528,8 +532,9 @@ form {
     .tag {
       display: flex;
       align-items: center;
-      font-size: 1.5em;
+      font-size: 1.3em;
       padding: 0 1em;
+      word-break: break-all;
     }
   }
 }
@@ -538,12 +543,12 @@ form {
   background-color: transparent;
   border-radius: 0;
   box-shadow: none;
-  padding: 4em 0 0 0;
+  padding:0;
   hr {
     margin-bottom: 1em;
   }
   form {
-    margin-top: 2em;
+    margin: 2em 0 0;
   }
 }
 
@@ -576,23 +581,11 @@ form {
 
 #geo-suggestions {
   form[name=form] {
-    margin-top: 2em;
     &:last-child .tag-row {
       margin-bottom: 0;
     }
-    .tag-row {
-    padding: 0;
-    margin: 1em 0;
-    background-color: $oag_bg;
-    display: flex;
-    justify-content: space-between;
-    box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
-      .tag {
-        display: flex;
-        align-items: center;
-        font-size: 1.5em;
-        padding: 0 0 1em 0;
-      }
+    .tag-row .tag {
+      padding: 0 0 1em 0;
     }
   }
   .info {
@@ -621,7 +614,7 @@ form {
   }
   span {
     @extend button;
-    width: 105px;
+    width: 100px;
     text-align: center;
   }
   input + span {
@@ -661,19 +654,21 @@ form {
 
 -------------------------------------------------------------- */
 
-.preview {
+#preview {
   .block {
     width: 100%;
   }
+  article {
+    height: 800px;
+  }
+  iframe {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 800px;
+    border: 0;
+  }
 }
-iframe {
-  padding: 0;
-  margin: 0;
-  width: 100%;
-  height: 800px;
-  border: 0;
-}
-
 
 /* --------------------------------------------------------------
 
@@ -683,38 +678,52 @@ iframe {
 
 .version {
   display: flex;
-  margin: 2em 0 0.5em;
+  justify-content: space-between;
   p {
     color: $oag_dark;
     margin-right: 0.5em;
   }
 }
 
+h2.file-name {
+  word-break: break-all;
+}
+
+.content-block.download {
+  padding: 1.5em;
+}
+
 .upload-form.download {
   background-color: transparent;
   box-shadow: none;
   padding: 0;
-  margin-bottom: 0;
+  margin: 0;
   width: 100%;
   h1 {
-    color: $oag_title;
+    color: $oag_dark;
+    font-size: 1.5em;
   }
   #oag_file {
     display: flex;
+    margin-bottom: 0;
+  }
+  div {
+    margin-bottom: 0;
   }
   div.jfilestyle.jfilestyle-corner {
     margin-top: 0;
   }
   button {
-    margin-left: 2em;
+    margin-left: 1.3em;
+  }
+  form {
+    margin: 0;
+    padding: 0.5em 0;
   }
 }
 
 .options {
-  display: flex;
-  justify-content: flex-end;
-  flex: 1;
-  margin-bottom: 2em;
+  margin: 0;
   a {
     margin:0 0.5em;
     &:nth-child(1) {
@@ -832,21 +841,30 @@ table {
 
 -------------------------------------------------------------- */
 
-@media (max-width: 1020px) {
+@media (max-width: 1146px) {
   .version,
   .version .options {
     display: block;
   }
+  .options a {
+    &:first-child {
+      margin-left: 0;
+    }
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+@media (max-width: 1020px) {
   .activity .content-block.summary {
     .improvements {
       display: block;
+      margin-bottom: 1em;
       p {
         width: initial;
         padding-right: 0;
       }
-    }
-    ul li {
-      margin-bottom: 1em;
     }
   }
   #geo-suggestions .suggested-map-block {
@@ -877,6 +895,10 @@ table {
   .gradient {
     .upload-form {
       display: block;
+      padding: 2em;
+      h1 {
+        margin: 0;
+      }
       button {
         position: absolute;
         bottom: 32px;
@@ -895,28 +917,33 @@ table {
 }
 
 @media (max-width: 768px) {
+  h2 {
+    font-size: 1.2em;
+  }
+  h3 {
+    font-size: 1em;
+  }
+  .activity .heading.summary h2 {
+    font-size: 1.5em;
+  }
   .content-block.download {
     padding: 1.5em;
   }
-
   /* Responsive table */
   table, thead, tbody, th, td, tr {
     display: block;
   }
-
   /* Hide table headers (but not display: none; for accessibility) */
   thead tr {
     position: absolute;
     top: -9999px;
     left: -9999px;
   }
-
   tr {
     margin-bottom: 0.5em;
     box-shadow: 0 7px 14px rgba(50,50,93,.1), 0 3px 6px rgba(0,0,0,.08);
     background-color: white;
   }
-
   table td {
     /* Behave like a "row" */
     border: none;
@@ -985,6 +1012,7 @@ table {
       display: block;
       .tag {
         padding-bottom: 0;
+        font-size: 1em;
       }
     }
     .suggested-map-block {
@@ -1003,34 +1031,73 @@ table {
       margin-bottom: 5em;
     }
   }
-  .gradient .upload-form {
-    #oag_file {
-      display: block;
-    }
-    button {
-      position: initial;
-    }
-    div.jfilestyle.jfilestyle-corner {
-      margin-bottom: 1em;
-    }
-  }
   .upload-info {
     form > div {
       display: block;
       button {
         margin-left: 0;
       }
+      textarea {
+        width: calc(100% - 2em);
+      }
     }
+  }
+  .addremove span {
+    padding: 0.7em;
+    font-size: 0.85em;
+  }
+  form .tag-row .tag {
+    font-size: 1em;
   }
 }
 
 @media (max-width: 700px) {
+  .gradient .upload-form,
   .upload-form.download {
+    div.jfilestyle.jfilestyle-corner {
+      display: flex;
+      margin-bottom: 1em;
+      width: 100%;
+      label {
+        width: 87px;
+      }
+      input:first-child {
+        width: 100% !important;
+        & ~ span {
+          justify-content: flex-end;
+        }
+      }
+    }
     #oag_file {
       display: block;
+      margin-bottom: 0;
     }
     button {
+      position: initial;
+      width: 100%;
       margin-left: 0;
+    }
+    &:last-child div {
+      margin-bottom: 0;
+    }
+  }
+  .upload-form.download form {
+    padding: 0;
+  }
+  .options a {
+    width: calc(100% - 3em);
+    margin: 0 0 0.5em 0;
+    text-align: center;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  .upload-info {
+    div textarea {
+      width: calc(100% - 2em);
+    }
+    button {
+      width: 100%;
     }
   }
 }
@@ -1061,19 +1128,11 @@ table {
       }
     }
   }
-  .options a {
-    width: calc(100% - 3em);
-    margin: 0 0 0.5em 0;
-    text-align: center;
-  }
-  .upload-info div textarea {
-    width: calc(100% - 2em);
-  }
 }
 
 @media (max-width: 611px) {
   h1 {
-    font-size: 2em;
+    font-size: 1.8em;
   }
   .upload-info {
     width: 100%;
@@ -1092,9 +1151,6 @@ table {
           justify-content: flex-end;
         }
       }
-    }
-    button {
-      width: 100%;
     }
   }
   #geo-suggestions form[name=form] .tag-row .tag {
@@ -1137,36 +1193,53 @@ table {
   .bottom-page-nav {
     bottom: -85px;
   }
-  .gradient .upload-form .upload {
-    padding: 0;
+  .gradient .upload-form {
+    .upload {
+      padding: 0;
+    }
+    div.jfilestyle.jfilestyle-corner input:first-child {
+      width: calc(100% - 150px) !important;
+    }
   }
-  .upload-form div.jfilestyle.jfilestyle-corner input:first-child {
-    width: calc(100% - 151px) !important;
+  .upload-form div.jfilestyle.jfilestyle-corner input:first-child,
+  .upload-form.download div.jfilestyle.jfilestyle-corner input:first-child {
+    width: calc(100% - 150px) !important;
   }
 }
 
-@media (max-width: 409px) {
-  .activity .content-block.summary {
-    padding: 1em;
-    button {
-      width: 100%;
+@media (max-width: 450px) {
+  #download {
+    .block {
+      padding: 1em;
     }
   }
-  .activity .heading.summary {
-    padding: 2em;
+  .activity {
+    .content-block.summary {
+      padding: 1em;
+      button {
+        width: 100%;
+      }
+    }
+    .heading.summary {
+      padding: 1.5em;
+    }
+  }
+  #geo-suggestions {
+    .info {
+      display: block;
+    }
+    form[name=form] .tag-row .tag {
+      margin-bottom: 0.5em;
+    }
   }
 }
 
 @media (max-width: 360px) {
   .block {
-    padding: 0.5em;
+    padding: 1em;
     .intro.margin {
-      padding: 1em;
       margin-bottom: 0;
     }
-  }
-  .content-block.download {
-    padding: 0.5em;
   }
   .upload-form {
     padding: 1em;
@@ -1175,11 +1248,8 @@ table {
   .activity .heading.summary h2 {
     font-size: 1.5em;
   }
-  #improve-your-data .block {
-    padding: 0.5em;
-  }
   article {
-    margin-bottom: 0.5em;
+    margin-bottom: 0.8em;
     &:last-child {
       margin-bottom: 0;
     }
@@ -1194,7 +1264,7 @@ table {
     }
   }
   .bottom-page-nav {
-    bottom: -65px;
+    bottom: -69px;
     div {
       margin-left: 0.5em;
     }
