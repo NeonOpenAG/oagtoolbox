@@ -126,6 +126,9 @@ class Docker extends AbstractOagService {
         $containerData = $this->containerData();
 
         $data = [];
+	if (!is_array($containerData)) {
+		return [];
+        }
         foreach ($containerData as $container) {
             $name = ltrim($container['Names'][0], '/');
             $data[$name] = [
