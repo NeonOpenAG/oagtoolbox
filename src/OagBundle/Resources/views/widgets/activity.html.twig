@@ -5,7 +5,11 @@
     </div>
 
     <div class="content-block">
-        <p>Description: {{ activity.description }}</p>
+        {%if activity.description %}
+        <p class="more">Description: {{ activity.description}}</p>
+        {% else %}
+        <p>No description available.</p>
+        {% endif %}
 
         {% if suggestRoute is defined %}
         <div class="view-suggestions"><a href="{{ suggestRoute }}" class="cta">{{ actionName }}</a></div>

@@ -24,7 +24,11 @@
                 </div>
 
                 <div class="content-block">
-                    <p>Description: {{ activity.description }}</p>
+                    {%if activity.description %}
+                    <p class="more">Description: {{ activity.description}}</p>
+                    {% else %}
+                    <p>No description available.</p>
+                    {% endif %}
 
                     <!-- TODO: Move this back out, but not to activity.html.twig -->
                     {{ form_start(form) }}
@@ -58,6 +62,7 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('bundles/oag/jquery-filestyle-1.5.1/src/jquery-filestyle.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/oag/js/main.js') }}"></script>
     <script>
         $(function () {
             $(document).tooltip();
