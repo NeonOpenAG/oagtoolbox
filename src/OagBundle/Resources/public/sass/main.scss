@@ -66,6 +66,7 @@ button,
   letter-spacing: inherit;
   line-height: 24px;
   color: white;
+  font-size: 1em;
   font-weight: bold;
   white-space: nowrap;
   display: inline-block;
@@ -245,28 +246,29 @@ div.jfilestyle.jfilestyle-corner {
   form {
     margin: 0;
   }
-  .upload-form {
+}
+
+.upload-form.upload {
+  display: flex;
+  justify-content: center;
+  padding: 1.5em;
+  max-width: 100%;
+  div {
+    margin-bottom: 0;
+  }
+  button {
+    position: initial;
+    margin-left: 1.3em;
+  }
+  div.jfilestyle.jfilestyle-corner {
+    margin-top: 0;
+  }
+  .file-upload {
+    margin-left: 2em;
+    padding-top: 22px;
+  }
+  #oag_file {
     display: flex;
-    justify-content: center;
-    padding: 1.5em;
-    max-width: 100%;
-    div {
-      margin-bottom: 0;
-    }
-    button {
-      position: initial;
-      margin-left: 1.3em;
-    }
-    div.jfilestyle.jfilestyle-corner {
-      margin-top: 0;
-    }
-    .upload {
-      margin-left: 2em;
-      padding-top: 20px;
-    }
-    #oag_file {
-      display: flex;
-    }
   }
 }
 
@@ -895,26 +897,24 @@ table {
       max-width: 20px;
     }
   }
-  .gradient {
-    .upload-form {
-      display: block;
-      padding: 2em;
-      h1 {
-        margin: 0;
-      }
-      button {
-        position: absolute;
-        bottom: 32px;
-        left: 460px;
-        margin-left: 0;
-      }
-      div.jfilestyle.jfilestyle-corner {
-        margin-top: 1em;
-      }
-      .upload {
-        margin-left: 0;
-        padding-top: 0;
-      }
+  .upload-form.upload {
+    display: block;
+    padding: 2em;
+    h1 {
+      margin: 0;
+    }
+    button {
+      position: absolute;
+      bottom: 32px;
+      left: 460px;
+      margin-left: 0;
+    }
+    div.jfilestyle.jfilestyle-corner {
+      margin-top: 1em;
+    }
+    .file-upload {
+      margin-left: 0;
+      padding-top: 0;
     }
   }
 }
@@ -1083,20 +1083,16 @@ table {
 }
 
 @media (max-width: 700px) {
-  .gradient .upload-form,
+  .upload-form.upload,
   .upload-form.download {
     div.jfilestyle.jfilestyle-corner {
       display: flex;
       margin-bottom: 1em;
-      width: 100%;
+      input:first-child {
+        width: calc(100% - 150px) !important;
+      }
       label {
         width: 87px;
-      }
-      input:first-child {
-        width: 100% !important;
-        & ~ span {
-          justify-content: flex-end;
-        }
       }
     }
     #oag_file {
@@ -1111,16 +1107,9 @@ table {
     &:last-child div {
       margin-bottom: 0;
     }
-  }
-  .upload-form.download form {
-    padding: 0;
-  }
-  .options a {
-    width: calc(100% - 3em);
-    margin: 0 0 0.5em 0;
-    text-align: center;
-    &:last-child {
-      margin-bottom: 0;
+    &.download form,
+    &.upload .file-upload {
+      padding: 0;
     }
   }
   .upload-info {
@@ -1129,6 +1118,14 @@ table {
     }
     button {
       width: 100%;
+    }
+  }
+  .options a {
+    width: calc(100% - 3em);
+    margin: 0 0 0.5em 0;
+    text-align: center;
+    &:last-child {
+      margin-bottom: 0;
     }
   }
 }
@@ -1195,18 +1192,6 @@ table {
   }
   .bottom-page-nav {
     bottom: -85px;
-  }
-  .gradient .upload-form {
-    .upload {
-      padding: 0;
-    }
-    div.jfilestyle.jfilestyle-corner input:first-child {
-      width: calc(100% - 150px) !important;
-    }
-  }
-  .upload-form div.jfilestyle.jfilestyle-corner input:first-child,
-  .upload-form.download div.jfilestyle.jfilestyle-corner input:first-child {
-    width: calc(100% - 150px) !important;
   }
 }
 
