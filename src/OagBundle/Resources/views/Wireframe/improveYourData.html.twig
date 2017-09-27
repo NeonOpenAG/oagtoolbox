@@ -13,33 +13,6 @@
 
         <section class="block">
 
-            <article class="activity" id="classifer-status" data-statusurl="http://localhost/workspace/oag/oagtoolbox/web/app_dev.php/async/classifyStatus">
-              <div class="heading summary">
-                  <h2>Classifier status</h2>
-              </div>
-
-                <div class="content-block summary">
-                    <ul>
-                        {% for filename in status.classifier.filenames %}
-                        <li>{{ filename }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </article>
-
-            <article class="activity" id="geocoder-status" data-statusurl="http://localhost/workspace/oag/oagtoolbox/web/app_dev.php/async/geocodeStatus">
-              <div class="heading summary">
-                  <h2>Geocoder status</h2>
-              </div>
-                <div class="content-block summary">
-                    <ul>
-                        {% for filename in status.geocoder.filenames %}
-                            <li>{{ filename }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </article>
-
             <div class="intro margin">
                 <h1>Check and improve your data</h1>
             </div>
@@ -83,6 +56,28 @@
                 </div>
             </article>
 
+            <article class="activity" id="classifer-status" data-statusurl="http://localhost/workspace/oag/oagtoolbox/web/app_dev.php/async/classifyStatus">
+                <div class="content-block summary">
+                    <ul>
+                            {% for filename in status.geocoder.filenames %}
+                        <li>
+                            {{ filename }}
+                        </li>
+                            {% endfor %}
+                    </ul>
+                </div>
+            </article>
+                    
+            <article class="activity" id="geocoder-status" data-statusurl="http://localhost/workspace/oag/oagtoolbox/web/app_dev.php/async/geocodeStatus">
+                <div class="content-block summary">
+                    <ul>
+                        {% for filename in status.classifier.filenames %}
+                            <li>{{ filename }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </article>
+                    
             {% if (not geocoded) or (not classified) %}
             <article class="activity">
                 <div class="heading summary improve">
@@ -143,7 +138,7 @@
             checkStatus(classifierStatus);
             geocoderStatus = $('#geocoder-status').data('statusurl');
             checkStatus(geocoderStatus);
-
+        
             function checkStatus(url) {
                 $.get(url, function(data, status){
                     console.log(data);
