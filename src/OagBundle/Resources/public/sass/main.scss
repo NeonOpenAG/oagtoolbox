@@ -468,6 +468,9 @@ article {
         &:last-child {
           margin: 0;
         }
+        &:last-child .info p {
+          width: 80%;
+        }
       }
       button {
         font-family: $oag_font;
@@ -511,7 +514,7 @@ article {
         }
       }
       .info p {
-        width: 80%;
+        width: 100%;
         padding-right: 0;
       }
     }
@@ -1262,7 +1265,12 @@ table {
         width: 100%;
       }
       &.complete {
-        padding-bottom: 4em;
+        padding-bottom: 2em;
+      }
+      ul li {
+        &:last-child .info p {
+          width: 100%;
+        }
       }
     }
     .heading.summary {
