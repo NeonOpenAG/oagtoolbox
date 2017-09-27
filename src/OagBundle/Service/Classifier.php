@@ -318,4 +318,69 @@ class Classifier extends AbstractOagService {
         return 'classifier';
     }
 
+    public function status() {
+        // wget -O /dev/null http://localhost/workspace/oag/oagtoolbox/web/app_dev.php/async/classify/15
+        $cmd = 'ps -ef | grep "wget"';
+        $output = [];
+        $pipes = [];
+        $descriptorspec = array(
+            0 => array("pipe", "r"),
+            1 => array("pipe", "w"),
+            2 => array("pipe", "w"),
+        );
+
+        $process = proc_open($cmd, $descriptorspec, $pipes);
+
+        if (is_resource($process)) {
+            $xml = stream_get_contents($pipes[1]);
+            fclose($pipes[1]);
+
+            $filenames = [];
+
+            // $em = $this->getContainer()->get('doctrine')->getManager();
+            $oagfileRepo = $this->getContainer()->get('doctrine')->getRepository(OagFile::class);
+            $lines = explode("\n", $xml);
+            foreach ($lines as $line) {
+                $start = strpos($line, '/async/classify/');
+                if ($start) {
+                    $start += 16;
+                    $fileid = trim(substr($line, $start));
+                    $file = $oagfileRepo->findOneById($fileid);
+                    $filenames[] = $file->getDocumentName();
+                }
+            }
+
+            $err = stream_get_contents($pipes[2]);
+            fclose($pipes[2]);
+
+            $return_value = proc_close($process);
+
+            if ($this->getContainer()->getParameter('populate_status')) {
+                $filenames = [
+                    'foo.xml', 'bar.xml'
+                ];
+            }
+
+            $data = array(
+                'filenames' => $filenames,
+                'err' => explode("\n", $err),
+                'status' => $return_value,
+            );
+
+            if (strlen($err)) {
+                $this->getContainer()->get('logger')->debug('Error: ' . $err);
+            }
+
+            return $data;
+        } else {
+            // TODO Better exception handling.
+        }
+
+        return array(
+            'filenames' => [],
+            'err' => [],
+            'status' => 0,
+        );
+    }
+
 }
