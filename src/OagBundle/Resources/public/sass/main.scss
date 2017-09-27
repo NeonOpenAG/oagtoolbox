@@ -444,6 +444,16 @@ article {
       h2 {
         font-size: 1.8em;
       }
+      &.improve {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        img {
+          position: absolute;
+          bottom: 16px;
+          right: 74px;
+        }
+      }
     }
   }
   .content-block {
@@ -457,6 +467,9 @@ article {
         padding: 0.5em;
         &:last-child {
           margin: 0;
+        }
+        &:last-child .info p {
+          width: 80%;
         }
       }
       button {
@@ -869,13 +882,18 @@ table {
 }
 
 @media (max-width: 1020px) {
-  .activity .content-block.summary {
-    .improvements {
-      display: block;
-      margin-bottom: 1em;
-      p {
-        width: initial;
-        padding-right: 0;
+  .activity {
+    .heading.summary.improve img {
+      right: 34px;
+    }
+    .content-block.summary {
+      .improvements {
+        display: block;
+        margin-bottom: 1em;
+        p {
+          width: initial;
+          padding-right: 0;
+        }
       }
     }
   }
@@ -926,6 +944,13 @@ table {
   }
 }
 
+@media (max-width: 920px) {
+  .activity .heading.summary.improve img {
+    right: -10px;
+    width: 100px;
+  }
+}
+
 @media (max-width: 870px) {
   header {
     padding: 0em 2em;
@@ -961,11 +986,30 @@ table {
   h3 {
     font-size: 1em;
   }
-  .activity .heading.summary h2 {
-    font-size: 1.5em;
+  .activity .heading.summary {
+    h2 {
+      font-size: 1.5em;
+    }
+    &.improve {
+      img {
+        bottom: 14px;
+        right: -13px;
+      }
+      h2 {
+        width: 80%;
+      }
+    }
   }
-  .content-block.download {
+  .activity .content-block.download {
     padding: 1.5em;
+  }
+  .activity .content-block.summary {
+    .complete {
+      padding: 1.5em 2em 5em;
+    }
+    .info p {
+      width: 100%;
+    }
   }
   /* Responsive table */
   table, thead, tbody, th, td, tr {
@@ -1137,6 +1181,12 @@ table {
   }
 }
 
+@media (max-width: 687px) {
+  .activity .heading.summary.improve img {
+    bottom: 43px;
+  }
+}
+
 @media (max-width: 611px) {
   h1 {
     font-size: 1.8em;
@@ -1214,6 +1264,14 @@ table {
       button {
         width: 100%;
       }
+      &.complete {
+        padding-bottom: 2em;
+      }
+      ul li {
+        &:last-child .info p {
+          width: 100%;
+        }
+      }
     }
     .heading.summary {
       padding: 1.5em;
@@ -1226,6 +1284,12 @@ table {
     form[name=form] .tag-row .tag {
       margin-bottom: 0.5em;
     }
+  }
+}
+
+@media (max-width: 381px) {
+  .activity .heading.summary.improve img {
+    bottom: 64px;
   }
 }
 
@@ -1270,5 +1334,15 @@ table {
   .gradient .upload-form {
     padding: 1em;
     width: calc(100% - 2em);
+  }
+  .activity .heading.summary.improve img {
+    width: 65px;
+    right: -5px;
+  }
+}
+
+@media (max-width: 349px) {
+  .activity .heading.summary.improve img {
+    bottom: 95px;
   }
 }
