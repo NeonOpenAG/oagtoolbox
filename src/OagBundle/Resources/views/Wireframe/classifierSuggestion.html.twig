@@ -24,7 +24,11 @@
                 </div>
 
                 <div class="content-block">
-                    <p>Description: {{ activity.description }}</p>
+                    {%if activity.description %}
+                    <p class="more">Description: {{ activity.description}}</p>
+                    {% else %}
+                    <p>No description available.</p>
+                    {% endif %}
 
                     <!-- TODO: Move this back out, but not to activity.html.twig -->
                     {{ form_start(form) }}
@@ -41,7 +45,8 @@
                     {{ form_end(form) }}
 
                     <div class="upload-info">
-                        <h3>Got any project info to match this Activity ID you want the tool to read?</h3>
+                        <h3>Use additional text</h3>
+                        <p>If your project would benefit from additional tags, please paste some relevant text into the box below.</p>
                         <hr>
                         <div>{{ form(pasteTextForm) }}</div>
                     </div>
@@ -58,6 +63,7 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('bundles/oag/jquery-filestyle-1.5.1/src/jquery-filestyle.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/oag/js/main.js') }}"></script>
     <script>
         $(function () {
             $(document).tooltip();
