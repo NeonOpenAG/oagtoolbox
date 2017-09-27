@@ -11,6 +11,7 @@ use OagBundle\Entity\OagFile;
 use OagBundle\Entity\Tag;
 use OagBundle\Entity\SuggestedTag;
 use Symfony\Component\Cache\Simple\FilesystemCache;
+
 class Classifier extends AbstractOagService {
 
     public function processUri($sometext = '') {
@@ -172,7 +173,6 @@ class Classifier extends AbstractOagService {
     public function classifyOagFile(OagFile $oagFile) {
         $srvClassifier = $this->getContainer()->get(Classifier::class);
         $srvOagFile = $this->getContainer()->get(OagFileService::class);
-        $srvTextify = $this->getContainer()->get(TextifyService::class);
 
         $oagFile->clearSuggestedTags();
 
@@ -194,6 +194,31 @@ class Classifier extends AbstractOagService {
 
         $em = $this->getContainer()->get('doctrine')->getManager();
         $em->persist($oagFile);
+        $em->flush();
+    }
+
+    /**
+     * Classify an OagFile from raw text associated with it and attach the
+     * resulting SuggestedTag objects to it.
+     *
+     * @param OagFile $oagFile
+     * @param string text
+     * @param string $activityId if the text is specific
+     */
+    public function classifyOagFileFromText(OagFile $file, $text, $activityId = null) {
+        $srvClassifier = $this->getContainer()->get(Classifier::class);
+
+        $file->clearSuggestedTags();
+        $json = $srvClassifier->processString($text);
+
+        if ($json['status']) {
+            throw new \Exception('Classifier service could not classify text');
+        }
+
+        $this->persistTags($json['data'], $file, $activityId);
+
+        $em = $this->getContainer()->get('doctrine')->getManager();
+        $em->persist($file);
         $em->flush();
     }
 
@@ -220,7 +245,10 @@ class Classifier extends AbstractOagService {
 
         $json = $srvClassifier->processString($rawText);
 
-        // TODO if $row['status'] == 0
+        if ($json['status']) {
+            throw new \Exception('Classifier service could not classify file');
+        }
+
         $this->persistTags($json['data'], $enhFile);
 
         $em = $this->getContainer()->get('doctrine')->getManager();

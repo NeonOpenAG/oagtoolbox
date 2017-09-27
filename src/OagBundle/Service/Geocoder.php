@@ -6,42 +6,108 @@ use OagBundle\Entity\EnhancementFile;
 use OagBundle\Entity\Geolocation;
 use OagBundle\Entity\OagFile;
 use OagBundle\Service\CSV;
+use OagBundle\Service\TextExtractor\TextifyService;
 
-class Geocoder extends AbstractAutoService {
+class Geocoder extends AbstractOagService {
 
-    public function processUri($sometext) {
-        // TODO implement non-fixture process
-        $csvService = $this->getContainer()->get(CSV::class);
-        return $csvService->toArray($this->getFixtureData(), "\t");
+    public function processString($sometext, $filename, $country) {
+        $data = $this->process($sometext, $filename, $country);
+        $json = json_decode($data['xml'], true);
+        // $json = json_decode($this->getXMLFixtureData(), true);
+        if (is_array($json)) {
+            $locations = array_column($json, 'locations', 'project_id'); // format as $activityId => $location[]
+        }
+        else {
+            $this->getContainer()->get('logger')->warn('Geocoder returned no locations.');
+            if ($country) {
+                $this->getContainer()->get('logger')->warn('Geocoder re-try again without a country code.');
+                $locations = $this->processString($sometext, $filename, false);
+            }
+            else {
+                $locations = [];
+            }
+        }
+        return $locations;
     }
 
-    public function processString($sometext) {
-        // TODO implement non-fixture process
-        $csvService = $this->getContainer()->get(CSV::class);
-        return $csvService->toArray($this->getFixtureData(), "\t");
+    public function processXML($contents, $filename, $country = null) {
+        $data = $this->process($contents, $filename, $country);
+        $json = json_decode($data['xml'], true);
+        // $json = json_decode($this->getXMLFixtureData(), true);
+        $locations = array_column($json, 'locations', 'project_id'); // format as $activityId => $location[]
+        return $locations;
     }
+    
+    public function process($contents, $filename, $country) {
+        $oag = $this->getContainer()->getParameter('oag');
+        $cmd = str_replace('{COUNTRY}', $country, str_replace('{FILENAME}', $filename, $oag['geocoder']['cmd']));
+        $this->getContainer()->get('logger')->debug(
+            sprintf('Command: %s', $cmd)
+        );
+        
+        if (!$this->isAvailable()) {
+            $this->getContainer()->get('session')->getFlashBag()->add("warning", $this->getName() . " docker not available, using fixtures.");
+            return json_encode($this->getFixtureData(), true);
+        }
 
-    public function processXML($contents) {
-        // TODO implement non-fixture process
-        // TODO how to do this per-activity?
-        $csvService = $this->getContainer()->get(CSV::class);
-        return $csvService->toArray($this->getFixtureData(), "\t");
+        $descriptorspec = array(
+            0 => array("pipe", "r"),
+            1 => array("pipe", "w"),
+            2 => array("pipe", "w"),
+        );
+
+        $process = proc_open($cmd, $descriptorspec, $pipes);
+
+        if (is_resource($process)) {
+            $this->getContainer()->get('logger')->info(sprintf('Writting %d bytes of data', strlen($contents)));
+            fwrite($pipes[0], $contents);
+            fclose($pipes[0]);
+
+            $xml = stream_get_contents($pipes[1]);
+            $this->getContainer()->get('logger')->info(sprintf('Got %d bytes of data', strlen($xml)));
+            fclose($pipes[1]);
+
+            $err = stream_get_contents($pipes[2]);
+            $this->getContainer()->get('logger')->info(sprintf('Got %d bytes of error', strlen($err)));
+            fclose($pipes[2]);
+
+            $return_value = proc_close($process);
+
+            $data = array(
+                'xml' => $xml,
+                'err' => explode("\n", $err),
+                'status' => $return_value,
+            );
+            
+            if (strlen($err)) {
+                $this->getContainer()->get('logger')->debug('Error: ' . $err);
+            }
+
+            return $data;
+        } else {
+            // TODO Better exception handling.
+            throw new \RuntimeException('Geocoder Failed to start');
+        }        
     }
 
     public function getName() {
         return 'geocoder';
     }
 
-    public function getFixtureData() {
+    public function getStringFixtureData() {
         $kernel = $this->getContainer()->get('kernel');
-        $path = $kernel->locateResource('@OagBundle/Resources/fixtures/geocoder.tsv');
+        $path = $kernel->locateResource('@OagBundle/Resources/fixtures/geocoder-string.json');
         $contents = file_get_contents($path);
 
         return $contents;
     }
 
-    public function processOagFile(OagFile $file) {
-        return $this->getFixtureData();
+    public function getXMLFixtureData() {
+        $kernel = $this->getContainer()->get('kernel');
+        $path = $kernel->locateResource('@OagBundle/Resources/fixtures/geocoder-xml.json');
+        $contents = file_get_contents($path);
+
+        return $contents;
     }
 
     /**
@@ -50,37 +116,56 @@ class Geocoder extends AbstractAutoService {
      *
      * @param OagFile $file the file to process
      */
-    public function geocodeOagFile(OagFile $file) {
+    public function geocodeOagFile(OagFile $file, $country = null) {
         $em = $this->getContainer()->get('doctrine')->getManager();
         $geolocRepo = $this->getContainer()->get('doctrine')->getRepository(Geolocation::class);
         $srvOagFile = $this->getContainer()->get(OagFileService::class);
 
         $xml = $srvOagFile->getContents($file);
-        $locations = $this->processXML($xml);
+        $activities = $this->processXML($xml, $file->getDocumentName(), $country);
 
         $file->clearGeolocations();
 
-        foreach ($locations as $location) {
-            $locationIdCode = $location['geonameId'];
-            $locationIdVocab = $this->getContainer()->getParameter('geocoder')['id_vocabulary'];
+        foreach ($activities as $activityId => $locations) {
+            foreach ($locations as $location) {
+                $geoloc = $this->geolocationFromJson($location);
+                $geoloc->setIatiActivityId($activityId);
 
-            $geoloc = $geolocRepo->findOneBy(array(
-                'locationIdCode' => $locationIdCode,
-                'locationIdVocab' => $locationIdVocab
-            ));
-
-            if (!$geoloc) {
-                $geoloc = new Geolocation();
-                $geoloc->setName($location['toponymName']);
-                $geoloc->setLocationIdCode($locationIdCode);
-                $geoloc->setLocationIdVocab($locationIdVocab);
-                $geoloc->setFeatureDesignation($location['fcode']);
-                $geoloc->setPointPosLat($location['lat']);
-                $geoloc->setPointPosLong($location['lng']);
-                // TODO admin
+                $file->addGeolocation($geoloc);
             }
+        }
 
-            $file->addGeolocation($geoloc);
+        $em->persist($file);
+        $em->flush();
+    }
+
+    /**
+     * Process text and attach the resulting Geolocation suggestions to an IATI
+     * file.
+     *
+     * @param OagFile $file
+     * @param string $text
+     * @param string $activityId if the text is specific
+     */
+    public function geocodeOagFileFromText(OagFile $file, $text, $activityId = null, $countryCode = false) {
+        $em = $this->getContainer()->get('doctrine')->getManager();
+        $geolocRepo = $this->getContainer()->get('doctrine')->getRepository(Geolocation::class);
+        $srvEnhancementFile = $this->getContainer()->get(EnhancementFileService::class);
+
+        $activities = $this->processString($text, 'enhancement.txt', $countryCode);
+
+        $file->clearGeolocations();
+
+        foreach ($activities as $locations) {
+            foreach ($locations as $location) {
+                $geoloc = $this->geolocationFromJson($location);
+
+                if (!is_null($activityId)) {
+                    $geoloc->setIatiActivityId($activityId);
+                }
+
+                $file->addGeolocation($geoloc);
+            }
         }
 
         $em->persist($file);
@@ -96,39 +181,54 @@ class Geocoder extends AbstractAutoService {
     public function geocodeEnhancementFile(EnhancementFile $file) {
         $em = $this->getContainer()->get('doctrine')->getManager();
         $geolocRepo = $this->getContainer()->get('doctrine')->getRepository(Geolocation::class);
+        $srvTextify = $this->getContainer()->get(TextifyService::class);
         $srvEnhancementFile = $this->getContainer()->get(EnhancementFileService::class);
 
-        $xml = $srvEnhancementFile->getContents($file);
-        $locations = $this->processXML($xml);
+        // enhancing/text document
+        $rawText = $srvTextify->stripEnhancementFile($file);
+
+        if ($rawText === false) {
+            // textifier failed
+            throw new \RuntimeException('Unsupported file type to strip text from');
+        }
+
+        $activities = $this->processString($rawText, $file->getDocumentName());
 
         $file->clearGeolocations();
 
-        foreach ($locations as $location) {
-            $locationIdCode = $location['geonameId'];
-            $locationIdVocab = $this->getContainer()->getParameter('geocoder')['id_vocabulary'];
-
-            $geoloc = $geolocRepo->findOneBy(array(
-                'locationIdCode' => $locationIdCode,
-                'locationIdVocab' => $locationIdVocab
-            ));
-
-            if (!$geoloc) {
-                $geoloc = new Geolocation();
-                $geoloc->setName($location['toponymName']);
-                $geoloc->setLocationIdCode($locationIdCode);
-                $geoloc->setLocationIdVocab($locationIdVocab);
-                $geoloc->setFeatureLocationCode($location['fcode']);
-                $geoloc->setFeatureLocationName($location['fcodeName']);
-                $geoloc->setPointPosLat($location['lat']);
-                $geoloc->setPointPosLong($location['lng']);
-                // TODO admin
+        foreach ($activities as $locations) {
+            foreach ($locations as $location) {
+                $geoloc = $this->geolocationFromJson($location);
+                $file->addGeolocation($geoloc);
             }
-
-            $file->addGeolocation($geoloc);
         }
 
         $em->persist($file);
         $em->flush();
+    }
+
+    /**
+     * Use a part of the JSON response from the Geocoder to make a Geolocation
+     * entity.
+     *
+     * @param $location a part of the JSON response describing a location
+     * @return Geolocation
+     */
+    private function geolocationFromJson($location) {
+        $locationIdCode = strval($location['id']);
+        $locationIdVocab = $this->getContainer()->getParameter('geocoder')['id_vocabulary'];
+
+        $geoloc = new Geolocation();
+        $geoloc->setName($location['name']);
+        $geoloc->setLocationIdCode($locationIdCode);
+        $geoloc->setLocationIdVocab($locationIdVocab);
+        $geoloc->setFeatureDesignation($location['featureDesignation']['code']);
+        $geoloc->setPointPosLong($location['geometry']['coordinates'][0]);
+        $geoloc->setPointPosLat($location['geometry']['coordinates'][1]);
+        // TODO admin1..4
+        // TODO country
+
+        return $geoloc;
     }
 
 }

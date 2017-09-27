@@ -31,7 +31,7 @@ h6 {
 }
 
 h1 {
-  font-size: 2.5em;
+  font-size: 2em;
 }
 
 hr {
@@ -66,6 +66,7 @@ button,
   letter-spacing: inherit;
   line-height: 24px;
   color: white;
+  font-size: 1em;
   font-weight: bold;
   white-space: nowrap;
   display: inline-block;
@@ -130,11 +131,11 @@ button,
 -------------------------------------------------------------- */
 
 .block {
-  max-width: 1200px;
+  width: 1200px;
 }
 
 .content {
-  max-width: 1000px;
+  width: 1000px;
 }
 
 .center {
@@ -231,23 +232,51 @@ nav {
 
 -------------------------------------------------------------- */
 
+div.jfilestyle.jfilestyle-corner {
+  border-radius: 2px;
+}
+
 .gradient {
-  height: 532px;
   background: $oag_blue;  /* fallback for old browsers */
   background: -webkit-linear-gradient(150deg, $oag_blue 15%, $oag_purple 90%);  /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(150deg, $oag_blue 15%, $oag_purple 90%); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   h1 {
-    color: white;
+    color: $oag_title;
+  }
+  form {
+    margin: 0;
+  }
+}
+
+.upload-form.upload {
+  display: flex;
+  justify-content: center;
+  padding: 1.5em;
+  max-width: 100%;
+  div {
+    margin-bottom: 0;
+  }
+  button {
+    position: initial;
+    margin-left: 1.3em;
+  }
+  div.jfilestyle.jfilestyle-corner {
+    margin-top: 0;
+  }
+  .file-upload {
+    margin-left: 2em;
+    padding-top: 22px;
+  }
+  #oag_file {
+    display: flex;
   }
 }
 
 .intro {
-  margin-bottom: 4em;
-  h1 {
-    color: white;
-  }
+  margin-bottom: 4.5em;
+  h1,
   h2 {
-    color: $oag_offwhite;
+    color: white;
   }
   &.margin {
     margin-bottom: 2em;
@@ -274,12 +303,19 @@ nav {
 
 .instructions {
   background-color: $oag_bg;
-  padding-top: 12em;
+  h2 {
+    margin: 0.5em 0;
+    &:before {
+      font-family: FontAwesome;
+      content: "\f058";
+      font-size: 1em;
+      color: $oag_title;
+      margin-right: 0.6em;
+    }
+  }
   .template {
     display: flex;
-    h2 {
-      margin: 0.5em 0;
-    }
+    margin-bottom: 1.5em;
     button {
       margin-left: 1.5em;
       span:before {
@@ -289,12 +325,8 @@ nav {
       }
     }
   }
-  .info p {
-    &:before {
-      font-family: FontAwesome;
-      margin-right: 0.6em;
-      content: "\f05a";
-    }
+  .content div {
+    margin-bottom: 1.5em;
   }
 }
 
@@ -310,6 +342,22 @@ nav {
   width: calc(100% - 4em);
   div {
     margin-bottom: 1em;
+    label {
+      display: none;
+    }
+    textarea {
+      border-radius: 2px;
+      width: 620px;
+      font-family: $oag_font;
+      border: 1px solid #dcdcdc;
+      height: 100px;
+      background-color: white;
+      padding: 1em;
+      margin-bottom: 1em;
+    }
+    > input[type="file"] {
+      display: none;
+    }
     &.jfilestyle {
       box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
       input {
@@ -349,11 +397,14 @@ nav {
     margin-top: 1em;
   }
   button {
-    position: absolute;
-    bottom: 48px;
-    left: 460px;
     font-family: $oag_font;
     line-height: 1.15;
+  }
+}
+.upload-info {
+  width: 100%;
+  div {
+    margin-bottom: 0;
   }
 }
 
@@ -389,9 +440,19 @@ article {
     border-top-left-radius: 2px;
     border-top-right-radius: 2px;
     &.summary {
-      padding: 1.5em 3em;
+      padding: 1.5em 2.5em;
       h2 {
-        font-size: 2em;
+        font-size: 1.8em;
+      }
+      &.improve {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        img {
+          position: absolute;
+          bottom: 16px;
+          right: 74px;
+        }
       }
     }
   }
@@ -401,9 +462,15 @@ article {
     border-bottom-right-radius: 2px;
     padding: .5em 1.5em 1.5em 1.5em;
     &.summary {
-      padding: 2em;
+      padding: 1.5em 2em;
       ul li {
-        padding: 1em;
+        padding: 0.5em;
+        &:last-child {
+          margin: 0;
+        }
+        &:last-child .info p {
+          width: 80%;
+        }
       }
       button {
         font-family: $oag_font;
@@ -446,6 +513,10 @@ article {
           justify-content: flex-end;
         }
       }
+      .info p {
+        width: 100%;
+        padding-right: 0;
+      }
     }
   }
 }
@@ -465,7 +536,7 @@ article {
 -------------------------------------------------------------- */
 
 form {
-  margin-top: 2em;
+  margin: 2em 0 3em;
   &:last-child .tag-row {
     margin-bottom: 0;
   }
@@ -479,8 +550,9 @@ form {
     .tag {
       display: flex;
       align-items: center;
-      font-size: 1.5em;
+      font-size: 1.3em;
       padding: 0 1em;
+      word-break: break-all;
     }
   }
 }
@@ -489,16 +561,12 @@ form {
   background-color: transparent;
   border-radius: 0;
   box-shadow: none;
-  padding: 4em 0 0 0;
-  button {
-    bottom: 31px;
-    left: 428px;
-  }
+  padding:0;
   hr {
     margin-bottom: 1em;
   }
   form {
-    margin-top: 1em;
+    margin: 2em 0 0;
   }
 }
 
@@ -506,7 +574,7 @@ form {
   position: absolute;
   display: flex;
   right: 0;
-  bottom: -84px;
+  bottom: -92px;
   button {
     @extend .back;
   }
@@ -531,36 +599,22 @@ form {
 
 #geo-suggestions {
   form[name=form] {
-    margin-top: 2em;
     &:last-child .tag-row {
       margin-bottom: 0;
     }
-    .tag-row {
-    padding: 0;
-    margin: 1em 0;
-    background-color: $oag_bg;
-    display: flex;
-    justify-content: space-between;
-    box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
-      .tag {
-        display: flex;
-        align-items: center;
-        font-size: 1.5em;
-        padding: 0 0 1em 0;
-      }
+    .tag-row .tag {
+      padding: 0 0 1em 0;
     }
   }
   .info {
     flex: 1;
     padding: 2em;
   }
-  span {
-    //margin: 2em;
-  }
   .suggested-map-block {
     border: none;
     background-color: #dbe5ea;
     width: 600px;
+    height: 250px;
   }
 }
 
@@ -578,7 +632,7 @@ form {
   }
   span {
     @extend button;
-    width: 98px;
+    width: 100px;
     text-align: center;
   }
   input + span {
@@ -618,11 +672,21 @@ form {
 
 -------------------------------------------------------------- */
 
-.preview.block,
-iframe {
-  width: 100%;
+#preview {
+  .block {
+    width: 100%;
+  }
+  article {
+    height: 800px;
+  }
+  iframe {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 800px;
+    border: 0;
+  }
 }
-
 
 /* --------------------------------------------------------------
 
@@ -632,18 +696,52 @@ iframe {
 
 .version {
   display: flex;
-  margin: 2em 0 0.5em;
+  justify-content: space-between;
   p {
     color: $oag_dark;
     margin-right: 0.5em;
   }
 }
 
+h2.file-name {
+  word-break: break-all;
+}
+
+.content-block.download {
+  padding: 1.5em;
+}
+
+.upload-form.download {
+  background-color: transparent;
+  box-shadow: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  h1 {
+    color: $oag_dark;
+    font-size: 1.5em;
+  }
+  #oag_file {
+    display: flex;
+    margin-bottom: 0;
+  }
+  div {
+    margin-bottom: 0;
+  }
+  div.jfilestyle.jfilestyle-corner {
+    margin-top: 0;
+  }
+  button {
+    margin-left: 1.3em;
+  }
+  form {
+    margin: 0;
+    padding: 0.5em 0;
+  }
+}
+
 .options {
-  display: flex;
-  justify-content: flex-end;
-  flex: 1;
-  margin-bottom: 2em;
+  margin: 0;
   a {
     margin:0 0.5em;
     &:nth-child(1) {
@@ -681,6 +779,13 @@ table {
   }
 }
 
+.morecontent span {
+    display: none;
+}
+.morelink {
+    display: block;
+}
+
 
 /* --------------------------------------------------------------
 
@@ -700,7 +805,7 @@ table {
 }
 
 .flash-info {
-  background: $oag_green;
+  background: #c2cf7d;
   font-weight: bold;
   color: white;
   font-size: 110%;
@@ -761,116 +866,92 @@ table {
 
 -------------------------------------------------------------- */
 
-@media (max-width: 1020px) {
+@media (max-width: 1146px) {
   .version,
   .version .options {
     display: block;
   }
-  .activity .content-block.summary {
-    .improvements {
-      display: block;
-      p {
-        width: initial;
-        padding-right: 0;
-      }
+  .options a {
+    &:first-child {
+      margin-left: 0;
     }
-    ul li {
-      margin-bottom: 1em;
+    &:last-child {
+      margin-right: 0;
     }
   }
 }
 
-@media (max-width: 768px) {
-
-  .content-block.download {
-    padding: 1.5em;
-  }
-
-  /* Responsive table */
-  table, thead, tbody, th, td, tr {
-    display: block;
-  }
-
-  /* Hide table headers (but not display: none; for accessibility) */
-  thead tr {
-    position: absolute;
-    top: -9999px;
-    left: -9999px;
-  }
-
-  tr {
-    margin-bottom: 0.5em;
-    box-shadow: 0 7px 14px rgba(50,50,93,.1), 0 3px 6px rgba(0,0,0,.08);
-    background-color: white;
-  }
-
-  table td {
-    /* Behave like a "row" */
-    border: none;
-    border-bottom: 1px solid #eee;
-    position: relative;
-    padding-left: 30%;
-    text-align: right;
-    &:nth-child(2),
-    &:nth-child(3) {
-      text-align: right;
+@media (max-width: 1020px) {
+  .activity {
+    .heading.summary.improve img {
+      right: 34px;
     }
-    &:before {
-      /* Now like a table header */
-      position: absolute;
-      left: 0;
-      width: 19%;
-      padding-left: 1em;
-      white-space: nowrap;
-      text-align: left;
-    }
-    &:nth-of-type(1):before {
-      content: "Delete";
-    }
-    &:nth-of-type(2):before {
-      content: "File name";
-    }
-    &:nth-of-type(3):before {
-      content: "Date";
-    }
-    &:nth-of-type(4):before {
-      content: "Improved?";
-    }
-    &:nth-of-type(5):before {
-      content: "Download";
-    }
-    .delete:before,
-    .download-icon:before {
-      font-size: 1em;
-    }
-  }
-
-  nav
-  .block,
-  .content {
-    width: 100%
-  }
-  .gradient {
-    height: initial;
-  }
-  .upload-form button,
-  .upload-info button {
-    position: initial;
-  }
-  .instructions {
-    padding-top: 3em;
-    .template {
-      display: block;
-      button {
-        margin-left: 0;
-        float: none;
+    .content-block.summary {
+      .improvements {
+        display: block;
         margin-bottom: 1em;
+        p {
+          width: initial;
+          padding-right: 0;
+        }
       }
+    }
+  }
+  #geo-suggestions .suggested-map-block {
+    width: 50%;
+  }
+  table td {
+    &:nth-child(1) {
+      word-wrap: break-word;
+      max-width: 20px;
+    }
+    &:nth-child(2) {
+      word-wrap: break-word;
+      max-width: 100px;
+    }
+    &:nth-child(3) {
+      word-wrap: break-word;
+      max-width: 100px;
+    }
+    &:nth-child(4) {
+      word-wrap: break-word;
+      max-width: 20px;
+    }
+    &:nth-child(5) {
+      word-wrap: break-word;
+      max-width: 20px;
+    }
+  }
+  .upload-form.upload {
+    display: block;
+    padding: 2em;
+    h1 {
+      margin: 0;
+    }
+    button {
+      position: absolute;
+      bottom: 32px;
+      left: 460px;
+      margin-left: 0;
+    }
+    div.jfilestyle.jfilestyle-corner {
+      margin-top: 1em;
+    }
+    .file-upload {
+      margin-left: 0;
+      padding-top: 0;
     }
   }
 }
 
-@media (max-width: 660px) {
+@media (max-width: 920px) {
+  .activity .heading.summary.improve img {
+    right: -10px;
+    width: 100px;
+  }
+}
+
+@media (max-width: 870px) {
   header {
     padding: 0em 2em;
     nav {
@@ -896,16 +977,219 @@ table {
       }
     }
   }
-  .options a {
-    width: calc(100% - 4em);
+}
+
+@media (max-width: 768px) {
+  h2 {
+    font-size: 1.2em;
+  }
+  h3 {
+    font-size: 1em;
+  }
+  .activity .heading.summary {
+    h2 {
+      font-size: 1.5em;
+    }
+    &.improve {
+      img {
+        bottom: 14px;
+        right: -13px;
+      }
+      h2 {
+        width: 80%;
+      }
+    }
+  }
+  .activity .content-block.download {
+    padding: 1.5em;
+  }
+  .activity .content-block.summary {
+    .complete {
+      padding: 1.5em 2em 5em;
+    }
+    .info p {
+      width: 100%;
+    }
+  }
+  /* Responsive table */
+  table, thead, tbody, th, td, tr {
+    display: block;
+  }
+  /* Hide table headers (but not display: none; for accessibility) */
+  thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+  tr {
     margin-bottom: 0.5em;
+    box-shadow: 0 7px 14px rgba(50,50,93,.1), 0 3px 6px rgba(0,0,0,.08);
+    background-color: white;
+  }
+  table td {
+    /* Behave like a "row" */
+    border: none;
+    border-bottom: 1px solid #eee;
+    position: relative;
+    text-align: right;
+    word-break: break-all;
+    padding-left: 8em;
+    &:nth-child(n) {
+      max-width: initial;
+    }
+    &:nth-child(2),
+    &:nth-child(3) {
+      text-align: right;
+    }
+    &:before {
+      /* Now like a table header */
+      position: absolute;
+      left: 0;
+      padding-left: 1em;
+      white-space: nowrap;
+      text-align: left;
+    }
+    &:nth-of-type(1):before {
+      content: "Delete";
+    }
+    &:nth-of-type(2):before {
+      content: "File name";
+    }
+    &:nth-of-type(3):before {
+      content: "Date";
+    }
+    &:nth-of-type(4):before {
+      content: "Improved?";
+    }
+    &:nth-of-type(5):before {
+      content: "Download";
+    }
+    .delete:before,
+    .download-icon:before {
+      font-size: 1em;
+    }
+  }
+  nav
+  .block,
+  .content {
+    width: 100%
+  }
+  .upload-form button,
+  .upload-info button {
+    position: initial;
+  }
+  .instructions {
+    padding-top: 3em;
+    .template {
+      display: block;
+      button {
+        margin-left: 0;
+        float: none;
+        margin-bottom: 1em;
+      }
+    }
+  }
+  #geo-suggestions {
+    form[name=form] .tag-row {
+      display: block;
+      .tag {
+        padding-bottom: 0;
+        font-size: 1em;
+      }
+    }
+    .suggested-map-block {
+      width: 100%;
+    }
+    .info {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+  article {
+    &:last-child {
+      margin-bottom: 0;
+    }
+    &.margin {
+      margin-bottom: 5em;
+    }
+  }
+  .upload-info {
+    form > div {
+      display: block;
+      button {
+        margin-left: 0;
+      }
+      textarea {
+        width: calc(100% - 2em);
+      }
+    }
+  }
+  .addremove span {
+    padding: 0.7em;
+    font-size: 0.85em;
+  }
+  form .tag-row .tag {
+    font-size: 1em;
+  }
+}
+
+@media (max-width: 700px) {
+  .upload-form.upload,
+  .upload-form.download {
+    div.jfilestyle.jfilestyle-corner {
+      display: flex;
+      margin-bottom: 1em;
+      input:first-child {
+        width: calc(100% - 150px) !important;
+      }
+      label {
+        width: 87px;
+      }
+    }
+    #oag_file {
+      display: block;
+      margin-bottom: 0;
+    }
+    button {
+      position: initial;
+      width: 100%;
+      margin-left: 0;
+    }
+    &:last-child div {
+      margin-bottom: 0;
+    }
+    &.download form,
+    &.upload .file-upload {
+      padding: 0;
+    }
+  }
+  .upload-info {
+    div textarea {
+      width: calc(100% - 2em);
+    }
+    button {
+      width: 100%;
+    }
+  }
+  .options a {
+    width: calc(100% - 3em);
+    margin: 0 0 0.5em 0;
     text-align: center;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+@media (max-width: 687px) {
+  .activity .heading.summary.improve img {
+    bottom: 43px;
   }
 }
 
 @media (max-width: 611px) {
   h1 {
-    font-size: 2em;
+    font-size: 1.8em;
   }
   .upload-info {
     width: 100%;
@@ -925,9 +1209,10 @@ table {
         }
       }
     }
-    button {
-      width: 100%;
-    }
+  }
+  #geo-suggestions form[name=form] .tag-row .tag {
+    font-size: 1em;
+    margin-right: 1em;
   }
 }
 
@@ -953,39 +1238,70 @@ table {
     font-size: 0.9em;
   }
   .addremove span {
-    width: 87px;
+    width: 95px;
     font-size: 0.9em;
   }
-  .version ~ .upload-form {
+  .upload-form.download {
     background-color: transparent;
     box-shadow: none;
     padding: 0;
     width: 100%;
   }
+  .bottom-page-nav {
+    bottom: -85px;
+  }
 }
 
-@media (max-width: 409px) {
-  .activity .content-block.summary {
-    padding: 1em;
-    button {
-      width: 100%;
+@media (max-width: 450px) {
+  #download {
+    .block {
+      padding: 1em;
     }
   }
-  .activity .heading.summary {
-    padding: 2em;
+  .activity {
+    .content-block.summary {
+      padding: 1em;
+      button {
+        width: 100%;
+      }
+      &.complete {
+        padding-bottom: 2em;
+      }
+      ul li {
+        &:last-child .info p {
+          width: 100%;
+        }
+      }
+    }
+    .heading.summary {
+      padding: 1.5em;
+    }
+  }
+  #geo-suggestions {
+    .info {
+      display: block;
+    }
+    form[name=form] .tag-row .tag {
+      margin-bottom: 0.5em;
+    }
+  }
+}
+
+@media (max-width: 381px) {
+  .activity .heading.summary.improve img {
+    bottom: 64px;
   }
 }
 
 @media (max-width: 360px) {
+  .logo {
+    font-size: 0.9em;
+  }
   .block {
-    padding: 0.5em 0.5em 2em 0.5em;
+    padding: 1em;
     .intro.margin {
-      padding: 1em;
       margin-bottom: 0;
     }
-  }
-  .content-block.download {
-    padding: 0.5em;
   }
   .upload-form {
     padding: 1em;
@@ -993,5 +1309,40 @@ table {
   }
   .activity .heading.summary h2 {
     font-size: 1.5em;
+  }
+  article {
+    margin-bottom: 0.8em;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  #classifier-suggestions article,
+  #geo-suggestions article {
+    margin-bottom: 4.1em;
+  }
+  #geo-suggestions {
+    .info {
+      padding: 1em;
+    }
+  }
+  .bottom-page-nav {
+    bottom: -69px;
+    div {
+      margin-left: 0.5em;
+    }
+  }
+  .gradient .upload-form {
+    padding: 1em;
+    width: calc(100% - 2em);
+  }
+  .activity .heading.summary.improve img {
+    width: 65px;
+    right: -5px;
+  }
+}
+
+@media (max-width: 349px) {
+  .activity .heading.summary.improve img {
+    bottom: 95px;
   }
 }

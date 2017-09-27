@@ -1,4 +1,4 @@
-{% extends 'OagBundle::Default/index.html.twig' %}
+{% extends 'OagBundle::base.html.twig' %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -19,19 +19,14 @@
 
                 <h2><span class="view">View how your data will look to the world.</span></h2>
 
-                <h2><span class="check">Check what your data can be used for and improve it.</span></h2>
+                <h2><span class="check">Check how your data can be used and improve it.</span></h2>
 
                 <h2><span class="download">Download your improved activity file.</span></h2>
             </div>
 
-            <h1>Get started</h1>
-
-            <div class="upload-form">
-                <h3>Import a new source document</h3>
-                <hr>
-                <div>The imported document will be automatically processed with CoVE and added to the IATI document list above.</div>
-                <div>Currently only XML is supported.</div>
-                {{ form(source_upload_form) }}
+            <div class="upload-form upload">
+                <div class="heading"><h1>Get started</h1></div>
+                <div class="file-upload">{{ form(source_upload_form) }}</div>
             </div>
 
         </div>
@@ -51,11 +46,14 @@
             </div>
             <div class="info">
                 <h2>XML that is IATI compliant</h2>
-                <p>Here's how to make your XML IATI compliant: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                  nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
-                  eu fugiat nulla pariatur.
+                <p>At the centre of IATI is the IATI Standard. This is a format and framework for publishing data on development
+                  cooperation activities, intended for use by all organisations engaged in development, from government donors to
+                  private sector organisations, and national and international NGOs. It was designed in close consultation with key
+                  users of development cooperation data in developing countries, to ensure its relevance and utility for a variety
+                  of different data users.
                 </p>
+                <p>IATI uses a data format called XML. It is very easy to convert this format into more accessible formats – such as
+                  CSV, or even use it to drive tools that can generate graphs and tables of data from queries.</p>
             </div>
 
         </div>

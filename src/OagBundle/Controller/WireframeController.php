@@ -20,6 +20,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -31,10 +32,11 @@ class WireframeController extends Controller {
      * @Route("/")
      */
     public function uploadAction(Request $request) {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $srvCove = $this->get(Cove::class);
         $srvClassifier = $this->get(Classifier::class);
         $srvGeocoder = $this->get(Geocoder::class);
+        $srvOagFile = $this->get(OagFileService::class);
 
         $oagfile = new OagFile();
         $sourceUploadForm = $this->createForm(OagFileType::class, $oagfile);
@@ -71,6 +73,10 @@ class WireframeController extends Controller {
             'source_upload_form' => $sourceUploadForm->createView()
         );
 
+        if (!is_null($srvOagFile->getMostRecent())) {
+            $data['file'] = $srvOagFile->getMostRecent();
+        }
+
         return $data;
     }
 
@@ -81,6 +87,9 @@ class WireframeController extends Controller {
     public function downloadAction(Request $request, OagFile $file) {
         $em = $this->getDoctrine()->getManager();
         $fileRepo = $this->getDoctrine()->getRepository(OagFile::class);
+        $srvClassifier = $this->get(Classifier::class);
+        $srvCove = $this->get(Cove::class);
+        $srvGeocoder = $this->get(Geocoder::class);
         $srvOagFile = $this->get(OagFileService::class);
 
         $oagfile = new OagFile();
@@ -109,6 +118,7 @@ class WireframeController extends Controller {
                 // TODO CoVE failed
             }
             $srvClassifier->classifyOagFile($oagfile);
+            $srvGeocoder->geocodeOagFile($oagfile);
 
 	    return $this->redirect($this->generateUrl('oag_wireframe_improveyourdata', array('id' => $oagfile->getId())));
         }
@@ -119,6 +129,34 @@ class WireframeController extends Controller {
             'uploadForm' => $sourceUploadForm->createView(),
             'srvOagFile' => $srvOagFile
         );
+    }
+
+    /**
+     * Delete an IATI file (from the download page).
+     *
+     * @Route("/download/{previous_id}/deleteFile/{to_delete_id}")
+     * @ParamConverter("previous", class="OagBundle:OagFile", options={"id" = "previous_id"})
+     * @ParamConverter("toDelete", class="OagBundle:OagFile", options={"id" = "to_delete_id"})
+     */
+    public function deleteFileAction(Request $request, OagFile $previous, OagFile $toDelete) {
+        $em = $this->getDoctrine()->getManager();
+        $oagFileRepo = $this->getDoctrine()->getRepository(OagFile::class);
+        $srvOagFile = $this->get(OagFileService::class);
+
+        $em->remove($toDelete);
+        $em->flush();
+
+        if (count($oagFileRepo->findAll()) === 0) {
+            // they deleted the last file, redirect to upload
+            return $this->redirect($this->generateUrl('oag_wireframe_upload'));
+        } else if ($previous->getId() === $toDelete->getId()) {
+            // they deleted the file of the page they're on, redirect to the most recent file
+            $latest = $srvOagFile->getMostRecent();
+            return $this->redirect($this->generateUrl('oag_wireframe_download', array('id' => $latest->getId())));
+        }
+
+        // they deleted another file
+        return $this->redirect($this->generateUrl('oag_wireframe_download', array('id' => $previous->getId())));
     }
 
     /**
@@ -134,27 +172,43 @@ class WireframeController extends Controller {
     }
 
     /**
-     * Delete an IATI file.
-     *
-     * @Route("/deleteFile/{id}")
-     * @ParamConverter("file", class="OagBundle:OagFile")
-     */
-    public function deleteFileAction(Request $request, OagFile $file) {
-        // TODO implement
-        return $this->redirect($this->generateUrl('oag_wireframe_upload'));
-    }
-
-    /**
      * @Route("/classifier/{id}")
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
     public function classifierAction(OagFile $file) {
         $srvIATI = $this->get(IATI::class);
         $root = $srvIATI->load($file);
+        $activities = $srvIATI->summariseToArray($root);
+
+        // work out which activities have suggested locations
+        $haveSuggested = array();
+        foreach ($activities as $activity) {
+            $suggestedTags = array();
+
+            // suggested on the OagFile for that activity
+            foreach ($file->getSuggestedTags()->toArray() as $generic) {
+                if (is_null($generic->getActivityId()) || $generic->getActivityId() === $activity['id']) {
+                    $suggestedTags[] = $generic;
+                }
+            }
+
+            // suggested in an EnhancementFile for that activity
+            foreach ($file->getEnhancingDocuments() as $enhFile) {
+                // if it is only relevant to another activity, ignore
+                if ((!is_null($enhFile->getIatiActivityId())) && ($enhFile->getIatiActivityId() !== $activity['id'])) continue;
+                $suggestedTags = array_merge($suggestedTags, $enhFile->getSuggestedTags()->toArray());
+            }
+
+            // has at least one suggested location
+            if (count($suggestedTags) > 0) {
+                $haveSuggested[] = $activity['id'];
+            }
+        }
 
         return array(
             'file' => $file,
-            'activities' => $srvIATI->summariseToArray($root)
+            'activities' => $activities,
+            'haveSuggested' => $haveSuggested
         );
     }
 
@@ -181,7 +235,7 @@ class WireframeController extends Controller {
         $suggestedTags = $file->getSuggestedTags()->toArray();
         foreach ($file->getEnhancingDocuments() as $enhFile) {
             // if it is only relevant to another activity, ignore
-            if ((!is_null($enhFile)) && ($enhFile->getIatiActivityId() !== $activityId)) continue;
+            if ((!is_null($enhFile->getIatiActivityId())) && ($enhFile->getIatiActivityId() !== $activityId)) continue;
             $suggestedTags = array_merge($suggestedTags, $enhFile->getSuggestedTags()->toArray());
         }
 
@@ -202,11 +256,11 @@ class WireframeController extends Controller {
         }
         $allTags = array_merge($currentTags, $classifierTags);
 
-        // enhancement upload form
+        // enhancement file upload form
         $enhFile = new EnhancementFile();
         $enhUploadForm = $this->createForm(EnhancementFileType::class, $enhFile);
         $enhUploadForm->add('Upload', SubmitType::class, array(
-            'attr' => array('class' => 'submit'),
+            'attr' => array('class' => 'submit')
         ));
         $enhUploadForm->handleRequest($request);
         if ($enhUploadForm->isSubmitted() && $enhUploadForm->isValid()) {
@@ -231,6 +285,21 @@ class WireframeController extends Controller {
             return $this->redirect($this->generateUrl('oag_wireframe_classifiersuggestion', array('id' => $file->getId(), 'activityId' => $activityId)));
         }
 
+        // paste text form
+        $pasteTextForm = $this->createFormBuilder()
+            ->add('text', TextareaType::class, array(
+                'attr' => array('placeholder' => 'Copy and paste text')
+            ))
+            ->add('read', SubmitType::class)
+            ->getForm();
+        $pasteTextForm->handleRequest($request);
+        if ($pasteTextForm->isSubmitted() && $pasteTextForm->isValid()) {
+            $data = $pasteTextForm->getData();
+            $srvClassifier->classifyOagFileFromText($file, $data['text'], $activityId);
+            return $this->redirect($this->generateUrl('oag_wireframe_classifiersuggestion', array('id' => $file->getId(), 'activityId' => $activityId)));
+        }
+
+        // tags add/remove form
         $form = $this->createFormBuilder()
             ->add('tags', ChoiceType::class, array(
                 'expanded' => true,
@@ -292,7 +361,8 @@ class WireframeController extends Controller {
             'file' => $file,
             'activity' => $srvIATI->summariseActivityToArray($activity),
             'form' => $form->createView(),
-            'enhancementUploadForm' => $enhUploadForm->createView()
+            'enhancementUploadForm' => $enhUploadForm->createView(),
+            'pasteTextForm' => $pasteTextForm->createView()
         );
     }
 
@@ -303,10 +373,37 @@ class WireframeController extends Controller {
     public function geocoderAction(OagFile $file) {
         $srvIATI = $this->get(IATI::class);
         $root = $srvIATI->load($file);
+        $activities = $srvIATI->summariseToArray($root);
+
+        // work out which activities have suggested locations
+        $haveSuggested = array();
+        foreach ($activities as $activity) {
+            $geocoderGeolocs = array();
+
+            // suggested on the OagFile for that activity
+            foreach ($file->getGeolocations()->toArray() as $generic) {
+                if (is_null($generic->getIatiActivityId()) || $generic->getIatiActivityId() === $activity['id']) {
+                    $geocoderGeolocs[] = $generic;
+                }
+            }
+
+            // suggested in an EnhancementFile for that activity
+            foreach ($file->getEnhancingDocuments() as $enhFile) {
+                // if it is only relevant to another activity, ignore
+                if ((!is_null($enhFile->getIatiActivityId())) && ($enhFile->getIatiActivityId() !== $activity['id'])) continue;
+                $geocoderGeolocs = array_merge($geocoderGeolocs, $enhFile->getGeolocations()->toArray());
+            }
+
+            // has at least one suggested location
+            if (count($geocoderGeolocs) > 0) {// has at least one suggested location
+                $haveSuggested[] = $activity['id'];
+            }
+        }
 
         return array(
             'file' => $file,
-            'activities' => $srvIATI->summariseToArray($root)
+            'activities' => $activities,
+            'haveSuggested' => $haveSuggested
         );
     }
 
@@ -341,12 +438,22 @@ class WireframeController extends Controller {
         }
 
         // load all suggested tags
-        $geocoderGeolocs = $file->getGeolocations()->toArray();
+        $geocoderGeolocs[] = array();
+
+        // suggested on the OagFile for that activity
+        foreach ($file->getGeolocations()->toArray() as $generic) {
+            if (is_null($generic->getIatiActivityId()) || $generic->getIatiActivityId() === $activityId) {
+                $geocoderGeolocs[] = $generic;
+            }
+        }
+
+        // suggested in an EnhancementFile for that activity
         foreach ($file->getEnhancingDocuments() as $enhFile) {
             // if it is only relevant to another activity, ignore
-            if ((!is_null($enhFile)) && ($enhFile->getIatiActivityId() !== $activityId)) continue;
+            if ((!is_null($enhFile->getIatiActivityId())) && ($enhFile->getIatiActivityId() !== $activityId)) continue;
             $geocoderGeolocs = array_merge($geocoderGeolocs, $enhFile->getGeolocations()->toArray());
         }
+
         // no duplicates please
         $geocoderGeolocs = array_unique($geocoderGeolocs, SORT_REGULAR);
 
@@ -379,6 +486,27 @@ class WireframeController extends Controller {
             return $this->redirect($this->generateUrl('oag_wireframe_geocodersuggestion', array('id' => $file->getId(), 'activityId' => $activityId)));
         }
 
+        // paste text form
+        $countryCode = $srvIATI->getActivityCountryCode($activity);
+        $pasteTextForm = $this->createFormBuilder()
+            ->add('country', ChoiceType::class, array(
+                'choices'  => array_flip($this->getCountryList()),
+                'label' => 'Country',
+                'data' => $countryCode,                
+            ))
+            ->add('text', TextareaType::class, array(
+                'attr' => array('placeholder' => 'Copy and paste text')
+            ))
+            ->add('read', SubmitType::class)
+            ->getForm();
+        $pasteTextForm->handleRequest($request);
+        if ($pasteTextForm->isSubmitted() && $pasteTextForm->isValid()) {
+            $data = $pasteTextForm->getData();
+            $srvGeocoder->geocodeOagFileFromText($file, $data['text'], $activityId, $data['country']);
+            return $this->redirect($this->generateUrl('oag_wireframe_geocodersuggestion', array('id' => $file->getId(), 'activityId' => $activityId)));
+        }
+
+        // geocoder add/remove form
         $form = $this->createFormBuilder()
             ->add('tags', ChoiceType::class, array(
                 'expanded' => true,
@@ -438,7 +566,8 @@ class WireframeController extends Controller {
             'form' => $form->createView(),
             'currentLocations' => $currentLocations,
             'currentLocationsMaps' => $currentLocationsMaps,
-            'enhancementUploadForm' => $enhUploadForm->createView()
+            'enhancementUploadForm' => $enhUploadForm->createView(),
+            'pasteTextForm' => $pasteTextForm->createView()
         );
     }
 
@@ -472,6 +601,259 @@ class WireframeController extends Controller {
             'classified' => $srvOagFile->hasBeenClassified($file),
             'geocoded' => $srvOagFile->hasBeenGeocoded($file)
         );
+    }
+
+    public function getCountryList() {
+        $countries = array
+            (
+            'AF' => 'Afghanistan',
+            'AX' => 'Aland Islands',
+            'AL' => 'Albania',
+            'DZ' => 'Algeria',
+            'AS' => 'American Samoa',
+            'AD' => 'Andorra',
+            'AO' => 'Angola',
+            'AI' => 'Anguilla',
+            'AQ' => 'Antarctica',
+            'AG' => 'Antigua And Barbuda',
+            'AR' => 'Argentina',
+            'AM' => 'Armenia',
+            'AW' => 'Aruba',
+            'AU' => 'Australia',
+            'AT' => 'Austria',
+            'AZ' => 'Azerbaijan',
+            'BS' => 'Bahamas',
+            'BH' => 'Bahrain',
+            'BD' => 'Bangladesh',
+            'BB' => 'Barbados',
+            'BY' => 'Belarus',
+            'BE' => 'Belgium',
+            'BZ' => 'Belize',
+            'BJ' => 'Benin',
+            'BM' => 'Bermuda',
+            'BT' => 'Bhutan',
+            'BO' => 'Bolivia',
+            'BA' => 'Bosnia And Herzegovina',
+            'BW' => 'Botswana',
+            'BV' => 'Bouvet Island',
+            'BR' => 'Brazil',
+            'IO' => 'British Indian Ocean Territory',
+            'BN' => 'Brunei Darussalam',
+            'BG' => 'Bulgaria',
+            'BF' => 'Burkina Faso',
+            'BI' => 'Burundi',
+            'KH' => 'Cambodia',
+            'CM' => 'Cameroon',
+            'CA' => 'Canada',
+            'CV' => 'Cape Verde',
+            'KY' => 'Cayman Islands',
+            'CF' => 'Central African Republic',
+            'TD' => 'Chad',
+            'CL' => 'Chile',
+            'CN' => 'China',
+            'CX' => 'Christmas Island',
+            'CC' => 'Cocos (Keeling) Islands',
+            'CO' => 'Colombia',
+            'KM' => 'Comoros',
+            'CG' => 'Congo',
+            'CD' => 'Congo, Democratic Republic',
+            'CK' => 'Cook Islands',
+            'CR' => 'Costa Rica',
+            'CI' => 'Cote D\'Ivoire',
+            'HR' => 'Croatia',
+            'CU' => 'Cuba',
+            'CY' => 'Cyprus',
+            'CZ' => 'Czech Republic',
+            'DK' => 'Denmark',
+            'DJ' => 'Djibouti',
+            'DM' => 'Dominica',
+            'DO' => 'Dominican Republic',
+            'EC' => 'Ecuador',
+            'EG' => 'Egypt',
+            'SV' => 'El Salvador',
+            'GQ' => 'Equatorial Guinea',
+            'ER' => 'Eritrea',
+            'EE' => 'Estonia',
+            'ET' => 'Ethiopia',
+            'FK' => 'Falkland Islands (Malvinas)',
+            'FO' => 'Faroe Islands',
+            'FJ' => 'Fiji',
+            'FI' => 'Finland',
+            'FR' => 'France',
+            'GF' => 'French Guiana',
+            'PF' => 'French Polynesia',
+            'TF' => 'French Southern Territories',
+            'GA' => 'Gabon',
+            'GM' => 'Gambia',
+            'GE' => 'Georgia',
+            'DE' => 'Germany',
+            'GH' => 'Ghana',
+            'GI' => 'Gibraltar',
+            'GR' => 'Greece',
+            'GL' => 'Greenland',
+            'GD' => 'Grenada',
+            'GP' => 'Guadeloupe',
+            'GU' => 'Guam',
+            'GT' => 'Guatemala',
+            'GG' => 'Guernsey',
+            'GN' => 'Guinea',
+            'GW' => 'Guinea-Bissau',
+            'GY' => 'Guyana',
+            'HT' => 'Haiti',
+            'HM' => 'Heard Island & Mcdonald Islands',
+            'VA' => 'Holy See (Vatican City State)',
+            'HN' => 'Honduras',
+            'HK' => 'Hong Kong',
+            'HU' => 'Hungary',
+            'IS' => 'Iceland',
+            'IN' => 'India',
+            'ID' => 'Indonesia',
+            'IR' => 'Iran, Islamic Republic Of',
+            'IQ' => 'Iraq',
+            'IE' => 'Ireland',
+            'IM' => 'Isle Of Man',
+            'IL' => 'Israel',
+            'IT' => 'Italy',
+            'JM' => 'Jamaica',
+            'JP' => 'Japan',
+            'JE' => 'Jersey',
+            'JO' => 'Jordan',
+            'KZ' => 'Kazakhstan',
+            'KE' => 'Kenya',
+            'KI' => 'Kiribati',
+            'KR' => 'Korea',
+            'KW' => 'Kuwait',
+            'KG' => 'Kyrgyzstan',
+            'LA' => 'Lao People\'s Democratic Republic',
+            'LV' => 'Latvia',
+            'LB' => 'Lebanon',
+            'LS' => 'Lesotho',
+            'LR' => 'Liberia',
+            'LY' => 'Libyan Arab Jamahiriya',
+            'LI' => 'Liechtenstein',
+            'LT' => 'Lithuania',
+            'LU' => 'Luxembourg',
+            'MO' => 'Macao',
+            'MK' => 'Macedonia',
+            'MG' => 'Madagascar',
+            'MW' => 'Malawi',
+            'MY' => 'Malaysia',
+            'MV' => 'Maldives',
+            'ML' => 'Mali',
+            'MT' => 'Malta',
+            'MH' => 'Marshall Islands',
+            'MQ' => 'Martinique',
+            'MR' => 'Mauritania',
+            'MU' => 'Mauritius',
+            'YT' => 'Mayotte',
+            'MX' => 'Mexico',
+            'FM' => 'Micronesia, Federated States Of',
+            'MD' => 'Moldova',
+            'MC' => 'Monaco',
+            'MN' => 'Mongolia',
+            'ME' => 'Montenegro',
+            'MS' => 'Montserrat',
+            'MA' => 'Morocco',
+            'MZ' => 'Mozambique',
+            'MM' => 'Myanmar',
+            'NA' => 'Namibia',
+            'NR' => 'Nauru',
+            'NP' => 'Nepal',
+            'NL' => 'Netherlands',
+            'AN' => 'Netherlands Antilles',
+            'NC' => 'New Caledonia',
+            'NZ' => 'New Zealand',
+            'NI' => 'Nicaragua',
+            'NE' => 'Niger',
+            'NG' => 'Nigeria',
+            'NU' => 'Niue',
+            'NF' => 'Norfolk Island',
+            'MP' => 'Northern Mariana Islands',
+            'NO' => 'Norway',
+            'OM' => 'Oman',
+            'PK' => 'Pakistan',
+            'PW' => 'Palau',
+            'PS' => 'Palestinian Territory, Occupied',
+            'PA' => 'Panama',
+            'PG' => 'Papua New Guinea',
+            'PY' => 'Paraguay',
+            'PE' => 'Peru',
+            'PH' => 'Philippines',
+            'PN' => 'Pitcairn',
+            'PL' => 'Poland',
+            'PT' => 'Portugal',
+            'PR' => 'Puerto Rico',
+            'QA' => 'Qatar',
+            'RE' => 'Reunion',
+            'RO' => 'Romania',
+            'RU' => 'Russian Federation',
+            'RW' => 'Rwanda',
+            'BL' => 'Saint Barthelemy',
+            'SH' => 'Saint Helena',
+            'KN' => 'Saint Kitts And Nevis',
+            'LC' => 'Saint Lucia',
+            'MF' => 'Saint Martin',
+            'PM' => 'Saint Pierre And Miquelon',
+            'VC' => 'Saint Vincent And Grenadines',
+            'WS' => 'Samoa',
+            'SM' => 'San Marino',
+            'ST' => 'Sao Tome And Principe',
+            'SA' => 'Saudi Arabia',
+            'SN' => 'Senegal',
+            'RS' => 'Serbia',
+            'SC' => 'Seychelles',
+            'SL' => 'Sierra Leone',
+            'SG' => 'Singapore',
+            'SK' => 'Slovakia',
+            'SI' => 'Slovenia',
+            'SB' => 'Solomon Islands',
+            'SO' => 'Somalia',
+            'ZA' => 'South Africa',
+            'GS' => 'South Georgia And Sandwich Isl.',
+            'ES' => 'Spain',
+            'LK' => 'Sri Lanka',
+            'SD' => 'Sudan',
+            'SR' => 'Suriname',
+            'SJ' => 'Svalbard And Jan Mayen',
+            'SZ' => 'Swaziland',
+            'SE' => 'Sweden',
+            'CH' => 'Switzerland',
+            'SY' => 'Syrian Arab Republic',
+            'TW' => 'Taiwan',
+            'TJ' => 'Tajikistan',
+            'TZ' => 'Tanzania',
+            'TH' => 'Thailand',
+            'TL' => 'Timor-Leste',
+            'TG' => 'Togo',
+            'TK' => 'Tokelau',
+            'TO' => 'Tonga',
+            'TT' => 'Trinidad And Tobago',
+            'TN' => 'Tunisia',
+            'TR' => 'Turkey',
+            'TM' => 'Turkmenistan',
+            'TC' => 'Turks And Caicos Islands',
+            'TV' => 'Tuvalu',
+            'UG' => 'Uganda',
+            'UA' => 'Ukraine',
+            'AE' => 'United Arab Emirates',
+            'GB' => 'United Kingdom',
+            'US' => 'United States',
+            'UM' => 'United States Outlying Islands',
+            'UY' => 'Uruguay',
+            'UZ' => 'Uzbekistan',
+            'VU' => 'Vanuatu',
+            'VE' => 'Venezuela',
+            'VN' => 'Viet Nam',
+            'VG' => 'Virgin Islands, British',
+            'VI' => 'Virgin Islands, U.S.',
+            'WF' => 'Wallis And Futuna',
+            'EH' => 'Western Sahara',
+            'YE' => 'Yemen',
+            'ZM' => 'Zambia',
+            'ZW' => 'Zimbabwe',
+        );
+        
+        return $countries;
     }
 
 }

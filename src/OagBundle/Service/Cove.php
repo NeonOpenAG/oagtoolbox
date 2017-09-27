@@ -6,7 +6,7 @@ namespace OagBundle\Service;
 
 use OagBundle\Entity\OagFile;
 
-class Cove extends AbstractAutoService {
+class Cove extends AbstractOagService {
 
     public function processUri($uri) {
         // TODO - fetch file, cache it, check content type, decode and then pass to cove line at a time
@@ -14,9 +14,15 @@ class Cove extends AbstractAutoService {
         return $this->autocodeXml($data);
     }
 
-    public function processString($text) {
+    public function process($contents, $filename) {
+        $oag = $this->getContainer()->getParameter('oag');
+        $cmd = str_replace('{FILENAME}', $filename, $oag['cove']['cmd']);
+        $this->getContainer()->get('logger')->debug(
+            sprintf('Command: %s', $cmd)
+        );
+        
         if (!$this->isAvailable()) {
-            $this->getContainer()->get('session')->getFlashBag()->add("warning", "CoVE docker not available, using fixtures.");
+            $this->getContainer()->get('session')->getFlashBag()->add("warning", $this->getName() . " docker not available, using fixtures.");
             return json_encode($this->getFixtureData(), true);
         }
 
@@ -26,17 +32,11 @@ class Cove extends AbstractAutoService {
             2 => array("pipe", "w"),
         );
 
-        $oag = $this->getContainer()->getParameter('oag');
-        $cmd = $oag['cove']['cmd'];
-        $this->getContainer()->get('logger')->debug(
-            sprintf('Command: %s', $cmd)
-        );
-
         $process = proc_open($cmd, $descriptorspec, $pipes);
 
         if (is_resource($process)) {
-            $this->getContainer()->get('logger')->info(sprintf('Writting %d bytes of data', strlen($text)));
-            fwrite($pipes[0], $text);
+            $this->getContainer()->get('logger')->info(sprintf('Writting %d bytes of data', strlen($contents)));
+            fwrite($pipes[0], $contents);
             fclose($pipes[0]);
 
             $xml = stream_get_contents($pipes[1]);
@@ -54,17 +54,14 @@ class Cove extends AbstractAutoService {
                 'err' => explode("\n", $err),
                 'status' => $return_value,
             );
+            
+            $this->getContainer()->get('logger')->debug('Error: ' . $err);
 
             return $data;
         } else {
             // TODO Better exception handling.
             throw new \RuntimeException('CoVE Failed to start');
         }
-    }
-
-    public function processXML($contents) {
-        // TODO - implement fetching this result from CoVE
-        return json_encode($this->getFixtureData(), true);
     }
 
     /**
@@ -79,7 +76,7 @@ class Cove extends AbstractAutoService {
         $this->getContainer()->get('logger')->debug(sprintf('Processing %s using CoVE', $file->getDocumentName()));
         // TODO - for bigger files we might need send as Uri
         $contents = $srvOagFile->getContents($file);
-        $json = $this->processString($contents);
+        $json = $this->process($contents, $file->getDocumentName());
 
         $err = array_filter($json['err'] ?? array());
         $status = $json['status'];

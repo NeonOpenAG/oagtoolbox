@@ -72,11 +72,7 @@ class OagFileService extends AbstractService {
      * @return boolean
      */
     public function hasBeenClassified(OagFile $file) {
-        $changeRepo = $this->getContainer()->get('doctrine')->getRepository(Change::class);
-
-        $changes = $changeRepo->findBy(array( 'file' => $file ));
-
-        foreach ($changes as $change) {
+        foreach ($file->getChanges() as $change) {
             if (count($change->getAddedTags()) > 0 || count($change->getRemovedTags()) > 0) {
                 return true;
             }
@@ -93,10 +89,7 @@ class OagFileService extends AbstractService {
      * @return boolean
      */
     public function hasBeenGeocoded(OagFile $file) {
-        $changeRepo = $this->getContainer()->get('doctrine')->getRepository(Change::class);
-        $changes = $changeRepo->findBy(array( 'file' => $file ));
-
-        foreach ($changes as $change) {
+        foreach ($file->getChanges() as $change) {
             if (count($change->getAddedGeolocs()) > 0 || count($change->getRemovedGeolocs()) > 0) {
                 return true;
             }
@@ -114,6 +107,33 @@ class OagFileService extends AbstractService {
      */
     public function hasBeenImproved(OagFile $oagFile) {
         return $this->hasBeenClassified($oagFile) && $this->hasBeenGeocoded($oagFile);
+    }
+
+    /**
+     * Gets the most recent file uploaded to the toolbox.
+     *
+     * @return OagFile|null null if no files are uploaded
+     */
+    public function getMostRecent() {
+        $oagFileRepo = $this->getContainer()->get('doctrine')->getRepository(OagFile::class);
+        $files = $oagFileRepo->findAll();
+
+        if (count($files) === 0) {
+            return null;
+        }
+
+        usort($files, function ($a, $b) {
+            if ($a->getUploadDate() < $b->getUploadDate()) {
+                // $a happened before $b
+                return -1;
+            } elseif ($a->getTimestamp() > $b->getTimestamp()) {
+                // $b happened before $a
+                return 1;
+            }
+            return 0;
+        });
+
+        return end($files);
     }
 
 }

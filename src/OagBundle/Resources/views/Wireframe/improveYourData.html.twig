@@ -9,7 +9,7 @@
 
 {% block body %}
 
-    <div class="center">
+    <div class="center" id="improve-your-data">
 
         <section class="block">
 
@@ -22,28 +22,25 @@
                     <h2>Right now, your data...</h2>
                 </div>
 
-                <div class="content-block summary">
+                <div class="content-block summary complete">
                     <ul>
                         <li>
-                            <h2 class="completed">Works for most people comparing IATI data</h2>
+                            <h2 class="completed">Works for people comparing IATI data</h2>
                             <div class="info">
-                                <p>This is some more info, explaining in a bit more detail how your data works for most people
-                                  comparing IATI data. Quam doloribus ut quisquam suscipit consectetur ab quasi.</p>
+                                <p>Your activity file is compliant to the XML schema of the IATI standard and the additional rulesets.</p>
                             </div>
                         </li>
                         <li>
                           <h2 class="completed">Helps show traceability</h2>
                           <div class="info">
-                              <p>This is some more info, explaining in a bit more detail how your data helps show
-                                traceability. Quam doloribus ut quisquam suscipit consectetur ab quasi.</p>
+                              <p>Your activity file contains sufficient identifying information to help people who wish to trace funding.</p>
                           </div>
                         </li>
                         {% if classified %}
                         <li>
-                            <h2 class="completed">Accusamus adipisci voluptatem aperiam rerum occaecati incidunt fuga provident</h2>
+                            <h2 class="completed">Helps people identify agricultural projects</h2>
                             <div class="info">
-                              <p>This is some more info, explaining in a bit more detail how your data is classified .Quam doloribus
-                                ut quisquam suscipit consectetur ab quasi.</p>
+                              <p>The AGROVOC codes in your activity file help make your projects more discoverable by funders and others who may be interested in your work.</p>
                             </div>
                         </li>
                         {% endif %}
@@ -51,8 +48,7 @@
                         <li>
                             <h2 class="completed">Shows exactly where your work helps people</h2>
                             <div class="info">
-                                <p>This is some more info, explaining in a bit more detail how your work helps people.
-                                  Quam doloribus ut quisquam suscipit consectetur ab quasi.</p>
+                                <p>Your activities are located accurately, which means people can use your data to identify partners on the ground, gaps in provision and other geographic patterns</p>
                             </div>
                         </li>
                         {% endif %}
@@ -62,25 +58,24 @@
 
             {% if (not geocoded) or (not classified) %}
             <article class="activity">
-                <div class="heading summary">
+                <div class="heading summary improve">
                     <h2>Improve your data to help people...</h2>
+                    <img src="{{ asset('bundles/oag/images/arrow.svg') }}" />
                 </div>
-                <div class="content-block summary">
+                <div class="content-block summary improve">
                     <ul>
                         {% if not classified %}
-                        <li><h2><span class="tip">Find AG projects to fund</span></h2>
+                        <li><h2><span class="tip">Identify agricultural projects</span></h2>
                             <div class="improvements">
-                                <p>Atque repellat nesciunt unde. Provident quam dolores ipsam debitis harum. Omnis modi et eveniet autem. Earum est perferendis
-                                  officia voluptatem quae.</p>
+                                <p>Adding AGROVOC codes to your activity file helps make your projects more discoverable by funders and others who may be interested in your work.</p>
                                 <a href="{{ path('oag_wireframe_classifier', { 'id': file.getId() }) }}"><button>Use Our Classifier</button></a>
                             </div>
                         </li>
                         {% endif %}
                         {% if not geocoded %}
-                        <li><h2><span class="tip">Find partners on the ground</span></h2>
+                        <li><h2><span class="tip">Locate your projects accurately</span></h2>
                             <div class="improvements">
-                                <p>In eius et enim. Quam doloribus ut quisquam suscipit consectetur ab quasi. Provident fugiat explicabo est rerum. Eveniet ut
-                                  quisquam et omnis rerum dolores corrupti architecto. Facere in ipsa soluta.</p>
+                                <p>If activities are located accurately, then people can use your data to identify partners on the ground, gaps in provision and other geographic patterns.</p>
                                 <a href="{{ path('oag_wireframe_geocoder', { 'id': file.getId() }) }}"><button>Use Our Geocoder</button></a>
                             </div>
                         </li>
