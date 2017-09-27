@@ -44,11 +44,15 @@ a {
   color: inherit;
   &:active,
   &:visited {
-    color: $oag_grey;
+    color: $oag_title;
   }
   &:hover {
     color: $oag_link;
   }
+}
+
+p a {
+  font-weight: bold;
 }
 
 ul {
@@ -804,20 +808,35 @@ table {
   display: none;
 }
 
-.flash-info {
-  background: #c2cf7d;
+.flash {
+  background-color: #f8f8f8;
   font-weight: bold;
-  color: white;
   font-size: 110%;
   padding: 1em;
-}
-
-.flash-error {
-  background: $oag_red;
-  font-weight: bold;
-  color: white;
-  font-size: 110%;
-  padding: 1em;
+  text-align: center;
+  &.error {
+    color: $oag_red;
+    .icon:before {
+      font-family: FontAwesome;
+      content: '\f00d';
+      margin-right: 0.5em;
+    }
+    .message:before {
+      content: ' Error: ';
+    }
+  }
+  &.info {
+    color: $oag_title;
+    .icon:before {
+      font-family: FontAwesome;
+      content: '\f00c';
+      margin-right: 0.5em;
+      color: #c2cf7d;
+    }
+    .message:before {
+      content: ' File upload successful. ';
+    }
+  }
 }
 
 .ui-tooltip {
