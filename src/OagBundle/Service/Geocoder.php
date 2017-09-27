@@ -8,7 +8,7 @@ use OagBundle\Entity\OagFile;
 use OagBundle\Service\CSV;
 use OagBundle\Service\TextExtractor\TextifyService;
 
-class Geocoder extends AbstractAutoService {
+class Geocoder extends AbstractOagService {
 
     public function processString($sometext, $filename, $country) {
         $data = $this->process($sometext, $filename, $country);
@@ -30,8 +30,8 @@ class Geocoder extends AbstractAutoService {
         return $locations;
     }
 
-    public function processXML($contents, $filename) {
-        $data = $this->process($contents, $filename);
+    public function processXML($contents, $filename, $country = null) {
+        $data = $this->process($contents, $filename, $country);
         $json = json_decode($data['xml'], true);
         // $json = json_decode($this->getXMLFixtureData(), true);
         $locations = array_column($json, 'locations', 'project_id'); // format as $activityId => $location[]
@@ -82,7 +82,6 @@ class Geocoder extends AbstractAutoService {
             if (strlen($err)) {
                 $this->getContainer()->get('logger')->debug('Error: ' . $err);
             }
-            $this->getContainer()->get('logger')->debug('Data: ' . $xml);
 
             return $data;
         } else {
@@ -117,13 +116,13 @@ class Geocoder extends AbstractAutoService {
      *
      * @param OagFile $file the file to process
      */
-    public function geocodeOagFile(OagFile $file) {
+    public function geocodeOagFile(OagFile $file, $country = null) {
         $em = $this->getContainer()->get('doctrine')->getManager();
         $geolocRepo = $this->getContainer()->get('doctrine')->getRepository(Geolocation::class);
         $srvOagFile = $this->getContainer()->get(OagFileService::class);
 
         $xml = $srvOagFile->getContents($file);
-        $activities = $this->processXML($xml, $file->getDocumentName());
+        $activities = $this->processXML($xml, $file->getDocumentName(), $country);
 
         $file->clearGeolocations();
 
