@@ -56,6 +56,28 @@
                 </div>
             </article>
 
+            <article class="activity" id="classifer-status" data-statusurl="http://localhost/workspace/oag/oagtoolbox/web/app_dev.php/async/classifyStatus">
+                <div class="content-block summary">
+                    <ul>
+                            {% for filename in status.geocoder.filenames %}
+                        <li>
+                            {{ filename }}
+                        </li>
+                            {% endfor %}
+                    </ul>
+                </div>
+            </article>
+                    
+            <article class="activity" id="geocoder-status" data-statusurl="http://localhost/workspace/oag/oagtoolbox/web/app_dev.php/async/geocodeStatus">
+                <div class="content-block summary">
+                    <ul>
+                        {% for filename in status.classifier.filenames %}
+                            <li>{{ filename }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </article>
+                    
             {% if (not geocoded) or (not classified) %}
             <article class="activity">
                 <div class="heading summary">
@@ -106,6 +128,26 @@
 
             if ($last.parents('li').index() !== $this.parent().index()) {
                 $next.slideDown('fast');
+            }
+        });
+    </script>
+    <script>
+        $( document ).ready(function() {
+            classifierStatus = $('#classifer-status').data('statusurl');
+            checkStatus(classifierStatus);
+            geocoderStatus = $('#geocoder-status').data('statusurl');
+            checkStatus(geocoderStatus);
+        
+            function checkStatus(url) {
+                $.get(url, function(data, status){
+                    console.log(data);
+                    if (data.filenames.length != 0) {
+                        setTimeout(function() {checkStatus(url)}, 5000);
+                    }
+                    else {
+                        console.log("Stop");
+                    }
+                });
             }
         });
     </script>

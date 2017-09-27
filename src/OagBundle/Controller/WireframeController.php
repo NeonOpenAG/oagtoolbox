@@ -22,6 +22,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @Template
@@ -63,10 +64,14 @@ class WireframeController extends Controller {
             if (!$srvCove->validateOagFile($oagfile)) {
                 // TODO CoVE failed
             }
-            $srvClassifier->classifyOagFile($oagfile);
-            $srvGeocoder->geocodeOagFile($oagfile);
 
-	    return $this->redirect($this->generateUrl('oag_wireframe_improveyourdata', array('id' => $oagfile->getId())));
+            // Kick off these as curl requests, they'll run in the background.
+            $geocoderUrl = $this->generateUrl('oag_async_geocode', array('id' => $oagfile->getId()), UrlGeneratorInterface::ABSOLUTE_URL);
+            $classifierUrl = $this->generateUrl('oag_async_classify', array('id' => $oagfile->getId()), UrlGeneratorInterface::ABSOLUTE_URL);
+            exec('wget -O /dev/null ' . $geocoderUrl . ' > /dev/null &');
+            exec('wget -O /dev/null ' . $classifierUrl . ' > /dev/null &');
+
+            return $this->redirect($this->generateUrl('oag_wireframe_improveyourdata', array('id' => $oagfile->getId())));
 	}
 
         $data = array(
@@ -492,7 +497,7 @@ class WireframeController extends Controller {
             ->add('country', ChoiceType::class, array(
                 'choices'  => array_flip($this->getCountryList()),
                 'label' => 'Country',
-                'data' => $countryCode,                
+                'data' => $countryCode,
             ))
             ->add('text', TextareaType::class, array(
                 'attr' => array('placeholder' => 'Copy and paste text')
@@ -596,10 +601,20 @@ class WireframeController extends Controller {
     public function improveYourDataAction(OagFile $file) {
         $srvOagFile = $this->get(OagFileService::class);
 
+        $srvGeocoder = $this->get(Geocoder::class);
+        $srvClassifier = $this->get(Classifier::class);
+
+        $geocoderStatus = $srvGeocoder->status();
+        $classifierStatus = $srvClassifier->status();
+
         return array(
             'file' => $file,
             'classified' => $srvOagFile->hasBeenClassified($file),
-            'geocoded' => $srvOagFile->hasBeenGeocoded($file)
+            'geocoded' => $srvOagFile->hasBeenGeocoded($file),
+            'status' => [
+                'geocoder' => $geocoderStatus,
+                'classifier' => $classifierStatus,
+            ],
         );
     }
 
@@ -852,7 +867,7 @@ class WireframeController extends Controller {
             'ZM' => 'Zambia',
             'ZW' => 'Zimbabwe',
         );
-        
+
         return $countries;
     }
 

@@ -23,3 +23,4 @@ parameters:
         admin_1_vocabulary: 'PLACEHOLDER'
         admin_2_vocabulary: 'PLACEHOLDER'
     unlink_files: true
+    populate_status: true

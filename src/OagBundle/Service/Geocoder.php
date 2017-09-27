@@ -37,14 +37,14 @@ class Geocoder extends AbstractOagService {
         $locations = array_column($json, 'locations', 'project_id'); // format as $activityId => $location[]
         return $locations;
     }
-    
+
     public function process($contents, $filename, $country) {
         $oag = $this->getContainer()->getParameter('oag');
         $cmd = str_replace('{COUNTRY}', $country, str_replace('{FILENAME}', $filename, $oag['geocoder']['cmd']));
         $this->getContainer()->get('logger')->debug(
             sprintf('Command: %s', $cmd)
         );
-        
+
         if (!$this->isAvailable()) {
             $this->getContainer()->get('session')->getFlashBag()->add("warning", $this->getName() . " docker not available, using fixtures.");
             return json_encode($this->getFixtureData(), true);
@@ -78,7 +78,7 @@ class Geocoder extends AbstractOagService {
                 'err' => explode("\n", $err),
                 'status' => $return_value,
             );
-            
+
             if (strlen($err)) {
                 $this->getContainer()->get('logger')->debug('Error: ' . $err);
             }
@@ -87,7 +87,7 @@ class Geocoder extends AbstractOagService {
         } else {
             // TODO Better exception handling.
             throw new \RuntimeException('Geocoder Failed to start');
-        }        
+        }
     }
 
     public function getName() {
@@ -229,6 +229,68 @@ class Geocoder extends AbstractOagService {
         // TODO country
 
         return $geoloc;
+    }
+
+    public function status() {
+        $cmd = 'docker exec -t openag_geocoder /bin/bash -c "/bin/ps -ef | grep python3"';
+        $output = [];
+        $pipes = [];
+        $descriptorspec = array(
+            0 => array("pipe", "r"),
+            1 => array("pipe", "w"),
+            2 => array("pipe", "w"),
+        );
+
+        $process = proc_open($cmd, $descriptorspec, $pipes);
+
+        if (is_resource($process)) {
+            $xml = stream_get_contents($pipes[1]);
+            fclose($pipes[1]);
+
+            $filenames = [];
+
+            $lines = explode("\n", $xml);
+            foreach ($lines as $line) {
+                $start = strpos($line, '-f');
+                if ($start) {
+                    $start += 3;
+                    $end = strpos($line, '-o');
+                    $filename = trim(substr($line, $start, $end - $start));
+                    $filenames[] = $filename;
+                }
+            }
+
+            $err = stream_get_contents($pipes[2]);
+            fclose($pipes[2]);
+
+            $return_value = proc_close($process);
+
+            if ($this->getContainer()->getParameter('populate_status')) {
+                $filenames = [
+                    'bill.xml', 'ted.xml'
+                ];
+            }
+
+            $data = array(
+                'filenames' => $filenames,
+                'err' => explode("\n", $err),
+                'status' => $return_value,
+            );
+
+            if (strlen($err)) {
+                $this->getContainer()->get('logger')->debug('Error: ' . $err);
+            }
+
+            return $data;
+        } else {
+            // TODO Better exception handling.
+        }
+
+        return array(
+            'filenames' => [],
+            'err' => [],
+            'status' => 0,
+        );
     }
 
 }
