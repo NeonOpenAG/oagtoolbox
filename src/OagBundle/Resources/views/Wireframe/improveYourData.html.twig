@@ -22,7 +22,7 @@
                     <h2>Right now, your data...</h2>
                 </div>
 
-                <div class="content-block summary">
+                <div class="content-block summary complete">
                     <ul>
                         <li>
                             <h2 class="completed">Works for people comparing IATI data</h2>
@@ -36,32 +36,29 @@
                               <p>Your activity file contains sufficient identifying information to help people who wish to trace funding.</p>
                           </div>
                         </li>
-                        {% if classified %}
                         <li>
                             <h2 class="completed">Helps people identify agricultural projects</h2>
                             <div class="info">
                               <p>The AGROVOC codes in your activity file help make your projects more discoverable by funders and others who may be interested in your work.</p>
                             </div>
                         </li>
-                        {% endif %}
-                        {% if geocoded %}
                         <li>
                             <h2 class="completed">Shows exactly where your work helps people</h2>
                             <div class="info">
                                 <p>Your activities are located accurately, which means people can use your data to identify partners on the ground, gaps in provision and other geographic patterns</p>
                             </div>
                         </li>
-                        {% endif %}
                     </ul>
                 </div>
             </article>
 
             {% if (not geocoded) or (not classified) %}
             <article class="activity">
-                <div class="heading summary">
+                <div class="heading summary improve">
                     <h2>Improve your data to help people...</h2>
+                    <img src="{{ asset('bundles/oag/images/arrow.svg') }}" />
                 </div>
-                <div class="content-block summary">
+                <div class="content-block summary improve">
                     <ul>
                         {% if not classified %}
                         <li><h2><span class="tip">Identify agricultural projects</span></h2>
