@@ -1,8 +1,11 @@
 #!/bin/bash -x
 
 REALPATH=$1
+if [ -z '$REALPATH' ]; then
+	REALPATH=`durname $0`/..
+fi
 ROOT=$(realpath $REALPATH)
 HTTPDUSER=$(ps axo user,comm | grep -E '[a]pache|[h]ttpd|[_]www|[w]ww-data|[n]ginx' | grep -v root | head -1 | cut -d\  -f1)
 
 setfacl -dR -m u:"$HTTPDUSER":rwX -m u:$(whoami):rwX $ROOT/var $ROOT/app/*.db $ROOT/web/*/oagfiles
-setfacl  -R -m u:"$HTTPDUSER":rwX -m u:$(whoami):rwX $ROOT/var $ROOT/app/*.db $ROOT/web/*/oagfiles
+setfacl  -R -m u:"$HTTPDUSER":rwX -m u:$(whoami):rwX $ROOT/var $ROOT/app/*.db $ROOT/web/*/oagfiles $ROOT/app $ROOT/app/*.db

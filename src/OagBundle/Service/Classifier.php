@@ -11,6 +11,7 @@ use OagBundle\Entity\OagFile;
 use OagBundle\Entity\Tag;
 use OagBundle\Entity\SuggestedTag;
 use Symfony\Component\Cache\Simple\FilesystemCache;
+
 class Classifier extends AbstractOagService {
 
     public function processUri($sometext = '') {

@@ -8,20 +8,86 @@ use OagBundle\Entity\OagFile;
 use OagBundle\Service\CSV;
 use OagBundle\Service\TextExtractor\TextifyService;
 
-class Geocoder extends AbstractAutoService {
+class Geocoder extends AbstractOagService {
 
-    public function processString($sometext) {
-        // TODO implement non-fixture process
-        $json = json_decode($this->getXMLFixtureData(), true);
-        $locations = array_column($json, 'locations', 'project_id'); // format as $activityId => $location[]
+    public function processString($sometext, $filename, $country) {
+        $data = $this->process($sometext, $filename, $country);
+        $json = json_decode($data['xml'], true);
+        // $json = json_decode($this->getXMLFixtureData(), true);
+        if (is_array($json)) {
+            $locations = array_column($json, 'locations', 'project_id'); // format as $activityId => $location[]
+        }
+        else {
+            $this->getContainer()->get('logger')->warn('Geocoder returned no locations.');
+            if ($country) {
+                $this->getContainer()->get('logger')->warn('Geocoder re-try again without a country code.');
+                $locations = $this->processString($sometext, $filename, false);
+            }
+            else {
+                $locations = [];
+            }
+        }
         return $locations;
     }
 
-    public function processXML($contents) {
-        // TODO implement non-fixture process
-        $json = json_decode($this->getXMLFixtureData(), true);
+    public function processXML($contents, $filename, $country = null) {
+        $data = $this->process($contents, $filename, $country);
+        $json = json_decode($data['xml'], true);
+        // $json = json_decode($this->getXMLFixtureData(), true);
         $locations = array_column($json, 'locations', 'project_id'); // format as $activityId => $location[]
         return $locations;
+    }
+    
+    public function process($contents, $filename, $country) {
+        $oag = $this->getContainer()->getParameter('oag');
+        $cmd = str_replace('{COUNTRY}', $country, str_replace('{FILENAME}', $filename, $oag['geocoder']['cmd']));
+        $this->getContainer()->get('logger')->debug(
+            sprintf('Command: %s', $cmd)
+        );
+        
+        if (!$this->isAvailable()) {
+            $this->getContainer()->get('session')->getFlashBag()->add("warning", $this->getName() . " docker not available, using fixtures.");
+            return json_encode($this->getFixtureData(), true);
+        }
+
+        $descriptorspec = array(
+            0 => array("pipe", "r"),
+            1 => array("pipe", "w"),
+            2 => array("pipe", "w"),
+        );
+
+        $process = proc_open($cmd, $descriptorspec, $pipes);
+
+        if (is_resource($process)) {
+            $this->getContainer()->get('logger')->info(sprintf('Writting %d bytes of data', strlen($contents)));
+            fwrite($pipes[0], $contents);
+            fclose($pipes[0]);
+
+            $xml = stream_get_contents($pipes[1]);
+            $this->getContainer()->get('logger')->info(sprintf('Got %d bytes of data', strlen($xml)));
+            fclose($pipes[1]);
+
+            $err = stream_get_contents($pipes[2]);
+            $this->getContainer()->get('logger')->info(sprintf('Got %d bytes of error', strlen($err)));
+            fclose($pipes[2]);
+
+            $return_value = proc_close($process);
+
+            $data = array(
+                'xml' => $xml,
+                'err' => explode("\n", $err),
+                'status' => $return_value,
+            );
+            
+            if (strlen($err)) {
+                $this->getContainer()->get('logger')->debug('Error: ' . $err);
+            }
+
+            return $data;
+        } else {
+            // TODO Better exception handling.
+            throw new \RuntimeException('Geocoder Failed to start');
+        }        
     }
 
     public function getName() {
@@ -50,13 +116,13 @@ class Geocoder extends AbstractAutoService {
      *
      * @param OagFile $file the file to process
      */
-    public function geocodeOagFile(OagFile $file) {
+    public function geocodeOagFile(OagFile $file, $country = null) {
         $em = $this->getContainer()->get('doctrine')->getManager();
         $geolocRepo = $this->getContainer()->get('doctrine')->getRepository(Geolocation::class);
         $srvOagFile = $this->getContainer()->get(OagFileService::class);
 
         $xml = $srvOagFile->getContents($file);
-        $activities = $this->processXML($xml);
+        $activities = $this->processXML($xml, $file->getDocumentName(), $country);
 
         $file->clearGeolocations();
 
@@ -81,12 +147,12 @@ class Geocoder extends AbstractAutoService {
      * @param string $text
      * @param string $activityId if the text is specific
      */
-    public function geocodeOagFileFromText(OagFile $file, $text, $activityId = null) {
+    public function geocodeOagFileFromText(OagFile $file, $text, $activityId = null, $countryCode = false) {
         $em = $this->getContainer()->get('doctrine')->getManager();
         $geolocRepo = $this->getContainer()->get('doctrine')->getRepository(Geolocation::class);
         $srvEnhancementFile = $this->getContainer()->get(EnhancementFileService::class);
 
-        $activities = $this->processString($text);
+        $activities = $this->processString($text, 'enhancement.txt', $countryCode);
 
         $file->clearGeolocations();
 
@@ -126,7 +192,7 @@ class Geocoder extends AbstractAutoService {
             throw new \RuntimeException('Unsupported file type to strip text from');
         }
 
-        $activities = $this->processString($rawText);
+        $activities = $this->processString($rawText, $file->getDocumentName());
 
         $file->clearGeolocations();
 
