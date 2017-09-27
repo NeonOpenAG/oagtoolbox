@@ -44,11 +44,15 @@ a {
   color: inherit;
   &:active,
   &:visited {
-    color: $oag_grey;
+    color: $oag_title;
   }
   &:hover {
     color: $oag_link;
   }
+}
+
+p a {
+  font-weight: bold;
 }
 
 ul {
@@ -804,20 +808,36 @@ table {
   display: none;
 }
 
-.flash-info {
-  background: #c2cf7d;
+.flash {
+  background-color: #f8f9ff;
   font-weight: bold;
-  color: white;
   font-size: 110%;
   padding: 1em;
-}
-
-.flash-error {
-  background: $oag_red;
-  font-weight: bold;
-  color: white;
-  font-size: 110%;
-  padding: 1em;
+  text-align: center;
+  color: $oag_title;
+  border-top: 1px solid #e7f1ff;
+  &.error {
+    .icon:before {
+      font-family: FontAwesome;
+      content: '\f00d';
+      margin-right: 0.5em;
+      color: $oag_red;
+    }
+    .message:before {
+      content: ' Error - file could not be uploaded. ';
+    }
+  }
+  &.info {
+    .icon:before {
+      font-family: FontAwesome;
+      content: '\f00c';
+      margin-right: 0.5em;
+      color: #81cf7d;
+    }
+    .message:before {
+      content: ' File upload successful. ';
+    }
+  }
 }
 
 .ui-tooltip {
