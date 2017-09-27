@@ -18,10 +18,11 @@ class StartupListener {
         $srvDocker = $this->getContainer()->get(Docker::class);
         $containers = $srvDocker->listContainers();
         
-        $_containers = ['cove', 'dportal', 'nerserver', 'geocode'];
+        $_containers = ['cove', 'dportal', 'nerserver', 'geocoder'];
         
         foreach ($_containers as $container) {
-            if (array_key_exists('openag_' . $container, $containers)) {
+            $name = 'openag_' . $container;
+            if (array_key_exists($name, $containers)) {
                 if ($containers['openag_' . $container]['status'] == 'running') {
                     continue;
                 }
@@ -42,7 +43,7 @@ class StartupListener {
                     case 'nerserver':
                         $_container = $srvDocker->createNerserver();
                         break;
-                    case 'geocode':
+                    case 'geocoder':
                         $_container = $srvDocker->createGeocode();
                         break;
                 }
