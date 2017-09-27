@@ -36,18 +36,22 @@
                               <p>Your activity file contains sufficient identifying information to help people who wish to trace funding.</p>
                           </div>
                         </li>
+                        {% if classified %}
                         <li>
                             <h2 class="completed">Helps people identify agricultural projects</h2>
                             <div class="info">
                               <p>The AGROVOC codes in your activity file help make your projects more discoverable by funders and others who may be interested in your work.</p>
                             </div>
                         </li>
+                        {% endif %}
+                        {% if geocoded %}
                         <li>
                             <h2 class="completed">Shows exactly where your work helps people</h2>
                             <div class="info">
                                 <p>Your activities are located accurately, which means people can use your data to identify partners on the ground, gaps in provision and other geographic patterns</p>
                             </div>
                         </li>
+                        {% endif %}
                     </ul>
                 </div>
             </article>
