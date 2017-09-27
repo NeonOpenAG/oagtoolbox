@@ -95,7 +95,6 @@ button,
     color: $oag_title;
     float: right;
     line-height: 18px;
-    height: 50px;
   }
   &.back:hover {
     color: $oag_dark;
@@ -186,7 +185,7 @@ nav {
       display: flex;
     }
     li {
-      border: none;
+      border: 0;
       padding: 0;
       margin-left: 5px;
       a {
@@ -199,33 +198,33 @@ nav {
         }
       }
       &:nth-child(1) > a {
-        box-shadow: inset 0px -6px 0px $oag_purple;
+        box-shadow: inset 0px -7px 0px -1px $oag_purple;
         &:before {
           content: "Preview";
         }
         &:hover {
           background-color: rgba($oag_purple, 0.1);
-          box-shadow: inset 0px -6px 0px $oag_purple_highlight;
+          box-shadow: inset 0px -7px 0px -1px $oag_purple_highlight;
         }
       }
       &:nth-child(2) > a {
-        box-shadow: inset 0px -6px 0px $oag_green;
+        box-shadow: inset 0px -7px 0px -1px $oag_green;
         &:before {
           content: "Check and improve";
         }
         &:hover {
           background-color: rgba($oag_green, 0.1);
-          box-shadow: inset 0px -6px 0px $oag_green_highlight;
+          box-shadow: inset 0px -7px 0px -1px $oag_green_highlight;
         }
       }
       &:nth-child(3) > a {
-        box-shadow: inset 0px -6px 0px $oag_blue;
+        box-shadow: inset 0px -7px 0px -1px $oag_blue;
         &:before {
           content: "Download";
         }
         &:hover {
           background-color: rgba($oag_blue, 0.1);
-          box-shadow: inset 0px -6px 0px $oag_blue_highlight;
+          box-shadow: inset 0px -7px 0px -1px $oag_blue_highlight;
         }
       }
     }
