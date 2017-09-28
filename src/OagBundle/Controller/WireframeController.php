@@ -65,11 +65,11 @@ class WireframeController extends Controller {
                 // TODO CoVE failed
             }
 
-            // Kick off these as curl requests, they'll run in the background.
-            $geocoderUrl = $this->generateUrl('oag_async_geocode', array('id' => $oagfile->getId()), UrlGeneratorInterface::ABSOLUTE_URL);
-            $classifierUrl = $this->generateUrl('oag_async_classify', array('id' => $oagfile->getId()), UrlGeneratorInterface::ABSOLUTE_URL);
-            exec('wget -O /dev/null ' . $geocoderUrl . ' > /dev/null &');
-            exec('wget -O /dev/null ' . $classifierUrl . ' > /dev/null &');
+            // Kick off these as background commands, they'll run in the background.
+            $root = $this->get('kernel')->getRootDir();
+            $console = $root . '/../bin/console ';
+            exec($console . 'oag:classify ' . $oagfile->getId() . ' > /dev/null &');
+            exec($console . 'oag:geocode ' . $oagfile->getId() . ' > /dev/null &');
 
             return $this->redirect($this->generateUrl('oag_wireframe_improveyourdata', array('id' => $oagfile->getId())));
 	}

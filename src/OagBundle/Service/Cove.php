@@ -20,7 +20,7 @@ class Cove extends AbstractOagService {
         $this->getContainer()->get('logger')->debug(
             sprintf('Command: %s', $cmd)
         );
-        
+
         if (!$this->isAvailable()) {
             $this->getContainer()->get('session')->getFlashBag()->add("warning", $this->getName() . " docker not available, using fixtures.");
             return json_encode($this->getFixtureData(), true);
@@ -54,8 +54,12 @@ class Cove extends AbstractOagService {
                 'err' => explode("\n", $err),
                 'status' => $return_value,
             );
-            
-            $this->getContainer()->get('logger')->debug('Error: ' . $err);
+
+            if (strlen($err)) {
+                $this->getContainer()->get('logger')->error('Error: ' . $err);
+            }
+            dump($err);
+            dump($xml);
 
             return $data;
         } else {
