@@ -57,22 +57,28 @@
             </article>
 
             <article class="activity" id="classifer-status" data-statusurl="http://localhost/workspace/oag/oagtoolbox/web/app_dev.php/async/classifyStatus">
+                <div class="heading summary improve">
+                    <h2>Classifying...</h2>
+                    <img src="{{ asset('bundles/oag/images/arrow.svg') }}" />
+                </div>
                 <div class="content-block summary">
                     <ul>
-                            {% for filename in status.geocoder.filenames %}
-                        <li>
-                            {{ filename }}
-                        </li>
+                            {% for filename in status.classifier.filenames %}
+                        <li class='classifier-status-file'>{{ filename }}</li>
                             {% endfor %}
                     </ul>
                 </div>
             </article>
                     
             <article class="activity" id="geocoder-status" data-statusurl="http://localhost/workspace/oag/oagtoolbox/web/app_dev.php/async/geocodeStatus">
+                <div class="heading summary improve">
+                    <h2>Geocoding...</h2>
+                    <img src="{{ asset('bundles/oag/images/arrow.svg') }}" />
+                </div>
                 <div class="content-block summary">
                     <ul>
-                        {% for filename in status.classifier.filenames %}
-                            <li>{{ filename }}</li>
+                        {% for filename in status.geocoder.filenames %}
+                            <li class='geocoder-status-file'>{{ filename }}</li>
                         {% endfor %}
                     </ul>
                 </div>
@@ -135,18 +141,23 @@
     <script>
         $( document ).ready(function() {
             classifierStatus = $('#classifer-status').data('statusurl');
-            checkStatus(classifierStatus);
+            checkStatus(classifierStatus, $('.classifier-status-file'));
             geocoderStatus = $('#geocoder-status').data('statusurl');
-            checkStatus(geocoderStatus);
+            checkStatus(geocoderStatus, $('.geocoder-status-file'));
         
-            function checkStatus(url) {
+            function checkStatus(url, targets) {
                 $.get(url, function(data, status){
-                    console.log(data);
-                    if (data.filenames.length != 0) {
-                        setTimeout(function() {checkStatus(url)}, 5000);
-                    }
-                    else {
-                        console.log("Stop");
+                    targets.each(function(){
+                        var filename = $(this).text();
+                        var index = $.inArray(filename, data.filenames);
+                        if (index === -1) {
+                            this.remove();
+                        }
+                    });
+                    if (data.filenames.length !== 0) {
+                        setTimeout(function() {
+                            checkStatus(url, targets);
+                        }, 5000);
                     }
                 });
             }
