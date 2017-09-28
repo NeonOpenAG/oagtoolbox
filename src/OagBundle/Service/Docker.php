@@ -176,7 +176,7 @@ class Docker extends AbstractOagService {
         $msg .= $path;
         $msg .= "\r\n\r\n";
         fwrite($sock, $msg);
-        $data = fread($sock, 4096);
+        $data = fread($sock, 40960);
         fclose($sock);
 
         if ($errno) {
@@ -185,8 +185,9 @@ class Docker extends AbstractOagService {
 
         list($this->header, $this->body) = explode("\r\n\r\n", $data, 2);
 
-        // $this->getContainer()->get('logger')->debug($this->body);
-        return json_decode($this->body, true);
+	$json = json_decode($this->body, true);
+	# $this->getContainer()->get('logger')->debug(sprintf('apiGet returned %d chars, %d elements.', strlen($this->body), count($json ?? [])));
+	return $json;
     }
 
     /**

@@ -91,6 +91,10 @@ class Classifier extends AbstractOagService {
             'status' => ($responseCode >= 200 && $responseCode <= 209) ? 0 : 1,
         );
 
+        if (!$response['status']) {
+            $this->getContainer()->get('logger')->error(sprintf('Classifier response: %d (%d)', $responseCode, $response['status']));
+        }
+
         $json = json_decode($data, true);
         if (!is_array($json)) {
             $json = array(
