@@ -32,8 +32,8 @@ class DockerController extends Controller
             'containers' => $containers,
             'json' => json_encode($containers, JSON_PRETTY_PRINT),
             'status' => [
-                'geocoder' => $geocoderStatus,
-                'classifier' => $classifierStatus,
+                'geocoder' => json_encode($geocoderStatus),
+                'classifier' => json_encode($classifierStatus),
             ],
         ];
         return $data;

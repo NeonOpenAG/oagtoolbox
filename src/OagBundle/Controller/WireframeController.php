@@ -607,6 +607,8 @@ class WireframeController extends Controller {
         $geocoderStatus = $srvGeocoder->status();
         $classifierStatus = $srvClassifier->status();
 
+        $router = $this->get('router');
+
         $classifierUrl = $router->generate(
                 'oag_async_classifystatus', array(), UrlGeneratorInterface::ABSOLUTE_URL // This guy right here
         );

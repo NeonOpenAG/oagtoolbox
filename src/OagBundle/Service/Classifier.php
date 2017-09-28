@@ -345,7 +345,11 @@ class Classifier extends AbstractOagService {
                     $start += 16;
                     $fileid = trim(substr($line, $start));
                     $file = $oagfileRepo->findOneById($fileid);
-                    $filenames[] = $file->getDocumentName();
+                    if ($file) {
+                        $filenames[] = $file->getDocumentName();
+                    } else {
+                        $filenames[] = $line;
+                    }
                 }
             }
 
