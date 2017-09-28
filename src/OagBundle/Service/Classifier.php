@@ -319,8 +319,7 @@ class Classifier extends AbstractOagService {
     }
 
     public function status() {
-        // wget -O /dev/null http://localhost/workspace/oag/oagtoolbox/web/app_dev.php/async/classify/15
-        $cmd = 'ps -ef | grep "wget"';
+        $cmd = 'ps -ef | grep bin/console';
         $output = [];
         $pipes = [];
         $descriptorspec = array(
@@ -341,7 +340,7 @@ class Classifier extends AbstractOagService {
             $oagfileRepo = $this->getContainer()->get('doctrine')->getRepository(OagFile::class);
             $lines = explode("\n", $xml);
             foreach ($lines as $line) {
-                $start = strpos($line, '/async/classify/');
+                $start = strpos($line, 'oag:classify');
                 if ($start) {
                     $start += 16;
                     $fileid = trim(substr($line, $start));

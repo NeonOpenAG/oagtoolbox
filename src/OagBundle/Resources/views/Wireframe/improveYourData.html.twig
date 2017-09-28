@@ -12,10 +12,9 @@
     <div class="center" id="improve-your-data">
 
         <section class="block">
-            <article class="activity" id="classifer-status" data-statusurl="http://localhost/workspace/oag/oagtoolbox/web/app_dev.php/async/classifyStatus">
+            <article class="activity" id="classifer-status" data-statusurl="{{ classifierUrl }}">
                 <div class="heading summary improve">
                     <h2>Classifying...</h2>
-                    <img src="{{ asset('bundles/oag/images/arrow.svg') }}" />
                 </div>
                 <div class="content-block summary">
                     <ul>
@@ -26,10 +25,9 @@
                 </div>
             </article>
                     
-            <article class="activity" id="geocoder-status" data-statusurl="http://localhost/workspace/oag/oagtoolbox/web/app_dev.php/async/geocodeStatus">
+            <article class="activity" id="geocoder-status" data-statusurl="{{ geocoderUrl }}">
                 <div class="heading summary improve">
                     <h2>Geocoding...</h2>
-                    <img src="{{ asset('bundles/oag/images/arrow.svg') }}" />
                 </div>
                 <div class="content-block summary">
                     <ul>

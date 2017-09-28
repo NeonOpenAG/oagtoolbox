@@ -607,6 +607,13 @@ class WireframeController extends Controller {
         $geocoderStatus = $srvGeocoder->status();
         $classifierStatus = $srvClassifier->status();
 
+        $classifierUrl = $router->generate(
+                'oag_async_classifystatus', array(), UrlGeneratorInterface::ABSOLUTE_URL // This guy right here
+        );
+        $geocoderUrl = $router->generate(
+                'oag_async_geocodestatus', array(), UrlGeneratorInterface::ABSOLUTE_URL // This guy right here
+        );
+
         return array(
             'file' => $file,
             'classified' => $srvOagFile->hasBeenClassified($file),
@@ -615,6 +622,8 @@ class WireframeController extends Controller {
                 'geocoder' => $geocoderStatus,
                 'classifier' => $classifierStatus,
             ],
+            'classifierUrl' => $classifierUrl,
+            'geocoderUrl' => $geocoderUrl,
         );
     }
 
