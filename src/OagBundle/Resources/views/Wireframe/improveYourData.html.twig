@@ -14,25 +14,27 @@
         <section class="block">
             <article class="activity" id="classifer-status" data-statusurl="{{ classifierUrl }}">
                 <div class="heading summary improve">
-                    <h2>Classifying...</h2>
+                    <h2>Classifying</h2>
                 </div>
                 <div class="content-block summary">
                     <ul>
                             {% for filename in status.classifier.filenames %}
-                        <li class='classifier-status-file'>{{ filename }}</li>
+                        <li class='status-file'>{{ filename }}</li>
                             {% endfor %}
+                        <li class='status-file'>salt.xml</li>
+                        <li class='status-file'>pepper.xml</li>
                     </ul>
                 </div>
             </article>
                     
             <article class="activity" id="geocoder-status" data-statusurl="{{ geocoderUrl }}">
                 <div class="heading summary improve">
-                    <h2>Geocoding...</h2>
+                    <h2>Geocoding</h2>
                 </div>
                 <div class="content-block summary">
                     <ul>
                         {% for filename in status.geocoder.filenames %}
-                            <li class='geocoder-status-file'>{{ filename }}</li>
+                            <li class='status-file'>{{ filename }}</li>
                         {% endfor %}
                     </ul>
                 </div>
@@ -138,27 +140,39 @@
     </script>
     <script>
         $( document ).ready(function() {
-            classifierStatus = $('#classifer-status').data('statusurl');
-            checkStatus(classifierStatus, $('.classifier-status-file'));
-            geocoderStatus = $('#geocoder-status').data('statusurl');
-            checkStatus(geocoderStatus, $('.geocoder-status-file'));
-        
-            function checkStatus(url, targets) {
+            checkStatus('#classifer-status');
+            checkStatus('#geocoder-status');
+            
+            function checkStatus(selectortext) {
+                var url = $(selectortext).data('statusurl');
+                var items = [];
+                $(selectortext + ' .status-file').each(function (key, ele){
+                    items.push($(ele).text());
+                });
                 $.get(url, function(data, status){
-                    targets.each(function(){
-                        var filename = $(this).text();
-                        var index = $.inArray(filename, data.filenames);
-                        if (index === -1) {
-                            this.remove();
-                        }
+                    var to_remove = $(items).not(data.filenames).get();
+                    var to_add = $(data.filenames).not(items).get();
+                    $.each(to_remove, function(key, value) {
+                        var ele = $(".status-file:contains(" + value + ")");
+                        ele.remove();
                     });
-                    if (data.filenames.length !== 0) {
-                        setTimeout(function() {
-                            checkStatus(url, targets);
-                        }, 5000);
+                    $.each(to_add, function(key, value) {
+                        $(selectortext + ' ul').append('<li class="status-file">' + value + '</li>');
+                    });
+                    
+                    if (data.filenames.length === 0) {
+                        $(selectortext).slideUp();
                     }
+                    else {
+                        $(selectortext).slideDown();
+                    }
+                    
+                    setTimeout(function() {
+                        checkStatus(selectortext);
+                    }, 5000);
                 });
             }
+            
         });
     </script>
 {% endblock %}

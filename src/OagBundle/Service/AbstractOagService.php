@@ -52,6 +52,6 @@ abstract class AbstractOagService extends AbstractService {
             return false;
         }
     }
-    
+
     abstract function getName();
 }

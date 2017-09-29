@@ -104,7 +104,15 @@ class Classifier extends AbstractOagService {
                     'confidence' => '',
                 ),
             );
-            $this->getContainer()->get('logger')->error('Classifier failed to process: ' . $data . ' with response code: ' . $responseCode);
+            $this->getContainer()->get('logger')->error('Classifier failed to return json');
+            $log = [
+                get_class() => [
+                    'uri' => $uri,
+                    'payload' => $payload,
+                    '$data' => $data,
+                ],
+            ];
+            $this->logData($log);
         }
 
         return array_merge($response, $json);
@@ -346,7 +354,7 @@ class Classifier extends AbstractOagService {
             foreach ($lines as $line) {
                 $start = strpos($line, 'oag:classify');
                 if ($start) {
-                    $start += 16;
+                    $start += 13;
                     $fileid = trim(substr($line, $start));
                     $file = $oagfileRepo->findOneById($fileid);
                     if ($file) {
