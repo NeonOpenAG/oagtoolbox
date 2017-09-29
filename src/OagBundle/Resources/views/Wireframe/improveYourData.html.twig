@@ -153,7 +153,7 @@
                     var to_remove = $(items).not(data.filenames).get();
                     var to_add = $(data.filenames).not(items).get();
                     $.each(to_remove, function(key, value) {
-                        var ele = $(".status-file:contains(" + value + ")");
+                        var ele = $(selectortext + " .status-file:contains(" + value + ")");
                         ele.remove();
                     });
                     $.each(to_add, function(key, value) {
