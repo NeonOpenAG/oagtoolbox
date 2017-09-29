@@ -58,8 +58,6 @@ class Cove extends AbstractOagService {
             if (strlen($err)) {
                 $this->getContainer()->get('logger')->error('Error: ' . $err);
             }
-            dump($err);
-            dump($xml);
 
             return $data;
         } else {
