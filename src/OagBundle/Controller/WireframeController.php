@@ -62,7 +62,7 @@ class WireframeController extends Controller {
 	    $em->flush();
 
             if (!$srvCove->validateOagFile($oagfile)) {
-                // TODO CoVE failed
+                return $this->redirect($this->generateUrl('oag_wireframe_upload'));
             }
 
             // Kick off these as background commands, they'll run in the background.
