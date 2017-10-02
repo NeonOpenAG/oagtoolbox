@@ -21,12 +21,10 @@
                             {% for filename in status.classifier.filenames %}
                         <li class='status-file'>{{ filename }}</li>
                             {% endfor %}
-                        <li class='status-file'>salt.xml</li>
-                        <li class='status-file'>pepper.xml</li>
                     </ul>
                 </div>
             </article>
-                    
+
             <article class="activity" id="geocoder-status" data-statusurl="{{ geocoderUrl }}">
                 <div class="heading summary improve">
                     <h2>Geocoding</h2>
@@ -39,7 +37,7 @@
                     </ul>
                 </div>
             </article>
-               
+
             <div class="intro margin">
                 <h1>Check and improve your data</h1>
             </div>
@@ -83,7 +81,7 @@
                 </div>
             </article>
 
-     
+
             {% if (not geocoded) or (not classified) %}
             <article class="activity">
                 <div class="heading summary improve">
@@ -142,10 +140,11 @@
         $( document ).ready(function() {
             checkStatus('#classifer-status');
             checkStatus('#geocoder-status');
-            
+
             function checkStatus(selectortext) {
                 var url = $(selectortext).data('statusurl');
                 var items = [];
+                $('button').prop("disabled", true);
                 $(selectortext + ' .status-file').each(function (key, ele){
                     items.push($(ele).text());
                 });
@@ -159,20 +158,21 @@
                     $.each(to_add, function(key, value) {
                         $(selectortext + ' ul').append('<li class="status-file">' + value + '</li>');
                     });
-                    
+
                     if (data.filenames.length === 0) {
                         $(selectortext).slideUp();
+                      //  $('button').prop("disabled", false);
                     }
                     else {
                         $(selectortext).slideDown();
                     }
-                    
+
                     setTimeout(function() {
                         checkStatus(selectortext);
                     }, 5000);
                 });
             }
-            
+
         });
     </script>
 {% endblock %}

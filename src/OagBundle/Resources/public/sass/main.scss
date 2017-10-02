@@ -99,6 +99,15 @@ button,
   &.back:hover {
     color: $oag_dark;
   }
+  &:disabled {
+    background-color: grey;
+    cursor: pointer;
+    transform: none;
+    box-shadow: none;
+    &:hover {
+      box-shadow: none;
+    }
+  }
 }
 
 .view:before {
