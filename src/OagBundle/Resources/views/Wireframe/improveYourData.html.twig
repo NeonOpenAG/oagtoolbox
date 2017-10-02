@@ -14,32 +14,30 @@
         <section class="block">
             <article class="activity" id="classifer-status" data-statusurl="{{ classifierUrl }}">
                 <div class="heading summary improve">
-                    <h2>Classifying</h2>
+                    <h2>Classifying in progress<span class="dots"><span>.</span><span>.</span><span>.</span></span></h2>
                 </div>
                 <div class="content-block summary">
                     <ul>
-                            {% for filename in status.classifier.filenames %}
+                        {% for filename in status.classifier.filenames %}
                         <li class='status-file'>{{ filename }}</li>
-                            {% endfor %}
-                        <li class='status-file'>salt.xml</li>
-                        <li class='status-file'>pepper.xml</li>
-                    </ul>
-                </div>
-            </article>
-                    
-            <article class="activity" id="geocoder-status" data-statusurl="{{ geocoderUrl }}">
-                <div class="heading summary improve">
-                    <h2>Geocoding</h2>
-                </div>
-                <div class="content-block summary">
-                    <ul>
-                        {% for filename in status.geocoder.filenames %}
-                            <li class='status-file'>{{ filename }}</li>
                         {% endfor %}
                     </ul>
                 </div>
             </article>
-               
+
+            <article class="activity" id="geocoder-status" data-statusurl="{{ geocoderUrl }}">
+                <div class="heading summary improve">
+                    <h2>Geocoding in progress<span class="dots"><span>.</span><span>.</span><span>.</span></span></h2>
+                </div>
+                <div class="content-block summary">
+                    <ul>
+                        {% for filename in status.geocoder.filenames %}
+                        <li class='status-file'>{{ filename }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </article>
+
             <div class="intro margin">
                 <h1>Check and improve your data</h1>
             </div>
@@ -85,7 +83,7 @@
                 </div>
             </article>
 
-     
+
             {% if (not geocoded) or (not classified) %}
             <article class="activity">
                 <div class="heading summary improve">
@@ -144,7 +142,7 @@
         $( document ).ready(function() {
             checkStatus('#classifer-status');
             checkStatus('#geocoder-status');
-            
+
             function checkStatus(selectortext) {
                 var url = $(selectortext).data('statusurl');
                 var items = [];
@@ -159,22 +157,22 @@
                         ele.remove();
                     });
                     $.each(to_add, function(key, value) {
-                        $(selectortext + ' ul').append('<li class="status-file">' + value + '</li>');
+                        $(selectortext + ' ul').append('<li class="status-file"><h2><i class="fa fa-spinner fa-pulse fa-fw"></i>' + value + '</h2></li>');
                     });
-                    
+
                     if (data.filenames.length === 0) {
                         $(selectortext).slideUp();
                     }
                     else {
                         $(selectortext).slideDown();
                     }
-                    
+
                     setTimeout(function() {
                         checkStatus(selectortext);
                     }, 5000);
                 });
             }
-            
+
         });
     </script>
 {% endblock %}
