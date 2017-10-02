@@ -57,12 +57,14 @@
                                 <p>Your activity file is compliant to the XML schema of the IATI standard and the additional rulesets.</p>
                             </div>
                         </li>
+                        {% if show_traceability %}
                         <li>
                           <h2 class="completed">Helps show traceability</h2>
                           <div class="info">
                               <p>Your activity file contains sufficient identifying information to help people who wish to trace funding.</p>
                           </div>
                         </li>
+                        {% endif %}
                         {% if classified %}
                         <li>
                             <h2 class="completed">Helps people identify agricultural projects</h2>

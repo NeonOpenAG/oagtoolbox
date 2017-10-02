@@ -28,3 +28,7 @@ parameters:
         geocoder: openagdata/geocoder:live
         nerserver: openagdata/nerserver:live
         dportal: openagdata/dportal:live
+
+twig:
+    globals:
+        show_traceability: false
