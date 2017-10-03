@@ -87,24 +87,32 @@
             {% if (not geocoded) or (not classified) %}
             <article class="activity">
                 <div class="heading summary improve">
-                    <h2>Improve your data to help people...</h2>
+                    <h2>Improve your data to...</h2>
                     <img src="{{ asset('bundles/oag/images/arrow.svg') }}" />
                 </div>
                 <div class="content-block summary improve">
                     <ul>
                         {% if not classified %}
-                        <li><h2><span class="tip">Identify agricultural projects</span></h2>
+                        <li><h2><span class="tip">Help people identify agricultural projects</span></h2>
                             <div class="improvements">
                                 <p>Adding AGROVOC codes to your activity file helps make your projects more discoverable by funders and others who may be interested in your work.</p>
-                                <a href="{{ path('oag_wireframe_classifier', { 'id': file.getId() }) }}"><button type="button" id="class-button" disabled>Use&nbsp;Our&nbsp;Classifier</button></a>
+                                <a href="{{ path('oag_wireframe_classifier', { 'id': file.getId() }) }}"><button type="button" id="class-button" disabled>Tag your data</button></a>
                             </div>
                         </li>
                         {% endif %}
                         {% if not geocoded %}
-                        <li><h2><span class="tip">Locate your projects accurately</span></h2>
+                        <li><h2><span class="tip">Help people locate your projects accurately</span></h2>
                             <div class="improvements">
                                 <p>If activities are located accurately, then people can use your data to identify partners on the ground, gaps in provision and other geographic patterns.</p>
-                                <a href="{{ path('oag_wireframe_geocoder', { 'id': file.getId() }) }}"><button type="button" id="geo-button" disabled>Use&nbsp;Our&nbsp;Geocoder</button></a>
+                                <a href="{{ path('oag_wireframe_geocoder', { 'id': file.getId() }) }}"><button type="button" id="geo-button" disabled>Geocode your data</button></a>
+                            </div>
+                        </li>
+                        {% endif %}
+                        {% if not show_traceability %}
+                        <li><h2><span class="tip">Help people trace funding between organisations</span></h2>
+                            <div class="improvements">
+                                <p>If your activities are tagged with organisational identifiers, then people can use your data to see how funding from large organisations has been spent on the ground.</p>
+                                <a href="http://org-id.guide/"><button type="button" id="trace-button">Org-id.guide can help</button></a>
                             </div>
                         </li>
                         {% endif %}
@@ -161,15 +169,15 @@
                     });
 
                     if (data.filenames.length === 0) {
-                        $(selectortext).slideUp();
                         $(buttonId).removeAttr("disabled");
+                        $(selectortext).slideUp();
                     }
                     else {
                         $(selectortext).slideDown();
                     }
 
                     setTimeout(function() {
-                        checkStatus(selectortext);
+                        checkStatus(selectortext, buttonId);
                     }, 5000);
                 });
             }

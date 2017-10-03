@@ -492,7 +492,7 @@ article {
       }
       button {
         font-family: $oag_font;
-        width: 200px;
+        width: 226px;
         margin-top: 0.5em;
       }
       .completed {
@@ -849,10 +849,34 @@ table {
     }
   }
   .activity .content-block.summary button {
-    width: 206px;
+    width: 236px;
   }
   .addremove span {
     width: 108px;
+  }
+  .options {
+    margin: 0;
+    a {
+      margin:0 0.5em;
+      &:nth-child(1) {
+        background-color: $oag_purple;
+        &:hover {
+          background-color: $oag_purple_highlight;
+        }
+      }
+      &:nth-child(2) {
+        background-color: $oag_green;
+        &:hover {
+          background-color: $oag_green_highlight;
+        }
+      }
+      &:nth-child(3) {
+        background-color: $oag_blue;
+        &:hover {
+          background-color: $oag_blue_highlight;
+        }
+      }
+    }
   }
 }
 
