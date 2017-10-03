@@ -128,9 +128,16 @@ class WireframeController extends Controller {
 	    return $this->redirect($this->generateUrl('oag_wireframe_improveyourdata', array('id' => $oagfile->getId())));
         }
 
+        $otherFiles = [];
+        $allFiles = $fileRepo->createQueryBuilder('f')
+                ->where('f.documentName LIKE :xml')
+                ->setParameter('xml', '%.xml')
+                ->getQuery()
+                ->execute();
+
         return array(
             'file' => $file,
-            'otherFiles' => $fileRepo->findBy(array()), // TODO filter to just IATI files
+            'otherFiles' => $allFiles,
             'uploadForm' => $sourceUploadForm->createView(),
             'srvOagFile' => $srvOagFile
         );
