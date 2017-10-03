@@ -313,9 +313,8 @@ class WireframeController extends Controller {
                 'data' => $currentTags, // default current tags to ticked
                 'choice_label' => function ($value, $key, $index) {
                     $desc = $value->getDescription();
-                    $vocab = $value->getVocabulary();
-                    return "$desc ($vocab)";
-                }
+                        return "$desc";
+                    }
             ))
             ->add('back', SubmitType::class)
             ->add('save', SubmitType::class)
