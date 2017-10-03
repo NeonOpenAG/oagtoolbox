@@ -212,7 +212,7 @@ nav {
       &:nth-child(1) > a {
         box-shadow: inset 0px -7px 0px -1px $oag_purple;
         &:before {
-          content: "Preview";
+          content: "Check and improve";
         }
         &:hover {
           background-color: rgba($oag_purple, 0.1);
@@ -222,7 +222,7 @@ nav {
       &:nth-child(2) > a {
         box-shadow: inset 0px -7px 0px -1px $oag_green;
         &:before {
-          content: "Check and improve";
+          content: "Preview and visualise";
         }
         &:hover {
           background-color: rgba($oag_green, 0.1);
@@ -1047,13 +1047,7 @@ table {
   }
 }
 
-@media (max-width: 920px) {
-  .activity .heading.summary.improve img {
-    right: -10px;
-  }
-}
-
-@media (max-width: 870px) {
+@media (max-width: 950px) {
   header {
     padding: 0em 2em;
     nav {
@@ -1078,6 +1072,12 @@ table {
         }
       }
     }
+  }
+}
+
+@media (max-width: 920px) {
+  .activity .heading.summary.improve img {
+    right: -10px;
   }
 }
 
@@ -1228,6 +1228,17 @@ table {
   }
 }
 
+@media (max-width: 730px) {
+  .options a {
+    width: calc(100% - 3em);
+    margin: 0 0 0.5em 0;
+    text-align: center;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
 @media (max-width: 700px) {
   .upload-form.upload,
   .upload-form.download {
@@ -1266,14 +1277,6 @@ table {
       width: 100%;
     }
   }
-  .options a {
-    width: calc(100% - 3em);
-    margin: 0 0 0.5em 0;
-    text-align: center;
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
 }
 
 @media (max-width: 687px) {
@@ -1286,6 +1289,12 @@ table {
 @media (max-width: 611px) {
   h1 {
     font-size: 1.8em;
+  }
+  nav .nav-options li:nth-child(1) > a:before {
+    content: "Check";
+  }
+  nav .nav-options li:nth-child(2) > a:before {
+    content: "Preview";
   }
   .upload-info {
     width: 100%;
@@ -1313,9 +1322,6 @@ table {
 }
 
 @media (max-width: 563px) {
-  nav .nav-options li:nth-child(2) > a:before {
-    content: "Check";
-  }
   .center {
     padding: 0;
   }
