@@ -14,32 +14,30 @@
         <section class="block">
             <article class="activity" id="classifer-status" data-statusurl="{{ classifierUrl }}">
                 <div class="heading summary improve">
-                    <h2>Classifying</h2>
+                    <h2>Classifying in progress<span class="dots"><span>.</span><span>.</span><span>.</span></span></h2>
                 </div>
                 <div class="content-block summary">
                     <ul>
-                            {% for filename in status.classifier.filenames %}
-                        <li class='status-file'>{{ filename }}</li>
-                            {% endfor %}
-                        <li class='status-file'>salt.xml</li>
-                        <li class='status-file'>pepper.xml</li>
-                    </ul>
-                </div>
-            </article>
-                    
-            <article class="activity" id="geocoder-status" data-statusurl="{{ geocoderUrl }}">
-                <div class="heading summary improve">
-                    <h2>Geocoding</h2>
-                </div>
-                <div class="content-block summary">
-                    <ul>
-                        {% for filename in status.geocoder.filenames %}
-                            <li class='status-file'>{{ filename }}</li>
+                        {% for filename in status.classifier.filenames %}
+                        <li class='status-file'><h2><i class="fa fa-spinner fa-pulse fa-fw"></i>{{ filename }}</h2></li>
                         {% endfor %}
                     </ul>
                 </div>
             </article>
-               
+
+            <article class="activity" id="geocoder-status" data-statusurl="{{ geocoderUrl }}">
+                <div class="heading summary improve">
+                    <h2>Geocoding in progress<span class="dots"><span>.</span><span>.</span><span>.</span></span></h2>
+                </div>
+                <div class="content-block summary">
+                    <ul>
+                        {% for filename in status.geocoder.filenames %}
+                        <li class='status-file'>{{ filename }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </article>
+
             <div class="intro margin">
                 <h1>Check and improve your data</h1>
             </div>
@@ -85,7 +83,7 @@
                 </div>
             </article>
 
-     
+
             {% if (not geocoded) or (not classified) %}
             <article class="activity">
                 <div class="heading summary improve">
@@ -98,7 +96,7 @@
                         <li><h2><span class="tip">Identify agricultural projects</span></h2>
                             <div class="improvements">
                                 <p>Adding AGROVOC codes to your activity file helps make your projects more discoverable by funders and others who may be interested in your work.</p>
-                                <a href="{{ path('oag_wireframe_classifier', { 'id': file.getId() }) }}"><button>Use&nbsp;Our&nbsp;Classifier</button></a>
+                                <a href="{{ path('oag_wireframe_classifier', { 'id': file.getId() }) }}"><button type="button" id="class-button" disabled>Use&nbsp;Our&nbsp;Classifier</button></a>
                             </div>
                         </li>
                         {% endif %}
@@ -106,7 +104,7 @@
                         <li><h2><span class="tip">Locate your projects accurately</span></h2>
                             <div class="improvements">
                                 <p>If activities are located accurately, then people can use your data to identify partners on the ground, gaps in provision and other geographic patterns.</p>
-                                <a href="{{ path('oag_wireframe_geocoder', { 'id': file.getId() }) }}"><button>Use&nbsp;Our&nbsp;Geocoder</button></a>
+                                <a href="{{ path('oag_wireframe_geocoder', { 'id': file.getId() }) }}"><button type="button" id="geo-button" disabled>Use&nbsp;Our&nbsp;Geocoder</button></a>
                             </div>
                         </li>
                         {% endif %}
@@ -142,10 +140,10 @@
     </script>
     <script>
         $( document ).ready(function() {
-            checkStatus('#classifer-status');
-            checkStatus('#geocoder-status');
-            
-            function checkStatus(selectortext) {
+            checkStatus('#classifer-status', '#class-button');
+            checkStatus('#geocoder-status', '#geo-button');
+
+            function checkStatus(selectortext, buttonId) {
                 var url = $(selectortext).data('statusurl');
                 var items = [];
                 $(selectortext + ' .status-file').each(function (key, ele){
@@ -159,22 +157,23 @@
                         ele.remove();
                     });
                     $.each(to_add, function(key, value) {
-                        $(selectortext + ' ul').append('<li class="status-file">' + value + '</li>');
+                        $(selectortext + ' ul').append('<li class="status-file"><h2><i class="fa fa-spinner fa-pulse fa-fw"></i>' + value + '</h2></li>');
                     });
-                    
+
                     if (data.filenames.length === 0) {
                         $(selectortext).slideUp();
+                        $(buttonId).removeAttr("disabled");
                     }
                     else {
                         $(selectortext).slideDown();
                     }
-                    
+
                     setTimeout(function() {
                         checkStatus(selectortext);
                     }, 5000);
                 });
             }
-            
+
         });
     </script>
 {% endblock %}
