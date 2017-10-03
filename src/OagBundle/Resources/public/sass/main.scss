@@ -467,8 +467,9 @@ article {
         justify-content: space-between;
         img {
           position: absolute;
-          bottom: 16px;
-          right: 74px;
+          bottom: 24px;
+          right: 88px;
+          width: 100px;
         }
       }
     }
@@ -1032,7 +1033,6 @@ table {
 @media (max-width: 920px) {
   .activity .heading.summary.improve img {
     right: -10px;
-    width: 100px;
   }
 }
 
@@ -1071,7 +1071,6 @@ table {
   .activity .heading.summary {
     &.improve {
       img {
-        bottom: 14px;
         right: -13px;
       }
       h2 {
@@ -1262,7 +1261,8 @@ table {
 
 @media (max-width: 687px) {
   .activity .heading.summary.improve img {
-    bottom: 43px;
+    width: 86px;
+    bottom: 65px;
   }
 }
 
@@ -1329,9 +1329,6 @@ table {
   .bottom-page-nav {
     bottom: -85px;
   }
-  .activity .heading.summary.improve img {
-    width: 86px;
-  }
 }
 
 @media (max-width: 450px) {
@@ -1371,7 +1368,7 @@ table {
 
 @media (max-width: 381px) {
   .activity .heading.summary.improve img {
-    bottom: 64px;
+    bottom: 90px;
   }
 }
 
@@ -1425,6 +1422,6 @@ table {
 
 @media (max-width: 349px) {
   .activity .heading.summary.improve img {
-    bottom: 95px;
+    bottom: 79px;
   }
 }
