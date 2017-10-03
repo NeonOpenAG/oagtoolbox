@@ -32,7 +32,7 @@
                 <div class="content-block summary">
                     <ul>
                         {% for filename in status.geocoder.filenames %}
-                        <li class='status-file'>{{ filename }}</li>
+                        <li class='status-file'><h2><i class="fa fa-spinner fa-pulse fa-fw"></i>{{ filename }}</h2></li>
                         {% endfor %}
                     </ul>
                 </div>
