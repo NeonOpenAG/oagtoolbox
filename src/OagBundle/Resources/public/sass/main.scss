@@ -99,6 +99,10 @@ button,
   &.back:hover {
     color: $oag_dark;
   }
+  &:disabled,
+  &[disabled] {
+    background-color: grey;
+  }
 }
 
 .view:before {
@@ -816,6 +820,23 @@ table {
 
 .fa-spinner {
   margin-right: 0.6em;
+}
+
+// Firefox hack
+@-moz-document url-prefix() {
+  /* Put your Firefox specific code here. */
+  a {
+    outline: none;
+  }
+  button,
+  .cta {
+    &:hover {
+      transform: none;
+    }
+  }
+  .activity .content-block.summary button {
+    width: 205px;
+  }
 }
 
 
