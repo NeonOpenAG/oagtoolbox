@@ -96,7 +96,7 @@
                         <li><h2><span class="tip">Identify agricultural projects</span></h2>
                             <div class="improvements">
                                 <p>Adding AGROVOC codes to your activity file helps make your projects more discoverable by funders and others who may be interested in your work.</p>
-                                <a href="{{ path('oag_wireframe_classifier', { 'id': file.getId() }) }}"><button type="button" id="class-button" disabled>Use&nbsp;Our&nbsp;Classifier</button></a>
+                                <a href="{{ path('oag_wireframe_classifier', { 'id': file.getId() }) }}"><button id="class-button" disabled>Use&nbsp;Our&nbsp;Classifier</button></a>
                             </div>
                         </li>
                         {% endif %}
@@ -104,7 +104,7 @@
                         <li><h2><span class="tip">Locate your projects accurately</span></h2>
                             <div class="improvements">
                                 <p>If activities are located accurately, then people can use your data to identify partners on the ground, gaps in provision and other geographic patterns.</p>
-                                <a href="{{ path('oag_wireframe_geocoder', { 'id': file.getId() }) }}"><button type="button" id="geo-button" disabled>Use&nbsp;Our&nbsp;Geocoder</button></a>
+                                <a href="{{ path('oag_wireframe_geocoder', { 'id': file.getId() }) }}"><button id="geo-button" disabled>Use&nbsp;Our&nbsp;Geocoder</button></a>
                             </div>
                         </li>
                         {% endif %}
