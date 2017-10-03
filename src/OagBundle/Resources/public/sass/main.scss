@@ -212,7 +212,7 @@ nav {
       &:nth-child(1) > a {
         box-shadow: inset 0px -7px 0px -1px $oag_purple;
         &:before {
-          content: "Preview";
+          content: "Check and improve";
         }
         &:hover {
           background-color: rgba($oag_purple, 0.1);
@@ -222,7 +222,7 @@ nav {
       &:nth-child(2) > a {
         box-shadow: inset 0px -7px 0px -1px $oag_green;
         &:before {
-          content: "Check and improve";
+          content: "Preview and visualise";
         }
         &:hover {
           background-color: rgba($oag_green, 0.1);
@@ -467,8 +467,9 @@ article {
         justify-content: space-between;
         img {
           position: absolute;
-          bottom: 16px;
-          right: 74px;
+          bottom: 24px;
+          right: 88px;
+          width: 100px;
         }
       }
     }
@@ -491,7 +492,7 @@ article {
       }
       button {
         font-family: $oag_font;
-        width: 200px;
+        width: 226px;
         margin-top: 0.5em;
       }
       .completed {
@@ -848,10 +849,27 @@ table {
     }
   }
   .activity .content-block.summary button {
-    width: 206px;
+    width: 236px;
   }
   .addremove span {
     width: 108px;
+  }
+  .options a {
+    &:nth-child(1) {
+      &:hover {
+        background-color: $oag_purple_highlight;
+      }
+    }
+    &:nth-child(2) {
+      &:hover {
+        background-color: $oag_green_highlight;
+      }
+    }
+    &:nth-child(3) {
+      &:hover {
+        background-color: $oag_blue_highlight;
+      }
+    }
   }
 }
 
@@ -1029,14 +1047,7 @@ table {
   }
 }
 
-@media (max-width: 920px) {
-  .activity .heading.summary.improve img {
-    right: -10px;
-    width: 100px;
-  }
-}
-
-@media (max-width: 870px) {
+@media (max-width: 950px) {
   header {
     padding: 0em 2em;
     nav {
@@ -1064,6 +1075,12 @@ table {
   }
 }
 
+@media (max-width: 920px) {
+  .activity .heading.summary.improve img {
+    right: -10px;
+  }
+}
+
 @media (max-width: 768px) {
   h3 {
     font-size: 1em;
@@ -1071,7 +1088,6 @@ table {
   .activity .heading.summary {
     &.improve {
       img {
-        bottom: 14px;
         right: -13px;
       }
       h2 {
@@ -1212,6 +1228,17 @@ table {
   }
 }
 
+@media (max-width: 730px) {
+  .options a {
+    width: calc(100% - 3em);
+    margin: 0 0 0.5em 0;
+    text-align: center;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
 @media (max-width: 700px) {
   .upload-form.upload,
   .upload-form.download {
@@ -1250,25 +1277,24 @@ table {
       width: 100%;
     }
   }
-  .options a {
-    width: calc(100% - 3em);
-    margin: 0 0 0.5em 0;
-    text-align: center;
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
 }
 
 @media (max-width: 687px) {
   .activity .heading.summary.improve img {
-    bottom: 43px;
+    width: 86px;
+    bottom: 65px;
   }
 }
 
 @media (max-width: 611px) {
   h1 {
     font-size: 1.8em;
+  }
+  nav .nav-options li:nth-child(1) > a:before {
+    content: "Check";
+  }
+  nav .nav-options li:nth-child(2) > a:before {
+    content: "Preview";
   }
   .upload-info {
     width: 100%;
@@ -1296,9 +1322,6 @@ table {
 }
 
 @media (max-width: 563px) {
-  nav .nav-options li:nth-child(2) > a:before {
-    content: "Check";
-  }
   .center {
     padding: 0;
   }
@@ -1328,9 +1351,6 @@ table {
   }
   .bottom-page-nav {
     bottom: -85px;
-  }
-  .activity .heading.summary.improve img {
-    width: 86px;
   }
 }
 
@@ -1371,7 +1391,7 @@ table {
 
 @media (max-width: 381px) {
   .activity .heading.summary.improve img {
-    bottom: 64px;
+    bottom: 90px;
   }
 }
 
@@ -1425,6 +1445,6 @@ table {
 
 @media (max-width: 349px) {
   .activity .heading.summary.improve img {
-    bottom: 95px;
+    bottom: 79px;
   }
 }
