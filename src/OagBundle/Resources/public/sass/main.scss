@@ -99,9 +99,10 @@ button,
   &.back:hover {
     color: $oag_dark;
   }
-  &:disabled,
-  &[disabled] {
+  &:disabled {
     background-color: grey;
+    cursor: default;
+    transform: none;
   }
 }
 
@@ -122,7 +123,6 @@ button,
 .download-icon:before {
   font-family: FontAwesome;
   font-size: 1.5em;
-  color: $oag_title;
   content: "\f019";
 }
 .delete:before {
@@ -625,6 +625,9 @@ form {
     width: 600px;
     height: 250px;
   }
+  select {
+    margin-bottom: 1.5em;
+  }
 }
 
 
@@ -782,8 +785,10 @@ table {
     &:nth-child(3) {
       text-align: left;
     }
-    &:nth-child(5):hover {
-      color: $oag_grey;
+    &:nth-child(5) {
+      a:hover {
+        color: $oag_grey;
+      }
     }
   }
 }
@@ -835,7 +840,10 @@ table {
     }
   }
   .activity .content-block.summary button {
-    width: 205px;
+    width: 206px;
+  }
+  .addremove span {
+    width: 108px;
   }
 }
 
