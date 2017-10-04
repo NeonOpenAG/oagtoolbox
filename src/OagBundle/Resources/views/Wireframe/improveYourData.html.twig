@@ -12,31 +12,6 @@
     <div class="center" id="improve-your-data">
 
         <section class="block">
-            <article class="activity" id="classifer-status" data-statusurl="{{ classifierUrl }}">
-                <div class="heading summary improve">
-                    <h2>Classifying in progress<span class="dots"><span>.</span><span>.</span><span>.</span></span></h2>
-                </div>
-                <div class="content-block summary">
-                    <ul>
-                        {% for filename in status.classifier.filenames %}
-                        <li class='status-file'><h2><i class="fa fa-spinner fa-pulse fa-fw"></i>{{ filename }}</h2></li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </article>
-
-            <article class="activity" id="geocoder-status" data-statusurl="{{ geocoderUrl }}">
-                <div class="heading summary improve">
-                    <h2>Geocoding in progress<span class="dots"><span>.</span><span>.</span><span>.</span></span></h2>
-                </div>
-                <div class="content-block summary">
-                    <ul>
-                        {% for filename in status.geocoder.filenames %}
-                        <li class='status-file'><h2><i class="fa fa-spinner fa-pulse fa-fw"></i>{{ filename }}</h2></li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </article>
 
             <div class="intro margin">
                 <h1>Check and improve your data</h1>
@@ -55,14 +30,6 @@
                                 <p>Your activity file is compliant to the XML schema of the IATI standard and the additional rulesets.</p>
                             </div>
                         </li>
-                        {% if show_traceability %}
-                        <li>
-                          <h2 class="completed">Helps show traceability</h2>
-                          <div class="info">
-                              <p>Your activity file contains sufficient identifying information to help people who wish to trace funding.</p>
-                          </div>
-                        </li>
-                        {% endif %}
                         {% if classified %}
                         <li>
                             <h2 class="completed">Helps people identify agricultural projects</h2>
@@ -79,12 +46,20 @@
                             </div>
                         </li>
                         {% endif %}
+                        {% if show_traceability %}
+                        <li>
+                          <h2 class="completed">Helps show traceability</h2>
+                          <div class="info">
+                              <p>Your activity file contains sufficient identifying information to help people who wish to trace funding.</p>
+                          </div>
+                        </li>
+                        {% endif %}
                     </ul>
                 </div>
             </article>
 
 
-            {% if (not geocoded) or (not classified) %}
+            {% if (not geocoded) or (not classified) or (not show_traceability) %}
             <article class="activity">
                 <div class="heading summary improve">
                     <h2>Improve your data to...</h2>
@@ -96,7 +71,7 @@
                         <li><h2><span class="tip">Help people identify agricultural projects</span></h2>
                             <div class="improvements">
                                 <p>Adding AGROVOC codes to your activity file helps make your projects more discoverable by funders and others who may be interested in your work.</p>
-                                <a href="{{ path('oag_wireframe_classifier', { 'id': file.getId() }) }}"><button type="button" id="class-button" disabled>Tag your data</button></a>
+                                <a href="{{ path('oag_wireframe_classifier', { 'id': file.getId() }) }}"><button type="button" id="class-button" disabled data-statusurl="{{ classifierUrl }}"><span class="fa fa-spinner fa-spin"></span>Tag your data</button></a>
                             </div>
                         </li>
                         {% endif %}
@@ -104,7 +79,7 @@
                         <li><h2><span class="tip">Help people locate your projects accurately</span></h2>
                             <div class="improvements">
                                 <p>If activities are located accurately, then people can use your data to identify partners on the ground, gaps in provision and other geographic patterns.</p>
-                                <a href="{{ path('oag_wireframe_geocoder', { 'id': file.getId() }) }}"><button type="button" id="geo-button" disabled>Geocode your data</button></a>
+                                <a href="{{ path('oag_wireframe_geocoder', { 'id': file.getId() }) }}"><button type="button" id="geo-button" disabled data-statusurl="{{ geocoderUrl }}"><span class="fa fa-spinner fa-spin"></span>Geocode your data</button></a>
                             </div>
                         </li>
                         {% endif %}
@@ -148,36 +123,24 @@
     </script>
     <script>
         $( document ).ready(function() {
-            checkStatus('#classifer-status', '#class-button');
-            checkStatus('#geocoder-status', '#geo-button');
+            checkStatus('#class-button');
+            checkStatus('#geo-button');
 
-            function checkStatus(selectortext, buttonId) {
-                var url = $(selectortext).data('statusurl');
+            function checkStatus(buttonId) {
+                var url = $(buttonId).data('statusurl');
                 var items = [];
-                $(selectortext + ' .status-file').each(function (key, ele){
+                $(buttonId + ' .status-file').each(function (key, ele){
                     items.push($(ele).text());
                 });
-                $.get(url, function(data, status){
-                    var to_remove = $(items).not(data.filenames).get();
-                    var to_add = $(data.filenames).not(items).get();
-                    $.each(to_remove, function(key, value) {
-                        var ele = $(selectortext + " .status-file:contains(" + value + ")");
-                        ele.remove();
-                    });
-                    $.each(to_add, function(key, value) {
-                        $(selectortext + ' ul').append('<li class="status-file"><h2><i class="fa fa-spinner fa-pulse fa-fw"></i>' + value + '</h2></li>');
-                    });
+                $.get(url, function(data, status) {
 
                     if (data.filenames.length === 0) {
                         $(buttonId).removeAttr("disabled");
-                        $(selectortext).slideUp();
-                    }
-                    else {
-                        $(selectortext).slideDown();
+                        $(".fa.fa-spinner.fa-spin").remove();
                     }
 
                     setTimeout(function() {
-                        checkStatus(selectortext, buttonId);
+                        checkStatus(buttonId);
                     }, 5000);
                 });
             }

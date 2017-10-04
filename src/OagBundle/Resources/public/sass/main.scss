@@ -71,6 +71,12 @@ ul {
   }
 }
 
+@-webkit-keyframes spinner-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@-moz-keyframes spinner-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@-o-keyframes spinner-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@-ms-keyframes spinner-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes spinner-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
 button,
 .cta {
   font-family: $oag_font;
@@ -108,9 +114,15 @@ button,
     color: $oag_dark;
   }
   &:disabled {
-    background-color: grey;
+    background-color: $oag_title;
     cursor: default;
     transform: none;
+    .fa-spinner.fa-spin:before {
+      -webkit-animation: spinner-spin  1s steps(8) infinite;
+      -moz-animation: spinner-spin  1s steps(8) infinite;
+      -o-animation: spinner-spin  1s steps(8) infinite;
+      animation: spinner-spin  1s steps(8) infinite;
+    }
   }
 }
 
