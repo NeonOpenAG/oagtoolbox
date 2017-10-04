@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="user-scalable=yes, width=device-width, initial-scale=1">
-        <title>{% block title %}{{ toolbox_title }}{% endblock %}</title>
+        <title>{% block title %}{{ toolbox_title }}{% endblock %} - Beta</title>
 
         {% block stylesheets %}
 
@@ -22,7 +22,7 @@
 
         <header class="header">
             <nav class="header-nav">
-                <div class="logo"><a href="{{ path('oag_wireframe_upload') }}">{{ toolbox_title }}</a></div>
+                <div class="logo"><a href="{{ path('oag_wireframe_upload') }}">{{ toolbox_title }} <span class="red">Beta</span></a></div>
 
 		{% if file is defined %}
                 <div class="nav-options">
