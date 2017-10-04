@@ -71,6 +71,10 @@ ul {
   }
 }
 
+.red {
+  color: $oag_red;
+}
+
 @-webkit-keyframes spinner-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 @-moz-keyframes spinner-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 @-o-keyframes spinner-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
@@ -997,6 +1001,31 @@ table {
 }
 
 @media (max-width: 1020px) {
+  header {
+    padding: 0em 2em;
+    nav {
+      display: block;
+      margin: 0 auto;
+      justify-content: center;
+      line-height: 51px;
+      .logo {
+        display: flex;
+        justify-content: center;
+        float: none;
+        padding-top: 0.5em;
+      }
+      .nav-options {
+        float: none;
+        display: flex;
+        justify-content: center;
+        li {
+          a {
+            padding: 1em;
+          }
+        }
+      }
+    }
+  }
   .activity {
     .heading.summary.improve img {
       right: 34px;
@@ -1055,34 +1084,6 @@ table {
     .file-upload {
       margin-left: 0;
       padding-top: 0;
-    }
-  }
-}
-
-@media (max-width: 950px) {
-  header {
-    padding: 0em 2em;
-    nav {
-      display: block;
-      margin: 0 auto;
-      justify-content: center;
-      line-height: 51px;
-      .logo {
-        display: flex;
-        justify-content: center;
-        float: none;
-        padding-top: 0.5em;
-      }
-      .nav-options {
-        float: none;
-        display: flex;
-        justify-content: center;
-        li {
-          a {
-            padding: 1em;
-          }
-        }
-      }
     }
   }
 }
