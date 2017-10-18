@@ -8,6 +8,8 @@ use OagBundle\Entity\OagFile;
 
 class Cove extends AbstractOagService {
 
+    private $json;
+
     public function processUri($uri) {
         // TODO - fetch file, cache it, check content type, decode and then pass to cove line at a time
         $data = file_get_contents($uri);
@@ -78,14 +80,14 @@ class Cove extends AbstractOagService {
         $this->getContainer()->get('logger')->debug(sprintf('Processing %s using CoVE', $file->getDocumentName()));
         // TODO - for bigger files we might need send as Uri
         $contents = $srvOagFile->getContents($file);
-        $json = $this->process($contents, $file->getDocumentName());
+        $this->json = $this->process($contents, $file->getDocumentName());
 
-        $err = array_filter($json['err'] ?? array());
-        $status = $json['status'];
+        $err = array_filter($this->json['err'] ?? array());
+        $status = $this->json['status'];
 
         if ($status === 0) {
             // CoVE claims to have processed the XML successfully
-            $xml = $json['xml'];
+            $xml = $this->json['xml'];
             if ($srvIATI->parseXML($xml)) {
                 // CoVE actually has returned valid XML
                 $xmldir = $this->getContainer()->getParameter('oagxml_directory');
@@ -142,6 +144,10 @@ class Cove extends AbstractOagService {
         );
 
         return json_encode($json);
+    }
+
+    public function getJson() {
+        return $this->json;
     }
 
     public function getName() {

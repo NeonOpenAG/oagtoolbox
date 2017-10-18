@@ -33,8 +33,12 @@ class Geocoder extends AbstractOagService {
     public function processXML($contents, $filename, $country = null) {
         $data = $this->process($contents, $filename, $country);
         $json = json_decode($data['xml'], true);
-        // $json = json_decode($this->getXMLFixtureData(), true);
-        $locations = array_column($json, 'locations', 'project_id'); // format as $activityId => $location[]
+        if ($json) {
+            $locations = array_column($json, 'locations', 'project_id'); // format as $activityId => $location[]
+        } else {
+            $locations = [];
+            $this->getContainer()->get('logger')->error(sprintf('Geocoder failed on %s : %s.', $filename, $json));
+        }
         return $locations;
     }
 

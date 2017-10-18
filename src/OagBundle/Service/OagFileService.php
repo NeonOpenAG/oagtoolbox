@@ -126,9 +126,9 @@ class OagFileService extends AbstractService {
             if ($a->getUploadDate() < $b->getUploadDate()) {
                 // $a happened before $b
                 return -1;
-            } elseif ($a->getTimestamp() > $b->getTimestamp()) {
-                // $b happened before $a
-                return 1;
+//            } elseif ($a->getTimestamp() > $b->getTimestamp()) {
+//                // $b happened before $a
+//                return 1;
             }
             return 0;
         });
