@@ -28,3 +28,5 @@ web-server-pid
 src/OagBundle/Resources/public/.sass-cache/
 src/OagBundle/Resources/public/stylesheets/main.css
 app/test.db
+output/
+xmlcache/
