@@ -12,7 +12,7 @@ use DOMXPath;
 
 class OagFetchIatiCommand extends ContainerAwareCommand
 {
-    protected $targetdir = __DIR__ . '../../xmlcache'; // Should use container -> get root
+    protected $targetdir = false;
     protected $page = 1;
     protected $noclobber = false;
 
@@ -28,6 +28,8 @@ class OagFetchIatiCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->targetdir = $this->getContainer()->get('kernel')->getProjectDir() . '/xmlcache'; // Should use container -> get root
+
         if ($input->getArgument('page')) {
             $this->page = $input->getArgument('page');
         }
@@ -40,7 +42,12 @@ class OagFetchIatiCommand extends ContainerAwareCommand
             mkdir($this->targetdir, 0775, true);
         }
 
-        $page = file_get_contents("https://www.iatiregistry.org/dataset?page=" . $this->page);
+        $registryUrl = "https://www.iatiregistry.org/dataset?page=" . $this->page;
+        $output->writeln("= Fetching " . $registryUrl);
+        $page = file_get_contents($registryUrl);
+        if (!$page) {
+            $output->writeln("! " . $registryUrl . " note found.");
+        }
         $dom = new DOMDocument();
         @$dom->loadHTML($page);
 
@@ -56,21 +63,21 @@ class OagFetchIatiCommand extends ContainerAwareCommand
                 }
             }
         } else {
-            $output->writeln("No DATA");
+            $output->writeln("- No DATA");
         }
     }
 
     private function fetchXml($filename, $url) {
-        $target = $this->targetdir . '/' . $filename;
+        $target = $this->targetdir . '/' . $filename . '.xml';
 
         if ($this->noclobber && file_exists($target)) {
             return 'o Skipping (noclobber) ' . $filename;
         }
 
-        $data = file_get_contents($url);
+        $data = @file_get_contents($url);
         $fh = fopen($target, 'w');
         fwrite($fh, $data);
         fclose($fh);
-        return sprintf('+ Wrote %d bytes of data from %s to %s', strlen($data), $url, $filename);
+        return sprintf('+ Wrote %d bytes of data from %s to %s', strlen($data), $url, $target);
     }
 }

@@ -53,7 +53,7 @@ class Cove extends AbstractOagService {
 
             $data = array(
                 'xml' => $xml,
-                'err' => explode("\n", $err),
+                'err' => $err,
                 'status' => $return_value,
             );
 
