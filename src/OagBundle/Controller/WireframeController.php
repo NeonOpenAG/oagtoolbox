@@ -49,7 +49,8 @@ class WireframeController extends Controller {
 
 	// TODO Check for too big files.
 	if ($sourceUploadForm->isSubmitted() && $sourceUploadForm->isValid()) {
-	    $tmpFile = $oagfile->getDocumentName();
+            $this->get('logger')->debug('Processing new upload');
+            $tmpFile = $oagfile->getDocumentName();
 	    $filename = $tmpFile->getClientOriginalName();
 
 	    $tmpFile->move(
@@ -62,6 +63,7 @@ class WireframeController extends Controller {
 	    $em->flush();
 
             if (!$srvCove->validateOagFile($oagfile)) {
+                $this->get('logger')->warn(sprintf('CoVE failed to process uploaded file %s.', $oagfile->getDocumentName()));
                 return $this->redirect($this->generateUrl('oag_wireframe_upload'));
             }
 
@@ -71,6 +73,7 @@ class WireframeController extends Controller {
             exec($console . 'oag:classify ' . $oagfile->getId() . ' > /dev/null &');
             exec($console . 'oag:geocode ' . $oagfile->getId() . ' > /dev/null &');
 
+            $this->get('logger')->debug(sprintf('CoVE parsed file %s sucessfully.', $oagfile->getDocumentName()));
             return $this->redirect($this->generateUrl('oag_wireframe_improveyourdata', array('id' => $oagfile->getId())));
 	}
 
