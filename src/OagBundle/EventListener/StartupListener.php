@@ -16,10 +16,11 @@ class StartupListener {
             return;
         }
         $srvDocker = $this->getContainer()->get(Docker::class);
+        // $containers = $srvDocker->fetchImages();
         $containers = $srvDocker->listContainers();
-        
-        $_containers = ['cove:live', 'dportal:live', 'nerserver:live', 'geocoder:live'];
-        
+
+        $_containers = $this->getContainer()->getParameter('docker_names');
+
         foreach ($_containers as $container) {
             $name = 'openag_' . $container;
             if (array_key_exists($name, $containers)) {
@@ -55,7 +56,7 @@ class StartupListener {
             }
         }
     }
-    
+
     /**
      * Sets the container.
      *

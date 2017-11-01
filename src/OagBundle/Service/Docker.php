@@ -26,9 +26,9 @@ class Docker extends AbstractOagService {
         return $data;
     }
 
-  public function createDportal() {
- // $payload = '{ "Image": "openagdata/dportal", "Tty": true, "ExposedPorts": { "8011/tcp": {}, "1408/tcp": {} }, "HostConfig": { "PortBindings": { "8011/tcp": [ { "HostPort": "8011" } ], "1408/tcp": [ { "HostPort": "1408" } ] }, "RestartPolicy": { "Name": "always" } } }';
- $payload = '{ "Image": "openagdata/dportal:live", "Tty": true, "ExposedPorts": { "8011/tcp": {}, "1408/tcp": {} }, "HostConfig": { "PortBindings": { "8011/tcp": [ { "HostPort": "8011" } ], "1408/tcp": [ { "HostPort": "1408" } ] }, "RestartPolicy": { "Name": "always" } } }';
+    public function createDportal() {
+        // $payload = '{ "Image": "openagdata/dportal", "Tty": true, "ExposedPorts": { "8011/tcp": {}, "1408/tcp": {} }, "HostConfig": { "PortBindings": { "8011/tcp": [ { "HostPort": "8011" } ], "1408/tcp": [ { "HostPort": "1408" } ] }, "RestartPolicy": { "Name": "always" } } }';
+        $payload = '{ "Image": "openagdata/dportal:live", "Tty": true, "ExposedPorts": { "8011/tcp": {}, "1408/tcp": {} }, "HostConfig": { "PortBindings": { "8011/tcp": [ { "HostPort": "8011" } ], "1408/tcp": [ { "HostPort": "1408" } ] }, "RestartPolicy": { "Name": "always" } } }';
 
         $data = $this->apiPost("http:/v1.30/containers/create?name=openag_dportal", $payload);
         return $data;
@@ -46,6 +46,18 @@ class Docker extends AbstractOagService {
         $payload = '{ "Image": "openagdata/geocoder:live", "Tty": true, "ExposedPorts": { "8010/tcp": {} }, "RestartPolicy": { "Name": "always" }, "Links": ["/openag_nerserver:/openag_geocoder/openag_nerserver"] }';
 
         $data = $this->apiPost("http:/v1.30/containers/create?name=openag_geocoder", $payload);
+        return $data;
+    }
+
+    /**
+     * Pull an image.
+     *
+     * @param string $name The name of the image
+     * @return array
+     */
+    public function pullImage($name) {
+        $uri = "http:/v1.30/images/create?fromImage=" . $name;
+        $data = $this->apiPost($uri);
         return $data;
     }
 
@@ -81,6 +93,8 @@ class Docker extends AbstractOagService {
         $msg .= "HOST: 0.0.0.0\r\n";
         $msg .= $path;
         $msg .= "\r\n\r\n";
+
+        $this->getContainer()->get('logger')->debug($msg);
 
         $this->getContainer()->get('logger')->info(sprintf('Posting to %s with %s', $path, $payload));
 

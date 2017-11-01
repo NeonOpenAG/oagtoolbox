@@ -89,4 +89,9 @@ class SuggestedTag {
     public function setActivityId($id) {
         $this->activityId = $id;
     }
+
+    public function toString() {
+        return sprintf('%s, %s, %s', $this->getTag(), $this->getConfidence(), $this->getActivityId());
+    }
+
 }

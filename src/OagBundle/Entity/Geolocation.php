@@ -263,5 +263,9 @@ class Geolocation {
         return $this->pointPosLong;
     }
 
+    public function toString() {
+        return sprintf('%s', $this->getName());
+    }
+
 }
 
