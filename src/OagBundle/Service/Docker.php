@@ -23,6 +23,7 @@ class Docker extends AbstractOagService {
         $payload = '{ "Image": "openagdata/cove:live", "ExposedPorts": { "8000/tcp": {} }, "RestartPolicy": { "Name": "always" } } }';
 
         $data = $this->apiPost("http:/v1.30/containers/create?name=openag_cove", $payload);
+        $this->getContainer()->get('logger')->info('Started CoVE');
         return $data;
     }
 
@@ -31,21 +32,24 @@ class Docker extends AbstractOagService {
         $payload = '{ "Image": "openagdata/dportal:live", "Tty": true, "ExposedPorts": { "8011/tcp": {}, "1408/tcp": {} }, "HostConfig": { "PortBindings": { "8011/tcp": [ { "HostPort": "8011" } ], "1408/tcp": [ { "HostPort": "1408" } ] }, "RestartPolicy": { "Name": "always" } } }';
 
         $data = $this->apiPost("http:/v1.30/containers/create?name=openag_dportal", $payload);
+        $this->getContainer()->get('logger')->info('Started D-Portal');
         return $data;
     }
 
     public function createNerserver() {
         // $payload = '{ "Image": "openagdata/nerserver", "ExposedPorts": { "9000/tcp": {} }, "HostConfig": { "PortBindings": { "9000/tcp": [ { "HostPort": "9000" } ] }, "RestartPolicy": { "Name": "always" } } }';
-        $payload = '{ "Image": "openagdata/nerserver", "ExposedPorts": { "9000/tcp": {} }, "RestartPolicy": { "Name": "always" } } }';
+        $payload = '{ "Image": "openagdata/nerserver:live", "ExposedPorts": { "9000/tcp": {} }, "RestartPolicy": { "Name": "always" } } }';
 
         $data = $this->apiPost("http:/v1.30/containers/create?name=openag_nerserver", $payload);
+        $this->getContainer()->get('logger')->info('Started NER Server');
         return $data;
     }
 
     public function createGeocode() {
-        $payload = '{ "Image": "openagdata/geocoder:live", "Tty": true, "ExposedPorts": { "8010/tcp": {} }, "RestartPolicy": { "Name": "always" }, "Links": ["/openag_nerserver:/openag_geocoder/openag_nerserver"] }';
+        $payload = '{ "Image": "openagdata/geocoder:live", "Tty": true, "ExposedPorts": { "8010/tcp": {} }, "RestartPolicy": { "Name": "always" }, "Links": ["/openag_nerserver": "/openag_geocoder/openag_nerserver"] }';
 
         $data = $this->apiPost("http:/v1.30/containers/create?name=openag_geocoder", $payload);
+        $this->getContainer()->get('logger')->info('Started Geocoder');
         return $data;
     }
 
@@ -56,9 +60,10 @@ class Docker extends AbstractOagService {
      * @return array
      */
     public function pullImage($name) {
-        $uri = "http:/v1.30/images/create?fromImage=" . $name;
-        $data = $this->apiPost($uri);
-        return $data;
+        return exec('docker pull ' . $name);
+        // $uri = "http:/v1.30/images/create?fromImage=" . $name;
+        // $data = $this->apiPost($uri);
+        // return $data;
     }
 
     /**
