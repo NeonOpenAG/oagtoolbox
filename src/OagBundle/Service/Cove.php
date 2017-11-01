@@ -82,7 +82,7 @@ class Cove extends AbstractOagService {
         $contents = $srvOagFile->getContents($file);
         $this->json = $this->process($contents, $file->getDocumentName());
 
-        $err = array_filter($this->json['err'] ?? array());
+        $err = array_filter(explode("\n", $this->json['err']) ?? array());
         $status = $this->json['status'];
 
         if ($status === 0) {
