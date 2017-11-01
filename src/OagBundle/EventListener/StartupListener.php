@@ -18,39 +18,44 @@ class StartupListener {
         $srvDocker = $this->getContainer()->get(Docker::class);
         // $containers = $srvDocker->fetchImages();
         $containers = $srvDocker->listContainers();
+        $this->getContainer()->get('logger')->info(json_encode($containers));
 
         $_containers = $this->getContainer()->getParameter('docker_names');
 
         foreach ($_containers as $container) {
             $name = 'openag_' . $container;
+            $this->getContainer()->get('logger')->info($name);
             if (array_key_exists($name, $containers)) {
                 if ($containers['openag_' . $container]['status'] == 'running') {
+                    $this->getContainer()->get('logger')->debug($name . ' is running.');
                     continue;
                 }
                 $id = $containers['openag_' . $container]['container_id'];
             }
             else {
+                $this->getContainer()->get('logger')->info($container . ' not started');
                 // This doesn't work I can't gert the return value back out
                 // $func = 'create' . ucfirst($container);
                 // $container = $srvDocker->$func;
                 // call_user_func(array($srvDocker, $func), $_container);
                 switch ($container) {
-                    case 'cove':
+                    case 'cove:live':
                         $_container = $srvDocker->createCove();
                         break;
-                    case 'dportal':
+                    case 'dportal:live':
                         $_container = $srvDocker->createDportal();
                         break;
-                    case 'nerserver':
+                    case 'nerserver:live':
                         $_container = $srvDocker->createNerserver();
                         break;
-                    case 'geocoder':
+                    case 'geocoder:live':
                         $_container = $srvDocker->createGeocode();
                         break;
                 }
                 $id = $_container['Id'] ?? false;
             }
 
+            $this->getContainer()->get('logger')->info('ID: ' . $id);
             if ($id) {
                 $srvDocker->startContainer($id);
             }
