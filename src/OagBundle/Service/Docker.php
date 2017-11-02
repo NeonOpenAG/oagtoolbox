@@ -59,8 +59,13 @@ class Docker extends AbstractOagService {
      * @param string $name The name of the image
      * @return array
      */
-    public function pullImage($name) {
-        return exec('docker pull ' . $name);
+    public function pullImage($name, $background = false) {
+        $cmd = 'docker pull ' . $name;
+        if ($background) {
+            $cmd .= " >/dev/null 2>&1 &";
+        }
+        $this->getContainer()->get('logger')->info('Executing ' . $cmd);
+        return exec($cmd);
         // $uri = "http:/v1.30/images/create?fromImage=" . $name;
         // $data = $this->apiPost($uri);
         // return $data;
@@ -152,6 +157,28 @@ class Docker extends AbstractOagService {
     }
 
     /**
+     * List all containers.
+     *
+     * @return array
+     */
+    public function listImages() {
+        $imageData = $this->imageData();
+
+        $data = [];
+        if (!is_array($imageData)) {
+            $this->getContainer()->get('logger')->warning('No conatiner data available.');
+            return [];
+        }
+        foreach ($imageData as $image) {
+            if (isset($image['RepoTags'])) {
+                $data = array_merge($data, $image['RepoTags']);
+            }
+        }
+
+        return $data;
+    }
+
+    /**
      * Turn the array port info into a string.
      *
      * @param array $data IP/Public port/Private port/Protocol
@@ -175,6 +202,16 @@ class Docker extends AbstractOagService {
      */
     public function containerData() {
         $data = $this->apiGet("http:/v1.30/containers/json?all=1");
+        return $data;
+    }
+
+    /**
+     * Fetch raw image data.
+     *
+     * @return array
+     */
+    public function imageData() {
+        $data = $this->apiGet("http:/v1.30/images/json");
         return $data;
     }
 
@@ -205,7 +242,7 @@ class Docker extends AbstractOagService {
         list($this->header, $this->body) = explode("\r\n\r\n", $data, 2);
 
 	$json = json_decode($this->body, true);
-	# $this->getContainer()->get('logger')->debug(sprintf('apiGet returned %d chars, %d elements.', strlen($this->body), count($json ?? [])));
+	$this->getContainer()->get('logger')->debug(sprintf('apiGet returned %d chars, %d elements.', strlen($this->body), count($json ?? [])));
 	return $json;
     }
 

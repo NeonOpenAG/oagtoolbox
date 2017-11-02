@@ -18,3 +18,4 @@ services:
             - { name: kernel.event_listener, event: kernel.request }
         calls:
             - [setContainer, ['@service_container']]
+            - [setRequest, ['@request_stack']]
