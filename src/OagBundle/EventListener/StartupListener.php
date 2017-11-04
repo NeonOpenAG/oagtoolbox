@@ -56,7 +56,7 @@ class StartupListener {
             // Is the container running already?
             $name = 'openag_' . $container;
             $this->getContainer()->get('logger')->info($name);
-            if (array_key_exists($name, $containers)) {
+            if (in_array($name, $containers)) {
                 if ($containers['openag_' . $container]['status'] == 'running') {
                     $this->getContainer()->get('logger')->debug($name . ' is running.');
                     continue;
