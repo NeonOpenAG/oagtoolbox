@@ -23,30 +23,58 @@ class Docker extends AbstractOagService {
         $payload = '{ "Image": "openagdata/cove:live", "ExposedPorts": { "8000/tcp": {} }, "RestartPolicy": { "Name": "always" } } }';
 
         $data = $this->apiPost("http:/v1.30/containers/create?name=openag_cove", $payload);
+        $this->getContainer()->get('logger')->info('Started CoVE');
         return $data;
     }
 
-  public function createDportal() {
- // $payload = '{ "Image": "openagdata/dportal", "Tty": true, "ExposedPorts": { "8011/tcp": {}, "1408/tcp": {} }, "HostConfig": { "PortBindings": { "8011/tcp": [ { "HostPort": "8011" } ], "1408/tcp": [ { "HostPort": "1408" } ] }, "RestartPolicy": { "Name": "always" } } }';
- $payload = '{ "Image": "openagdata/dportal:live", "Tty": true, "ExposedPorts": { "8011/tcp": {}, "1408/tcp": {} }, "HostConfig": { "PortBindings": { "8011/tcp": [ { "HostPort": "8011" } ], "1408/tcp": [ { "HostPort": "1408" } ] }, "RestartPolicy": { "Name": "always" } } }';
+    public function createDportal() {
+        // $payload = '{ "Image": "openagdata/dportal", "Tty": true, "ExposedPorts": { "8011/tcp": {}, "1408/tcp": {} }, "HostConfig": { "PortBindings": { "8011/tcp": [ { "HostPort": "8011" } ], "1408/tcp": [ { "HostPort": "1408" } ] }, "RestartPolicy": { "Name": "always" } } }';
+        $payload = '{ "Image": "openagdata/dportal:live", "Tty": true, "ExposedPorts": { "8011/tcp": {}, "1408/tcp": {} }, "HostConfig": { "PortBindings": { "8011/tcp": [ { "HostPort": "8011" } ], "1408/tcp": [ { "HostPort": "1408" } ] }, "RestartPolicy": { "Name": "always" } } }';
 
         $data = $this->apiPost("http:/v1.30/containers/create?name=openag_dportal", $payload);
+        $this->getContainer()->get('logger')->info('Started D-Portal');
         return $data;
     }
 
     public function createNerserver() {
         // $payload = '{ "Image": "openagdata/nerserver", "ExposedPorts": { "9000/tcp": {} }, "HostConfig": { "PortBindings": { "9000/tcp": [ { "HostPort": "9000" } ] }, "RestartPolicy": { "Name": "always" } } }';
-        $payload = '{ "Image": "openagdata/nerserver", "ExposedPorts": { "9000/tcp": {} }, "RestartPolicy": { "Name": "always" } } }';
+        $payload = '{ "Image": "openagdata/nerserver:live", "ExposedPorts": { "9000/tcp": {} }, "RestartPolicy": { "Name": "always" } } }';
 
         $data = $this->apiPost("http:/v1.30/containers/create?name=openag_nerserver", $payload);
+        $this->getContainer()->get('logger')->info('Started NER Server');
         return $data;
     }
 
     public function createGeocode() {
-        $payload = '{ "Image": "openagdata/geocoder:live", "Tty": true, "ExposedPorts": { "8010/tcp": {} }, "RestartPolicy": { "Name": "always" }, "Links": ["/openag_nerserver:/openag_geocoder/openag_nerserver"] }';
+        $payload = '{ ' .
+            '"Image": "openagdata/geocoder:live", ' .
+            '"Tty": true, ' .
+            '"ExposedPorts": { "8010/tcp": {} }, ' .
+            '"RestartPolicy": { "Name": "always" }, ' .
+            '"Links": ["/openag_nerserver", "/openag_geocoder/openag_nerserver"] ' .
+            '}';
 
         $data = $this->apiPost("http:/v1.30/containers/create?name=openag_geocoder", $payload);
+        $this->getContainer()->get('logger')->info('Started Geocoder');
         return $data;
+    }
+
+    /**
+     * Pull an image.
+     *
+     * @param string $name The name of the image
+     * @return array
+     */
+    public function pullImage($name, $background = false) {
+        $cmd = 'docker pull ' . $name;
+        if ($background) {
+            $cmd .= " >/dev/null 2>&1 &";
+        }
+        $this->getContainer()->get('logger')->info('Executing ' . $cmd);
+        return exec($cmd);
+        // $uri = "http:/v1.30/images/create?fromImage=" . $name;
+        // $data = $this->apiPost($uri);
+        // return $data;
     }
 
     /**
@@ -81,6 +109,8 @@ class Docker extends AbstractOagService {
         $msg .= "HOST: 0.0.0.0\r\n";
         $msg .= $path;
         $msg .= "\r\n\r\n";
+
+        $this->getContainer()->get('logger')->debug($msg);
 
         $this->getContainer()->get('logger')->info(sprintf('Posting to %s with %s', $path, $payload));
 
@@ -133,6 +163,28 @@ class Docker extends AbstractOagService {
     }
 
     /**
+     * List all containers.
+     *
+     * @return array
+     */
+    public function listImages() {
+        $imageData = $this->imageData();
+
+        $data = [];
+        if (!is_array($imageData)) {
+            $this->getContainer()->get('logger')->warning('No conatiner data available.');
+            return [];
+        }
+        foreach ($imageData as $image) {
+            if (isset($image['RepoTags'])) {
+                $data = array_merge($data, $image['RepoTags']);
+            }
+        }
+
+        return $data;
+    }
+
+    /**
      * Turn the array port info into a string.
      *
      * @param array $data IP/Public port/Private port/Protocol
@@ -156,6 +208,16 @@ class Docker extends AbstractOagService {
      */
     public function containerData() {
         $data = $this->apiGet("http:/v1.30/containers/json?all=1");
+        return $data;
+    }
+
+    /**
+     * Fetch raw image data.
+     *
+     * @return array
+     */
+    public function imageData() {
+        $data = $this->apiGet("http:/v1.30/images/json");
         return $data;
     }
 
@@ -186,7 +248,7 @@ class Docker extends AbstractOagService {
         list($this->header, $this->body) = explode("\r\n\r\n", $data, 2);
 
 	$json = json_decode($this->body, true);
-	# $this->getContainer()->get('logger')->debug(sprintf('apiGet returned %d chars, %d elements.', strlen($this->body), count($json ?? [])));
+	$this->getContainer()->get('logger')->debug(sprintf('apiGet returned %d chars, %d elements.', strlen($this->body), count($json ?? [])));
 	return $json;
     }
 

@@ -25,12 +25,36 @@ class DockerController extends Controller
         $srvClassifier = $this->get(Classifier::class);
 
         $containers = $srvDocker->listContainers();
+        $images = $srvDocker->listImages();
         $geocoderStatus = $srvGeocoder->status();
         $classifierStatus = $srvClassifier->status();
 
+        // Dockers
+        $dockerNames = $this->getParameter('docker_names');
+        $imageData = [];
+        foreach ($dockerNames as $name) {
+            $status = in_array('openagdata/' . $name, $images);
+            $imageData[] = [
+                'name' => $name,
+                'status' => $status,
+            ];
+            if (!$status) {
+                $srvDocker->pullImage('openagdata/' . $name, true);
+            }
+        }
+
+        $output = [];
+        exec('ps -ef | grep "docker pull"', $output);
+
         $data = [
             'containers' => $containers,
-            'json' => json_encode($containers, JSON_PRETTY_PRINT),
+            'images' => $images,
+            'all_images' => implode(', ', $images),
+            'docker_names' => $dockerNames,
+            'process_stat' => $output,
+            'image_data' => $imageData,
+            'container_json' => json_encode($containers, JSON_PRETTY_PRINT),
+            'image_json' => json_encode($images, JSON_PRETTY_PRINT),
             'status' => [
                 'geocoder' => json_encode($geocoderStatus),
                 'classifier' => json_encode($classifierStatus),

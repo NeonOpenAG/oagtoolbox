@@ -23,11 +23,12 @@ parameters:
         admin_2_vocabulary: 'PLACEHOLDER'
     unlink_files: true
     populate_status: false
+    docker_reponame: openagdata
     docker_names:
-        cove: openagdata/cove:live
-        geocoder: openagdata/geocoder:live
-        nerserver: openagdata/nerserver:live
-        dportal: openagdata/dportal:live
+        cove: cove:live
+        geocoder: geocoder:live
+        nerserver: nerserver:live
+        dportal: dportal:live
 
 twig:
     globals:

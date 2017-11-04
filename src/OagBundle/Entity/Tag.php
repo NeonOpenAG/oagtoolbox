@@ -128,4 +128,8 @@ class Tag {
         return $this->vocabulary_uri;
     }
 
+    public function __toString() {
+        return sprintf('Tag %s, [%s]', $this->getCode(), $this->getDescription());
+    }
+
 }
