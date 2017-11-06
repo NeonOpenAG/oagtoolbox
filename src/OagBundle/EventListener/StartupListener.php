@@ -58,18 +58,17 @@ class StartupListener {
                 $containerName = $container;
             }
             $name = 'openag_' . $containerName;
-                    $this->getContainer()->get('logger')->debug($name . ' in ' . implode(', ', array_keys($containers)));
             if (array_key_exists($name, $containers)) {
                 if ($containers[$name]['status'] == 'running') {
-                    $this->getContainer()->get('logger')->debug($name . ' is running.');
                     continue;
                 }
                 // If the container is created but not started, then note the ID.
                 $id = $containers['openag_' . $container]['container_id'];
+                $this->getContainer()->get('logger')->debug($name . ' not started.');
             }
             else {
                 // Create the container if it's not created.
-                $this->getContainer()->get('logger')->info($container . ' not started');
+                $this->getContainer()->get('logger')->info($container . ' not created');
                 // This doesn't work I can't gert the return value back out
                 // $func = 'create' . ucfirst($container);
                 // $container = $srvDocker->$func;

@@ -110,9 +110,8 @@ class Docker extends AbstractOagService {
         $msg .= $path;
         $msg .= "\r\n\r\n";
 
-        $this->getContainer()->get('logger')->debug($msg);
-
-        $this->getContainer()->get('logger')->info(sprintf('Posting to %s with %s', $path, $payload));
+        // $this->getContainer()->get('logger')->debug($msg);
+        // $this->getContainer()->get('logger')->info(sprintf('Posting to %s with %s', $path, $payload));
 
         fwrite($sock, $msg);
         if ($payload) {
@@ -248,7 +247,7 @@ class Docker extends AbstractOagService {
         list($this->header, $this->body) = explode("\r\n\r\n", $data, 2);
 
 	$json = json_decode($this->body, true);
-	$this->getContainer()->get('logger')->debug(sprintf('apiGet returned %d chars, %d elements.', strlen($this->body), count($json ?? [])));
+	// $this->getContainer()->get('logger')->debug(sprintf('apiGet returned %d chars, %d elements.', strlen($this->body), count($json ?? [])));
 	return $json;
     }
 

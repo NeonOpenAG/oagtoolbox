@@ -70,7 +70,6 @@ class Classifier extends AbstractOagService {
         curl_setopt($request, CURLOPT_URL, $uri);
         curl_setopt($request, CURLOPT_POST, true);
         curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
-        $this->getContainer()->get('logger')->info('Accessing classifer at ' . $uri);
 
         $payload = array(
             'data' => $contents,
@@ -80,6 +79,7 @@ class Classifier extends AbstractOagService {
             'form' => 'json',
             'xml_input' => 'true',
         );
+        $this->getContainer()->get('logger')->info('Accessing classifer at ' . $uri);
 
         curl_setopt($request, CURLOPT_POSTFIELDS, json_encode($payload));
         curl_setopt($request, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
@@ -104,13 +104,12 @@ class Classifier extends AbstractOagService {
                     'confidence' => '',
                 ),
             );
-            $this->getContainer()->get('logger')->error('Classifier failed to return json');
+            $this->getContainer()->get('logger')->error('Classifier failed to return json. (' . $data . ')');
             $log = [
-                get_class() => [
-                    'uri' => $uri,
-                    'payload' => $payload,
-                    '$data' => $data,
-                ],
+                'class' => get_class(),
+                'uri' => $uri,
+                'payload' => $payload,
+                'data' => $data,
             ];
             $this->logData($log);
         }
@@ -183,17 +182,16 @@ class Classifier extends AbstractOagService {
      * @param OagFile $oagFile the file to classify
      */
     public function classifyOagFile(OagFile $oagFile) {
-        $srvClassifier = $this->getContainer()->get(Classifier::class);
         $srvOagFile = $this->getContainer()->get(OagFileService::class);
 
-        $oagFile->clearSuggestedTags();
+        // $oagFile->clearSuggestedTags();
 
         // IATI xml document
         $rawXml = $srvOagFile->getContents($oagFile);
         $jsonResp = $this->processXML($rawXml);
 
         if ($jsonResp['status']) {
-            throw new \Exception('Classifier service could not classify file');
+            throw new \Exception('Classifier service could not classify oag file');
         }
 
         foreach ($jsonResp['data'] as $block) {
@@ -218,10 +216,8 @@ class Classifier extends AbstractOagService {
      * @param string $activityId if the text is specific
      */
     public function classifyOagFileFromText(OagFile $file, $text, $activityId = null) {
-        $srvClassifier = $this->getContainer()->get(Classifier::class);
-
-        $file->clearSuggestedTags();
-        $json = $srvClassifier->processString($text);
+        // $file->clearSuggestedTags();
+        $json = $this->processString($text);
 
         if ($json['status']) {
             throw new \Exception('Classifier service could not classify text');
@@ -241,8 +237,7 @@ class Classifier extends AbstractOagService {
      *
      * @param EnhancementFile $enhFile the file to classify
      */
-    public function classifyEnhancementFile(EnhancementFile $enhFile) {
-        $srvClassifier = $this->getContainer()->get(Classifier::class);
+    public function classifyEnhancementFile(EnhancementFile $enhFile, $activityId) {
         $srvTextify = $this->getContainer()->get(TextifyService::class);
 
         // $enhFile->clearSuggestedTags();
@@ -255,13 +250,13 @@ class Classifier extends AbstractOagService {
             throw new \RuntimeException('Unsupported file type to strip text from');
         }
 
-        $json = $srvClassifier->processString($rawText);
+        $json = $this->processString($rawText);
 
         if ($json['status']) {
-            throw new \Exception('Classifier service could not classify file');
+            throw new \Exception('Classifier service could not classify enhancement file');
         }
 
-        $this->persistTags($json['data'], $enhFile);
+        $this->persistTags($json['data'], $enhFile, $activityId);
 
         $em = $this->getContainer()->get('doctrine')->getManager();
         $em->persist($enhFile);
@@ -315,14 +310,23 @@ class Classifier extends AbstractOagService {
                 $tag->setVocabulary($vocab, $vocabUri);
             }
 
+            $em->persist($tag);
+            $em->flush();
+
+            $this->getContainer()->get('logger')
+                ->debug(sprintf('Persisting %s (%s) at %s for %s', $code, $description, $confidence, $activityId));
             $sugTag = new \OagBundle\Entity\SuggestedTag();
             $sugTag->setTag($tag);
             $sugTag->setConfidence($confidence);
             if (!is_null($activityId)) {
                 $sugTag->setActivityId($activityId);
             }
+            $em->persist($sugTag);
+            $em->flush();
 
             $file->addSuggestedTag($sugTag);
+            $em->persist($file);
+            $em->flush();
         }
     }
 

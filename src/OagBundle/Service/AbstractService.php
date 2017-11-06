@@ -21,15 +21,19 @@ abstract class AbstractService {
         return $this->container;
     }
 
-    public function logData($data) {
+    public function logData($data, $fileprefix = 'data') {
 
         $logDir = $this->getContainer()->get('kernel')->getLogDir() . '/oag';
-        $logFile = $logDir . '/' . 'delme.log';
+        $logFile = $logDir . '/' . $fileprefix . '.log';
         if (!is_dir($logDir)) {
             mkdir($logDir, 0775, true);
         }
 
         if (is_array($data)) {
+            if (isset($data['payload]'])) {
+                $this->logData($data['payload]'], 'payload');
+                unset($data['payload]']);
+            }
             $_data = json_encode($data);
         } elseif (is_string($data)) {
             $_data = $data;
@@ -37,7 +41,7 @@ abstract class AbstractService {
             var_export($data, true);
         }
 
-        $fh = fopen($logFile, 'a');
+        $fh = fopen($logFile, 'w');
         fwrite($fh, $_data);
         fwrite($fh, "\n");
         fclose($fh);

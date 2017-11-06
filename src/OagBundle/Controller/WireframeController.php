@@ -241,6 +241,51 @@ class WireframeController extends Controller {
             // TODO throw a reasonable error
         }
 
+        $this->get('logger')->debug('Activity count = ' . $activity->count());
+
+        // enhancement file upload form
+        $enhFile = new EnhancementFile();
+        $enhUploadForm = $this->createForm(EnhancementFileType::class, $enhFile);
+        $enhUploadForm->add('Upload', SubmitType::class, array(
+            'attr' => array('class' => 'submit')
+        ));
+        $enhUploadForm->handleRequest($request);
+        if ($enhUploadForm->isSubmitted() && $enhUploadForm->isValid()) {
+            $tmpFile = $enhFile->getDocumentName();
+            $enhFile->setMimeType(mime_content_type($tmpFile->getPathName()));
+
+            $filename = $tmpFile->getClientOriginalName();
+
+            $tmpFile->move(
+                $this->getParameter('oagfiles_directory'), $filename
+            );
+
+            $enhFile->setDocumentName($filename);
+            $enhFile->setUploadDate(new \DateTime('now'));
+            $enhFile->setIatiActivityId($activityId);
+            $srvClassifier->classifyEnhancementFile($enhFile, $activityId);
+
+            $file->addEnhancingDocument($enhFile);
+            $em->persist($file);
+            $em->flush();
+
+            return $this->redirect($this->generateUrl('oag_wireframe_classifiersuggestion', array('id' => $file->getId(), 'activityId' => $activityId)));
+        }
+
+        // paste text form
+        $pasteTextForm = $this->createFormBuilder()
+            ->add('text', TextareaType::class, array(
+                'attr' => array('placeholder' => 'Copy and paste text')
+            ))
+            ->add('read', SubmitType::class)
+            ->getForm();
+        $pasteTextForm->handleRequest($request);
+        if ($pasteTextForm->isSubmitted() && $pasteTextForm->isValid()) {
+            $data = $pasteTextForm->getData();
+            $srvClassifier->classifyOagFileFromText($file, $data['text'], $activityId);
+            return $this->redirect($this->generateUrl('oag_wireframe_classifiersuggestion', array('id' => $file->getId(), 'activityId' => $activityId)));
+        }
+
         $currentTags = $srvIATI->getActivityTags($activity);
 
         // load all suggested tags
@@ -267,49 +312,6 @@ class WireframeController extends Controller {
             $classifierTags[] = $sugTag->getTag();
         }
         $allTags = array_merge($currentTags, $classifierTags);
-
-        // enhancement file upload form
-        $enhFile = new EnhancementFile();
-        $enhUploadForm = $this->createForm(EnhancementFileType::class, $enhFile);
-        $enhUploadForm->add('Upload', SubmitType::class, array(
-            'attr' => array('class' => 'submit')
-        ));
-        $enhUploadForm->handleRequest($request);
-        if ($enhUploadForm->isSubmitted() && $enhUploadForm->isValid()) {
-            $tmpFile = $enhFile->getDocumentName();
-            $enhFile->setMimeType(mime_content_type($tmpFile->getPathName()));
-
-            $filename = $tmpFile->getClientOriginalName();
-
-            $tmpFile->move(
-                $this->getParameter('oagfiles_directory'), $filename
-            );
-
-            $enhFile->setDocumentName($filename);
-            $enhFile->setUploadDate(new \DateTime('now'));
-            $enhFile->setIatiActivityId($activityId);
-            $srvClassifier->classifyEnhancementFile($enhFile);
-
-            $file->addEnhancingDocument($enhFile);
-            $em->persist($file);
-            $em->flush();
-
-            return $this->redirect($this->generateUrl('oag_wireframe_classifiersuggestion', array('id' => $file->getId(), 'activityId' => $activityId)));
-        }
-
-        // paste text form
-        $pasteTextForm = $this->createFormBuilder()
-            ->add('text', TextareaType::class, array(
-                'attr' => array('placeholder' => 'Copy and paste text')
-            ))
-            ->add('read', SubmitType::class)
-            ->getForm();
-        $pasteTextForm->handleRequest($request);
-        if ($pasteTextForm->isSubmitted() && $pasteTextForm->isValid()) {
-            $data = $pasteTextForm->getData();
-            $srvClassifier->classifyOagFileFromText($file, $data['text'], $activityId);
-            return $this->redirect($this->generateUrl('oag_wireframe_classifiersuggestion', array('id' => $file->getId(), 'activityId' => $activityId)));
-        }
 
         // tags add/remove form
         $form = $this->createFormBuilder()
