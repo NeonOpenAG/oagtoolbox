@@ -818,11 +818,9 @@ table {
   }
 }
 
-.morecontent span {
-    display: none;
-}
-.morelink {
-    display: block;
+/* Read more link for readmore.js */
+[data-readmore-toggle] {
+  font-weight: bold;
 }
 
 // Ellipsis animation
