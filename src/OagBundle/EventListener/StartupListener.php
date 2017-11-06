@@ -25,27 +25,24 @@ class StartupListener {
             // This is a status URL, so don't do the checks
             return;
         }
-        $this->getContainer()->get('logger')->error('+++++ ' . $route . ' +++++');
 
         $srvDocker = $this->getContainer()->get(Docker::class);
         $_containers = $this->getContainer()->getParameter('docker_names');
         $images = $srvDocker->listImages();
 
         $containers = $srvDocker->listContainers();
-        $this->getContainer()->get('logger')->info(json_encode($containers));
 
         foreach ($_containers as $container) {
             // Is the image available?
             $imagePulled = false;
             foreach ($images as $image) {
-                $this->getContainer()->get('logger')->error('Checking ' . $container . ' against ' . $image);
                 if (strpos($image, $container) !== false) {
                     $imagePulled = true;
                     break;
                 }
             }
             if (!$imagePulled) {
-                $this->getContainer()->get('logger')->error('The image for the ' . $container . ' not present');
+                $this->getContainer()->get('logger')->debug('The image for the ' . $container . ' not present');
                 $router = $this->getContainer()->get('router');
                 $url = $router->generate('oag_docker_list');
                 $response = new RedirectResponse($url);
@@ -54,10 +51,16 @@ class StartupListener {
             }
 
             // Is the container running already?
-            $name = 'openag_' . $container;
-            $this->getContainer()->get('logger')->info($name);
-            if (in_array($name, $containers)) {
-                if ($containers['openag_' . $container]['status'] == 'running') {
+            if (strpos($container, ':') !== false) {
+                $containerName = substr($container, 0, strpos($container, ':'));
+            }
+            else {
+                $containerName = $container;
+            }
+            $name = 'openag_' . $containerName;
+                    $this->getContainer()->get('logger')->debug($name . ' in ' . implode(', ', array_keys($containers)));
+            if (array_key_exists($name, $containers)) {
+                if ($containers[$name]['status'] == 'running') {
                     $this->getContainer()->get('logger')->debug($name . ' is running.');
                     continue;
                 }

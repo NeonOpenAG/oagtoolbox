@@ -245,7 +245,7 @@ class Classifier extends AbstractOagService {
         $srvClassifier = $this->getContainer()->get(Classifier::class);
         $srvTextify = $this->getContainer()->get(TextifyService::class);
 
-        $enhFile->clearSuggestedTags();
+        // $enhFile->clearSuggestedTags();
 
         // enhancing/text document
         $rawText = $srvTextify->stripEnhancementFile($enhFile);
