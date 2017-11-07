@@ -2,7 +2,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link href="{{ asset('bundles/oag/jquery-filestyle-1.5.1/src/jquery-filestyle.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('bundles/oag/jquery-filestyle-1.5.1/src/jquery-filestyle.min.css') }}" rel="stylesheet"/>
 {% endblock %}
 
 {% block title %}Add agricultural classifications{% endblock %}
@@ -26,7 +26,7 @@
                 }) }}
             {% endfor %}
 
-      	    <a class="cta back" href="{{ path('oag_wireframe_improveyourdata', { 'id': file.getId }) }}">Back</a>
+            <a class="cta back" href="{{ path('oag_wireframe_improveyourdata', { 'id': file.getId }) }}">Back</a>
 
         </section>
 

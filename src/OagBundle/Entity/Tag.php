@@ -3,7 +3,6 @@
 namespace OagBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Code
@@ -11,7 +10,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Table(name="tag")
  * @ORM\Entity(repositoryClass="OagBundle\Repository\TagRepository")
  */
-class Tag {
+class Tag
+{
 
     /**
      * @var int
@@ -55,8 +55,52 @@ class Tag {
      *
      * @return int
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
+    }
+
+    public function getVocabulary()
+    {
+        return $this->vocabulary;
+    }
+
+    /**
+     * Sets the vocabulary and conditionally vocabulary_uri if invalid.
+     *
+     * @param string $vocab
+     * @param string $vocabUri
+     */
+    public function setVocabulary($vocab, $vocabUri = null)
+    {
+        $this->vocabulary = $vocab;
+        if ($vocab === "98" || $vocab === "99") {
+            if (is_null($vocabUri)) {
+                throw new \Exception("Invalid vocabUri provided.");
+            }
+
+            $this->vocabulary_uri = $vocabUri;
+        }
+    }
+
+    public function getVocabularyUri()
+    {
+        return $this->vocabulary_uri;
+    }
+
+    public function __toString()
+    {
+        return sprintf('Tag %s, [%s]', $this->getCode(), $this->getDescription());
+    }
+
+    /**
+     * Get code
+     *
+     * @return string
+     */
+    public function getCode()
+    {
+        return $this->code;
     }
 
     /**
@@ -66,30 +110,9 @@ class Tag {
      *
      * @return Tag
      */
-    public function setCode($code) {
+    public function setCode($code)
+    {
         $this->code = $code;
-
-        return $this;
-    }
-
-    /**
-     * Get code
-     *
-     * @return string
-     */
-    public function getCode() {
-        return $this->code;
-    }
-
-    /**
-     * Set description
-     *
-     * @param string $description
-     *
-     * @return Tag
-     */
-    public function setDescription($description) {
-        $this->description = $description;
 
         return $this;
     }
@@ -99,37 +122,23 @@ class Tag {
      *
      * @return string
      */
-    public function getDescription() {
+    public function getDescription()
+    {
         return $this->description;
     }
 
     /**
-     * Sets the vocabulary and conditionally vocabulary_uri if invalid.
+     * Set description
      *
-     * @param string $vocab
-     * @param string $vocabUri
+     * @param string $description
+     *
+     * @return Tag
      */
-    public function setVocabulary($vocab, $vocabUri = null) {
-        $this->vocabulary = $vocab;
-        if($vocab === "98" || $vocab === "99") {
-            if(is_null($vocabUri)) {
-                throw new \Exception("Invalid vocabUri provided.");
-            }
+    public function setDescription($description)
+    {
+        $this->description = $description;
 
-            $this->vocabulary_uri = $vocabUri;
-        }
-    }
-
-    public function getVocabulary() {
-        return $this->vocabulary;
-    }
-
-    public function getVocabularyUri() {
-        return $this->vocabulary_uri;
-    }
-
-    public function __toString() {
-        return sprintf('Tag %s, [%s]', $this->getCode(), $this->getDescription());
+        return $this;
     }
 
 }

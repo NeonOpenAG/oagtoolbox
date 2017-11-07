@@ -6,15 +6,29 @@
         </reporting-org>
         <title>
             <narrative xml:lang="en">Tunisia - The Water Sector Investment Project - Phase II (PISEAU II)</narrative>
-            <narrative xml:lang="fr">Tunisie - Projet d'investissement dans le secteur de l'eau - Phase II (PISEAU II)</narrative>
+            <narrative xml:lang="fr">Tunisie - Projet d'investissement dans le secteur de l'eau - Phase II (PISEAU II)
+            </narrative>
         </title>
         <description type="1">
-            <narrative xml:lang="fr">,,Dans une optique d'apport d'un appui financier aux budgets annuels d'investissements du Minist�re de l'Agriculture pour les ann�es 2001-2006 et d'une am�lioration de l'impact �conomique des d�penses publiques par la
-                r�alisation d'actions cl�s d'accompagnement, le programme PISEAU vise � augmenter les revenus du secteur rural par le d�veloppement de l'infrastructure et une meilleure utilisation des ressources et a assurer une gestion durable des ressources en eau
-                par : - la gestion de la demande � travers une plus grande participation des usagers - la gestion int�gr�e des ressources en eau (eaux souterraines et eaux de surface) - la pr�servation de la ressource et la protection de l'environnement. Plus
-                sp�cifiquement, le PISEAU vise � : (a) promouvoir la gestion int�gr�e des ressources en eau par (i) l'�tablissement et l'application d'un cadre institutionnel et la mise en #uvre de r�formes sectorielles en vue d'adopter une strat�gie de gestion de
-                la demande (�volution de la politique tarifaire, nouvelles dispositions institutionnelles) ; (ii) l'am�lioration de la capacit� des groupements d'int�r�ts collectifs (GIC) et des op�rateurs du secteur priv� � g�rer les ressources de mani�re efficace,
-                et (iii) une meilleure gestion en temps r�el des eaux superficielles et souterraines (sources traditionnelles et non traditionnelles) ; et (b) promouvoir la conservation des ressources en eau et la protection de l'environnement..</narrative>
+            <narrative xml:lang="fr">,,Dans une optique d'apport d'un appui financier aux budgets annuels
+                d'investissements du Minist�re de l'Agriculture pour les ann�es 2001-2006 et d'une am�lioration de
+                l'impact �conomique des d�penses publiques par la
+                r�alisation d'actions cl�s d'accompagnement, le programme PISEAU vise � augmenter les revenus du secteur
+                rural par le d�veloppement de l'infrastructure et une meilleure utilisation des ressources et a assurer
+                une gestion durable des ressources en eau
+                par : - la gestion de la demande � travers une plus grande participation des usagers - la gestion
+                int�gr�e des ressources en eau (eaux souterraines et eaux de surface) - la pr�servation de la ressource
+                et la protection de l'environnement. Plus
+                sp�cifiquement, le PISEAU vise � : (a) promouvoir la gestion int�gr�e des ressources en eau par (i)
+                l'�tablissement et l'application d'un cadre institutionnel et la mise en #uvre de r�formes sectorielles
+                en vue d'adopter une strat�gie de gestion de
+                la demande (�volution de la politique tarifaire, nouvelles dispositions institutionnelles) ; (ii)
+                l'am�lioration de la capacit� des groupements d'int�r�ts collectifs (GIC) et des op�rateurs du secteur
+                priv� � g�rer les ressources de mani�re efficace,
+                et (iii) une meilleure gestion en temps r�el des eaux superficielles et souterraines (sources
+                traditionnelles et non traditionnelles) ; et (b) promouvoir la conservation des ressources en eau et la
+                protection de l'environnement..
+            </narrative>
         </description>
         <participating-org role="1" ref="46002" type="40">
             <narrative>African Development Bank</narrative>
@@ -35,7 +49,9 @@
                 <narrative>African Development Bank Group</narrative>
             </organisation>
             <department>
-                <narrative>Agriculture and Agro Industry North, East and South Regions/ Agriculture et Agro Industrie, R�gions de l'Afrique du Nord, de l'Est et du Sud</narrative>
+                <narrative>Agriculture and Agro Industry North, East and South Regions/ Agriculture et Agro Industrie,
+                    R�gions de l'Afrique du Nord, de l'Est et du Sud
+                </narrative>
             </department>
             <person-name>
                 <narrative>KANE Mamadou</narrative>
@@ -47,7 +63,9 @@
             <email>m.a.kane@afdb.org</email>
             <website>www.afdb.org</website>
             <mailing-address>
-                <narrative>African Development Bank Group Headquarters Avenue Joseph Anoma 01 BP 1387 Abidjan 01, C�te d'Ivoire</narrative>
+                <narrative>African Development Bank Group Headquarters Avenue Joseph Anoma 01 BP 1387 Abidjan 01, C�te
+                    d'Ivoire
+                </narrative>
             </mailing-address>
         </contact-info>
         <activity-scope code="4"/>
@@ -727,7 +745,9 @@
                 <narrative>Government Of Tunisia</narrative>
             </provider-org>
         </transaction>
-        <document-link url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Environmental-and-Social-Assessments/30769277-EN-DCPES-PISEAU-II-TUNISIE.PDF" format="application/pdf">
+        <document-link
+                url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Environmental-and-Social-Assessments/30769277-EN-DCPES-PISEAU-II-TUNISIE.PDF"
+                format="application/pdf">
             <title>
                 <narrative>Appraisal report</narrative>
             </title>
@@ -740,8 +760,8 @@
             <language code="fr"/>
         </document-link>
         <document-link
-            url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Procurement/Project-related-Procurement/EOI_%E2%80%93_Tunisie_-_Bureau_de_formation_pour_la_r%C3%A9alisation_de_sessions_de_formation_en_informatique_et_en_management_-_Projet_d%E2%80%99investissement_dans_le_secteur_de_l%E2%80%99EAU__PISEAU_II_.pdf"
-            format="application/pdf">
+                url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Procurement/Project-related-Procurement/EOI_%E2%80%93_Tunisie_-_Bureau_de_formation_pour_la_r%C3%A9alisation_de_sessions_de_formation_en_informatique_et_en_management_-_Projet_d%E2%80%99investissement_dans_le_secteur_de_l%E2%80%99EAU__PISEAU_II_.pdf"
+                format="application/pdf">
             <title>
                 <narrative>Tender</narrative>
             </title>
@@ -840,11 +860,16 @@
             <narrative>African Development Bank Group</narrative>
         </reporting-org>
         <title>
-            <narrative xml:lang="en">Botswana - The Pandamatenga Agricultural Infrastructure Development Project</narrative>
-            <narrative xml:lang="fr">Botswana - Projet de d�veloppement des infrastructures agricoles de Pandamatenga</narrative>
+            <narrative xml:lang="en">Botswana - The Pandamatenga Agricultural Infrastructure Development Project
+            </narrative>
+            <narrative xml:lang="fr">Botswana - Projet de d�veloppement des infrastructures agricoles de Pandamatenga
+            </narrative>
         </title>
         <description type="2">
-            <narrative xml:lang="en">The specific objective is to increase cereal production of the 25,000 ha arable farms from the current level of 0.5 to 2.5 metric tonnes per ha for the traditional farmers; and 2 to 3.5 metric tonnes per ha for the large scale farmers</narrative>
+            <narrative xml:lang="en">The specific objective is to increase cereal production of the 25,000 ha arable
+                farms from the current level of 0.5 to 2.5 metric tonnes per ha for the traditional farmers; and 2 to
+                3.5 metric tonnes per ha for the large scale farmers
+            </narrative>
         </description>
         <participating-org role="1" ref="46002" type="40">
             <narrative>African Development Bank</narrative>
@@ -865,7 +890,9 @@
                 <narrative>African Development Bank Group</narrative>
             </organisation>
             <department>
-                <narrative>Agriculture and Agro Industry North, East and South Regions/ Agriculture et Agro Industrie, R�gions de l'Afrique du Nord, de l'Est et du Sud</narrative>
+                <narrative>Agriculture and Agro Industry North, East and South Regions/ Agriculture et Agro Industrie,
+                    R�gions de l'Afrique du Nord, de l'Est et du Sud
+                </narrative>
             </department>
             <person-name>
                 <narrative>SOLIMAN Wael Mohamed Roshdy</narrative>
@@ -877,7 +904,9 @@
             <email>w.soliman@afdb.org</email>
             <website>www.afdb.org</website>
             <mailing-address>
-                <narrative>African Development Bank Group Headquarters Avenue Joseph Anoma 01 BP 1387 Abidjan 01, C�te d'Ivoire</narrative>
+                <narrative>African Development Bank Group Headquarters Avenue Joseph Anoma 01 BP 1387 Abidjan 01, C�te
+                    d'Ivoire
+                </narrative>
             </mailing-address>
         </contact-info>
         <activity-scope code="4"/>
@@ -1411,7 +1440,8 @@
                 <narrative>Government Of Botswana</narrative>
             </provider-org>
         </transaction>
-        <document-link url="http://www.afdb.org/en/projects-and-operations/project-portfolio/project/p-bw-aac-001/" format="WebPage">
+        <document-link url="http://www.afdb.org/en/projects-and-operations/project-portfolio/project/p-bw-aac-001/"
+                       format="WebPage">
             <title>
                 <narrative>Activity Web Site</narrative>
             </title>
@@ -1419,8 +1449,8 @@
             <language code="en"/>
         </document-link>
         <document-link
-            url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Procurement/Project-related-Procurement/Information_Notice_%E2%80%93_Botswana_-_Construction_of_Road_Network_and_Drainage_Systems_for_Eastern_Area_of_Pandamatenga_Farms.pdf"
-            format="application/pdf">
+                url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Procurement/Project-related-Procurement/Information_Notice_%E2%80%93_Botswana_-_Construction_of_Road_Network_and_Drainage_Systems_for_Eastern_Area_of_Pandamatenga_Farms.pdf"
+                format="application/pdf">
             <title>
                 <narrative>Contract</narrative>
             </title>
@@ -1428,7 +1458,9 @@
             <category code="A11"/>
             <language code="en"/>
         </document-link>
-        <document-link url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Botswana_-_Pandamatenga_Agricultural_Infrastructure_Development_Project_-_Appraisal_Report.PDF" format="application/pdf">
+        <document-link
+                url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Botswana_-_Pandamatenga_Agricultural_Infrastructure_Development_Project_-_Appraisal_Report.PDF"
+                format="application/pdf">
             <title>
                 <narrative>Appraisal report</narrative>
             </title>
@@ -1440,7 +1472,9 @@
             <category code="A08"/>
             <language code="en"/>
         </document-link>
-        <document-link url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Botswana_-_Projet_de_d%C3%A9veloppement_des_infrastructures_agricoles_de_Pandamatenga_-_Rapports_d%E2%80%99%C3%A9valuation.PDF" format="application/pdf">
+        <document-link
+                url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Botswana_-_Projet_de_d%C3%A9veloppement_des_infrastructures_agricoles_de_Pandamatenga_-_Rapports_d%E2%80%99%C3%A9valuation.PDF"
+                format="application/pdf">
             <title>
                 <narrative>Appraisal report</narrative>
             </title>
@@ -1508,8 +1542,12 @@
             <narrative xml:lang="fr">Madagascar - Projet d'extension du p�rim�tre de Bas-Mangoky</narrative>
         </title>
         <description type="2">
-            <narrative xml:lang="fr">L'objectif du projet est de contribuer � la r�duction de la pauvret� en milieu rural � Madagascar. L'objectif sp�cifique du Projet de R�habilitation et d'Extension du P�rim�tre de Bas Mangoky - Phase II (PREPBM II) est
-                l'augmentation de la production agricole � travers le d�veloppement des infrastructures d'irrigation collectives et le renforcement des organisations des producteurs.</narrative>
+            <narrative xml:lang="fr">L'objectif du projet est de contribuer � la r�duction de la pauvret� en milieu
+                rural � Madagascar. L'objectif sp�cifique du Projet de R�habilitation et d'Extension du P�rim�tre de Bas
+                Mangoky - Phase II (PREPBM II) est
+                l'augmentation de la production agricole � travers le d�veloppement des infrastructures d'irrigation
+                collectives et le renforcement des organisations des producteurs.
+            </narrative>
         </description>
         <participating-org role="1" ref="46003" type="40">
             <narrative>African Development Fund</narrative>
@@ -1533,7 +1571,9 @@
                 <narrative>African Development Bank Group</narrative>
             </organisation>
             <department>
-                <narrative>Agriculture and Agro Industry North, East and South Regions/ Agriculture et Agro Industrie, R�gions de l'Afrique du Nord, de l'Est et du Sud</narrative>
+                <narrative>Agriculture and Agro Industry North, East and South Regions/ Agriculture et Agro Industrie,
+                    R�gions de l'Afrique du Nord, de l'Est et du Sud
+                </narrative>
             </department>
             <person-name>
                 <narrative>GUINEO Vaidjoua</narrative>
@@ -1545,7 +1585,9 @@
             <email>v.guineo@afdb.org</email>
             <website>www.afdb.org</website>
             <mailing-address>
-                <narrative>African Development Bank Group Headquarters Avenue Joseph Anoma 01 BP 1387 Abidjan 01, C�te d'Ivoire</narrative>
+                <narrative>African Development Bank Group Headquarters Avenue Joseph Anoma 01 BP 1387 Abidjan 01, C�te
+                    d'Ivoire
+                </narrative>
             </mailing-address>
         </contact-info>
         <activity-scope code="4"/>
@@ -1661,21 +1703,17 @@
                 <narrative>Government Of Madagascar</narrative>
             </provider-org>
         </transaction>
-        <document-link url="http://www.afdb.org/en/projects-and-operations/project-portfolio/project/p-mg-aab-003/" format="WebPage">
+        <document-link url="http://www.afdb.org/en/projects-and-operations/project-portfolio/project/p-mg-aab-003/"
+                       format="WebPage">
             <title>
                 <narrative>Activity Web Site</narrative>
             </title>
             <category code="A12"/>
             <language code="fr"/>
         </document-link>
-        <document-link url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Procurement/Project-related-Procurement/AOI_-_Madagascar_-_PEPBM_2._6-16.pdf" format="application/pdf">
-            <title>
-                <narrative>Tender</narrative>
-            </title>
-            <category code="A10"/>
-            <language code="fr"/>
-        </document-link>
-        <document-link url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Procurement/Project-related-Procurement/AOI-_Madagascar_-_PEPBM.pdf" format="application/pdf">
+        <document-link
+                url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Procurement/Project-related-Procurement/AOI_-_Madagascar_-_PEPBM_2._6-16.pdf"
+                format="application/pdf">
             <title>
                 <narrative>Tender</narrative>
             </title>
@@ -1683,8 +1721,17 @@
             <language code="fr"/>
         </document-link>
         <document-link
-            url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Procurement/Project-related-Procurement/EOI_%E2%80%93_Madagascar_-_Contr%C3%B4le_et_la_surveillance_des_travaux_d%E2%80%99extension_du_P%C3%A9rim%C3%A8tre_du_Bas_Mangoky_compos%C3%A9s_de__deux_lots_.pdf"
-            format="application/pdf">
+                url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Procurement/Project-related-Procurement/AOI-_Madagascar_-_PEPBM.pdf"
+                format="application/pdf">
+            <title>
+                <narrative>Tender</narrative>
+            </title>
+            <category code="A10"/>
+            <language code="fr"/>
+        </document-link>
+        <document-link
+                url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Procurement/Project-related-Procurement/EOI_%E2%80%93_Madagascar_-_Contr%C3%B4le_et_la_surveillance_des_travaux_d%E2%80%99extension_du_P%C3%A9rim%C3%A8tre_du_Bas_Mangoky_compos%C3%A9s_de__deux_lots_.pdf"
+                format="application/pdf">
             <title>
                 <narrative>Tender</narrative>
             </title>
@@ -1738,13 +1785,23 @@
             <narrative>African Development Bank Group</narrative>
         </reporting-org>
         <title>
-            <narrative xml:lang="en">Madagascar - South-West Region Agricultural Infrastructure Rehabilitation Project (PRIASO)</narrative>
-            <narrative xml:lang="fr">Madagascar - Projet de r�habilitation des infrastructures agricoles de la r�gion sud-ouest (PRIASO)</narrative>
+            <narrative xml:lang="en">Madagascar - South-West Region Agricultural Infrastructure Rehabilitation Project
+                (PRIASO)
+            </narrative>
+            <narrative xml:lang="fr">Madagascar - Projet de r�habilitation des infrastructures agricoles de la r�gion
+                sud-ouest (PRIASO)
+            </narrative>
         </title>
         <description type="2">
-            <narrative xml:lang="fr">L'objectif du Projet est de contribuer � la r�duction de la pauvret� et de l'ins�curit� alimentaire. Le PRIASO est align� sur le premier pilier (Infrastructures Rurales) du DSP (2012-2013). Il va �galement contribuer au
-                pilier N�2 (Gouvernance) par des actions relatives au renforcement de la gouvernance locale (s�curisation fonci�re des agriculteurs, et contribution � la mise en #uvre des plans communaux de d�veloppement). Le projet est par ailleurs en conformit�
-                avec la Strat�gie de la Banque (2013-2022) ainsi qu'avec la strat�gie de la Banque pour le secteur de l'agriculture (2010-2014), dont le premier pilier concerne l'am�lioration des infrastructures rurales.</narrative>
+            <narrative xml:lang="fr">L'objectif du Projet est de contribuer � la r�duction de la pauvret� et de
+                l'ins�curit� alimentaire. Le PRIASO est align� sur le premier pilier (Infrastructures Rurales) du DSP
+                (2012-2013). Il va �galement contribuer au
+                pilier N�2 (Gouvernance) par des actions relatives au renforcement de la gouvernance locale
+                (s�curisation fonci�re des agriculteurs, et contribution � la mise en #uvre des plans communaux de
+                d�veloppement). Le projet est par ailleurs en conformit�
+                avec la Strat�gie de la Banque (2013-2022) ainsi qu'avec la strat�gie de la Banque pour le secteur de
+                l'agriculture (2010-2014), dont le premier pilier concerne l'am�lioration des infrastructures rurales.
+            </narrative>
         </description>
         <participating-org role="1" ref="46003" type="40">
             <narrative>African Development Fund</narrative>
@@ -1765,7 +1822,9 @@
                 <narrative>African Development Bank Group</narrative>
             </organisation>
             <department>
-                <narrative>Agriculture and Agro Industry North, East and South Regions/ Agriculture et Agro Industrie, R�gions de l'Afrique du Nord, de l'Est et du Sud</narrative>
+                <narrative>Agriculture and Agro Industry North, East and South Regions/ Agriculture et Agro Industrie,
+                    R�gions de l'Afrique du Nord, de l'Est et du Sud
+                </narrative>
             </department>
             <person-name>
                 <narrative>GUINEO Vaidjoua</narrative>
@@ -1777,7 +1836,9 @@
             <email>v.guineo@afdb.org</email>
             <website>www.afdb.org</website>
             <mailing-address>
-                <narrative>African Development Bank Group Headquarters Avenue Joseph Anoma 01 BP 1387 Abidjan 01, C�te d'Ivoire</narrative>
+                <narrative>African Development Bank Group Headquarters Avenue Joseph Anoma 01 BP 1387 Abidjan 01, C�te
+                    d'Ivoire
+                </narrative>
             </mailing-address>
         </contact-info>
         <activity-scope code="4"/>
@@ -2122,7 +2183,8 @@
                 <narrative>Nigerian Trust Fund</narrative>
             </receiver-org>
         </transaction>
-        <document-link url="http://www.afdb.org/en/projects-and-operations/project-portfolio/project/p-mg-aab-004/" format="WebPage">
+        <document-link url="http://www.afdb.org/en/projects-and-operations/project-portfolio/project/p-mg-aab-004/"
+                       format="WebPage">
             <title>
                 <narrative>Activity Web Site</narrative>
             </title>
@@ -2130,8 +2192,8 @@
             <language code="fr"/>
         </document-link>
         <document-link
-            url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Environmental-and-Social-Assessments/Madagascar_-_Projet_de_R%C3%A9habilitation_des_Infrastructures_Agricoles_dans_la_R%C3%A9gion_du_Sud-ouest__PRIASO__-_R%C3%A9sum%C3%A9_PGES.pdf"
-            format="application/pdf">
+                url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Environmental-and-Social-Assessments/Madagascar_-_Projet_de_R%C3%A9habilitation_des_Infrastructures_Agricoles_dans_la_R%C3%A9gion_du_Sud-ouest__PRIASO__-_R%C3%A9sum%C3%A9_PGES.pdf"
+                format="application/pdf">
             <title>
                 <narrative>Appraisal Report</narrative>
             </title>
@@ -2144,8 +2206,8 @@
             <language code="fr"/>
         </document-link>
         <document-link
-            url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Procurement/Project-related-Procurement/AOI_%E2%80%93_Madagascar_-_Travaux_de_R%C3%A9habilitation_du_R%C3%A9seau_d%E2%80%99irrigation_et_Piste_Sur_le_P%C3%A9rim%C3%A8tre_de_Manombo_Ranozaza_-_PRIASO_-_01_2015.pdf"
-            format="application/pdf">
+                url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Procurement/Project-related-Procurement/AOI_%E2%80%93_Madagascar_-_Travaux_de_R%C3%A9habilitation_du_R%C3%A9seau_d%E2%80%99irrigation_et_Piste_Sur_le_P%C3%A9rim%C3%A8tre_de_Manombo_Ranozaza_-_PRIASO_-_01_2015.pdf"
+                format="application/pdf">
             <title>
                 <narrative>Tender</narrative>
             </title>
@@ -2153,15 +2215,8 @@
             <language code="fr"/>
         </document-link>
         <document-link
-            url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Procurement/Project-related-Procurement/AOI_-_Madagascar-Travaux_de_R%C3%A9habilitation_du_R%C3%A9seau_rive_Droite_du_P%C3%A9rim%C3%A8tre_de_Taheza_-_Commune_Rurale_de_Bezaha_-_1_2015.pdf"
-            format="application/pdf">
-            <title>
-                <narrative>Tender</narrative>
-            </title>
-            <category code="A10"/>
-            <language code="fr"/>
-        </document-link>
-        <document-link url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Procurement/Project-related-Procurement/REOI_-_Madagascar_-_PRIASO.pdf" format="application/pdf">
+                url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Procurement/Project-related-Procurement/AOI_-_Madagascar-Travaux_de_R%C3%A9habilitation_du_R%C3%A9seau_rive_Droite_du_P%C3%A9rim%C3%A8tre_de_Taheza_-_Commune_Rurale_de_Bezaha_-_1_2015.pdf"
+                format="application/pdf">
             <title>
                 <narrative>Tender</narrative>
             </title>
@@ -2169,8 +2224,17 @@
             <language code="fr"/>
         </document-link>
         <document-link
-            url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Madagascar%20-%20South-West%20Region%20Agricultural%20Infrastructure%20Rehabilitation%20Project%20%28PRIASO%29%20-%20Appraisal%20Report.pdf"
-            format="application/pdf">
+                url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Procurement/Project-related-Procurement/REOI_-_Madagascar_-_PRIASO.pdf"
+                format="application/pdf">
+            <title>
+                <narrative>Tender</narrative>
+            </title>
+            <category code="A10"/>
+            <language code="fr"/>
+        </document-link>
+        <document-link
+                url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Madagascar%20-%20South-West%20Region%20Agricultural%20Infrastructure%20Rehabilitation%20Project%20%28PRIASO%29%20-%20Appraisal%20Report.pdf"
+                format="application/pdf">
             <title>
                 <narrative>Appraisal report</narrative>
             </title>
@@ -2183,8 +2247,8 @@
             <language code="en"/>
         </document-link>
         <document-link
-            url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Madagascar_-_Projet_de_r%C3%A9habilitation_des_infrastructures_agricoles_de_la_r%C3%A9gion_sud-ouest__PRIASO__-_Rapport_d%E2%80%99%C3%A9valuation.pdf"
-            format="application/pdf">
+                url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Madagascar_-_Projet_de_r%C3%A9habilitation_des_infrastructures_agricoles_de_la_r%C3%A9gion_sud-ouest__PRIASO__-_Rapport_d%E2%80%99%C3%A9valuation.pdf"
+                format="application/pdf">
             <title>
                 <narrative>Appraisal report</narrative>
             </title>
@@ -2309,10 +2373,14 @@
         </reporting-org>
         <title>
             <narrative xml:lang="en"/>
-            <narrative xml:lang="fr">Projet d'appui au d�veloppement des productions animales en zone de Kayes Sud (PADEPA-KS)</narrative>
+            <narrative xml:lang="fr">Projet d'appui au d�veloppement des productions animales en zone de Kayes Sud
+                (PADEPA-KS)
+            </narrative>
         </title>
         <description type="2">
-            <narrative xml:lang="fr">L'objectif sp�cifique du projet est de contribuer � l'augmentation, de fa�on durable, des productions animales et des revenus des agro-�leveurs de la zone de Kayes-sud.</narrative>
+            <narrative xml:lang="fr">L'objectif sp�cifique du projet est de contribuer � l'augmentation, de fa�on
+                durable, des productions animales et des revenus des agro-�leveurs de la zone de Kayes-sud.
+            </narrative>
         </description>
         <participating-org role="1" ref="46003" type="40">
             <narrative>African Development Fund</narrative>
@@ -2333,7 +2401,9 @@
                 <narrative>African Development Bank Group</narrative>
             </organisation>
             <department>
-                <narrative>Agriculture and Agro Industry West and Central Regions/ Agriculture et Agro-Industrie Afrique de l'Ouest et Afrique Centrale</narrative>
+                <narrative>Agriculture and Agro Industry West and Central Regions/ Agriculture et Agro-Industrie Afrique
+                    de l'Ouest et Afrique Centrale
+                </narrative>
             </department>
             <person-name>
                 <narrative>DJIRO Abdoulaye</narrative>
@@ -2345,7 +2415,9 @@
             <email>a.djiro@afdb.org</email>
             <website>www.afdb.org</website>
             <mailing-address>
-                <narrative>African Development Bank Group Headquarters Avenue Joseph Anoma 01 BP 1387 Abidjan 01, C�te d'Ivoire</narrative>
+                <narrative>African Development Bank Group Headquarters Avenue Joseph Anoma 01 BP 1387 Abidjan 01, C�te
+                    d'Ivoire
+                </narrative>
             </mailing-address>
         </contact-info>
         <activity-scope code="4"/>
@@ -2873,7 +2945,8 @@
                 <narrative>Government Of Mali</narrative>
             </provider-org>
         </transaction>
-        <document-link url="http://www.afdb.org/en/projects-and-operations/project-portfolio/project/p-ml-aae-004/" format="WebPage">
+        <document-link url="http://www.afdb.org/en/projects-and-operations/project-portfolio/project/p-ml-aae-004/"
+                       format="WebPage">
             <title>
                 <narrative>Activity Web Site</narrative>
             </title>
@@ -3011,7 +3084,10 @@
             <narrative xml:lang="fr">Zambie - Projet d'appui aux infrastructures d'�levage</narrative>
         </title>
         <description type="2">
-            <narrative xml:lang="en">The overall sector goal is to contribute to economic growth and food security. The specific Project objectives are to improve smallholder livestock production, productivity, market linkages and income of livestock farmers.</narrative>
+            <narrative xml:lang="en">The overall sector goal is to contribute to economic growth and food security. The
+                specific Project objectives are to improve smallholder livestock production, productivity, market
+                linkages and income of livestock farmers.
+            </narrative>
         </description>
         <participating-org role="1" ref="46003" type="40">
             <narrative>African Development Fund</narrative>
@@ -3029,7 +3105,9 @@
                 <narrative>African Development Bank Group</narrative>
             </organisation>
             <department>
-                <narrative>Agriculture and Agro Industry North, East and South Regions/ Agriculture et Agro Industrie, R�gions de l'Afrique du Nord, de l'Est et du Sud</narrative>
+                <narrative>Agriculture and Agro Industry North, East and South Regions/ Agriculture et Agro Industrie,
+                    R�gions de l'Afrique du Nord, de l'Est et du Sud
+                </narrative>
             </department>
             <person-name>
                 <narrative>BOULANOUAR Bouchaib</narrative>
@@ -3041,7 +3119,9 @@
             <email>b.boulanouar@afdb.org</email>
             <website>www.afdb.org</website>
             <mailing-address>
-                <narrative>African Development Bank Group Headquarters Avenue Joseph Anoma 01 BP 1387 Abidjan 01, C�te d'Ivoire</narrative>
+                <narrative>African Development Bank Group Headquarters Avenue Joseph Anoma 01 BP 1387 Abidjan 01, C�te
+                    d'Ivoire
+                </narrative>
             </mailing-address>
         </contact-info>
         <activity-scope code="4"/>
@@ -3295,7 +3375,8 @@
                 <narrative>African Development Fund</narrative>
             </receiver-org>
         </transaction>
-        <document-link url="http://www.afdb.org/en/projects-and-operations/project-portfolio/project/p-zm-aae-001/" format="WebPage">
+        <document-link url="http://www.afdb.org/en/projects-and-operations/project-portfolio/project/p-zm-aae-001/"
+                       format="WebPage">
             <title>
                 <narrative>Activity Web Site</narrative>
             </title>
@@ -3303,8 +3384,8 @@
             <language code="en"/>
         </document-link>
         <document-link
-            url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Environmental-and-Social-Assessments/Cameroun%20-%20Programme%20d%E2%80%99assainissement%20de%20la%20ville%20de%20Yaound%C3%A9-Phase%202%20%28PADY%202%29%20-%20R%C3%A9sum%C3%A9%20PAR.pdf"
-            format="application/pdf">
+                url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Environmental-and-Social-Assessments/Cameroun%20-%20Programme%20d%E2%80%99assainissement%20de%20la%20ville%20de%20Yaound%C3%A9-Phase%202%20%28PADY%202%29%20-%20R%C3%A9sum%C3%A9%20PAR.pdf"
+                format="application/pdf">
             <title>
                 <narrative>Appraisal Report</narrative>
             </title>
@@ -3343,7 +3424,8 @@
         </result>
         <result type="1">
             <title>
-                <narrative>Social facilities established or rehabilitated (rural schools, health centers, etc.)</narrative>
+                <narrative>Social facilities established or rehabilitated (rural schools, health centers, etc.)
+                </narrative>
             </title>
             <indicator measure="1">
                 <title>
@@ -3389,10 +3471,14 @@
         </reporting-org>
         <title>
             <narrative xml:lang="en">Benin - Ou�m� Valley Agricultural Infrastructure Support Project</narrative>
-            <narrative xml:lang="fr">Benin - Projet d'appui aux infrastructures agricoles dans la vall�e de l'Ou�m�</narrative>
+            <narrative xml:lang="fr">Benin - Projet d'appui aux infrastructures agricoles dans la vall�e de l'Ou�m�
+            </narrative>
         </title>
         <description type="2">
-            <narrative xml:lang="fr">L'objectif sp�cifique est de contribuer � l'accroissement durable de la productivit� et des productions agricoles par la promotion des fili�res porteuses dans la vall�e de l'Ou�m�..</narrative>
+            <narrative xml:lang="fr">L'objectif sp�cifique est de contribuer � l'accroissement durable de la
+                productivit� et des productions agricoles par la promotion des fili�res porteuses dans la vall�e de
+                l'Ou�m�..
+            </narrative>
         </description>
         <participating-org role="1" ref="46003" type="40">
             <narrative>African Development Fund</narrative>
@@ -3410,7 +3496,9 @@
                 <narrative>African Development Bank Group</narrative>
             </organisation>
             <department>
-                <narrative>Agriculture and Agro Industry West and Central Regions/ Agriculture et Agro-Industrie Afrique de l'Ouest et Afrique Centrale</narrative>
+                <narrative>Agriculture and Agro Industry West and Central Regions/ Agriculture et Agro-Industrie Afrique
+                    de l'Ouest et Afrique Centrale
+                </narrative>
             </department>
             <person-name>
                 <narrative>ATTIOGBEVI-SOMADO Eklou</narrative>
@@ -3422,7 +3510,9 @@
             <email>e.attiogbevi-somado@afdb.org</email>
             <website>www.afdb.org</website>
             <mailing-address>
-                <narrative>African Development Bank Group Headquarters Avenue Joseph Anoma 01 BP 1387 Abidjan 01, C�te d'Ivoire</narrative>
+                <narrative>African Development Bank Group Headquarters Avenue Joseph Anoma 01 BP 1387 Abidjan 01, C�te
+                    d'Ivoire
+                </narrative>
             </mailing-address>
         </contact-info>
         <activity-scope code="4"/>
@@ -3876,7 +3966,8 @@
                 <narrative>African Development Fund</narrative>
             </provider-org>
         </transaction>
-        <document-link url="http://www.afdb.org/en/projects-and-operations/project-portfolio/project/p-bj-aa0-005/" format="WebPage">
+        <document-link url="http://www.afdb.org/en/projects-and-operations/project-portfolio/project/p-bj-aa0-005/"
+                       format="WebPage">
             <title>
                 <narrative>Activity Web Site</narrative>
             </title>
@@ -3884,8 +3975,8 @@
             <language code="fr"/>
         </document-link>
         <document-link
-            url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Environmental-and-Social-Assessments/B%C3%A9nin_-_Projet_d%E2%80%99Appui_aux_Infrastructures_Agricoles_dans_la_Vall%C3%A9e_de_l%E2%80%99Ou%C3%A9m%C3%A9__PAIA-VO__-_R%C3%A9sum%C3%A9_PGES.pdf"
-            format="application/pdf">
+                url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Environmental-and-Social-Assessments/B%C3%A9nin_-_Projet_d%E2%80%99Appui_aux_Infrastructures_Agricoles_dans_la_Vall%C3%A9e_de_l%E2%80%99Ou%C3%A9m%C3%A9__PAIA-VO__-_R%C3%A9sum%C3%A9_PGES.pdf"
+                format="application/pdf">
             <title>
                 <narrative>Appraisal Report</narrative>
             </title>
@@ -3898,8 +3989,8 @@
             <language code="fr"/>
         </document-link>
         <document-link
-            url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Procurement/Project-related-Procurement/EOI_%E2%80%93__Benin-__mission_d%E2%80%99%C3%A9tudes_techniques__de_contr%C3%B4le_et_de_surveillance_%E2%80%93_11_2015.pdf"
-            format="application/pdf">
+                url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Procurement/Project-related-Procurement/EOI_%E2%80%93__Benin-__mission_d%E2%80%99%C3%A9tudes_techniques__de_contr%C3%B4le_et_de_surveillance_%E2%80%93_11_2015.pdf"
+                format="application/pdf">
             <title>
                 <narrative>Tender</narrative>
             </title>
@@ -3907,8 +3998,8 @@
             <language code="fr"/>
         </document-link>
         <document-link
-            url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Procurement/Project-related-Procurement/EOI_%E2%80%93_Benin_-_Mission_d%E2%80%99%C3%A9tudes_techniques__de_contr%C3%B4le_et_de_surveillance_des_travaux_de_r%C3%A9habilitation_%E2%80%93_11_2015.pdf"
-            format="application/pdf">
+                url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Procurement/Project-related-Procurement/EOI_%E2%80%93_Benin_-_Mission_d%E2%80%99%C3%A9tudes_techniques__de_contr%C3%B4le_et_de_surveillance_des_travaux_de_r%C3%A9habilitation_%E2%80%93_11_2015.pdf"
+                format="application/pdf">
             <title>
                 <narrative>Tender</narrative>
             </title>
@@ -3916,8 +4007,8 @@
             <language code="fr"/>
         </document-link>
         <document-link
-            url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Procurement/Project-related-Procurement/EOI_-_Benin_-_Mission_d%E2%80%99%C3%A9tudes_techniques__de_contr%C3%B4le_et_de_surveillance_des_travaux__%E2%80%93_11_2015.pdf"
-            format="application/pdf">
+                url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Procurement/Project-related-Procurement/EOI_-_Benin_-_Mission_d%E2%80%99%C3%A9tudes_techniques__de_contr%C3%B4le_et_de_surveillance_des_travaux__%E2%80%93_11_2015.pdf"
+                format="application/pdf">
             <title>
                 <narrative>Tender</narrative>
             </title>
@@ -3925,8 +4016,8 @@
             <language code="fr"/>
         </document-link>
         <document-link
-            url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Procurement/Project-related-Procurement/EOI_-_Benin_-_Mission_d%E2%80%99%C3%A9tudes_techniques__de_contr%C3%B4le_et_de_surveillance_des_travaux_infrastructures_%E2%80%93_11_2015.pdf"
-            format="application/pdf">
+                url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Procurement/Project-related-Procurement/EOI_-_Benin_-_Mission_d%E2%80%99%C3%A9tudes_techniques__de_contr%C3%B4le_et_de_surveillance_des_travaux_infrastructures_%E2%80%93_11_2015.pdf"
+                format="application/pdf">
             <title>
                 <narrative>Tender</narrative>
             </title>
@@ -3934,8 +4025,8 @@
             <language code="fr"/>
         </document-link>
         <document-link
-            url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/B%C3%A9nin_-_Projet_d_appui_aux_infrastructures_agricoles_dans_la_vall%C3%A9e_de_l_Ou%C3%A9m%C3%A9_-_Rapport_d_%C3%A9valuation.pdf"
-            format="application/pdf">
+                url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/B%C3%A9nin_-_Projet_d_appui_aux_infrastructures_agricoles_dans_la_vall%C3%A9e_de_l_Ou%C3%A9m%C3%A9_-_Rapport_d_%C3%A9valuation.pdf"
+                format="application/pdf">
             <title>
                 <narrative>Appraisal report</narrative>
             </title>
@@ -3947,7 +4038,9 @@
             <category code="A08"/>
             <language code="fr"/>
         </document-link>
-        <document-link url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Benin_-_Oueme_Valley_Agricultural_Infrastructure_Support_Project__PAIA-VO__-_Appraisal_Report1.pdf" format="application/pdf">
+        <document-link
+                url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Benin_-_Oueme_Valley_Agricultural_Infrastructure_Support_Project__PAIA-VO__-_Appraisal_Report1.pdf"
+                format="application/pdf">
             <title>
                 <narrative>Appraisal report</narrative>
             </title>
@@ -4111,8 +4204,12 @@
             <narrative>African Development Bank Group</narrative>
         </reporting-org>
         <title>
-            <narrative xml:lang="en">Ghana - Engaging Local Communities in REDD+ / Enhancement of Carbon Stocks Project</narrative>
-            <narrative xml:lang="fr">Ghana - Projet d'association des communaut�s locales au programme REDD+ / Renforcement des stocks de carbone</narrative>
+            <narrative xml:lang="en">Ghana - Engaging Local Communities in REDD+ / Enhancement of Carbon Stocks
+                Project
+            </narrative>
+            <narrative xml:lang="fr">Ghana - Projet d'association des communaut�s locales au programme REDD+ /
+                Renforcement des stocks de carbone
+            </narrative>
         </title>
         <description>
             <narrative/>
@@ -4148,7 +4245,9 @@
             <email>s.mohamedahmed@afdb.org</email>
             <website>www.afdb.org</website>
             <mailing-address>
-                <narrative>African Development Bank Group Headquarters Avenue Joseph Anoma 01 BP 1387 Abidjan 01, C�te d'Ivoire</narrative>
+                <narrative>African Development Bank Group Headquarters Avenue Joseph Anoma 01 BP 1387 Abidjan 01, C�te
+                    d'Ivoire
+                </narrative>
             </mailing-address>
         </contact-info>
         <activity-scope code="4"/>
@@ -4252,26 +4351,17 @@
                 <narrative>Government Of Ghana</narrative>
             </provider-org>
         </transaction>
-        <document-link url="http://www.afdb.org/en/projects-and-operations/project-portfolio/project/p-gh-aad-002/" format="WebPage">
+        <document-link url="http://www.afdb.org/en/projects-and-operations/project-portfolio/project/p-gh-aad-002/"
+                       format="WebPage">
             <title>
                 <narrative>Activity Web Site</narrative>
             </title>
             <category code="A12"/>
             <language code="en"/>
         </document-link>
-        <document-link url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Environmental-and-Social-Assessments/Ghana_-_Managing_Local_Communities_in_REDD__-_Enhancement_of_Carbon_Stocks_Project_-_ESMP_Summary.pdf" format="application/pdf">
-            <title>
-                <narrative>Appraisal Report</narrative>
-            </title>
-            <category code="A01"/>
-            <category code="A02"/>
-            <category code="A03"/>
-            <category code="A04"/>
-            <category code="A05"/>
-            <category code="A08"/>
-            <language code="en"/>
-        </document-link>
-        <document-link url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Ghana_-_Engaging_Local_Communities_in_REDD__Enhancement_of_Carbon_Stocks__ELCIR___-_Appraisal_Report.pdf" format="application/pdf">
+        <document-link
+                url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Environmental-and-Social-Assessments/Ghana_-_Managing_Local_Communities_in_REDD__-_Enhancement_of_Carbon_Stocks_Project_-_ESMP_Summary.pdf"
+                format="application/pdf">
             <title>
                 <narrative>Appraisal Report</narrative>
             </title>
@@ -4284,8 +4374,22 @@
             <language code="en"/>
         </document-link>
         <document-link
-            url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Ghana_-_Projet_d_association_des_communaut%C3%A9s_locales_au_programme_REDD__-Renforcement_des_stocks_de_carbone_ELCIR__-_Rapport_d_%C3%A9valuation.pdf"
-            format="application/pdf">
+                url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Ghana_-_Engaging_Local_Communities_in_REDD__Enhancement_of_Carbon_Stocks__ELCIR___-_Appraisal_Report.pdf"
+                format="application/pdf">
+            <title>
+                <narrative>Appraisal Report</narrative>
+            </title>
+            <category code="A01"/>
+            <category code="A02"/>
+            <category code="A03"/>
+            <category code="A04"/>
+            <category code="A05"/>
+            <category code="A08"/>
+            <language code="en"/>
+        </document-link>
+        <document-link
+                url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Ghana_-_Projet_d_association_des_communaut%C3%A9s_locales_au_programme_REDD__-Renforcement_des_stocks_de_carbone_ELCIR__-_Rapport_d_%C3%A9valuation.pdf"
+                format="application/pdf">
             <title>
                 <narrative>Appraisal Report</narrative>
             </title>
@@ -4309,11 +4413,16 @@
             <narrative>African Development Bank Group</narrative>
         </reporting-org>
         <title>
-            <narrative xml:lang="en">Uganda - Farm Income Enhancement and Forestry Conservation Programme - Project 2</narrative>
-            <narrative xml:lang="fr">Ouganda - Programme d'am�lioration du revenu agricole et de conservation des for�ts : Projet 2</narrative>
+            <narrative xml:lang="en">Uganda - Farm Income Enhancement and Forestry Conservation Programme - Project 2
+            </narrative>
+            <narrative xml:lang="fr">Ouganda - Programme d'am�lioration du revenu agricole et de conservation des for�ts
+                : Projet 2
+            </narrative>
         </title>
         <description type="2">
-            <narrative xml:lang="en">The project objective is to improve household incomes, food security, and climate resilience through sustainable natural resources management and agricultural enterprise development</narrative>
+            <narrative xml:lang="en">The project objective is to improve household incomes, food security, and climate
+                resilience through sustainable natural resources management and agricultural enterprise development
+            </narrative>
         </description>
         <participating-org role="1" ref="46002" type="40">
             <narrative>African Development Bank</narrative>
@@ -4334,7 +4443,9 @@
                 <narrative>African Development Bank Group</narrative>
             </organisation>
             <department>
-                <narrative>Agriculture and Agro Industry North, East and South Regions/ Agriculture et Agro Industrie, R�gions de l'Afrique du Nord, de l'Est et du Sud</narrative>
+                <narrative>Agriculture and Agro Industry North, East and South Regions/ Agriculture et Agro Industrie,
+                    R�gions de l'Afrique du Nord, de l'Est et du Sud
+                </narrative>
             </department>
             <person-name>
                 <narrative>LOULSEGED Mekonnen Kifle</narrative>
@@ -4346,7 +4457,9 @@
             <email>m.loulseged@afdb.org</email>
             <website>www.afdb.org</website>
             <mailing-address>
-                <narrative>African Development Bank Group Headquarters Avenue Joseph Anoma 01 BP 1387 Abidjan 01, C�te d'Ivoire</narrative>
+                <narrative>African Development Bank Group Headquarters Avenue Joseph Anoma 01 BP 1387 Abidjan 01, C�te
+                    d'Ivoire
+                </narrative>
             </mailing-address>
         </contact-info>
         <activity-scope code="4"/>
@@ -4389,14 +4502,17 @@
                 <narrative>Government Of Uganda</narrative>
             </provider-org>
         </transaction>
-        <document-link url="http://www.afdb.org/en/projects-and-operations/project-portfolio/project/p-ug-aad-001/" format="WebPage">
+        <document-link url="http://www.afdb.org/en/projects-and-operations/project-portfolio/project/p-ug-aad-001/"
+                       format="WebPage">
             <title>
                 <narrative>Activity Web Site</narrative>
             </title>
             <category code="A12"/>
             <language code="en"/>
         </document-link>
-        <document-link url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Environmental-and-Social-Assessments/FIEFOC_ESMP_Summary_final_2015.pdf" format="application/pdf">
+        <document-link
+                url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Environmental-and-Social-Assessments/FIEFOC_ESMP_Summary_final_2015.pdf"
+                format="application/pdf">
             <title>
                 <narrative>Appraisal Report</narrative>
             </title>
@@ -4408,7 +4524,9 @@
             <category code="A08"/>
             <language code="en"/>
         </document-link>
-        <document-link url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Ouganda-_Programme_d-am%C3%A9lioration_du_revenu_agricole_et_de_conservation_....pdf" format="application/pdf">
+        <document-link
+                url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Ouganda-_Programme_d-am%C3%A9lioration_du_revenu_agricole_et_de_conservation_....pdf"
+                format="application/pdf">
             <title>
                 <narrative>Appraisal Report</narrative>
             </title>
@@ -4420,7 +4538,9 @@
             <category code="A08"/>
             <language code="fr"/>
         </document-link>
-        <document-link url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Uganda-_AR_Farm_Income_Enhancement_and_Forest_Conservation_Project.pdf" format="application/pdf">
+        <document-link
+                url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Uganda-_AR_Farm_Income_Enhancement_and_Forest_Conservation_Project.pdf"
+                format="application/pdf">
             <title>
                 <narrative>Appraisal Report</narrative>
             </title>
@@ -4447,9 +4567,15 @@
             <narrative xml:lang="en">Zambia - Cashew infrastructure development project</narrative>
         </title>
         <description type="2">
-            <narrative xml:lang="en">The development objective is to contribute to economic growth and food security. The Project objective is to contribute to the country's poverty reduction and improved household incomes through improved cashew production,
-                processing and marketing. Enhanced household incomes will lead to improved household food security. The Project will (i) increase cashew tree productivity and production, (ii) contribute to improved household income and food security, (iii) increase
-                foreign exchange earnings from cashew products, and (iii) improve rural employment for men, women and youths.</narrative>
+            <narrative xml:lang="en">The development objective is to contribute to economic growth and food security.
+                The Project objective is to contribute to the country's poverty reduction and improved household incomes
+                through improved cashew production,
+                processing and marketing. Enhanced household incomes will lead to improved household food security. The
+                Project will (i) increase cashew tree productivity and production, (ii) contribute to improved household
+                income and food security, (iii) increase
+                foreign exchange earnings from cashew products, and (iii) improve rural employment for men, women and
+                youths.
+            </narrative>
         </description>
         <participating-org role="1" ref="46002" type="40">
             <narrative>African Development Bank</narrative>
@@ -4470,7 +4596,9 @@
                 <narrative>African Development Bank Group</narrative>
             </organisation>
             <department>
-                <narrative>Agriculture and Agro Industry North, East and South Regions/ Agriculture et Agro Industrie, R�gions de l'Afrique du Nord, de l'Est et du Sud</narrative>
+                <narrative>Agriculture and Agro Industry North, East and South Regions/ Agriculture et Agro Industrie,
+                    R�gions de l'Afrique du Nord, de l'Est et du Sud
+                </narrative>
             </department>
             <person-name>
                 <narrative>BANGWE Lewis Mupeta</narrative>
@@ -4482,7 +4610,9 @@
             <email>l.bangwe@afdb.org</email>
             <website>www.afdb.org</website>
             <mailing-address>
-                <narrative>African Development Bank Group Headquarters Avenue Joseph Anoma 01 BP 1387 Abidjan 01, C�te d'Ivoire</narrative>
+                <narrative>African Development Bank Group Headquarters Avenue Joseph Anoma 01 BP 1387 Abidjan 01, C�te
+                    d'Ivoire
+                </narrative>
             </mailing-address>
         </contact-info>
         <activity-scope code="4"/>
@@ -4721,14 +4851,17 @@
                 <narrative>Government Of Zambia</narrative>
             </provider-org>
         </transaction>
-        <document-link url="http://www.afdb.org/en/projects-and-operations/project-portfolio/project/p-zm-aa0-024/" format="WebPage">
+        <document-link url="http://www.afdb.org/en/projects-and-operations/project-portfolio/project/p-zm-aa0-024/"
+                       format="WebPage">
             <title>
                 <narrative>Activity Web Site</narrative>
             </title>
             <category code="A12"/>
             <language code="en"/>
         </document-link>
-        <document-link url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Environmental-and-Social-Assessments/Zambia_-_Cashew_Infrastructure_Development_Project__CIDP__%E2%80%93_SESA_Summary_%E2%80%93_06_2015.pdf" format="application/pdf">
+        <document-link
+                url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Environmental-and-Social-Assessments/Zambia_-_Cashew_Infrastructure_Development_Project__CIDP__%E2%80%93_SESA_Summary_%E2%80%93_06_2015.pdf"
+                format="application/pdf">
             <title>
                 <narrative>Appraisal Report</narrative>
             </title>
@@ -4740,14 +4873,18 @@
             <category code="A08"/>
             <language code="en"/>
         </document-link>
-        <document-link url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Procurement/Project-related-Procurement/GPN_-_Zambia_-_Cashew_Infrastructure_Development_Project_-_CIDP.pdf" format="application/pdf">
+        <document-link
+                url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Procurement/Project-related-Procurement/GPN_-_Zambia_-_Cashew_Infrastructure_Development_Project_-_CIDP.pdf"
+                format="application/pdf">
             <title>
                 <narrative>Tender</narrative>
             </title>
             <category code="A10"/>
             <language code="en"/>
         </document-link>
-        <document-link url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Zambia-AR-Cashew_Infrastructure_Development_Project__CIDP_.pdf" format="application/pdf">
+        <document-link
+                url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Zambia-AR-Cashew_Infrastructure_Development_Project__CIDP_.pdf"
+                format="application/pdf">
             <title>
                 <narrative>Appraisal report</narrative>
             </title>
@@ -4759,14 +4896,18 @@
             <category code="A08"/>
             <language code="en"/>
         </document-link>
-        <document-link url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Zambia-AR-Cashew_Infrastructure_Development_Project__CIDP_.pdf" format="application/pdf">
+        <document-link
+                url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Zambia-AR-Cashew_Infrastructure_Development_Project__CIDP_.pdf"
+                format="application/pdf">
             <title>
                 <narrative>Memorandum of Understanding</narrative>
             </title>
             <category code="A09"/>
             <language code="en"/>
         </document-link>
-        <document-link url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Zambie-Re-_Projet_de_d%C3%A9veloppement_de_linfrastructure_danacarde__CIDP_.pdf" format="application/pdf">
+        <document-link
+                url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Zambie-Re-_Projet_de_d%C3%A9veloppement_de_linfrastructure_danacarde__CIDP_.pdf"
+                format="application/pdf">
             <title>
                 <narrative>Appraisal report</narrative>
             </title>
@@ -4778,7 +4919,9 @@
             <category code="A08"/>
             <language code="fr"/>
         </document-link>
-        <document-link url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Zambie-Re-_Projet_de_d%C3%A9veloppement_de_linfrastructure_danacarde__CIDP_.pdf" format="application/pdf">
+        <document-link
+                url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Zambie-Re-_Projet_de_d%C3%A9veloppement_de_linfrastructure_danacarde__CIDP_.pdf"
+                format="application/pdf">
             <title>
                 <narrative>Memorandum of Understanding</narrative>
             </title>

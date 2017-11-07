@@ -5,7 +5,7 @@ namespace OagBundle\Tests\Controller;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class OagFileControllerTest extends WebTestCase
- {
+{
 
     public function testIati()
     {
@@ -21,7 +21,8 @@ class OagFileControllerTest extends WebTestCase
         $crawler = $client->request('GET', '/oagFile/source/4');
     }
 
-    public function testEnhancement() {
+    public function testEnhancement()
+    {
         $client = static::createClient();
 
         $crawler = $client->request('GET', '/oagFile/enhancement/3');

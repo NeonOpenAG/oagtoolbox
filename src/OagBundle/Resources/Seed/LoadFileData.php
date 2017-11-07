@@ -18,9 +18,11 @@ use OagBundle\Entity\OagFile;
  *
  * @author tobias
  */
-class LoadFileData implements FixtureInterface {
+class LoadFileData implements FixtureInterface
+{
 
-    public function load(ObjectManager $em) {
+    public function load(ObjectManager $em)
+    {
         $file = new EnhancementFile();
         $file->setDocumentName('animalfarm.txt');
         $file->setMimeType('text/plain');

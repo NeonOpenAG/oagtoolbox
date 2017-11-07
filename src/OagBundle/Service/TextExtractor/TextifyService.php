@@ -8,15 +8,16 @@
 
 namespace OagBundle\Service\TextExtractor;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use OagBundle\Service\EnhancementFileService;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Description of TextifyService
  *
  * @author tobias
  */
-class TextifyService {
+class TextifyService
+{
 
     private $container;
 
@@ -26,7 +27,8 @@ class TextifyService {
      * @param EnhancementFile $enhFile the file to get the text of
      * @return string
      */
-    public function stripEnhancementFile($enhancementFile) {
+    public function stripEnhancementFile($enhancementFile)
+    {
         $srvEnhancementFile = $this->container->get(EnhancementFileService::class);
         $path = $srvEnhancementFile->getPath($enhancementFile);
 //        $mimetype = mime_content_type($path);
@@ -88,7 +90,8 @@ class TextifyService {
         return false;
     }
 
-    public function setContainer(ContainerInterface $container) {
+    public function setContainer(ContainerInterface $container)
+    {
         $this->container = $container;
     }
 

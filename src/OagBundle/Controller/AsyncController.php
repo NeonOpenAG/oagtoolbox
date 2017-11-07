@@ -15,13 +15,15 @@ use Symfony\Component\HttpFoundation\Response;
  * @Route("/async")
  * @Template
  */
-class AsyncController extends Controller {
+class AsyncController extends Controller
+{
 
     /**
      * @Route("/geocode/{id}")
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
-    public function geocodeAction(OagFile $oagfile) {
+    public function geocodeAction(OagFile $oagfile)
+    {
         $srvGeocoder = $this->get(Geocoder::class);
         $srvGeocoder->geocodeOagFile($oagfile);
     }
@@ -30,7 +32,8 @@ class AsyncController extends Controller {
      * @Route("/classify/{id}")
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
-    public function classifyAction(OagFile $oagfile) {
+    public function classifyAction(OagFile $oagfile)
+    {
         $srvClassifier = $this->get(Classifier::class);
         $srvClassifier->classifyOagFile($oagfile);
     }
@@ -38,7 +41,8 @@ class AsyncController extends Controller {
     /**
      * @Route("/classifyStatus")
      */
-    public function classifyStatusAction() {
+    public function classifyStatusAction()
+    {
         $srvClassifier = $this->get(Classifier::class);
         $status = $srvClassifier->status();
 
@@ -51,7 +55,8 @@ class AsyncController extends Controller {
     /**
      * @Route("/geocodeStatus")
      */
-    public function geocodeStatusAction() {
+    public function geocodeStatusAction()
+    {
         $srvGeocoder = $this->get(Geocoder::class);
         $status = $srvGeocoder->status();
 

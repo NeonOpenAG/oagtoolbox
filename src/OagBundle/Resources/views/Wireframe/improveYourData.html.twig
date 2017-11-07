@@ -2,7 +2,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link href="{{ asset('bundles/oag/jquery-filestyle-1.5.1/src/jquery-filestyle.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('bundles/oag/jquery-filestyle-1.5.1/src/jquery-filestyle.min.css') }}" rel="stylesheet"/>
 {% endblock %}
 
 {% block title %}Check and improve your data{% endblock %}
@@ -27,32 +27,37 @@
                         <li>
                             <h2 class="completed">Works for people comparing IATI data</h2>
                             <div class="info">
-                                <p>Your activity file is compliant to the XML schema of the IATI standard and the additional rulesets.</p>
+                                <p>Your activity file is compliant to the XML schema of the IATI standard and the
+                                    additional rulesets.</p>
                             </div>
                         </li>
                         {% if classified %}
-                        <li>
-                            <h2 class="completed">Helps people identify agricultural projects</h2>
-                            <div class="info">
-                              <p>The AGROVOC codes in your activity file help make your projects more discoverable by funders and others who may be interested in your work.</p>
-                            </div>
-                        </li>
+                            <li>
+                                <h2 class="completed">Helps people identify agricultural projects</h2>
+                                <div class="info">
+                                    <p>The AGROVOC codes in your activity file help make your projects more discoverable
+                                        by funders and others who may be interested in your work.</p>
+                                </div>
+                            </li>
                         {% endif %}
                         {% if geocoded %}
-                        <li>
-                            <h2 class="completed">Shows exactly where your work helps people</h2>
-                            <div class="info">
-                                <p>Your activities are located accurately, which means people can use your data to identify partners on the ground, gaps in provision and other geographic patterns</p>
-                            </div>
-                        </li>
+                            <li>
+                                <h2 class="completed">Shows exactly where your work helps people</h2>
+                                <div class="info">
+                                    <p>Your activities are located accurately, which means people can use your data to
+                                        identify partners on the ground, gaps in provision and other geographic
+                                        patterns</p>
+                                </div>
+                            </li>
                         {% endif %}
                         {% if show_traceability %}
-                        <li>
-                          <h2 class="completed">Helps show traceability</h2>
-                          <div class="info">
-                              <p>Your activity file contains sufficient identifying information to help people who wish to trace funding.</p>
-                          </div>
-                        </li>
+                            <li>
+                                <h2 class="completed">Helps show traceability</h2>
+                                <div class="info">
+                                    <p>Your activity file contains sufficient identifying information to help people who
+                                        wish to trace funding.</p>
+                                </div>
+                            </li>
                         {% endif %}
                     </ul>
                 </div>
@@ -60,40 +65,57 @@
 
 
             {% if (not geocoded) or (not classified) or (not show_traceability) %}
-            <article class="activity">
-                <div class="heading summary improve">
-                    <h2>Improve your data to...</h2>
-                    <img src="{{ asset('bundles/oag/images/arrow.svg') }}" />
-                </div>
-                <div class="content-block summary improve">
-                    <ul>
-                        {% if not classified %}
-                        <li><h2><span class="tip">Help people identify agricultural projects</span></h2>
-                            <div class="improvements">
-                                <p>Adding AGROVOC codes to your activity file helps make your projects more discoverable by funders and others who may be interested in your work.</p>
-                                <a href="{{ path('oag_wireframe_classifier', { 'id': file.getId() }) }}"><button type="button" id="class-button" disabled data-statusurl="{{ classifierUrl }}"><span class="fa fa-spinner fa-spin"></span>Tag your data</button></a>
-                            </div>
-                        </li>
-                        {% endif %}
-                        {% if not geocoded %}
-                        <li><h2><span class="tip">Help people locate your projects accurately</span></h2>
-                            <div class="improvements">
-                                <p>If activities are located accurately, then people can use your data to identify partners on the ground, gaps in provision and other geographic patterns.</p>
-                                <a href="{{ path('oag_wireframe_geocoder', { 'id': file.getId() }) }}"><button type="button" id="geo-button" disabled data-statusurl="{{ geocoderUrl }}"><span class="fa fa-spinner fa-spin"></span>Geocode your data</button></a>
-                            </div>
-                        </li>
-                        {% endif %}
-                        {% if not show_traceability %}
-                        <li><h2><span class="tip">Help people trace funding between organisations</span></h2>
-                            <div class="improvements">
-                                <p>If your activities are tagged with organisational identifiers, then people can use your data to see how funding from large organisations has been spent on the ground.</p>
-                                <a href="http://org-id.guide/"><button type="button" id="trace-button">Org-id.guide can help</button></a>
-                            </div>
-                        </li>
-                        {% endif %}
-                    </ul>
-                </div>
-            </article>
+                <article class="activity">
+                    <div class="heading summary improve">
+                        <h2>Improve your data to...</h2>
+                        <img src="{{ asset('bundles/oag/images/arrow.svg') }}"/>
+                    </div>
+                    <div class="content-block summary improve">
+                        <ul>
+                            {% if not classified %}
+                                <li><h2><span class="tip">Help people identify agricultural projects</span></h2>
+                                    <div class="improvements">
+                                        <p>Adding AGROVOC codes to your activity file helps make your projects more
+                                            discoverable by funders and others who may be interested in your work.</p>
+                                        <a href="{{ path('oag_wireframe_classifier', { 'id': file.getId() }) }}">
+                                            <button type="button" id="class-button" disabled
+                                                    data-statusurl="{{ classifierUrl }}"><span
+                                                        class="fa fa-spinner fa-spin"></span>Tag your data
+                                            </button>
+                                        </a>
+                                    </div>
+                                </li>
+                            {% endif %}
+                            {% if not geocoded %}
+                                <li><h2><span class="tip">Help people locate your projects accurately</span></h2>
+                                    <div class="improvements">
+                                        <p>If activities are located accurately, then people can use your data to
+                                            identify partners on the ground, gaps in provision and other geographic
+                                            patterns.</p>
+                                        <a href="{{ path('oag_wireframe_geocoder', { 'id': file.getId() }) }}">
+                                            <button type="button" id="geo-button" disabled
+                                                    data-statusurl="{{ geocoderUrl }}"><span
+                                                        class="fa fa-spinner fa-spin"></span>Geocode your data
+                                            </button>
+                                        </a>
+                                    </div>
+                                </li>
+                            {% endif %}
+                            {% if not show_traceability %}
+                                <li><h2><span class="tip">Help people trace funding between organisations</span></h2>
+                                    <div class="improvements">
+                                        <p>If your activities are tagged with organisational identifiers, then people
+                                            can use your data to see how funding from large organisations has been spent
+                                            on the ground.</p>
+                                        <a href="http://org-id.guide/">
+                                            <button type="button" id="trace-button">Org-id.guide can help</button>
+                                        </a>
+                                    </div>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </article>
             {% endif %}
 
         </section>
@@ -103,12 +125,13 @@
 {% endblock %}
 
 {% block javascripts %}
-    <script type="text/javascript" src="{{ asset('bundles/oag/jquery-filestyle-1.5.1/src/jquery-filestyle.min.js') }}"></script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/oag/jquery-filestyle-1.5.1/src/jquery-filestyle.min.js') }}"></script>
     <script>
         $('.info').hide();
-        $('.completed').on('click', function() {
+        $('.completed').on('click', function () {
             var $this = $(this),
-            $next = $this.next();
+                $next = $this.next();
 
             var $last = $('div:visible', $this.parents('ul'));
 
@@ -122,24 +145,24 @@
         });
     </script>
     <script>
-        $( document ).ready(function() {
+        $(document).ready(function () {
             checkStatus('#class-button');
             checkStatus('#geo-button');
 
             function checkStatus(buttonId) {
                 var url = $(buttonId).data('statusurl');
                 var items = [];
-                $(buttonId + ' .status-file').each(function (key, ele){
+                $(buttonId + ' .status-file').each(function (key, ele) {
                     items.push($(ele).text());
                 });
-                $.get(url, function(data, status) {
+                $.get(url, function (data, status) {
 
                     if (data.filenames.length === 0) {
                         $(buttonId).removeAttr("disabled");
                         $(buttonId + " .fa.fa-spinner.fa-spin").remove();
                     }
 
-                    setTimeout(function() {
+                    setTimeout(function () {
                         checkStatus(buttonId);
                     }, 5000);
                 });
