@@ -2,10 +2,10 @@
 
 namespace OagBundle\Command;
 
+use OagBundle\Service\Docker;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use OagBundle\Service\Docker;
 
 class OagFetchimagesCommand extends ContainerAwareCommand
 {
@@ -13,8 +13,7 @@ class OagFetchimagesCommand extends ContainerAwareCommand
     {
         $this
             ->setName('oag:fetchimages')
-            ->setDescription('Pulls the OAG docker images onto the host machine')
-        ;
+            ->setDescription('Pulls the OAG docker images onto the host machine');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

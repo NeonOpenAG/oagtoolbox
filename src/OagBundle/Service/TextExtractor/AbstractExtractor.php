@@ -13,18 +13,21 @@ namespace OagBundle\Service\TextExtractor;
  *
  * @author tobias
  */
-abstract class AbstractExtractor {
+abstract class AbstractExtractor
+{
 
     protected $path;
     protected $output;
 
-    public function setFilename($path) {
+    public function setFilename($path)
+    {
         $this->path = $path;
     }
 
     abstract function decode();
 
-    public function output() {
+    public function output()
+    {
         return $this->output;
     }
 

@@ -4,17 +4,20 @@ use OagBundle\Service\CSV;
 use OagBundle\Service\Geocoder;
 use Symfony\Bundle\WebProfilerBundle\Tests\TestCase;
 
-class GeocoderTest extends TestCase {
+class GeocoderTest extends TestCase
+{
 
     protected $container;
 
-    public function setUp() {
+    public function setUp()
+    {
         $kernel = new \AppKernel("test", true);
         $kernel->boot();
         $this->container = $kernel->getContainer();
     }
 
-    public function testGetStringFixtureData() {
+    public function testGetStringFixtureData()
+    {
         $classifier = $this->container->get(Geocoder::class);
         $classifier->setContainer($this->container);
         $data = $classifier->getStringFixtureData();
@@ -23,7 +26,8 @@ class GeocoderTest extends TestCase {
         $this->assertTrue(count($json) >= 1);
     }
 
-    public function testGetXMLFixtureData() {
+    public function testGetXMLFixtureData()
+    {
         $classifier = $this->container->get(Geocoder::class);
         $classifier->setContainer($this->container);
         $data = $classifier->getXMLFixtureData();

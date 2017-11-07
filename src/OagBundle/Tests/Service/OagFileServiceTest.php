@@ -1,7 +1,6 @@
 <?php
 
 use OagBundle\Entity\OagFile;
-use OagBundle\Repository\OagFileRepository;
 use OagBundle\Service\OagFileService;
 use Symfony\Bundle\WebProfilerBundle\Tests\TestCase;
 
@@ -10,19 +9,22 @@ use Symfony\Bundle\WebProfilerBundle\Tests\TestCase;
  *
  * @group OagFileServiceTests
  */
-class OagFileServiceTest extends TestCase {
+class OagFileServiceTest extends TestCase
+{
 
     protected $container;
     protected $kernel;
 
-    public function setUp() {
+    public function setUp()
+    {
         $kernel = new \AppKernel("test", true);
         $kernel->boot();
         $this->kernel = $kernel;
         $this->container = $kernel->getContainer();
     }
 
-    public function testXmlFileName() {
+    public function testXmlFileName()
+    {
         $fileService = $this->container->get(OagFileService::class);
         $fileService->setContainer($this->container);
 
@@ -34,7 +36,8 @@ class OagFileServiceTest extends TestCase {
         $this->assertEquals($expectedData, $data);
     }
 
-    public function testGetPath() {
+    public function testGetPath()
+    {
         $fileService = $this->container->get(OagFileService::class);
 
         $container = $this->getMockBuilder(\Symfony\Component\DependencyInjection\Container::class)
@@ -65,7 +68,8 @@ class OagFileServiceTest extends TestCase {
         $this->assertEquals($expectedPath, $path);
     }
 
-    public function testGetContents() {
+    public function testGetContents()
+    {
         $fileService = $this->getMockBuilder(OagFileService::class)
             ->setMethods(['getPath'])
             ->getMock();

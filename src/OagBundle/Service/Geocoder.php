@@ -8,29 +8,59 @@ use OagBundle\Entity\OagFile;
 use OagBundle\Service\CSV;
 use OagBundle\Service\TextExtractor\TextifyService;
 
-class Geocoder extends AbstractOagService {
+class Geocoder extends AbstractOagService
+{
 
-    public function processString($sometext, $filename, $country) {
-        $data = $this->process($sometext, $filename, $country);
-        $json = json_decode($data['xml'], true);
-        // $json = json_decode($this->getXMLFixtureData(), true);
-        if (is_array($json)) {
-            $locations = array_column($json, 'locations', 'project_id'); // format as $activityId => $location[]
-        }
-        else {
-            $this->getContainer()->get('logger')->warn('Geocoder returned no locations.');
-            if ($country) {
-                $this->getContainer()->get('logger')->warn('Geocoder re-try again without a country code.');
-                $locations = $this->processString($sometext, $filename, false);
-            }
-            else {
-                $locations = [];
-            }
-        }
-        return $locations;
+    public function getStringFixtureData()
+    {
+        $kernel = $this->getContainer()->get('kernel');
+        $path = $kernel->locateResource('@OagBundle/Resources/fixtures/geocoder-string.json');
+        $contents = file_get_contents($path);
+
+        return $contents;
     }
 
-    public function processXML($contents, $filename, $country = null) {
+    public function getXMLFixtureData()
+    {
+        $kernel = $this->getContainer()->get('kernel');
+        $path = $kernel->locateResource('@OagBundle/Resources/fixtures/geocoder-xml.json');
+        $contents = file_get_contents($path);
+
+        return $contents;
+    }
+
+    /**
+     * Process an OagFile and persist the results as Geolocation objects,
+     * attached to the OagFile.
+     *
+     * @param OagFile $file the file to process
+     */
+    public function geocodeOagFile(OagFile $file, $country = null)
+    {
+        $em = $this->getContainer()->get('doctrine')->getManager();
+        $geolocRepo = $this->getContainer()->get('doctrine')->getRepository(Geolocation::class);
+        $srvOagFile = $this->getContainer()->get(OagFileService::class);
+
+        $xml = $srvOagFile->getContents($file);
+        $activities = $this->processXML($xml, $file->getDocumentName(), $country);
+
+        $file->clearGeolocations();
+
+        foreach ($activities as $activityId => $locations) {
+            foreach ($locations as $location) {
+                $geoloc = $this->geolocationFromJson($location);
+                $geoloc->setIatiActivityId($activityId);
+
+                $file->addGeolocation($geoloc);
+            }
+        }
+
+        $em->persist($file);
+        $em->flush();
+    }
+
+    public function processXML($contents, $filename, $country = null)
+    {
         $data = $this->process($contents, $filename, $country);
         $json = json_decode($data['xml'], true);
         if ($json) {
@@ -42,7 +72,8 @@ class Geocoder extends AbstractOagService {
         return $locations;
     }
 
-    public function process($contents, $filename, $country) {
+    public function process($contents, $filename, $country)
+    {
         $oag = $this->getContainer()->getParameter('oag');
         $cmd = str_replace('{COUNTRY}', $country, str_replace('{FILENAME}', $filename, $oag['geocoder']['cmd']));
         $this->getContainer()->get('logger')->debug(
@@ -94,53 +125,34 @@ class Geocoder extends AbstractOagService {
         }
     }
 
-    public function getName() {
+    public function getName()
+    {
         return 'geocoder';
     }
 
-    public function getStringFixtureData() {
-        $kernel = $this->getContainer()->get('kernel');
-        $path = $kernel->locateResource('@OagBundle/Resources/fixtures/geocoder-string.json');
-        $contents = file_get_contents($path);
-
-        return $contents;
-    }
-
-    public function getXMLFixtureData() {
-        $kernel = $this->getContainer()->get('kernel');
-        $path = $kernel->locateResource('@OagBundle/Resources/fixtures/geocoder-xml.json');
-        $contents = file_get_contents($path);
-
-        return $contents;
-    }
-
     /**
-     * Process an OagFile and persist the results as Geolocation objects,
-     * attached to the OagFile.
+     * Use a part of the JSON response from the Geocoder to make a Geolocation
+     * entity.
      *
-     * @param OagFile $file the file to process
+     * @param $location a part of the JSON response describing a location
+     * @return Geolocation
      */
-    public function geocodeOagFile(OagFile $file, $country = null) {
-        $em = $this->getContainer()->get('doctrine')->getManager();
-        $geolocRepo = $this->getContainer()->get('doctrine')->getRepository(Geolocation::class);
-        $srvOagFile = $this->getContainer()->get(OagFileService::class);
+    private function geolocationFromJson($location)
+    {
+        $locationIdCode = strval($location['id']);
+        $locationIdVocab = $this->getContainer()->getParameter('geocoder')['id_vocabulary'];
 
-        $xml = $srvOagFile->getContents($file);
-        $activities = $this->processXML($xml, $file->getDocumentName(), $country);
+        $geoloc = new Geolocation();
+        $geoloc->setName($location['name']);
+        $geoloc->setLocationIdCode($locationIdCode);
+        $geoloc->setLocationIdVocab($locationIdVocab);
+        $geoloc->setFeatureDesignation($location['featureDesignation']['code']);
+        $geoloc->setPointPosLong($location['geometry']['coordinates'][0]);
+        $geoloc->setPointPosLat($location['geometry']['coordinates'][1]);
+        // TODO admin1..4
+        // TODO country
 
-        $file->clearGeolocations();
-
-        foreach ($activities as $activityId => $locations) {
-            foreach ($locations as $location) {
-                $geoloc = $this->geolocationFromJson($location);
-                $geoloc->setIatiActivityId($activityId);
-
-                $file->addGeolocation($geoloc);
-            }
-        }
-
-        $em->persist($file);
-        $em->flush();
+        return $geoloc;
     }
 
     /**
@@ -151,7 +163,8 @@ class Geocoder extends AbstractOagService {
      * @param string $text
      * @param string $activityId if the text is specific
      */
-    public function geocodeOagFileFromText(OagFile $file, $text, $activityId = null, $countryCode = false) {
+    public function geocodeOagFileFromText(OagFile $file, $text, $activityId = null, $countryCode = false)
+    {
         $em = $this->getContainer()->get('doctrine')->getManager();
         $geolocRepo = $this->getContainer()->get('doctrine')->getRepository(Geolocation::class);
         $srvEnhancementFile = $this->getContainer()->get(EnhancementFileService::class);
@@ -176,13 +189,33 @@ class Geocoder extends AbstractOagService {
         $em->flush();
     }
 
+    public function processString($sometext, $filename, $country)
+    {
+        $data = $this->process($sometext, $filename, $country);
+        $json = json_decode($data['xml'], true);
+        // $json = json_decode($this->getXMLFixtureData(), true);
+        if (is_array($json)) {
+            $locations = array_column($json, 'locations', 'project_id'); // format as $activityId => $location[]
+        } else {
+            $this->getContainer()->get('logger')->warn('Geocoder returned no locations.');
+            if ($country) {
+                $this->getContainer()->get('logger')->warn('Geocoder re-try again without a country code.');
+                $locations = $this->processString($sometext, $filename, false);
+            } else {
+                $locations = [];
+            }
+        }
+        return $locations;
+    }
+
     /**
      * Process an EnhancementFile and persist the results as Geolocation
      * objects, attached to the EnhancementFile.
      *
      * @param EnhancementFile $file the file to process
      */
-    public function geocodeEnhancementFile(EnhancementFile $file) {
+    public function geocodeEnhancementFile(EnhancementFile $file)
+    {
         $em = $this->getContainer()->get('doctrine')->getManager();
         $geolocRepo = $this->getContainer()->get('doctrine')->getRepository(Geolocation::class);
         $srvTextify = $this->getContainer()->get(TextifyService::class);
@@ -211,31 +244,8 @@ class Geocoder extends AbstractOagService {
         $em->flush();
     }
 
-    /**
-     * Use a part of the JSON response from the Geocoder to make a Geolocation
-     * entity.
-     *
-     * @param $location a part of the JSON response describing a location
-     * @return Geolocation
-     */
-    private function geolocationFromJson($location) {
-        $locationIdCode = strval($location['id']);
-        $locationIdVocab = $this->getContainer()->getParameter('geocoder')['id_vocabulary'];
-
-        $geoloc = new Geolocation();
-        $geoloc->setName($location['name']);
-        $geoloc->setLocationIdCode($locationIdCode);
-        $geoloc->setLocationIdVocab($locationIdVocab);
-        $geoloc->setFeatureDesignation($location['featureDesignation']['code']);
-        $geoloc->setPointPosLong($location['geometry']['coordinates'][0]);
-        $geoloc->setPointPosLat($location['geometry']['coordinates'][1]);
-        // TODO admin1..4
-        // TODO country
-
-        return $geoloc;
-    }
-
-    public function status() {
+    public function status()
+    {
         $cmd = 'docker exec -t openag_geocoder /bin/bash -c "/bin/ps -ef | grep python3"';
         $output = [];
         $pipes = [];

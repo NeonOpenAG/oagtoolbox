@@ -15,8 +15,7 @@ class OagClassifyCommand extends ContainerAwareCommand
     {
         $this
             ->setName('oag:classify')
-                ->addArgument('fileid', InputArgument::REQUIRED, 'File ID to classify')
-        ;
+            ->addArgument('fileid', InputArgument::REQUIRED, 'File ID to classify');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -32,7 +31,7 @@ class OagClassifyCommand extends ContainerAwareCommand
         $srvClassifier->classifyOagFile($oagfile);
         $then = time();
         $this->getContainer()->get('logger')->info(
-                sprintf('Classification complete on %s in %d seconds', $oagfile->getDocumentName(), $then - $now)
+            sprintf('Classification complete on %s in %d seconds', $oagfile->getDocumentName(), $then - $now)
         );
     }
 

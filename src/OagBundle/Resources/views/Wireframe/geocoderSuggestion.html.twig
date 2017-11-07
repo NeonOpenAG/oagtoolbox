@@ -2,8 +2,8 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link href="{{ asset('bundles/oag/neonmap/dist/neonmap.css') }}" rel="stylesheet" />
-    <link href="{{ asset('bundles/oag/jquery-filestyle-1.5.1/src/jquery-filestyle.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('bundles/oag/neonmap/dist/neonmap.css') }}" rel="stylesheet"/>
+    <link href="{{ asset('bundles/oag/jquery-filestyle-1.5.1/src/jquery-filestyle.min.css') }}" rel="stylesheet"/>
 {% endblock %}
 
 {% block title %}OagBundle:Wireframe:classifierSuggestion{% endblock %}
@@ -25,46 +25,47 @@
                 </div>
 
                 <div class="content-block">
-                    {%if activity.description %}
-                    <p class="more">Description: {{ activity.description}}</p>
+                    {% if activity.description %}
+                        <p class="more">Description: {{ activity.description }}</p>
                     {% else %}
-                    <p>No description available.</p>
+                        <p>No description available.</p>
                     {% endif %}
 
                     <!-- TODO: Move this back out, but not to activity.html.twig -->
                     {{ form_start(form) }}
 
                     {% for location in currentLocations %}
-                    <div class="tag-row">
-                        {% if loop.index0 in currentLocationsMaps|keys %}
-                            <div class="suggested-map-block" data-geojson='{{ currentLocationsMaps[loop.index0] }}'></div>
-                        {% endif %}
-
-                        <div class="info">
-                            {% if location.name is defined %}
-                                <div class="tag">{{ location.name }}</div>
+                        <div class="tag-row">
+                            {% if loop.index0 in currentLocationsMaps|keys %}
+                                <div class="suggested-map-block"
+                                     data-geojson='{{ currentLocationsMaps[loop.index0] }}'></div>
                             {% endif %}
 
-                            {% if location.description is defined %}
-                                <p>{{ location.description }}</p>
-                            {% endif %}
+                            <div class="info">
+                                {% if location.name is defined %}
+                                    <div class="tag">{{ location.name }}</div>
+                                {% endif %}
 
-                            {% if location['activity-description'] is defined %}
-                                <p>{{ location['activity-description'] }}</p>
-                            {% endif %}
+                                {% if location.description is defined %}
+                                    <p>{{ location.description }}</p>
+                                {% endif %}
+
+                                {% if location['activity-description'] is defined %}
+                                    <p>{{ location['activity-description'] }}</p>
+                                {% endif %}
+                            </div>
                         </div>
-                    </div>
                     {% endfor %}
 
                     {% for tag in form['tags'] %}
-                    <div class="tag-row">
-                        <div class="suggested-map-block" data-geojson='{{ tag.vars.attr['data-geojson'] }}'></div>
+                        <div class="tag-row">
+                            <div class="suggested-map-block" data-geojson='{{ tag.vars.attr['data-geojson'] }}'></div>
 
-                        <div class="info">
-                            <div class="tag">{{ form_label(tag) }}</div>
-                            <label class="addremove">{{ form_widget(tag) }}<span></span></label>
+                            <div class="info">
+                                <div class="tag">{{ form_label(tag) }}</div>
+                                <label class="addremove">{{ form_widget(tag) }}<span></span></label>
+                            </div>
                         </div>
-                    </div>
                     {% endfor %}
                     {% do form['tags'].setRendered %}
                     <div class="bottom-page-nav">
@@ -74,13 +75,14 @@
 
                     <div class="upload-info">
                         <h3>Use additional text</h3>
-                        <p>If your project would benefit from additional tags, please paste some relevant text into the box below.</p>
+                        <p>If your project would benefit from additional tags, please paste some relevant text into the
+                            box below.</p>
                         <hr>
                         <div>{{ form(pasteTextForm) }}</div>
                     </div>
 
                 </div>
-            </acticle>
+                </acticle>
 
         </section>
 
@@ -90,20 +92,22 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset('bundles/oag/neonmap/dist/neonmap.js') }}"></script>
-    <script>
-        $( document ).ready(function() {
-            $('.suggested-map-block').neonmap({image_path: "{{ asset('bundles/oag/neonmap/dist/images') }}" });
-        });
-    </script>
-    <script type="text/javascript" src="{{ asset('bundles/oag/jquery-filestyle-1.5.1/src/jquery-filestyle.min.js') }}"></script>
-    {{ parent() }}
-    <script>
-        $(function () {
-            $(document).tooltip();
+<script src="{{ asset('bundles/oag/neonmap/dist/neonmap.js') }}"></script>
+<script>
+    $(document).ready(function () {
+        $('.suggested-map-block').neonmap({image_path: "{{ asset('bundles/oag/neonmap/dist/images') }}"});
+    });
+</script>
+<script type="text/javascript"
+        src="{{ asset('bundles/oag/jquery-filestyle-1.5.1/src/jquery-filestyle.min.js') }}"></script>
+{{ parent() }}
+<script>
+    $(function () {
+        $(document).tooltip();
 
-            $("#enhancement_file_documentName").jfilestyle();;
-        });
-    </script>
-    <script>
-{% endblock %}
+        $("#enhancement_file_documentName").jfilestyle();
+        ;
+    });
+</script>
+<script>
+    {% endblock %}
