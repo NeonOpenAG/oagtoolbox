@@ -31,14 +31,14 @@ class Cove extends AbstractOagService
         $this->getContainer()->get('logger')->debug(sprintf('Processing %s using CoVE', $file->getDocumentName()));
         // TODO - for bigger files we might need send as Uri
         $contents = $srvOagFile->getContents($file);
-        $this->json = $this->process($contents, $file->getDocumentName());
+        $json = $this->process($contents, $file->getDocumentName());
+        $this->getContainer()->get('session')->set('cove_json', $json);
 
-        $err = array_filter(explode("\n", $this->json['err']) ?? array());
-        $status = $this->json['status'];
+        $status = $json['status'];
 
-        if ($status === 0) {
+        if ($status) {
             // CoVE claims to have processed the XML successfully
-            $xml = $this->json['xml'];
+            $xml = $json['xml'];
             if ($srvIATI->parseXML($xml)) {
                 // CoVE actually has returned valid XML
                 $xmldir = $this->getContainer()->getParameter('oagxml_directory');
@@ -69,11 +69,6 @@ class Cove extends AbstractOagService
             } else {
                 $this->getContainer()->get('session')->getFlashBag()->add('error', 'CoVE returned data that was not XML.');
             }
-        } else {
-            // CoVE returned with an error, spit out stderr
-            foreach ($err as $line) {
-                $this->getContainer()->get('session')->getFlashBag()->add('error', $line);
-            }
         }
 
         return false;
@@ -101,29 +96,45 @@ class Cove extends AbstractOagService
         $process = proc_open($cmd, $descriptorspec, $pipes);
 
         if (is_resource($process)) {
-            $this->getContainer()->get('logger')->info(sprintf('Writting %d bytes of data', strlen($contents)));
+            $this->getContainer()->get('logger')->debug(sprintf('Writting %d bytes of data', strlen($contents)));
             fwrite($pipes[0], $contents);
             fclose($pipes[0]);
 
             $xml = stream_get_contents($pipes[1]);
-            $this->getContainer()->get('logger')->info(sprintf('Got %d bytes of data', strlen($xml)));
+            $this->getContainer()->get('logger')->debug(sprintf('Got %d bytes of data', strlen($xml)));
             fclose($pipes[1]);
 
             $err = stream_get_contents($pipes[2]);
-            $this->getContainer()->get('logger')->info(sprintf('Got %d bytes of error', strlen($err)));
+            $this->getContainer()->get('logger')->debug(sprintf('Got %d bytes of error', strlen($err)));
             fclose($pipes[2]);
 
-            $return_value = proc_close($process);
+            if (strlen($err)) {
+                $this->getContainer()->get('logger')->info($err);
+            }
+
+            if (strpos($err, 'cat: /tmp/out/*.xml: No such file or directory') === 0) {
+                $message = 'CoVE did not return any XML file.';
+                $this->getContainer()->get('session')->getFlashBag()->add('error', $message);
+                $this->getContainer()->get('logger')->error($message);
+            }
+
+            proc_close($process);
+
+            $_err = json_decode($err, true);
+
+            // Totally borked XML produces no descriptive out put but an output status of 0.
+            $stdErrIsArray = count($_err) > 0;
+            $errHasValidationErrors = isset($_err['validation_errors']);
+            $validationCountIsZero = count($_err['validation_errors']) === 0;
+            $status = $stdErrIsArray && ($errHasValidationErrors && $validationCountIsZero);
 
             $data = array(
                 'xml' => $xml,
-                'err' => $err,
-                'status' => $return_value,
+                'err' => $_err,
+                'status' => $status,
             );
 
-            if (strlen($err)) {
-                $this->getContainer()->get('logger')->error('Error: ' . $err);
-            }
+            $this->json = $data;
 
             return $data;
         } else {

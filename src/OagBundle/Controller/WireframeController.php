@@ -37,8 +37,6 @@ class WireframeController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $srvCove = $this->get(Cove::class);
-        $srvClassifier = $this->get(Classifier::class);
-        $srvGeocoder = $this->get(Geocoder::class);
         $srvOagFile = $this->get(OagFileService::class);
 
         $oagfile = new OagFile();
@@ -63,7 +61,8 @@ class WireframeController extends Controller
             $em->persist($oagfile);
             $em->flush();
 
-            if (!$srvCove->validateOagFile($oagfile)) {
+            $isValid = $srvCove->validateOagFile($oagfile);
+            if (!$isValid) {
                 return $this->redirect($this->generateUrl('oag_wireframe_upload'));
             }
 
@@ -83,6 +82,16 @@ class WireframeController extends Controller
         if (!is_null($srvOagFile->getMostRecent())) {
             $data['file'] = $srvOagFile->getMostRecent();
         }
+
+        $json = $this->get('session')->get('cove_json');
+        if (isset($json['err'])) {
+            $validationErrors = $json['err']['validation_errors'] ?? false;
+            $rulesetErrors = $json['err']['ruleset_errors'] ?? false;
+        }
+        $data['validation_errors'] = $validationErrors ?? false;
+        $data['ruleset_errors'] = $rulesetErrors ?? false;
+        // Reset the validation error set
+        // $this->get('session')->remove('cove_json');
 
         return $data;
     }
@@ -889,6 +898,11 @@ class WireframeController extends Controller
             'oag_async_geocodestatus', array(), UrlGeneratorInterface::ABSOLUTE_URL // This guy right here
         );
 
+        $json = $this->get('session')->get('cove_json');
+        if (isset($json['err'])) {
+            $validationErrors = $json['err']['validation_errors'] ?? false;
+        }
+
         return array(
             'file' => $file,
             'classified' => $srvOagFile->hasBeenClassified($file),
@@ -899,6 +913,7 @@ class WireframeController extends Controller
             ],
             'classifierUrl' => $classifierUrl,
             'geocoderUrl' => $geocoderUrl,
+            'validation_errors' => $validationErrors ?? false,
         );
     }
 
