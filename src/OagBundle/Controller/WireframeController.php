@@ -623,6 +623,21 @@ class WireframeController extends Controller {
         $geocoderUrl = $router->generate(
                 'oag_async_geocodestatus', array(), UrlGeneratorInterface::ABSOLUTE_URL // This guy right here
         );
+        $reclassifyUrl = $router->generate(
+            'oag_async_classify',
+            array(
+                'id' => $file->getId(),
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        $regeocodeUrl = $router->generate(
+            'oag_async_geocode',
+            array(
+                'id' => $file->getId(),
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
 
         return array(
             'file' => $file,
@@ -634,6 +649,8 @@ class WireframeController extends Controller {
             ],
             'classifierUrl' => $classifierUrl,
             'geocoderUrl' => $geocoderUrl,
+            'reclassifyUrl' => $reclassifyUrl,
+            'regeocodeUrl' => $regeocodeUrl,
         );
     }
 

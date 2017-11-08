@@ -511,6 +511,12 @@ article {
         width: 226px;
         margin-top: 0.5em;
       }
+      .trigger {
+        width: 120px;
+        padding: 3px;
+        margin-top: 0px;
+        display: inline-block;
+      }
       .completed {
         cursor: pointer;
         &:before {

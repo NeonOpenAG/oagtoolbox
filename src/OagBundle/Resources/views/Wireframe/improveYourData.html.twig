@@ -34,7 +34,8 @@
                         <li>
                             <h2 class="completed">Helps people identify agricultural projects</h2>
                             <div class="info">
-                              <p>The AGROVOC codes in your activity file help make your projects more discoverable by funders and others who may be interested in your work.</p>
+                                <p>The AGROVOC codes in your activity file help make your projects more discoverable by funders and others who may be interested in your work.<button id="reclassify" data-url="{{ reclassifyUrl }}" class="trigger">&#x21bb; Re-Classify</button></p>
+                                <a href="{{ path('oag_wireframe_classifier', { 'id': file.getId() }) }}"><button type="button" id="class-button" disabled data-statusurl="{{ classifierUrl }}"><span class="fa fa-spinner fa-spin"></span>Tag your data</button></a>
                             </div>
                         </li>
                         {% endif %}
@@ -42,7 +43,8 @@
                         <li>
                             <h2 class="completed">Shows exactly where your work helps people</h2>
                             <div class="info">
-                                <p>Your activities are located accurately, which means people can use your data to identify partners on the ground, gaps in provision and other geographic patterns</p>
+                                <p>Your activities are located accurately, which means people can use your data to identify partners on the ground, gaps in provision and other geographic patterns<button id="reclassify" data-url="{{ reclassifyUrl }}" class="trigger">&#x21bb; Re-Classify</button></p>
+                                <a href="{{ path('oag_wireframe_geocoder', { 'id': file.getId() }) }}"><button type="button" id="geo-button" disabled data-statusurl="{{ geocoderUrl }}"><span class="fa fa-spinner fa-spin"></span>Geocode your data</button></a>
                             </div>
                         </li>
                         {% endif %}
@@ -70,7 +72,10 @@
                         {% if not classified %}
                         <li><h2><span class="tip">Help people identify agricultural projects</span></h2>
                             <div class="improvements">
-                                <p>Adding AGROVOC codes to your activity file helps make your projects more discoverable by funders and others who may be interested in your work.</p>
+                                <p>
+                                    Adding AGROVOC codes to your activity file helps make your projects more discoverable by funders and others who may be interested in your work.
+                                    <button id="reclassify" data-url="{{ reclassifyUrl }}" class="trigger">&#x21bb; Re-Classify</button>
+                                </p>
                                 <a href="{{ path('oag_wireframe_classifier', { 'id': file.getId() }) }}"><button type="button" id="class-button" disabled data-statusurl="{{ classifierUrl }}"><span class="fa fa-spinner fa-spin"></span>Tag your data</button></a>
                             </div>
                         </li>
@@ -78,7 +83,10 @@
                         {% if not geocoded %}
                         <li><h2><span class="tip">Help people locate your projects accurately</span></h2>
                             <div class="improvements">
-                                <p>If activities are located accurately, then people can use your data to identify partners on the ground, gaps in provision and other geographic patterns.</p>
+                                <p>
+                                    If activities are located accurately, then people can use your data to identify partners on the ground, gaps in provision and other geographic patterns.
+                                    <button id="regeocode" data-url="{{ regeocodeUrl }}" class="trigger">&#x21bb; Re-Geocode</button>
+                                </p>
                                 <a href="{{ path('oag_wireframe_geocoder', { 'id': file.getId() }) }}"><button type="button" id="geo-button" disabled data-statusurl="{{ geocoderUrl }}"><span class="fa fa-spinner fa-spin"></span>Geocode your data</button></a>
                             </div>
                         </li>
@@ -137,13 +145,47 @@
                     if (data.filenames.length === 0) {
                         $(buttonId).removeAttr("disabled");
                         $(buttonId + " .fa.fa-spinner.fa-spin").remove();
+                        $(buttonId).trigger( "asyncdone", [ buttonId ] );
                     }
-
-                    setTimeout(function() {
-                        checkStatus(buttonId);
-                    }, 5000);
+                    else {
+                        setTimeout(function () {
+                            checkStatus(buttonId);
+                        }, 5000);
+                    }
                 });
             }
+
+            function reCheck(url, buttonId) {
+                $(buttonId).attr('disabled', true);
+                $(buttonId).prepend('<span class="fa fa-spinner fa-spin">');
+                $.get({
+                    url: url,
+                }).done(function() {
+                    checkStatus(buttonId);
+                });
+            }
+
+            $('#reclassify').on('click', function() {
+                $(this).attr('disabled', true);
+                var url = $(this).data('url');
+                reCheck(url, '#class-button');
+            });
+
+            $('#regeocode').on('click', function() {
+                $(this).attr('disabled', true);
+                var url = $(this).data('url');
+                reCheck(url, '#geo-button');
+            });
+
+            $( "body" ).on( "asyncdone", function( event, buttonId ) {
+              console.log('HERE ' + buttonId);
+              if (buttonId == '#class-button') {
+                  $('#reclassify').removeAttr("disabled");
+              }
+              else if (buttonId == '#geo-button') {
+                  $('#regeocode').removeAttr("disabled");
+              }
+            });
 
         });
     </script>
