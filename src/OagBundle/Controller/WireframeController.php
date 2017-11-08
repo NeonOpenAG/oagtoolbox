@@ -899,8 +899,9 @@ class WireframeController extends Controller
         );
 
         $json = $this->get('session')->get('cove_json');
+        dump($json['err']);
         if (isset($json['err'])) {
-            $validationErrors = $json['err']['validation_errors'] ?? false;
+            $rulesetErrors = $json['err']['ruleset_errors'] ?? false;
         }
 
         return array(
@@ -913,7 +914,7 @@ class WireframeController extends Controller
             ],
             'classifierUrl' => $classifierUrl,
             'geocoderUrl' => $geocoderUrl,
-            'validation_errors' => $validationErrors ?? false,
+            'ruleset_errors' => $rulesetErrors ?? false,
         );
     }
 
