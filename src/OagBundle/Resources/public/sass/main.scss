@@ -544,8 +544,14 @@ article {
       }
       button {
         font-family: $oag_font;
-        width: 226px;
+        width: 300px;
         margin-top: 0.5em;
+      }
+      .trigger {
+        width: 120px;
+        padding: 3px;
+        margin-top: 0px;
+        display: inline-block;
       }
       .completed {
         cursor: pointer;
