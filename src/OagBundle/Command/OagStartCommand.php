@@ -2,12 +2,11 @@
 
 namespace OagBundle\Command;
 
+use OagBundle\Service\Docker;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use OagBundle\Service\Docker;
 
 
 class OagStartCommand extends ContainerAwareCommand
@@ -17,8 +16,7 @@ class OagStartCommand extends ContainerAwareCommand
         $this
             ->setName('oag:start')
             ->setDescription('Starts an underlying docker.')
-            ->addArgument('dockers', InputArgument::IS_ARRAY + InputArgument::OPTIONAL, 'List of dockers to start, if none, all are started')
-        ;
+            ->addArgument('dockers', InputArgument::IS_ARRAY + InputArgument::OPTIONAL, 'List of dockers to start, if none, all are started');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -42,8 +40,7 @@ class OagStartCommand extends ContainerAwareCommand
                     continue;
                 }
                 $id = $containers['openag_' . $docker]['container_id'];
-            }
-            else {
+            } else {
                 $output->writeln($docker . ' not started');
                 // This doesn't work I can't gert the return value back out
                 // $func = 'create' . ucfirst($container);

@@ -3,8 +3,8 @@
 namespace OagBundle\Controller;
 
 use OagBundle\Entity\Change;
-use OagBundle\Entity\OagFile;
 use OagBundle\Entity\EnhancementFile;
+use OagBundle\Entity\OagFile;
 use OagBundle\Form\EnhancementFileType;
 use OagBundle\Form\OagFileType;
 use OagBundle\Service\Classifier;
@@ -27,12 +27,14 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 /**
  * @Template
  */
-class WireframeController extends Controller {
+class WireframeController extends Controller
+{
 
     /**
      * @Route("/")
      */
-    public function uploadAction(Request $request) {
+    public function uploadAction(Request $request)
+    {
         $em = $this->getDoctrine()->getManager();
         $srvCove = $this->get(Cove::class);
         $srvClassifier = $this->get(Classifier::class);
@@ -45,21 +47,21 @@ class WireframeController extends Controller {
             'attr' => array('class' => 'submit'),
         ));
 
-	$sourceUploadForm->handleRequest($request);
+        $sourceUploadForm->handleRequest($request);
 
-	// TODO Check for too big files.
-	if ($sourceUploadForm->isSubmitted() && $sourceUploadForm->isValid()) {
-	    $tmpFile = $oagfile->getDocumentName();
-	    $filename = $tmpFile->getClientOriginalName();
+        // TODO Check for too big files.
+        if ($sourceUploadForm->isSubmitted() && $sourceUploadForm->isValid()) {
+            $tmpFile = $oagfile->getDocumentName();
+            $filename = $tmpFile->getClientOriginalName();
 
-	    $tmpFile->move(
-		$this->getParameter('oagfiles_directory'), $filename
-	    );
+            $tmpFile->move(
+                $this->getParameter('oagfiles_directory'), $filename
+            );
 
-	    $oagfile->setDocumentName($filename);
-	    $oagfile->setUploadDate(new \DateTime('now'));
-	    $em->persist($oagfile);
-	    $em->flush();
+            $oagfile->setDocumentName($filename);
+            $oagfile->setUploadDate(new \DateTime('now'));
+            $em->persist($oagfile);
+            $em->flush();
 
             if (!$srvCove->validateOagFile($oagfile)) {
                 return $this->redirect($this->generateUrl('oag_wireframe_upload'));
@@ -72,7 +74,7 @@ class WireframeController extends Controller {
             exec($console . 'oag:geocode ' . $oagfile->getId() . ' > /dev/null &');
 
             return $this->redirect($this->generateUrl('oag_wireframe_improveyourdata', array('id' => $oagfile->getId())));
-	}
+        }
 
         $data = array(
             'source_upload_form' => $sourceUploadForm->createView()
@@ -89,7 +91,8 @@ class WireframeController extends Controller {
      * @Route("/download/{id}")
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
-    public function downloadAction(Request $request, OagFile $file) {
+    public function downloadAction(Request $request, OagFile $file)
+    {
         $em = $this->getDoctrine()->getManager();
         $fileRepo = $this->getDoctrine()->getRepository(OagFile::class);
         $srvClassifier = $this->get(Classifier::class);
@@ -125,15 +128,15 @@ class WireframeController extends Controller {
             $srvClassifier->classifyOagFile($oagfile);
             $srvGeocoder->geocodeOagFile($oagfile);
 
-	    return $this->redirect($this->generateUrl('oag_wireframe_improveyourdata', array('id' => $oagfile->getId())));
+            return $this->redirect($this->generateUrl('oag_wireframe_improveyourdata', array('id' => $oagfile->getId())));
         }
 
         $otherFiles = [];
         $allFiles = $fileRepo->createQueryBuilder('f')
-                ->where('f.documentName LIKE :xml')
-                ->setParameter('xml', '%.xml')
-                ->getQuery()
-                ->execute();
+            ->where('f.documentName LIKE :xml')
+            ->setParameter('xml', '%.xml')
+            ->getQuery()
+            ->execute();
 
         return array(
             'file' => $file,
@@ -150,7 +153,8 @@ class WireframeController extends Controller {
      * @ParamConverter("previous", class="OagBundle:OagFile", options={"id" = "previous_id"})
      * @ParamConverter("toDelete", class="OagBundle:OagFile", options={"id" = "to_delete_id"})
      */
-    public function deleteFileAction(Request $request, OagFile $previous, OagFile $toDelete) {
+    public function deleteFileAction(Request $request, OagFile $previous, OagFile $toDelete)
+    {
         $em = $this->getDoctrine()->getManager();
         $oagFileRepo = $this->getDoctrine()->getRepository(OagFile::class);
         $srvOagFile = $this->get(OagFileService::class);
@@ -177,7 +181,8 @@ class WireframeController extends Controller {
      * @Route("/downloadFile/{id}")
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
-    public function downloadFileAction(Request $request, OagFile $file) {
+    public function downloadFileAction(Request $request, OagFile $file)
+    {
         $srvOagFile = $this->get(OagFileService::class);
 
         return $this->file($srvOagFile->getPath($file));
@@ -187,7 +192,8 @@ class WireframeController extends Controller {
      * @Route("/classifier/{id}")
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
-    public function classifierAction(OagFile $file) {
+    public function classifierAction(OagFile $file)
+    {
         $srvIATI = $this->get(IATI::class);
         $root = $srvIATI->load($file);
         $activities = $srvIATI->summariseToArray($root);
@@ -228,7 +234,8 @@ class WireframeController extends Controller {
      * @Route("/classifier/{id}/{activityId}")
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
-    public function classifierSuggestionAction(Request $request, OagFile $file, $activityId) {
+    public function classifierSuggestionAction(Request $request, OagFile $file, $activityId)
+    {
         $em = $this->getDoctrine()->getManager();
         $srvClassifier = $this->get(Classifier::class);
         $srvIATI = $this->get(IATI::class);
@@ -322,8 +329,8 @@ class WireframeController extends Controller {
                 'data' => $currentTags, // default current tags to ticked
                 'choice_label' => function ($value, $key, $index) {
                     $desc = $value->getDescription();
-                        return "$desc";
-                    }
+                    return "$desc";
+                }
             ))
             ->add('back', SubmitType::class)
             ->add('save', SubmitType::class)
@@ -383,7 +390,8 @@ class WireframeController extends Controller {
      * @Route("/geocoder/{id}")
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
-    public function geocoderAction(OagFile $file) {
+    public function geocoderAction(OagFile $file)
+    {
         $srvIATI = $this->get(IATI::class);
         $root = $srvIATI->load($file);
         $activities = $srvIATI->summariseToArray($root);
@@ -424,7 +432,8 @@ class WireframeController extends Controller {
      * @Route("/geocoder/{id}/{activityId}")
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
-    public function geocoderSuggestionAction(Request $request, OagFile $file, $activityId) {
+    public function geocoderSuggestionAction(Request $request, OagFile $file, $activityId)
+    {
         $em = $this->getDoctrine()->getManager();
         $srvGeocoder = $this->get(Geocoder::class);
         $srvGeoJson = $this->get(GeoJson::class);
@@ -503,7 +512,7 @@ class WireframeController extends Controller {
         $countryCode = $srvIATI->getActivityCountryCode($activity);
         $pasteTextForm = $this->createFormBuilder()
             ->add('country', ChoiceType::class, array(
-                'choices'  => array_flip($this->getCountryList()),
+                'choices' => array_flip($this->getCountryList()),
                 'label' => 'Country',
                 'data' => $countryCode,
             ))
@@ -584,83 +593,10 @@ class WireframeController extends Controller {
         );
     }
 
-    /**
-     * @Route("/preview/{id}")
-     * @ParamConverter("file", class="OagBundle:OagFile")
-     */
-    public function previewAction(OagFile $file) {
-        $srvDPortal = $this->get(DPortal::class);
-        $srvDPortal->visualise($file);
-
-        $uri = \str_replace(
-            'SERVER_HOST', $_SERVER['HTTP_HOST'], $this->getParameter('oag')['dportal']['uri']
-        );
-
-        return array(
-            'dPortalUri' => $uri,
-            'file' => $file
-        );
-    }
-
-    /**
-     * @Route("/improveYourData/{id}")
-     * @ParamConverter("file", class="OagBundle:OagFile")
-     */
-    public function improveYourDataAction(OagFile $file) {
-        $srvOagFile = $this->get(OagFileService::class);
-
-        $srvGeocoder = $this->get(Geocoder::class);
-        $srvClassifier = $this->get(Classifier::class);
-        $srvIati = $this->get(IATI::class);
-
-        $geocoderStatus = $srvGeocoder->status();
-        $classifierStatus = $srvClassifier->status();
-
-        $router = $this->get('router');
-
-        $classifierUrl = $router->generate(
-                'oag_async_classifystatus', array(), UrlGeneratorInterface::ABSOLUTE_URL // This guy right here
-        );
-        $geocoderUrl = $router->generate(
-                'oag_async_geocodestatus', array(), UrlGeneratorInterface::ABSOLUTE_URL // This guy right here
-        );
-        $reclassifyUrl = $router->generate(
-            'oag_async_classify',
-            array(
-                'id' => $file->getId(),
-            ),
-            UrlGeneratorInterface::ABSOLUTE_URL
-        );
-        $regeocodeUrl = $router->generate(
-            'oag_async_geocode',
-            array(
-                'id' => $file->getId(),
-            ),
-            UrlGeneratorInterface::ABSOLUTE_URL
-        );
-
-        $fileData = $srvIati->getData($file);
-        $fileStats = $srvIati->getStats($fileData);
-
-        return array(
-            'file' => $file,
-            'classified' => $srvOagFile->hasBeenClassified($file),
-            'geocoded' => $srvOagFile->hasBeenGeocoded($file),
-            'status' => [
-                'geocoder' => $geocoderStatus,
-                'classifier' => $classifierStatus,
-            ],
-            'classifierUrl' => $classifierUrl,
-            'geocoderUrl' => $geocoderUrl,
-            'reclassifyUrl' => $reclassifyUrl,
-            'regeocodeUrl' => $regeocodeUrl,
-            'file_stats' => $fileStats,
-        );
-    }
-
-    public function getCountryList() {
+    public function getCountryList()
+    {
         $countries = array
-            (
+        (
             'AF' => 'Afghanistan',
             'AX' => 'Aland Islands',
             'AL' => 'Albania',
@@ -909,6 +845,61 @@ class WireframeController extends Controller {
         );
 
         return $countries;
+    }
+
+    /**
+     * @Route("/preview/{id}")
+     * @ParamConverter("file", class="OagBundle:OagFile")
+     */
+    public function previewAction(OagFile $file)
+    {
+        $srvDPortal = $this->get(DPortal::class);
+        $srvDPortal->visualise($file);
+
+        $uri = \str_replace(
+            'SERVER_HOST', $_SERVER['HTTP_HOST'], $this->getParameter('oag')['dportal']['uri']
+        );
+
+        return array(
+            'dPortalUri' => $uri,
+            'file' => $file
+        );
+    }
+
+    /**
+     * @Route("/improveYourData/{id}")
+     * @ParamConverter("file", class="OagBundle:OagFile")
+     */
+    public function improveYourDataAction(OagFile $file)
+    {
+        $srvOagFile = $this->get(OagFileService::class);
+
+        $srvGeocoder = $this->get(Geocoder::class);
+        $srvClassifier = $this->get(Classifier::class);
+
+        $geocoderStatus = $srvGeocoder->status();
+        $classifierStatus = $srvClassifier->status();
+
+        $router = $this->get('router');
+
+        $classifierUrl = $router->generate(
+            'oag_async_classifystatus', array(), UrlGeneratorInterface::ABSOLUTE_URL // This guy right here
+        );
+        $geocoderUrl = $router->generate(
+            'oag_async_geocodestatus', array(), UrlGeneratorInterface::ABSOLUTE_URL // This guy right here
+        );
+
+        return array(
+            'file' => $file,
+            'classified' => $srvOagFile->hasBeenClassified($file),
+            'geocoded' => $srvOagFile->hasBeenGeocoded($file),
+            'status' => [
+                'geocoder' => $geocoderStatus,
+                'classifier' => $classifierStatus,
+            ],
+            'classifierUrl' => $classifierUrl,
+            'geocoderUrl' => $geocoderUrl,
+        );
     }
 
 }

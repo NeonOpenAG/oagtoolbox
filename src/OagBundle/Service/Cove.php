@@ -6,66 +6,16 @@ namespace OagBundle\Service;
 
 use OagBundle\Entity\OagFile;
 
-class Cove extends AbstractOagService {
+class Cove extends AbstractOagService
+{
 
     private $json;
 
-    public function processUri($uri) {
+    public function processUri($uri)
+    {
         // TODO - fetch file, cache it, check content type, decode and then pass to cove line at a time
         $data = file_get_contents($uri);
         return $this->autocodeXml($data);
-    }
-
-    public function process($contents, $filename) {
-        $oag = $this->getContainer()->getParameter('oag');
-        $cmd = str_replace('{FILENAME}', $filename, $oag['cove']['cmd']);
-        $this->getContainer()->get('logger')->debug(
-            sprintf('Command: %s', $cmd)
-        );
-
-        if (!$this->isAvailable()) {
-            $this->getContainer()->get('session')->getFlashBag()->add("warning", $this->getName() . " docker not available, using fixtures.");
-            return json_encode($this->getFixtureData(), true);
-        }
-
-        $descriptorspec = array(
-            0 => array("pipe", "r"),
-            1 => array("pipe", "w"),
-            2 => array("pipe", "w"),
-        );
-
-        $process = proc_open($cmd, $descriptorspec, $pipes);
-
-        if (is_resource($process)) {
-            $this->getContainer()->get('logger')->info(sprintf('Writting %d bytes of data', strlen($contents)));
-            fwrite($pipes[0], $contents);
-            fclose($pipes[0]);
-
-            $xml = stream_get_contents($pipes[1]);
-            $this->getContainer()->get('logger')->info(sprintf('Got %d bytes of data', strlen($xml)));
-            fclose($pipes[1]);
-
-            $err = stream_get_contents($pipes[2]);
-            $this->getContainer()->get('logger')->info(sprintf('Got %d bytes of error', strlen($err)));
-            fclose($pipes[2]);
-
-            $return_value = proc_close($process);
-
-            $data = array(
-                'xml' => $xml,
-                'err' => $err,
-                'status' => $return_value,
-            );
-
-            if (strlen($err)) {
-                $this->getContainer()->get('logger')->error('Error: ' . $err);
-            }
-
-            return $data;
-        } else {
-            // TODO Better exception handling.
-            throw new \RuntimeException('CoVE Failed to start');
-        }
     }
 
     /**
@@ -73,7 +23,8 @@ class Cove extends AbstractOagService {
      *
      * @param OagFile $file
      */
-    public function validateOagFile(OagFile $file) {
+    public function validateOagFile(OagFile $file)
+    {
         $srvOagFile = $this->getContainer()->get(OagFileService::class);
         $srvIATI = $this->getContainer()->get(IATI::class);
 
@@ -128,7 +79,66 @@ class Cove extends AbstractOagService {
         return false;
     }
 
-    public function getFixtureData() {
+    public function process($contents, $filename)
+    {
+        $oag = $this->getContainer()->getParameter('oag');
+        $cmd = str_replace('{FILENAME}', $filename, $oag['cove']['cmd']);
+        $this->getContainer()->get('logger')->debug(
+            sprintf('Command: %s', $cmd)
+        );
+
+        if (!$this->isAvailable()) {
+            $this->getContainer()->get('session')->getFlashBag()->add("warning", $this->getName() . " docker not available, using fixtures.");
+            return json_encode($this->getFixtureData(), true);
+        }
+
+        $descriptorspec = array(
+            0 => array("pipe", "r"),
+            1 => array("pipe", "w"),
+            2 => array("pipe", "w"),
+        );
+
+        $process = proc_open($cmd, $descriptorspec, $pipes);
+
+        if (is_resource($process)) {
+            $this->getContainer()->get('logger')->info(sprintf('Writting %d bytes of data', strlen($contents)));
+            fwrite($pipes[0], $contents);
+            fclose($pipes[0]);
+
+            $xml = stream_get_contents($pipes[1]);
+            $this->getContainer()->get('logger')->info(sprintf('Got %d bytes of data', strlen($xml)));
+            fclose($pipes[1]);
+
+            $err = stream_get_contents($pipes[2]);
+            $this->getContainer()->get('logger')->info(sprintf('Got %d bytes of error', strlen($err)));
+            fclose($pipes[2]);
+
+            $return_value = proc_close($process);
+
+            $data = array(
+                'xml' => $xml,
+                'err' => $err,
+                'status' => $return_value,
+            );
+
+            if (strlen($err)) {
+                $this->getContainer()->get('logger')->error('Error: ' . $err);
+            }
+
+            return $data;
+        } else {
+            // TODO Better exception handling.
+            throw new \RuntimeException('CoVE Failed to start');
+        }
+    }
+
+    public function getName()
+    {
+        return 'cove';
+    }
+
+    public function getFixtureData()
+    {
 
 
         // TODO - load from file, can we make this an asset?
@@ -146,12 +156,9 @@ class Cove extends AbstractOagService {
         return json_encode($json);
     }
 
-    public function getJson() {
+    public function getJson()
+    {
         return $this->json;
-    }
-
-    public function getName() {
-        return 'cove';
     }
 
 }

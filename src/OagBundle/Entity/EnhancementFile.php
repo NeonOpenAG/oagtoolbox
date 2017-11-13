@@ -2,11 +2,9 @@
 
 namespace OagBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-use OagBundle\Entity\SuggestedTag;
-use OagBundle\Entity\FileType;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Validator\Constraints\Range;
+use Doctrine\ORM\Mapping as ORM;
+use OagBundle\Entity\FileType;
 
 /**
  * EnhancementFile
@@ -14,8 +12,17 @@ use Symfony\Component\Validator\Constraints\Range;
  * @ORM\Table(name="enhancement_file")
  * @ORM\Entity(repositoryClass="OagBundle\Repository\EnhancementFileRepository")
  */
-class EnhancementFile {
+class EnhancementFile
+{
 
+    /**
+     * @ORM\ManyToMany(targetEntity="OagBundle\Entity\SuggestedTag", cascade={"persist"})
+     */
+    protected $suggestedTags;
+    /**
+     * @ORM\ManyToMany(targetEntity="OagBundle\Entity\Geolocation", cascade={"persist"})
+     */
+    protected $geolocations;
     /**
      * @var int
      *
@@ -24,22 +31,10 @@ class EnhancementFile {
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
     /**
      * @ORM\ManyToMany(targetEntity="OagFile", mappedBy="enhancingDocuments")
      * */
     private $iatiParents;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="OagBundle\Entity\SuggestedTag", cascade={"persist"})
-     */
-    protected $suggestedTags;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="OagBundle\Entity\Geolocation", cascade={"persist"})
-     */
-    protected $geolocations;
-
     /**
      * @var string
      *
@@ -68,7 +63,8 @@ class EnhancementFile {
      */
     private $uploadDate;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->suggestedTags = new ArrayCollection();
         $this->iatiParents = new ArrayCollection();
         $this->geolocations = new ArrayCollection();
@@ -80,21 +76,9 @@ class EnhancementFile {
      *
      * @return int
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
-    }
-
-    /**
-     * Set path
-     *
-     * @param string $path
-     *
-     * @return EnhancementFile
-     */
-    public function setDocumentName($documentName) {
-        $this->documentName = $documentName;
-
-        return $this;
     }
 
     /**
@@ -102,7 +86,8 @@ class EnhancementFile {
      *
      * @return string
      */
-    public function getDocumentName() {
+    public function getDocumentName()
+    {
         return $this->documentName;
     }
 
@@ -113,8 +98,9 @@ class EnhancementFile {
      *
      * @return EnhancementFile
      */
-    public function setMimeType($mimeType) {
-        $this->mimeType = $mimeType;
+    public function setDocumentName($documentName)
+    {
+        $this->documentName = $documentName;
 
         return $this;
     }
@@ -124,32 +110,30 @@ class EnhancementFile {
      *
      * @return string
      */
-    public function getMimeType() {
+    public function getMimeType()
+    {
         return $this->mimeType;
     }
 
     /**
-     * Get Tags
+     * Set path
      *
-     * @return ArrayCollection
+     * @param string $path
+     *
+     * @return EnhancementFile
      */
-    public function getSuggestedTags() {
-        return $this->suggestedTags;
+    public function setMimeType($mimeType)
+    {
+        $this->mimeType = $mimeType;
+
+        return $this;
     }
 
     /**
      * @param \OagBundle\Entity\SuggestedTag $activity
-     *
-     * @return bool
      */
-    public function hasSuggestedTag(SuggestedTag $activity) {
-        return $this->getSuggestedTags()->contains($activity);
-    }
-
-    /**
-     * @param \OagBundle\Entity\SuggestedTag $activity
-     */
-    public function addSuggestedTag(SuggestedTag $activity) {
+    public function addSuggestedTag(SuggestedTag $activity)
+    {
         if (!$this->hasSuggestedTag($activity)) {
             $this->suggestedTags->add($activity);
         }
@@ -157,34 +141,39 @@ class EnhancementFile {
 
     /**
      * @param \OagBundle\Entity\SuggestedTag $activity
+     *
+     * @return bool
      */
-    public function removeSuggestedTag(SuggestedTag $activity) {
+    public function hasSuggestedTag(SuggestedTag $activity)
+    {
+        return $this->getSuggestedTags()->contains($activity);
+    }
+
+    /**
+     * Get Tags
+     *
+     * @return ArrayCollection
+     */
+    public function getSuggestedTags()
+    {
+        return $this->suggestedTags;
+    }
+
+    /**
+     * @param \OagBundle\Entity\SuggestedTag $activity
+     */
+    public function removeSuggestedTag(SuggestedTag $activity)
+    {
         if ($this->hasSuggestedTag($activity)) {
             $this->suggestedTags->removeElement($activity);
         }
     }
 
     /**
-     * Get Geolocations
-     *
-     * @return string
-     */
-    public function getGeolocations() {
-        return $this->geolocations;
-    }
-
-    /**
-     * @param \OagBundle\Entity\Geolocation $geolocation
-     * @return bool
-     */
-    public function hasGeolocation(Geolocation $geolocation) {
-        return $this->getGeolocations()->contains($geolocation);
-    }
-
-    /**
      * @param \OagBundle\Entity\Geolocation $geolocation
      */
-    public function addGeolocation(Geolocation $geolocation) {
+    public function addGeolocation(Geolocation $geolocation)
+    {
         if (!$this->hasGeolocation($geolocation)) {
             $this->geolocations->add($geolocation);
         }
@@ -192,8 +181,28 @@ class EnhancementFile {
 
     /**
      * @param \OagBundle\Entity\Geolocation $geolocation
+     * @return bool
      */
-    public function removeGeolocation(Geolocation $geolocation) {
+    public function hasGeolocation(Geolocation $geolocation)
+    {
+        return $this->getGeolocations()->contains($geolocation);
+    }
+
+    /**
+     * Get Geolocations
+     *
+     * @return string
+     */
+    public function getGeolocations()
+    {
+        return $this->geolocations;
+    }
+
+    /**
+     * @param \OagBundle\Entity\Geolocation $geolocation
+     */
+    public function removeGeolocation(Geolocation $geolocation)
+    {
         if (!$this->hasGeolocation($geolocation)) {
             $this->geolocations->removeElement($geolocation);
         }
@@ -202,14 +211,16 @@ class EnhancementFile {
     /**
      * Remove all geolocations.
      */
-    public function clearGeolocations() {
+    public function clearGeolocations()
+    {
         $this->geolocations->clear();
     }
 
     /**
      * Remove all suggested tags.
      */
-    public function clearSuggestedTags() {
+    public function clearSuggestedTags()
+    {
         $this->suggestedTags->clear();
     }
 
@@ -218,7 +229,8 @@ class EnhancementFile {
      *
      * @return ArrayCollection
      */
-    public function getIatiParents() {
+    public function getIatiParents()
+    {
         return $this->iatiParents;
     }
 
@@ -227,7 +239,8 @@ class EnhancementFile {
      *
      * @param ArrayCollection $iatiParents
      */
-    public function setIatiParents(ArrayCollection $iatiParents) {
+    public function setIatiParents(ArrayCollection $iatiParents)
+    {
         $this->iatiParents = $iatiParents;
     }
 
@@ -236,7 +249,8 @@ class EnhancementFile {
      *
      * @return \DateTime
      */
-    public function getUploadDate() {
+    public function getUploadDate()
+    {
         return $this->uploadDate;
     }
 
@@ -245,15 +259,18 @@ class EnhancementFile {
      *
      * @param \DateTime $uploadDate
      */
-    public function setUploadDate(\DateTime $uploadDate) {
+    public function setUploadDate(\DateTime $uploadDate)
+    {
         $this->uploadDate = $uploadDate;
     }
 
-    public function getIatiActivityId() {
+    public function getIatiActivityId()
+    {
         return $this->iatiActivityId;
     }
 
-    public function setIatiActivityId($iatiActivityId) {
+    public function setIatiActivityId($iatiActivityId)
+    {
         $this->iatiActivityId = $iatiActivityId;
     }
 

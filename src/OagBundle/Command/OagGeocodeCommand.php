@@ -15,8 +15,7 @@ class OagGeocodeCommand extends ContainerAwareCommand
     {
         $this
             ->setName('oag:geocode')
-                ->addArgument('fileid', InputArgument::REQUIRED, 'File ID to geocode')
-        ;
+            ->addArgument('fileid', InputArgument::REQUIRED, 'File ID to geocode');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -32,7 +31,7 @@ class OagGeocodeCommand extends ContainerAwareCommand
         $srvGeocode->geocodeOagFile($oagfile);
         $then = time();
         $this->getContainer()->get('logger')->info(
-                sprintf('Geocoding complete on %s in %d seconds', $oagfile->getDocumentName(), $then - $now)
+            sprintf('Geocoding complete on %s in %d seconds', $oagfile->getDocumentName(), $then - $now)
         );
     }
 

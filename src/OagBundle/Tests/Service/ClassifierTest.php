@@ -6,21 +6,24 @@ use Symfony\Bundle\WebProfilerBundle\Tests\TestCase;
 /**
  * @group ClassifierTests
  */
-class ClassifierTest extends TestCase {
+class ClassifierTest extends TestCase
+{
 
     /**
-    * @var \Symfony\Component\DependencyInjection\Tests\ProjectServiceContainer
-    */
+     * @var \Symfony\Component\DependencyInjection\Tests\ProjectServiceContainer
+     */
     protected $container;
 
-    public function setUp() {
+    public function setUp()
+    {
         $kernel = new \AppKernel("test", true);
         $kernel->boot();
         $this->container = $kernel->getContainer();
     }
 
 
-    public function testProcessUri() {
+    public function testProcessUri()
+    {
         $classifier = $this->container->get(Classifier::class);
         $classifier->setContainer($this->container);
 
@@ -31,7 +34,8 @@ class ClassifierTest extends TestCase {
     /**
      * @dataProvider parseUriDataProvider
      */
-    public function testParseUri($uri, $assertParsed) {
+    public function testParseUri($uri, $assertParsed)
+    {
         $classifier = $this->container->get(Classifier::class);
         $classifier->setContainer($this->container);
 
@@ -39,7 +43,8 @@ class ClassifierTest extends TestCase {
         $this->assertEquals($assertParsed, $parsedUri);
     }
 
-    public function parseUriDataProvider() {
+    public function parseUriDataProvider()
+    {
         return array(
             array('http://localhost:8011', array(
                 'host' => 'localhost',
@@ -60,7 +65,8 @@ class ClassifierTest extends TestCase {
         );
     }
 
-    public function testIsAvailable() {
+    public function testIsAvailable()
+    {
         $classifier = $this->container->get(Classifier::class);
         $classifier->setContainer($this->container);
 
@@ -88,7 +94,8 @@ class ClassifierTest extends TestCase {
         socket_shutdown($sock);
     }
 
-    public function testProcessXML() {
+    public function testProcessXML()
+    {
         $classifier = $this->container->get(Classifier::class);
         $classifier->setContainer($this->container);
 
@@ -99,7 +106,8 @@ class ClassifierTest extends TestCase {
         $this->assertArrayHasKey('status', $processed_xml);
     }
 
-    public function testProcessString() {
+    public function testProcessString()
+    {
         $classifier = $this->getMockBuilder(Classifier::class)
             ->setMethods(['isAvailable'])
             ->getMock();
@@ -119,12 +127,12 @@ class ClassifierTest extends TestCase {
         $this->assertJson(json_encode($notAvailableResult));
 
 
-
         $availableResult = $classifier->processString('');
         $this->assertJson(json_encode($availableResult));
     }
 
-    public function testGetStringFixtureData() {
+    public function testGetStringFixtureData()
+    {
         $classifier = $this->container->get(Classifier::class);
         $classifier->setContainer($this->container);
         $data = $classifier->getStringFixtureData();
@@ -132,7 +140,8 @@ class ClassifierTest extends TestCase {
         $this->assertJson($data);
     }
 
-    public function testGetXMLFixtureData() {
+    public function testGetXMLFixtureData()
+    {
         $classifier = $this->container->get(Classifier::class);
         $classifier->setContainer($this->container);
         $data = $classifier->getXMLFixtureData();
