@@ -34,8 +34,10 @@
                         <li>
                             <h2 class="completed">Helps people identify agricultural projects</h2>
                             <div class="info">
-                                <p>The AGROVOC codes in your activity file help make your projects more discoverable by funders and others who may be interested in your work.<button id="reclassify" data-url="{{ reclassifyUrl }}" class="trigger">&#x21bb; Re-Classify</button></p>
-                                <a href="{{ path('oag_wireframe_classifier', { 'id': file.getId() }) }}"><button type="button" id="class-button" disabled data-statusurl="{{ classifierUrl }}"><span class="fa fa-spinner fa-spin"></span>Tag your data</button></a>
+                                <p>The AGROVOC codes in your activity file help make your projects more discoverable by funders and others who may be interested in your work.{# <button id="reclassify" data-url="{{ reclassifyUrl }}" class="trigger">&#x21bb; Re-Classify</button> #}</p>
+                                <a href="{{ path('oag_wireframe_classifier', { 'id': file.getId() }) }}">
+                                    <button type="button" id="class-button" disabled data-statusurl="{{ classifierUrl }}"><span class="fa fa-spinner fa-spin"></span>Further improve your tagging</button>
+                                </a>
                             </div>
                         </li>
                         {% endif %}
@@ -43,8 +45,10 @@
                         <li>
                             <h2 class="completed">Shows exactly where your work helps people</h2>
                             <div class="info">
-                                <p>Your activities are located accurately, which means people can use your data to identify partners on the ground, gaps in provision and other geographic patterns<button id="reclassify" data-url="{{ reclassifyUrl }}" class="trigger">&#x21bb; Re-Classify</button></p>
-                                <a href="{{ path('oag_wireframe_geocoder', { 'id': file.getId() }) }}"><button type="button" id="geo-button" disabled data-statusurl="{{ geocoderUrl }}"><span class="fa fa-spinner fa-spin"></span>Geocode your data</button></a>
+                                <p>Your activities are located accurately, which means people can use your data to identify partners on the ground, gaps in provision and other geographic patterns. {# <button id="reclassify" data-url="{{ reclassifyUrl }}" class="trigger">&#x21bb; Re-Classify</button> #}</p>
+                                <a href="{{ path('oag_wireframe_geocoder', { 'id': file.getId() }) }}">
+                                    <button type="button" id="geo-button" disabled data-statusurl="{{ geocoderUrl }}"><span class="fa fa-spinner fa-spin"></span>Further improve your geo-coding</button>
+                                </a>
                             </div>
                         </li>
                         {% endif %}
@@ -74,7 +78,7 @@
                             <div class="improvements">
                                 <p>
                                     Adding AGROVOC codes to your activity file helps make your projects more discoverable by funders and others who may be interested in your work.
-                                    <button id="reclassify" data-url="{{ reclassifyUrl }}" class="trigger">&#x21bb; Re-Classify</button>
+                                    {# <button id="reclassify" data-url="{{ reclassifyUrl }}" class="trigger">&#x21bb; Re-Classify</button> #}
                                 </p>
                                 <a href="{{ path('oag_wireframe_classifier', { 'id': file.getId() }) }}"><button type="button" id="class-button" disabled data-statusurl="{{ classifierUrl }}"><span class="fa fa-spinner fa-spin"></span>Tag your data</button></a>
                             </div>
@@ -85,7 +89,7 @@
                             <div class="improvements">
                                 <p>
                                     If activities are located accurately, then people can use your data to identify partners on the ground, gaps in provision and other geographic patterns.
-                                    <button id="regeocode" data-url="{{ regeocodeUrl }}" class="trigger">&#x21bb; Re-Geocode</button>
+                                    {# <button id="regeocode" data-url="{{ regeocodeUrl }}" class="trigger">&#x21bb; Re-Geocode</button> #}
                                 </p>
                                 <a href="{{ path('oag_wireframe_geocoder', { 'id': file.getId() }) }}"><button type="button" id="geo-button" disabled data-statusurl="{{ geocoderUrl }}"><span class="fa fa-spinner fa-spin"></span>Geocode your data</button></a>
                             </div>
@@ -112,23 +116,6 @@
 
 {% block javascripts %}
     <script type="text/javascript" src="{{ asset('bundles/oag/jquery-filestyle-1.5.1/src/jquery-filestyle.min.js') }}"></script>
-    <script>
-        $('.info').hide();
-        $('.completed').on('click', function() {
-            var $this = $(this),
-            $next = $this.next();
-
-            var $last = $('div:visible', $this.parents('ul'));
-
-            if ($last.length) {
-                $last.slideUp('fast');
-            }
-
-            if ($last.parents('li').index() !== $this.parent().index()) {
-                $next.slideDown('fast');
-            }
-        });
-    </script>
     <script>
         $( document ).ready(function() {
             checkStatus('#class-button');
