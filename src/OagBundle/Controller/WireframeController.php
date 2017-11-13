@@ -870,35 +870,49 @@ class WireframeController extends Controller
      * @Route("/improveYourData/{id}")
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
-    public function improveYourDataAction(OagFile $file)
-    {
+    public function improveYourDataAction(OagFile $file) {
         $srvOagFile = $this->get(OagFileService::class);
-
         $srvGeocoder = $this->get(Geocoder::class);
         $srvClassifier = $this->get(Classifier::class);
-
+        $srvIati = $this->get(IATI::class);
         $geocoderStatus = $srvGeocoder->status();
         $classifierStatus = $srvClassifier->status();
-
         $router = $this->get('router');
-
         $classifierUrl = $router->generate(
             'oag_async_classifystatus', array(), UrlGeneratorInterface::ABSOLUTE_URL // This guy right here
         );
         $geocoderUrl = $router->generate(
             'oag_async_geocodestatus', array(), UrlGeneratorInterface::ABSOLUTE_URL // This guy right here
         );
-
+        $reclassifyUrl = $router->generate(
+            'oag_async_classify',
+            array(
+                'id' => $file->getId(),
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        $regeocodeUrl = $router->generate(
+            'oag_async_geocode',
+            array(
+                'id' => $file->getId(),
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        $fileData = $srvIati->getData($file);
+        $fileStats = $srvIati->getStats($fileData);
         return array(
             'file' => $file,
-            'classified' => $srvOagFile->hasBeenClassified($file),
-            'geocoded' => $srvOagFile->hasBeenGeocoded($file),
+            'classified' => $fileStats['activitiesWithNoTags'] == 0,
+            'geocoded' => $fileStats['activitiesWithNoLocs'] == 0,
             'status' => [
                 'geocoder' => $geocoderStatus,
                 'classifier' => $classifierStatus,
             ],
             'classifierUrl' => $classifierUrl,
             'geocoderUrl' => $geocoderUrl,
+            'reclassifyUrl' => $reclassifyUrl,
+            'regeocodeUrl' => $regeocodeUrl,
+            'file_stats' => $fileStats,
         );
     }
 
