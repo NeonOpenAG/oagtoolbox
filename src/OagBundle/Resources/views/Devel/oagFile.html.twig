@@ -1,0 +1,54 @@
+{% extends "OagBundle::base.html.twig" %}
+
+{% block title %}OagBundle:Devel:oagFile{% endblock %}
+
+{% block body %}
+    <h1>Welcome to the Devel:oagFile page</h1>
+
+    <table>
+        <tr>
+            <th>Id</th>
+            <td>{{ oagFile.id }}</td>
+        </tr>
+        <tr>
+            <th>Name</th>
+            <td>{{ oagFile.documentName }}</td>
+        </tr>
+        <tr>
+            <th>Upload Date</th>
+            <td>{{ oagFile.uploadDate |date('Y-m-d H:i:s') }}</td>
+        </tr>
+        <tr>
+            <th>Suggested Tags</th>
+            <td>
+                {% for tag in oagFile.suggestedTags %}
+                    {{ tag.tag }}
+                    {{ tag.confidence }}
+                {% endfor %}
+            </td>
+        </tr>
+        <tr>
+            <th>Enhancing documents</th>
+            <td>
+                {% for doc in oagFile.enhancingDocuments %}
+                    {{ doc.documentName }}
+                    {{ doc.mimetype }}
+                    {% for tag in doc.suggestedTags %}
+                        {{ tag.tag }}
+                        {{ tag.confidence }}
+                    {% endfor %}
+                {% endfor %}
+            </td>
+        </tr>
+        <tr>
+            <th>Changes</th>
+            <td>
+            </td>
+        </tr>
+        <tr>
+            <th>Geolocations</th>
+            <td>
+            </td>
+        </tr>
+    </table>
+{% endblock %}

@@ -10,7 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="geolocation")
  * @ORM\Entity(repositoryClass="OagBundle\Repository\GeolocationRepository")
  */
-class Geolocation {
+class Geolocation
+{
 
     /**
      * @var int
@@ -98,6 +99,16 @@ class Geolocation {
     }
 
     /**
+     * Get iatiActivityId
+     *
+     * @return string
+     */
+    public function getIatiActivityId()
+    {
+        return $this->iatiActivityId;
+    }
+
+    /**
      * Set iatiActivityId
      *
      * @param string $iatiActivityId
@@ -112,37 +123,13 @@ class Geolocation {
     }
 
     /**
-     * Get iatiActivityId
+     * Get locationIdCode
      *
      * @return string
      */
-    public function getIatiActivityId()
+    public function getLocationIdCode()
     {
-        return $this->iatiActivityId;
-    }
-
-    /**
-     * Set name
-     *
-     * @param string $name
-     *
-     * @return Geolocation
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * Get name
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
+        return $this->locationIdCode;
     }
 
     /**
@@ -160,13 +147,13 @@ class Geolocation {
     }
 
     /**
-     * Get locationIdCode
+     * Get locationIdVocab
      *
      * @return string
      */
-    public function getLocationIdCode()
+    public function getLocationIdVocab()
     {
-        return $this->locationIdCode;
+        return $this->locationIdVocab;
     }
 
     /**
@@ -184,13 +171,13 @@ class Geolocation {
     }
 
     /**
-     * Get locationIdVocab
+     * Get featureDesignation
      *
      * @return string
      */
-    public function getLocationIdVocab()
+    public function getFeatureDesignation()
     {
-        return $this->locationIdVocab;
+        return $this->featureDesignation;
     }
 
     /**
@@ -206,13 +193,13 @@ class Geolocation {
     }
 
     /**
-     * Get featureDesignation
+     * Get pointPosLat
      *
      * @return string
      */
-    public function getFeatureDesignation()
+    public function getPointPosLat()
     {
-        return $this->featureDesignation;
+        return $this->pointPosLat;
     }
 
     /**
@@ -230,13 +217,13 @@ class Geolocation {
     }
 
     /**
-     * Get pointPosLat
+     * Get pointPosLong
      *
      * @return string
      */
-    public function getPointPosLat()
+    public function getPointPosLong()
     {
-        return $this->pointPosLat;
+        return $this->pointPosLong;
     }
 
     /**
@@ -253,18 +240,33 @@ class Geolocation {
         return $this;
     }
 
+    public function toString()
+    {
+        return sprintf('%s', $this->getName());
+    }
+
     /**
-     * Get pointPosLong
+     * Get name
      *
      * @return string
      */
-    public function getPointPosLong()
+    public function getName()
     {
-        return $this->pointPosLong;
+        return $this->name;
     }
 
-    public function toString() {
-        return sprintf('%s', $this->getName());
+    /**
+     * Set name
+     *
+     * @param string $name
+     *
+     * @return Geolocation
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
     }
 
 }

@@ -1,6 +1,5 @@
 @import 'vars';
 
-
 /* --------------------------------------------------------------
 
    General styling
@@ -14,8 +13,8 @@ html, body {
   font-family: $oag_font;
   font-size: 1em;
   color: $oag_title;
-  background: $oag_blue;  /* fallback for old browsers */
-  background: -webkit-linear-gradient(150deg, $oag_blue 15%, $oag_purple 90%) fixed no-repeat;  /* Chrome 10-25, Safari 5.1-6 */
+  background: $oag_blue; /* fallback for old browsers */
+  background: -webkit-linear-gradient(150deg, $oag_blue 15%, $oag_purple 90%) fixed no-repeat; /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(150deg, $oag_blue 15%, $oag_purple 90%) fixed no-repeat; /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
@@ -75,11 +74,50 @@ ul {
   color: $oag_red;
 }
 
-@-webkit-keyframes spinner-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-@-moz-keyframes spinner-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-@-o-keyframes spinner-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-@-ms-keyframes spinner-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-@keyframes spinner-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@-webkit-keyframes spinner-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@-moz-keyframes spinner-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@-o-keyframes spinner-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@-ms-keyframes spinner-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spinner-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
 
 button,
 .cta {
@@ -95,7 +133,7 @@ button,
   padding: 1em 1.5em;
   border: 0;
   border-radius: 2px;
-  box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
+  box-shadow: 0 4px 6px rgba(50, 50, 93, .11), 0 1px 3px rgba(0, 0, 0, .08);
   cursor: pointer;
   transition: all .15s ease;
   &:hover {
@@ -103,7 +141,7 @@ button,
     color: white;
     text-decoration: none;
     transform: translateY(-1px);
-    box-shadow: 0 7px 14px rgba(50,50,93,.1), 0 3px 6px rgba(0,0,0,.08);
+    box-shadow: 0 7px 14px rgba(50, 50, 93, .1), 0 3px 6px rgba(0, 0, 0, .08);
   }
   &:visited {
     color: white;
@@ -122,10 +160,10 @@ button,
     cursor: default;
     transform: none;
     .fa-spinner.fa-spin:before {
-      -webkit-animation: spinner-spin  1s steps(8) infinite;
-      -moz-animation: spinner-spin  1s steps(8) infinite;
-      -o-animation: spinner-spin  1s steps(8) infinite;
-      animation: spinner-spin  1s steps(8) infinite;
+      -webkit-animation: spinner-spin 1s steps(8) infinite;
+      -moz-animation: spinner-spin 1s steps(8) infinite;
+      -o-animation: spinner-spin 1s steps(8) infinite;
+      animation: spinner-spin 1s steps(8) infinite;
     }
   }
 }
@@ -149,13 +187,13 @@ button,
   font-size: 1.5em;
   content: "\f019";
 }
+
 .delete:before {
   font-family: FontAwesome;
   font-size: 1.5em;
   color: $oag_red;
   content: "\f057";
 }
-
 
 /* --------------------------------------------------------------
 
@@ -176,7 +214,6 @@ button,
   justify-content: center;
   padding: 3em;
 }
-
 
 /* --------------------------------------------------------------
 
@@ -259,7 +296,6 @@ nav {
   }
 }
 
-
 /* --------------------------------------------------------------
 
    Upload page
@@ -271,8 +307,8 @@ div.jfilestyle.jfilestyle-corner {
 }
 
 .gradient {
-  background: $oag_blue;  /* fallback for old browsers */
-  background: -webkit-linear-gradient(150deg, $oag_blue 15%, $oag_purple 90%);  /* Chrome 10-25, Safari 5.1-6 */
+  background: $oag_blue; /* fallback for old browsers */
+  background: -webkit-linear-gradient(150deg, $oag_blue 15%, $oag_purple 90%); /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(150deg, $oag_blue 15%, $oag_purple 90%); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   h1 {
     color: $oag_title;
@@ -372,7 +408,7 @@ div.jfilestyle.jfilestyle-corner {
   padding: 1em 2em;
   border: none;
   border-radius: 2px;
-  box-shadow: 0 15px 35px rgba(50,50,93,.1), 0 5px 15px rgba(0,0,0,.07);
+  box-shadow: 0 15px 35px rgba(50, 50, 93, .1), 0 5px 15px rgba(0, 0, 0, .07);
   width: calc(100% - 4em);
   div {
     margin-bottom: 1em;
@@ -393,7 +429,7 @@ div.jfilestyle.jfilestyle-corner {
       display: none;
     }
     &.jfilestyle {
-      box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
+      box-shadow: 0 4px 6px rgba(50, 50, 93, .11), 0 1px 3px rgba(0, 0, 0, .08);
       input {
         font-family: $oag_font;
         font-size: 1em;
@@ -434,13 +470,13 @@ div.jfilestyle.jfilestyle-corner {
     font-family: $oag_font;
   }
 }
+
 .upload-info {
   width: 100%;
   div {
     margin-bottom: 0;
   }
 }
-
 
 /* --------------------------------------------------------------
 
@@ -451,7 +487,7 @@ div.jfilestyle.jfilestyle-corner {
 article {
   position: relative;
   margin-bottom: 2em;
-  box-shadow: 0 15px 35px rgba(50,50,93,.1), 0 5px 15px rgba(0,0,0,.07);
+  box-shadow: 0 15px 35px rgba(50, 50, 93, .1), 0 5px 15px rgba(0, 0, 0, .07);
   &.margin {
     margin-bottom: 5em;
   }
@@ -581,12 +617,12 @@ form {
     margin-bottom: 0;
   }
   .tag-row {
-  padding: 0;
-  margin: 1em 0;
-  background-color: $oag_bg;
-  display: flex;
-  justify-content: space-between;
-  box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
+    padding: 0;
+    margin: 1em 0;
+    background-color: $oag_bg;
+    display: flex;
+    justify-content: space-between;
+    box-shadow: 0 4px 6px rgba(50, 50, 93, .11), 0 1px 3px rgba(0, 0, 0, .08);
     .tag {
       display: flex;
       align-items: center;
@@ -601,7 +637,7 @@ form {
   background-color: transparent;
   border-radius: 0;
   box-shadow: none;
-  padding:0;
+  padding: 0;
   hr {
     margin-bottom: 1em;
   }
@@ -629,7 +665,6 @@ form {
     }
   }
 }
-
 
 /* --------------------------------------------------------------
 
@@ -661,13 +696,11 @@ form {
   }
 }
 
-
 /* --------------------------------------------------------------
 
    Fancy checkbox styling
 
 -------------------------------------------------------------- */
-
 
 .addremove {
   input {
@@ -707,7 +740,6 @@ form {
     transform: none;
   }
 }
-
 
 /* --------------------------------------------------------------
 
@@ -786,7 +818,7 @@ h2.file-name {
 .options {
   margin: 0;
   a {
-    margin:0 0.5em;
+    margin: 0 0.5em;
     &:nth-child(1) {
       background-color: $oag_purple;
     }
@@ -830,26 +862,73 @@ table {
 }
 
 // Ellipsis animation
-@keyframes dots-1 { from { opacity: 0; } 25% { opacity: 1; } }
-@keyframes dots-2 { from { opacity: 0; } 50% { opacity: 1; } }
-@keyframes dots-3 { from { opacity: 0; } 75% { opacity: 1; } }
-@-webkit-keyframes dots-1 { from { opacity: 0; } 25% { opacity: 1; } }
-@-webkit-keyframes dots-2 { from { opacity: 0; } 50% { opacity: 1; } }
-@-webkit-keyframes dots-3 { from { opacity: 0; } 75% { opacity: 1; } }
+@keyframes dots-1 {
+  from {
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+}
+
+@keyframes dots-2 {
+  from {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes dots-3 {
+  from {
+    opacity: 0;
+  }
+  75% {
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes dots-1 {
+  from {
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes dots-2 {
+  from {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes dots-3 {
+  from {
+    opacity: 0;
+  }
+  75% {
+    opacity: 1;
+  }
+}
 
 .dots span {
-    animation: dots-1 1s infinite steps(1);
-    -webkit-animation: dots-1 1s infinite steps(1);
+  animation: dots-1 1s infinite steps(1);
+  -webkit-animation: dots-1 1s infinite steps(1);
 }
 
 .dots span:first-child + span {
-    animation-name: dots-2;
-    -webkit-animation-name: dots-2;
+  animation-name: dots-2;
+  -webkit-animation-name: dots-2;
 }
 
 .dots span:first-child + span + span {
-    animation-name: dots-3;
-    -webkit-animation-name: dots-3;
+  animation-name: dots-3;
+  -webkit-animation-name: dots-3;
 }
 
 .fa-spinner {
@@ -892,7 +971,6 @@ table {
     }
   }
 }
-
 
 /* --------------------------------------------------------------
 
@@ -957,7 +1035,7 @@ table {
   border: 1px solid;
 }
 
-#existing-map-block .leaflet-map-pane *+* {
+#existing-map-block .leaflet-map-pane * + * {
   margin: 0;
 }
 
@@ -981,7 +1059,6 @@ table {
 #merge_activity_suggested {
   margin-bottom: 20px;
 }
-
 
 /* --------------------------------------------------------------
 
@@ -1135,7 +1212,7 @@ table {
   }
   tr {
     margin-bottom: 0.5em;
-    box-shadow: 0 7px 14px rgba(50,50,93,.1), 0 3px 6px rgba(0,0,0,.08);
+    box-shadow: 0 7px 14px rgba(50, 50, 93, .1), 0 3px 6px rgba(0, 0, 0, .08);
     background-color: white;
   }
   table td {

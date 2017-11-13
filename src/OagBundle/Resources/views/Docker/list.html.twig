@@ -4,96 +4,96 @@
 
 {% block body %}
     <div>
-    <h1>Welcome to the Docker:list page</h1>
+        <h1>Welcome to the Docker:list page</h1>
 
-    <div>
-        <h2>Available images</h2>
-
-        <table style='background: white; padding: 10px; border: black solid 2px; color: black;'>
-            <thead>
-            <tr>
-                <th>All Images</th>
-                <td>{{ all_images }}</td>
-            </tr>
-            </thead>
-        </table>
-    </div>
-
-    <div>
-        <h2>Required Images</h2>
-
-        <table style='background: white; padding: 10px; border: black solid 2px; color: black;'>
-            <thead>
-            <tr>
-                <th>IMAGE</th>
-                <th>STATUS</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for image in image_data %}
-                <tr>
-                    <td>{{ image.name }}</td>
-                    <td>{% if image.status %} &#10004; {% else %} &#10005; {% endif %}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
-
-    <div>
-        <h2>Pull status</h2>
         <div>
+            <h2>Available images</h2>
+
+            <table style='background: white; padding: 10px; border: black solid 2px; color: black;'>
+                <thead>
+                <tr>
+                    <th>All Images</th>
+                    <td>{{ all_images }}</td>
+                </tr>
+                </thead>
+            </table>
+        </div>
+
+        <div>
+            <h2>Required Images</h2>
+
+            <table style='background: white; padding: 10px; border: black solid 2px; color: black;'>
+                <thead>
+                <tr>
+                    <th>IMAGE</th>
+                    <th>STATUS</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for image in image_data %}
+                    <tr>
+                        <td>{{ image.name }}</td>
+                        <td>{% if image.status %} &#10004; {% else %} &#10005; {% endif %}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div>
+            <h2>Pull status</h2>
+            <div>
         <pre>
             {% for line in process_stat %}
                 {{ line }}
             {% endfor %}
         </pre>
+            </div>
         </div>
-    </div>
 
-    <div>
-        <h2>Containers</h2>
+        <div>
+            <h2>Containers</h2>
 
-        <table style='background: white; padding: 10px; border: black solid 2px; color: black;'>
-            <thead>
-            <tr>
-                <th>CONTAINER ID</th>
-                <th>IMAGE</th>
-                <th>COMMAND</th>
-                <th>CREATED</th>
-                <th>STATUS</th>
-                <th>PORTS</th>
-                <th>NAMES</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for container in containers %}
+            <table style='background: white; padding: 10px; border: black solid 2px; color: black;'>
+                <thead>
                 <tr>
-                    <td>{{ container.container_id }}</td>
-                    <td>{{ container.image }}</td>
-                    <td>{{ container.command }}</td>
-                    <td>{{ container.created }}</td>
-                    <td>{{ container.status }}</td>
-                    <td>{{ container.ports }}</td>
-                    <td>{{ container.names }}</td>
+                    <th>CONTAINER ID</th>
+                    <th>IMAGE</th>
+                    <th>COMMAND</th>
+                    <th>CREATED</th>
+                    <th>STATUS</th>
+                    <th>PORTS</th>
+                    <th>NAMES</th>
                 </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
+                </thead>
+                <tbody>
+                {% for container in containers %}
+                    <tr>
+                        <td>{{ container.container_id }}</td>
+                        <td>{{ container.image }}</td>
+                        <td>{{ container.command }}</td>
+                        <td>{{ container.created }}</td>
+                        <td>{{ container.status }}</td>
+                        <td>{{ container.ports }}</td>
+                        <td>{{ container.names }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
-    <pre style='background: white; padding: 10px; border: black solid 2px; color: black;'>
+        <pre style='background: white; padding: 10px; border: black solid 2px; color: black;'>
   {{ status.geocoder }}
 </pre>
 
-    <pre style='background: white; padding: 10px; border: black solid 2px; color: black;'>
+        <pre style='background: white; padding: 10px; border: black solid 2px; color: black;'>
   {{ status.classifier }}
 </pre>
 
-    <pre style='background: white; padding: 10px; border: black solid 2px; color: black;'>
+        <pre style='background: white; padding: 10px; border: black solid 2px; color: black;'>
   {{ container_json }}
 </pre>
-    
+
     </div>
 
 {% endblock %}

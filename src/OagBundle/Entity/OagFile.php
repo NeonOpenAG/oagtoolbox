@@ -5,7 +5,6 @@ namespace OagBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping as ORM;
-use OagBundle\Entity\SuggestedTag;
 
 /**
  * OagFile
@@ -14,8 +13,17 @@ use OagBundle\Entity\SuggestedTag;
  * @ORM\Entity(repositoryClass="OagBundle\Repository\OagFileRepository")
  * @ORM\HasLifecycleCallbacks()
  */
-class OagFile {
+class OagFile
+{
 
+    /**
+     * @ORM\ManyToMany(targetEntity="OagBundle\Entity\SuggestedTag", cascade={"persist"})
+     */
+    protected $suggestedTags;
+    /**
+     * @ORM\ManyToMany(targetEntity="OagBundle\Entity\Geolocation", cascade={"persist"})
+     */
+    protected $geolocations;
     /**
      * @var int
      *
@@ -24,17 +32,6 @@ class OagFile {
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="OagBundle\Entity\SuggestedTag", cascade={"persist"})
-     */
-    protected $suggestedTags;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="OagBundle\Entity\Geolocation", cascade={"persist"})
-     */
-    protected $geolocations;
-
     /**
      * @ORM\ManyToMany(targetEntity="EnhancementFile", inversedBy="iatiParents", cascade={"persist"})
      */
@@ -66,7 +63,8 @@ class OagFile {
      */
     private $coved;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->coved = false;
         $this->suggestedTags = new ArrayCollection();
         $this->enhancingDocuments = new ArrayCollection();
@@ -79,8 +77,19 @@ class OagFile {
      *
      * @return int
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
+    }
+
+    /**
+     * Get path
+     *
+     * @return string
+     */
+    public function getDocumentName()
+    {
+        return $this->documentName;
     }
 
     /**
@@ -90,43 +99,18 @@ class OagFile {
      *
      * @return OagFile
      */
-    public function setDocumentName($documentName) {
+    public function setDocumentName($documentName)
+    {
         $this->documentName = $documentName;
 
         return $this;
     }
 
     /**
-     * Get path
-     *
-     * @return string
-     */
-    public function getDocumentName() {
-        return $this->documentName;
-    }
-
-    /**
-     * Get Tags
-     *
-     * @return ArrayCollection
-     */
-    public function getSuggestedTags() {
-        return $this->suggestedTags;
-    }
-
-    /**
-     * @param \OagBundle\Entity\SuggestedTag $activity
-     *
-     * @return bool
-     */
-    public function hasSuggestedTag(SuggestedTag $activity) {
-        return $this->getSuggestedTags()->contains($activity);
-    }
-
-    /**
      * @param \OagBundle\Entity\SuggestedTag $activity
      */
-    public function addSuggestedTag(SuggestedTag $activity) {
+    public function addSuggestedTag(SuggestedTag $activity)
+    {
         if (!$this->hasSuggestedTag($activity)) {
             $this->suggestedTags->add($activity);
         }
@@ -134,34 +118,39 @@ class OagFile {
 
     /**
      * @param \OagBundle\Entity\SuggestedTag $activity
+     *
+     * @return bool
      */
-    public function removeSuggestedTag(SuggestedTag $activity) {
+    public function hasSuggestedTag(SuggestedTag $activity)
+    {
+        return $this->getSuggestedTags()->contains($activity);
+    }
+
+    /**
+     * Get Tags
+     *
+     * @return ArrayCollection
+     */
+    public function getSuggestedTags()
+    {
+        return $this->suggestedTags;
+    }
+
+    /**
+     * @param \OagBundle\Entity\SuggestedTag $activity
+     */
+    public function removeSuggestedTag(SuggestedTag $activity)
+    {
         if ($this->hasSuggestedTag($activity)) {
             $this->suggestedTags->removeElement($activity);
         }
     }
 
     /**
-     * Get Geolocations
-     *
-     * @return string
-     */
-    public function getGeolocations() {
-        return $this->geolocations;
-    }
-
-    /**
-     * @param \OagBundle\Entity\Geolocation $geolocation
-     * @return bool
-     */
-    public function hasGeolocation(Geolocation $geolocation) {
-        return $this->getGeolocations()->contains($geolocation);
-    }
-
-    /**
      * @param \OagBundle\Entity\Geolocation $geolocation
      */
-    public function addGeolocation(Geolocation $geolocation) {
+    public function addGeolocation(Geolocation $geolocation)
+    {
         if (!$this->hasGeolocation($geolocation)) {
             $this->geolocations->add($geolocation);
         }
@@ -169,25 +158,43 @@ class OagFile {
 
     /**
      * @param \OagBundle\Entity\Geolocation $geolocation
+     * @return bool
      */
-    public function removeGeolocation(Geolocation $geolocation) {
+    public function hasGeolocation(Geolocation $geolocation)
+    {
+        return $this->getGeolocations()->contains($geolocation);
+    }
+
+    /**
+     * Get Geolocations
+     *
+     * @return string
+     */
+    public function getGeolocations()
+    {
+        return $this->geolocations;
+    }
+
+    /**
+     * @param \OagBundle\Entity\Geolocation $geolocation
+     */
+    public function removeGeolocation(Geolocation $geolocation)
+    {
         if (!$this->hasGeolocation($geolocation)) {
             $this->geolocations->removeElement($geolocation);
         }
     }
 
-    /**
-     * Remove all geolocations.
-     */
-    public function clearGeolocations() {
-        $this->geolocations->clear();
+    public function addEnhancingDocument(EnhancementFile $file)
+    {
+        if (!$this->hasEnhancingDocument($file)) {
+            $this->getEnhancingDocuments()->add($file);
+        }
     }
 
-    /**
-     * Remove all suggested tags.
-     */
-    public function clearSuggestedTags() {
-        $this->suggestedTags->clear();
+    public function hasEnhancingDocument(EnhancementFile $file)
+    {
+        return $this->getEnhancingDocuments()->contains($file);
     }
 
     /**
@@ -195,7 +202,8 @@ class OagFile {
      *
      * @return ArrayCollection
      */
-    public function getEnhancingDocuments() {
+    public function getEnhancingDocuments()
+    {
         return $this->enhancingDocuments;
     }
 
@@ -204,60 +212,43 @@ class OagFile {
      *
      * @param ArrayCollection $iatiParents
      */
-    public function setEnhancingDocuments(ArrayCollection $enhancingDocuments) {
+    public function setEnhancingDocuments(ArrayCollection $enhancingDocuments)
+    {
         $this->enhancingDocuments = $enhancingDocuments;
     }
 
-    public function addEnhancingDocument(EnhancementFile $file) {
-        if (!$this->hasEnhancingDocument($file)) {
-            $this->getEnhancingDocuments()->add($file);
-        }
-    }
-
-    public function removeEnhancingDocument(EnhancementFile $file) {
+    public function removeEnhancingDocument(EnhancementFile $file)
+    {
         if ($this->hasEnhancingDocument($file)) {
             $this->getEnhancingDocuments()->remove($file);
         }
     }
 
-    public function hasEnhancingDocument(EnhancementFile $file) {
-        return $this->getEnhancingDocuments()->contains($file);
-    }
-
-    public function clearEnhancingDocuments() {
-        $this->getEnhancingDocuments()->clear();
-    }
-
     /**
      * @return \OagBundle\Entity\Change[]
      */
-    public function getChanges() {
+    public function getChanges()
+    {
         return $this->changes;
     }
 
     /**
      * @param \OagBundle\Entity\Change $change
      */
-    public function addChange($change) {
+    public function addChange($change)
+    {
         if (!$this->changes->contains($change)) {
             $this->changes->add($change);
         }
     }
-
-    public function clearChanges() {
-        foreach ($this->changes as $change) {
-            $change->setFile(null);
-        }
-        $this->changes->clear();
-    }
-
 
     /**
      * Gets the date the OagFile was uploaded.
      *
      * @return \DateTime
      */
-    public function getUploadDate() {
+    public function getUploadDate()
+    {
         return $this->uploadDate;
     }
 
@@ -266,22 +257,26 @@ class OagFile {
      *
      * @param \DateTime $uploadDate
      */
-    public function setUploadDate(\DateTime $uploadDate) {
+    public function setUploadDate(\DateTime $uploadDate)
+    {
         $this->uploadDate = $uploadDate;
     }
 
-    public function isCoved() {
+    public function isCoved()
+    {
         return $this->coved;
     }
 
-    public function setCoved($coved) {
+    public function setCoved($coved)
+    {
         $this->coved = $coved;
     }
 
     /**
      * @ORM\PreRemove
      */
-    public function tidyUp(LifecycleEventArgs $args) {
+    public function tidyUp(LifecycleEventArgs $args)
+    {
         // NOTE: this just removes the relationships, not the entities themselves
         $this->clearSuggestedTags();
         $this->clearGeolocations();
@@ -289,6 +284,35 @@ class OagFile {
         $this->clearChanges();
         $args->getObjectManager()->persist($this);
         $args->getObjectManager()->flush($this);
+    }
+
+    /**
+     * Remove all suggested tags.
+     */
+    public function clearSuggestedTags()
+    {
+        $this->suggestedTags->clear();
+    }
+
+    /**
+     * Remove all geolocations.
+     */
+    public function clearGeolocations()
+    {
+        $this->geolocations->clear();
+    }
+
+    public function clearEnhancingDocuments()
+    {
+        $this->getEnhancingDocuments()->clear();
+    }
+
+    public function clearChanges()
+    {
+        foreach ($this->changes as $change) {
+            $change->setFile(null);
+        }
+        $this->changes->clear();
     }
 
 }

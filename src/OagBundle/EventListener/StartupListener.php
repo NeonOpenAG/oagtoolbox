@@ -4,16 +4,18 @@ namespace OagBundle\EventListener;
 
 use OagBundle\Service\Docker;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
-class StartupListener {
+class StartupListener
+{
 
     private $container;
     private $request;
 
-    public function onKernelRequest(GetResponseEvent $event) {
+    public function onKernelRequest(GetResponseEvent $event)
+    {
         if ($this->getContainer()->get('kernel')->getEnvironment() == "test") {
             // Skip this in the test env
             return;
@@ -53,8 +55,7 @@ class StartupListener {
             // Is the container running already?
             if (strpos($container, ':') !== false) {
                 $containerName = substr($container, 0, strpos($container, ':'));
-            }
-            else {
+            } else {
                 $containerName = $container;
             }
             $name = 'openag_' . $containerName;
@@ -65,8 +66,7 @@ class StartupListener {
                 // If the container is created but not started, then note the ID.
                 $id = $containers['openag_' . $container]['container_id'];
                 $this->getContainer()->get('logger')->debug($name . ' not started.');
-            }
-            else {
+            } else {
                 // Create the container if it's not created.
                 $this->getContainer()->get('logger')->info($container . ' not created');
                 // This doesn't work I can't gert the return value back out
@@ -97,17 +97,19 @@ class StartupListener {
         }
     }
 
+    public function getContainer()
+    {
+        return $this->container;
+    }
+
     /**
      * Sets the container.
      *
      * @param ContainerInterface|null $container A ContainerInterface instance or null
      */
-    public function setContainer(ContainerInterface $container = null) {
+    public function setContainer(ContainerInterface $container = null)
+    {
         $this->container = $container;
-    }
-
-    public function getContainer() {
-        return $this->container;
     }
 
     /**

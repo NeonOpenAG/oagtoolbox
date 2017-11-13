@@ -2,17 +2,20 @@
 
 namespace OagBundle\Twig;
 
-class OagExtension extends \Twig_Extension {
+class OagExtension extends \Twig_Extension
+{
 
-    public function getFilters() {
+    public function getFilters()
+    {
         return array(
             new \Twig_SimpleFilter('formatTagList', array($this, 'formatTagList')),
             new \Twig_SimpleFilter('suggestedTagList', array($this, 'suggestedTagList')),
         );
     }
 
-    public function formatTagList($tags) {
-        return array_reduce($tags, function($reduction, $tag) {
+    public function formatTagList($tags)
+    {
+        return array_reduce($tags, function ($reduction, $tag) {
             $activityList = &$reduction[$tag->getActivityId()];
             if (!$activityList)
                 $activityList = array();
@@ -21,7 +24,8 @@ class OagExtension extends \Twig_Extension {
         }, array());
     }
 
-    public function suggestedTagList($suggestedTag) {
+    public function suggestedTagList($suggestedTag)
+    {
         $lines = array();
         foreach ($suggestedTag as $tag) {
             $lines[] = $tag->getTag()->getDescription();

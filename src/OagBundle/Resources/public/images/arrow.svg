@@ -2,61 +2,60 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:xlink="http://www.w3.org/1999/xlink"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   version="1.1"
-   id="svg80"
-   width="123"
-   height="210"
-   viewBox="0 0 123 210"
-   sodipodi:docname="arrow.svg"
-   inkscape:version="0.92.1 unknown">
-  <metadata
-     id="metadata86">
-    <rdf:RDF>
-      <cc:Work
-         rdf:about="">
-        <dc:format>image/svg+xml</dc:format>
-        <dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
-      </cc:Work>
-    </rdf:RDF>
-  </metadata>
-  <defs
-     id="defs84" />
-  <sodipodi:namedview
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1"
-     objecttolerance="10"
-     gridtolerance="10"
-     guidetolerance="10"
-     inkscape:pageopacity="0"
-     inkscape:pageshadow="2"
-     inkscape:window-width="1920"
-     inkscape:window-height="1031"
-     id="namedview82"
-     showgrid="false"
-     inkscape:zoom="4.1333333"
-     inkscape:cx="61.5"
-     inkscape:cy="105"
-     inkscape:window-x="0"
-     inkscape:window-y="25"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="svg80" />
-  <image
-     width="123"
-     height="210"
-     preserveAspectRatio="none"
-     style="image-rendering:optimizeQuality"
-     xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHsAAADSCAYAAABq1L9ZAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJ
+        xmlns:dc="http://purl.org/dc/elements/1.1/"
+        xmlns:cc="http://creativecommons.org/ns#"
+        xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+        xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+        xmlns="http://www.w3.org/2000/svg"
+        version="1.1"
+        id="svg80"
+        width="123"
+        height="210"
+        viewBox="0 0 123 210"
+        sodipodi:docname="arrow.svg"
+        inkscape:version="0.92.1 unknown">
+    <metadata
+            id="metadata86">
+        <rdf:RDF>
+            <cc:Work
+                    rdf:about="">
+                <dc:format>image/svg+xml</dc:format>
+                <dc:type
+                        rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+                <dc:title></dc:title>
+            </cc:Work>
+        </rdf:RDF>
+    </metadata>
+    <defs
+            id="defs84"/>
+    <sodipodi:namedview
+            pagecolor="#ffffff"
+            bordercolor="#666666"
+            borderopacity="1"
+            objecttolerance="10"
+            gridtolerance="10"
+            guidetolerance="10"
+            inkscape:pageopacity="0"
+            inkscape:pageshadow="2"
+            inkscape:window-width="1920"
+            inkscape:window-height="1031"
+            id="namedview82"
+            showgrid="false"
+            inkscape:zoom="4.1333333"
+            inkscape:cx="61.5"
+            inkscape:cy="105"
+            inkscape:window-x="0"
+            inkscape:window-y="25"
+            inkscape:window-maximized="1"
+            inkscape:current-layer="svg80"/>
+    <image
+            width="123"
+            height="210"
+            preserveAspectRatio="none"
+            style="image-rendering:optimizeQuality"
+            xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHsAAADSCAYAAABq1L9ZAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJ
 bWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdp
 bj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6
 eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMTM4IDc5LjE1
@@ -478,7 +477,7 @@ ynTjjSlWDwL+0H/nYCm/jU45ZeVRL++vCNCVHRLIqslvnF3Virg2LnZvUeKc+tohSmFRgAEMvAcu
 Pz0D110IsInMF6lW2QnYkqnXF2NQuBr1HirKH2gWn9Ru+eNVgAEAiDOsR00sSZgAAAAASUVORK5C
 YII=
 "
-     id="image88"
-     x="0"
-     y="0" />
+            id="image88"
+            x="0"
+            y="0"/>
 </svg>

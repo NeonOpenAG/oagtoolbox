@@ -11,7 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="change")
  * @ORM\Entity(repositoryClass="OagBundle\Repository\ChangeRepository")
  */
-class Change {
+class Change
+{
     /**
      * @var int
      *
@@ -69,8 +70,19 @@ class Change {
      *
      * @return int
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
+    }
+
+    /**
+     * Get timestamp
+     *
+     * @return \DateTime
+     */
+    public function getTimestamp()
+    {
+        return $this->timestamp;
     }
 
     /**
@@ -80,30 +92,9 @@ class Change {
      *
      * @return Change
      */
-    public function setTimestamp($timestamp) {
+    public function setTimestamp($timestamp)
+    {
         $this->timestamp = $timestamp;
-
-        return $this;
-    }
-
-    /**
-     * Get timestamp
-     *
-     * @return \DateTime
-     */
-    public function getTimestamp() {
-        return $this->timestamp;
-    }
-
-    /**
-     * Set activityId
-     *
-     * @param string $activityId
-     *
-     * @return Change
-     */
-    public function setActivityId($activityId) {
-        $this->activityId = $activityId;
 
         return $this;
     }
@@ -113,19 +104,21 @@ class Change {
      *
      * @return string
      */
-    public function getActivityId() {
+    public function getActivityId()
+    {
         return $this->activityId;
     }
 
     /**
-     * Set file
+     * Set activityId
      *
-     * @param OagFile $file
+     * @param string $activityId
      *
      * @return Change
      */
-    public function setFile($file) {
-        $this->file = $file;
+    public function setActivityId($activityId)
+    {
+        $this->activityId = $activityId;
 
         return $this;
     }
@@ -135,14 +128,38 @@ class Change {
      *
      * @return OagFile
      */
-    public function getFile() {
+    public function getFile()
+    {
         return $this->file;
+    }
+
+    /**
+     * Set file
+     *
+     * @param OagFile $file
+     *
+     * @return Change
+     */
+    public function setFile($file)
+    {
+        $this->file = $file;
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getAddedTags()
+    {
+        return $this->addedTags;
     }
 
     /**
      * @param ArrayCollection|array $addedTags
      */
-    public function setAddedTags($addedTags) {
+    public function setAddedTags($addedTags)
+    {
         if (is_array($addedTags)) {
             $addedTags = new ArrayCollection($addedTags);
         }
@@ -152,14 +169,16 @@ class Change {
     /**
      * @return ArrayCollection
      */
-    public function getAddedTags() {
-        return $this->addedTags;
+    public function getRemovedTags()
+    {
+        return $this->removedTags;
     }
 
     /**
      * @param ArrayCollection|array $removedTags
      */
-    public function setRemovedTags($removedTags) {
+    public function setRemovedTags($removedTags)
+    {
         if (is_array($removedTags)) {
             $removedTags = new ArrayCollection($removedTags);
         }
@@ -169,14 +188,16 @@ class Change {
     /**
      * @return ArrayCollection
      */
-    public function getRemovedTags() {
-        return $this->removedTags;
+    public function getAddedGeolocs()
+    {
+        return $this->addedGeolocs;
     }
 
     /**
      * @param ArrayCollection|array $addedGeolocs
      */
-    public function setAddedGeolocs($addedGeolocs) {
+    public function setAddedGeolocs($addedGeolocs)
+    {
         if (is_array($addedGeolocs)) {
             $addedGeolocs = new ArrayCollection($addedGeolocs);
         }
@@ -186,25 +207,20 @@ class Change {
     /**
      * @return ArrayCollection
      */
-    public function getAddedGeolocs() {
-        return $this->addedGeolocs;
+    public function getRemovedGeolocs()
+    {
+        return $this->removedGeolocs;
     }
 
     /**
      * @param ArrayCollection|array $removedGeolocs
      */
-    public function setRemovedGeolocs($removedGeolocs) {
+    public function setRemovedGeolocs($removedGeolocs)
+    {
         if (is_array($removedGeolocs)) {
             $removedGeolocs = new ArrayCollection($removedGeolocs);
         }
         $this->removedGeolocs = $removedGeolocs;
-    }
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getRemovedGeolocs() {
-        return $this->removedGeolocs;
     }
 
 }

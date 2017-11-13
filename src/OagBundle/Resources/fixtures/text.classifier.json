@@ -1,36 +1,44 @@
-
 {
-    "data": [{
-            "code": "c_7555",
-            "description": "swine",
-            "confidence": 0.71792795441367
-        }, {
-            "code": "c_5872",
-            "description": "piglets",
-            "confidence": 0.26945263484739
-        }, {
-            "code": "c_676",
-            "description": "asses",
-            "confidence": 0.22598925503817
-        }, {
-            "code": "c_977",
-            "description": "boars",
-            "confidence": 0.21078558238047
-        }, {
-            "code": "c_4669",
-            "description": "meat",
-            "confidence": 0.17470430428127
-        }, {
-            "code": "c_6599",
-            "description": "rice",
-            "confidence": 0.12310939914775
-        }, {
-            "code": "c_4826",
-            "description": "milk",
-            "confidence": 0.027025418461494
-        }, {
-            "code": "c_1939",
-            "description": "cows",
-            "confidence": 0.018585344530502
-        }]
+  "data": [
+    {
+      "code": "c_7555",
+      "description": "swine",
+      "confidence": 0.71792795441367
+    },
+    {
+      "code": "c_5872",
+      "description": "piglets",
+      "confidence": 0.26945263484739
+    },
+    {
+      "code": "c_676",
+      "description": "asses",
+      "confidence": 0.22598925503817
+    },
+    {
+      "code": "c_977",
+      "description": "boars",
+      "confidence": 0.21078558238047
+    },
+    {
+      "code": "c_4669",
+      "description": "meat",
+      "confidence": 0.17470430428127
+    },
+    {
+      "code": "c_6599",
+      "description": "rice",
+      "confidence": 0.12310939914775
+    },
+    {
+      "code": "c_4826",
+      "description": "milk",
+      "confidence": 0.027025418461494
+    },
+    {
+      "code": "c_1939",
+      "description": "cows",
+      "confidence": 0.018585344530502
+    }
+  ]
 }

@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
     $('p.more').readmore({
         moreLink: '<a href="#">Read more...</a>',
         lessLink: '<a href="#">Read less...</a>',
