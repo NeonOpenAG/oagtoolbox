@@ -3,6 +3,7 @@
 namespace OagBundle\Service;
 
 use OagBundle\Entity\Tag;
+use OagBundle\Entity\OagFile;
 
 /**
  * A service for manipulating and getting data from IATI Activity files after
@@ -19,6 +20,66 @@ class IATI extends AbstractService
 
     const LIBXML_OPTIONS = LIBXML_BIGLINES & LIBXML_PARSEHUGE;
     const OPENAG_NAMESPACE = 'openag';
+
+    public function getData(OagFile $oagFile) {
+        $data = [];
+        // Get activites
+        $srvIATI = $this->getContainer()->get(IATI::class);
+        $root = $srvIATI->load($oagFile);
+
+        $activities = $this->getActivities($root);
+        foreach ($activities as $activity) {
+            // Count tags / activity
+            $tags = $this->getActivityTags($activity);
+            // Count gelocation / activity
+            $gelocations = $this->getActivityLocations($activity);
+            $data[$this->getActivityId($activity)] = [
+                'tags' => $tags,
+                'locs' => $gelocations,
+            ];
+        }
+
+        return $data;
+    }
+
+    public function getStats($data) {
+        $activitcount = count($data);
+        $activitiesWithNoTags = 0;
+        $activitiesWithNoLocs = 0;
+        $totalTags = 0;
+        $totalLocs = 0;
+        $averageTags = 0;
+        $averageLocs = 0;
+
+        foreach ($data as $activityId => $activityData) {
+            $tags = $activityData['tags'];
+            $locs = $activityData['locs'];
+            $totalTags += count($tags);
+            $totalLocs += count($locs);
+
+            if (count($tags) == 0) {
+                $activitiesWithNoTags++;
+            }
+            if (count($locs) == 0) {
+                $activitiesWithNoLocs++;
+            }
+        }
+
+        $averageTags = $activitcount > 0 ? $totalTags / $activitcount : 0;
+        $averageLocs = $activitcount > 0 ? $totalLocs / $activitcount : 0;
+
+        $stats = [
+            'count' => $activitcount,
+            'activitiesWithNoTags' => $activitiesWithNoTags,
+            'activitiesWithNoLocs' => $activitiesWithNoLocs,
+            'totalTags' => $totalTags,
+            'totalLocs' => $totalLocs,
+            'averageTags' => $averageTags,
+            'averageLocs' => $averageLocs,
+        ];
+
+        return $stats;
+    }
 
     /**
      * Load and parse an IATI OagFile into a SimpleXMLElement object.

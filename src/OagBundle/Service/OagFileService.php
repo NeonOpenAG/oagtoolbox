@@ -84,6 +84,8 @@ class OagFileService extends AbstractService
      * Gets whether the file has been classified. Classification is currently
      * defined as a single net change to the tags of the IATI file.
      *
+     * @deprecated Use stats to evaluate now
+     *
      * @param OagFile $oagFile
      * @return boolean
      */
@@ -101,6 +103,8 @@ class OagFileService extends AbstractService
     /**
      * Gets whether the file has been geocoded. Geocoding is currently defined
      * as a single net change to the locations of the IATI file.
+     *
+     * @deprecated Use stats to evaluate now
      *
      * @param OagFile $oagFile
      * @return boolean
