@@ -18,6 +18,7 @@ class Cove extends AbstractOagService
         return $this->autocodeXml($data);
     }
 
+
     /**
      * Process on OagFile with CoVE.
      *
@@ -159,6 +160,10 @@ class Cove extends AbstractOagService
     public function getJson()
     {
         return $this->json;
+    }
+
+    public function getName() {
+        return 'cove';
     }
 
 }

@@ -31,11 +31,14 @@
 
         </div>
 
+
     </section>
 
     <section class="center instructions">
 
         <div class="content">
+            {{ include('OagBundle::widgets/validation_errors.html.twig') }}
+            {{ include('OagBundle::widgets/ruleset_errors.html.twig') }}
 
             <h1>What can I upload?</h1>
             <div class="template">

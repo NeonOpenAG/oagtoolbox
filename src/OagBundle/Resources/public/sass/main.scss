@@ -342,6 +342,15 @@ div.jfilestyle.jfilestyle-corner {
   }
 }
 
+.ruleset-errors {
+  border: 3px solid black;
+  td {
+    text-align: left;
+    margin-left: 0px;
+    padding-left: 15px;
+  }
+}
+
 .intro {
   margin-bottom: 3em;
   h1,
