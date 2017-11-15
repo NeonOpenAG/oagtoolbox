@@ -21,11 +21,14 @@ class StartupListener
             return;
         }
 
-        $request = $this->getRequest()->getCurrentRequest();;
-        $route = $request->attributes->get('_route');
-        if ($route == 'oag_docker_list' || strpos($route, '_assetic') !== false || $route == '_wdt' || empty($route)) {
-            // This is a status URL, so don't do the checks
-            return;
+        $request = $this->getRequest();
+        if ($request) {
+            $currentRequest = $request->getCurrentRequest();;
+            $route = $currentRequest->attributes->get('_route');
+            if ($route == 'oag_docker_list' || strpos($route, '_assetic') !== false || $route == '_wdt' || empty($route)) {
+                // This is a status URL, so don't do the checks
+                return;
+            }
         }
 
         $srvDocker = $this->getContainer()->get(Docker::class);
