@@ -45,7 +45,7 @@
         {% for message in messages %}
             <div class="flash {{ label }}">
                 <span class="icon"></span>
-                <span class="message">{{ message }}</span>
+                <span class="message">{{ message | raw }}</span>
             </div>
         {% endfor %}
     {% endfor %}

@@ -24,6 +24,17 @@
                 <h2><span class="download">Download your improved activity file.</span></h2>
             </div>
 
+            {% if errors is defined and errors.error is defined %}
+                <div class="'error">
+                    {% for error in errors.error %}
+                        <div class="'error-item">
+                            {{ error | raw }}
+                        </div>
+                    {% endfor %}
+                </div>
+                {{ dump(errors) }}
+            {% endif %}
+
             <div class="upload-form upload">
                 <div class="heading"><h1>Get started</h1></div>
                 <div class="file-upload">{{ form(source_upload_form) }}</div>

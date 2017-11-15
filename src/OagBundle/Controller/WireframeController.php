@@ -85,6 +85,14 @@ class WireframeController extends Controller
             $data['file'] = $srvOagFile->getMostRecent();
         }
 
+//        $flashbag = $this->get('session')->getFlashBag();
+//        $all = $flashbag->peekAll();
+//        $flashbag->clear();
+//
+//        $data['errors'] = $all;
+//        $data['errors']['error'] = [];
+//        $data['errors']['error'][] = '<p>Line one</p><p>Line two</p><p>Line three</p>';
+
         return $data;
     }
 
