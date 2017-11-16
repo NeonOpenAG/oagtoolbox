@@ -3,17 +3,20 @@
 use OagBundle\Service\Cove;
 use Symfony\Bundle\WebProfilerBundle\Tests\TestCase;
 
-class CoveTest extends TestCase {
+class CoveTest extends TestCase
+{
 
     protected $container;
 
-    public function setUp() {
+    public function setUp()
+    {
         $kernel = new \AppKernel("test", true);
         $kernel->boot();
         $this->container = $kernel->getContainer();
     }
 
-    public function testGetFixtureData() {
+    public function testGetFixtureData()
+    {
         $classifier = $this->container->get(Cove::class);
         $classifier->setContainer($this->container);
         $data = $classifier->getFixtureData();

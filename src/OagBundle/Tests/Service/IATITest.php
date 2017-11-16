@@ -2,27 +2,28 @@
 
 use OagBundle\Entity\OagFile;
 use OagBundle\Entity\Tag;
-use OagBundle\Service\Geocoder;
 use OagBundle\Service\IATI;
 use OagBundle\Service\OagFileService;
 use Symfony\Bundle\WebProfilerBundle\Tests\TestCase;
 
-class IATITest extends TestCase {
+class IATITest extends TestCase
+{
 
     protected $container;
 
     /**
-    * @var \Doctrine\Common\Persistence\ObjectManager
-    */
+     * @var \Doctrine\Common\Persistence\ObjectManager
+     */
     protected $em;
 
     /**
-    * @var OagFileService
-    */
+     * @var OagFileService
+     */
     protected $oagFileService;
     protected $testOagFile;
 
-    public function setUp() {
+    public function setUp()
+    {
         $kernel = new \AppKernel("test", true);
         $kernel->boot();
         $this->container = $kernel->getContainer();
@@ -39,7 +40,8 @@ class IATITest extends TestCase {
         $this->oagFileService->setContainer($this->container);
     }
 
-    public function testLoad() {
+    public function testLoad()
+    {
         $srvIATI = $this->container->get(IATI::class);
         $srvIATI->setContainer($this->container);
 
@@ -47,8 +49,9 @@ class IATITest extends TestCase {
         $this->assertInstanceOf('SimpleXMLElement', $loadedFile);
     }
 
-    public function testXpathNS() {
-        $namespaceUri =  $this->container->getParameter('classifier')['namespace_uri'];
+    public function testXpathNS()
+    {
+        $namespaceUri = $this->container->getParameter('classifier')['namespace_uri'];
 
         $srvIATI = $this->container->get(IATI::class);
         $srvIATI->setContainer($this->container);
@@ -67,7 +70,8 @@ class IATITest extends TestCase {
         );
     }
 
-    public function testParseXML() {
+    public function testParseXML()
+    {
         $srvIATI = $this->container->get(IATI::class);
         $srvIATI->setContainer($this->container);
 
@@ -88,7 +92,8 @@ class IATITest extends TestCase {
         $srvIATI->parseXML('');
     }
 
-    public function testToXML() {
+    public function testToXML()
+    {
         $srvIATI = $this->container->get(IATI::class);
         $srvIATI->setContainer($this->container);
 
@@ -99,7 +104,8 @@ class IATITest extends TestCase {
         $this->assertXmlStringEqualsXmlString($root->asXML(), $toXML);
     }
 
-    public function testSummariseActivityToArray() {
+    public function testSummariseActivityToArray()
+    {
         $srvIATI = $this->getMockBuilder(IATI::class)
             ->setMethods(array(
                 'getActivityId',
@@ -129,7 +135,8 @@ class IATITest extends TestCase {
         $this->assertArrayHasKey('tags', $summarisedActivity);
     }
 
-    public function testSummariseToArray() {
+    public function testSummariseToArray()
+    {
         $srvIATI = $this->getMockBuilder(IATI::class)
             ->setMethods(array('summariseActivityToArray'))
             ->getMock();
@@ -147,9 +154,12 @@ class IATITest extends TestCase {
     }
 
     // Not sure if we should unit test fixture data methods.
-    public function testGetFixtureData() {}
+    public function testGetFixtureData()
+    {
+    }
 
-    public function testGetActivities() {
+    public function testGetActivities()
+    {
         $srvIATI = $this->container->get(IATI::class);
         $srvIATI->setContainer($this->container);
         $mock = $this
@@ -170,7 +180,8 @@ class IATITest extends TestCase {
         $this->assertNotEmpty($activities);
     }
 
-    public function testGetActivityById() {
+    public function testGetActivityById()
+    {
         $srvIATI = $this->getMockBuilder(IATI::class)
             ->setMethods(array('getActivities', 'getActivityId'))
             ->enableProxyingToOriginalMethods()
@@ -186,7 +197,7 @@ class IATITest extends TestCase {
         $activities = $root->xpath('/iati-activities/iati-activity');
 
         $activityToCheck = $activities[0];
-        $activityIdToCheck = (string) $activityToCheck->xpath('./iati-identifier')[0];
+        $activityIdToCheck = (string)$activityToCheck->xpath('./iati-identifier')[0];
 
         # Assert that the methods required to find the activity ID are called.
         $srvIATI->expects($this->exactly(2))
@@ -212,7 +223,8 @@ class IATITest extends TestCase {
 
     }
 
-    public function testGetActivityId() {
+    public function testGetActivityId()
+    {
         $srvIATI = $this->container->get(IATI::class);
         $srvIATI->setContainer($this->container);
         $mock = $this
@@ -235,7 +247,8 @@ class IATITest extends TestCase {
 
     }
 
-    public function testGetActivityTitle() {
+    public function testGetActivityTitle()
+    {
         $srvIATI = $this->container->get(IATI::class);
         $srvIATI->setContainer($this->container);
 
@@ -253,7 +266,8 @@ class IATITest extends TestCase {
         $this->assertNull($title, 'Title should be null when there is none in the activity');
     }
 
-    public function testGetActivityDescription() {
+    public function testGetActivityDescription()
+    {
         $srvIATI = $this->container->get(IATI::class);
         $srvIATI->setContainer($this->container);
 
@@ -278,7 +292,8 @@ class IATITest extends TestCase {
      *
      * @dataProvider tagManipulationProvider
      */
-    public function testTagManipulation($exampleTag) {
+    public function testTagManipulation($exampleTag)
+    {
         $srvIATI = $this->container->get(IATI::class);
         $srvIATI->setContainer($this->container);
 
@@ -309,7 +324,8 @@ class IATITest extends TestCase {
         $this->assertEquals(0, count($tags)); // it should have gone
     }
 
-    public function tagManipulationProvider() {
+    public function tagManipulationProvider()
+    {
         // it would nice to be able to use $this->container - any ideas?
         // https://stackoverflow.com/a/42161440
         $kernel = new \AppKernel("test", true);
@@ -359,9 +375,10 @@ class IATITest extends TestCase {
     }
 
     /**
-    * {@inheritDoc}
-    */
-    protected function tearDown() {
+     * {@inheritDoc}
+     */
+    protected function tearDown()
+    {
         parent::tearDown();
 
         $this->em->close();

@@ -2,13 +2,13 @@
 
 namespace OagBundle\Command;
 
+use DOMDocument;
+use DOMXPath;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use DOMDocument;
-use DOMXPath;
 
 class OagFetchIatiCommand extends ContainerAwareCommand
 {
@@ -21,9 +21,8 @@ class OagFetchIatiCommand extends ContainerAwareCommand
         $this
             ->setName('oag:fetch:iati')
             ->setDescription('Get a pge of IATI xml documents')
-                ->addArgument('page', InputArgument::OPTIONAL, 'Page number')
-                ->addOption('noclobber', 'c', InputOption::VALUE_NONE, 'If set skip existing documents.')
-        ;
+            ->addArgument('page', InputArgument::OPTIONAL, 'Page number')
+            ->addOption('noclobber', 'c', InputOption::VALUE_NONE, 'If set skip existing documents.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -67,7 +66,8 @@ class OagFetchIatiCommand extends ContainerAwareCommand
         }
     }
 
-    private function fetchXml($filename, $url) {
+    private function fetchXml($filename, $url)
+    {
         $target = $this->targetdir . '/' . $filename . '.xml';
 
         if ($this->noclobber && file_exists($target)) {

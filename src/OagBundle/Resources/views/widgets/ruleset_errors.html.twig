@@ -1,0 +1,21 @@
+{%  if ruleset_errors is defined and ruleset_errors | length > 0 %}
+    <div class="ruleset-errors">
+        <table>
+            <tr>
+                <th colspan="2"><h2>RULESET ERRORS</h2></th>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <th>Activity ID</th>
+                <th>Message (path)</th>
+            </tr>
+            {% for error in ruleset_errors %}
+                <tr>
+                    <td>{{ error.rule }}</td>
+                    <td>{{ error.id }}</td>
+                    <td>{{ error.message }}{% if error.path is not empty %} ({{ error.path }}){% endif %}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endif %}

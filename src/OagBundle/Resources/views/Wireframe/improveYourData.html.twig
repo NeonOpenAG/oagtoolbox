@@ -34,7 +34,12 @@
                         <li>
                             <h2 class="completed">Helps people identify agricultural projects</h2>
                             <div class="info">
-                              <p>The AGROVOC codes in your activity file help make your projects more discoverable by funders and others who may be interested in your work.</p>
+                                <p>The AGROVOC codes in your activity file help make your projects more discoverable by funders and others who may be interested in your work.
+                                    You have an average of {{ file_stats.averageTags }} tag{% if file_stats.averageTags | round != 1  %}s{% endif %} per activity.
+                                    {# <button id="reclassify" data-url="{{ reclassifyUrl }}" class="trigger">&#x21bb; Re-Classify</button> #}</p>
+                                <a href="{{ path('oag_wireframe_classifier', { 'id': file.getId() }) }}">
+                                    <button type="button" id="class-button" disabled data-statusurl="{{ classifierUrl }}"><span class="fa fa-spinner fa-spin"></span>Further improve your tagging</button>
+                                </a>
                             </div>
                         </li>
                         {% endif %}
@@ -42,7 +47,12 @@
                         <li>
                             <h2 class="completed">Shows exactly where your work helps people</h2>
                             <div class="info">
-                                <p>Your activities are located accurately, which means people can use your data to identify partners on the ground, gaps in provision and other geographic patterns</p>
+                                <p>Your activities are located accurately, which means people can use your data to identify partners on the ground, gaps in provision and other geographic patterns.
+                                    You have an average of {{ file_stats.averageLocs }} location{% if file_stats.averageLocs | round != 1  %}s{% endif %} per activity.
+                                    {# <button id="reclassify" data-url="{{ reclassifyUrl }}" class="trigger">&#x21bb; Re-Classify</button> #}</p>
+                                <a href="{{ path('oag_wireframe_geocoder', { 'id': file.getId() }) }}">
+                                    <button type="button" id="geo-button" disabled data-statusurl="{{ geocoderUrl }}"><span class="fa fa-spinner fa-spin"></span>Further improve your geo-coding</button>
+                                </a>
                             </div>
                         </li>
                         {% endif %}
@@ -70,7 +80,17 @@
                         {% if not classified %}
                         <li><h2><span class="tip">Help people identify agricultural projects</span></h2>
                             <div class="improvements">
-                                <p>Adding AGROVOC codes to your activity file helps make your projects more discoverable by funders and others who may be interested in your work.</p>
+                                <p>
+                                    Adding AGROVOC codes to your activity file helps make your projects more discoverable by funders and others who may be interested in your work.
+                                    <strong>
+                                        {% if file_stats.count == 1 %}
+                                            Your activity has no tags.
+                                        {% else %}
+                                            {{ file_stats.activitiesWithNoTags }} of your {{ file_stats.count }} activities have no tags.
+                                        {% endif %}
+                                    </strong>
+                                    {# <button id="reclassify" data-url="{{ reclassifyUrl }}" class="trigger">&#x21bb; Re-Classify</button> #}
+                                </p>
                                 <a href="{{ path('oag_wireframe_classifier', { 'id': file.getId() }) }}"><button type="button" id="class-button" disabled data-statusurl="{{ classifierUrl }}"><span class="fa fa-spinner fa-spin"></span>Tag your data</button></a>
                             </div>
                         </li>
@@ -78,7 +98,17 @@
                         {% if not geocoded %}
                         <li><h2><span class="tip">Help people locate your projects accurately</span></h2>
                             <div class="improvements">
-                                <p>If activities are located accurately, then people can use your data to identify partners on the ground, gaps in provision and other geographic patterns.</p>
+                                <p>
+                                    If activities are located accurately, then people can use your data to identify partners on the ground, gaps in provision and other geographic patterns.
+                                    <strong>
+                                        {% if file_stats.count == 1 %}
+                                            Your activity has no locations.
+                                        {% else %}
+                                            {{ file_stats.activitiesWithNoLocs }} of your {{ file_stats.count }} activities have no locations.
+                                        {% endif %}
+                                    </strong>
+                                    {# <button id="regeocode" data-url="{{ regeocodeUrl }}" class="trigger">&#x21bb; Re-Geocode</button> #}
+                                </p>
                                 <a href="{{ path('oag_wireframe_geocoder', { 'id': file.getId() }) }}"><button type="button" id="geo-button" disabled data-statusurl="{{ geocoderUrl }}"><span class="fa fa-spinner fa-spin"></span>Geocode your data</button></a>
                             </div>
                         </li>
@@ -105,23 +135,6 @@
 {% block javascripts %}
     <script type="text/javascript" src="{{ asset('bundles/oag/jquery-filestyle-1.5.1/src/jquery-filestyle.min.js') }}"></script>
     <script>
-        $('.info').hide();
-        $('.completed').on('click', function() {
-            var $this = $(this),
-            $next = $this.next();
-
-            var $last = $('div:visible', $this.parents('ul'));
-
-            if ($last.length) {
-                $last.slideUp('fast');
-            }
-
-            if ($last.parents('li').index() !== $this.parent().index()) {
-                $next.slideDown('fast');
-            }
-        });
-    </script>
-    <script>
         $( document ).ready(function() {
             checkStatus('#class-button');
             checkStatus('#geo-button');
@@ -137,13 +150,46 @@
                     if (data.filenames.length === 0) {
                         $(buttonId).removeAttr("disabled");
                         $(buttonId + " .fa.fa-spinner.fa-spin").remove();
+                        $(buttonId).trigger( "asyncdone", [ buttonId ] );
                     }
-
-                    setTimeout(function() {
-                        checkStatus(buttonId);
-                    }, 5000);
+                    else {
+                        setTimeout(function () {
+                            checkStatus(buttonId);
+                        }, 5000);
+                    }
                 });
             }
+
+            function reCheck(url, buttonId) {
+                $(buttonId).attr('disabled', true);
+                $(buttonId).prepend('<span class="fa fa-spinner fa-spin">');
+                $.get({
+                    url: url,
+                }).done(function() {
+                    checkStatus(buttonId);
+                });
+            }
+
+            $('#reclassify').on('click', function() {
+                $(this).attr('disabled', true);
+                var url = $(this).data('url');
+                reCheck(url, '#class-button');
+            });
+
+            $('#regeocode').on('click', function() {
+                $(this).attr('disabled', true);
+                var url = $(this).data('url');
+                reCheck(url, '#geo-button');
+            });
+
+            $( "body" ).on( "asyncdone", function( event, buttonId ) {
+              if (buttonId == '#class-button') {
+                  $('#reclassify').removeAttr("disabled");
+              }
+              else if (buttonId == '#geo-button') {
+                  $('#regeocode').removeAttr("disabled");
+              }
+            });
 
         });
     </script>

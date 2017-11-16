@@ -2,67 +2,70 @@
 
 namespace OagBundle\Service;
 
-use OagBundle\Service\TextExtractor\TextifyService;
-use OagBundle\Service\TextExtractor\PDFExtractor;
-use OagBundle\Service\TextExtractor\RTFExtractor;
-use PhpOffice\PhpWord\IOFactory;
 use OagBundle\Entity\EnhancementFile;
 use OagBundle\Entity\OagFile;
 use OagBundle\Entity\Tag;
-use OagBundle\Entity\SuggestedTag;
-use Symfony\Component\Cache\Simple\FilesystemCache;
+use OagBundle\Service\TextExtractor\TextifyService;
 
-class Classifier extends AbstractOagService {
+class Classifier extends AbstractOagService
+{
 
-    public function processUri($sometext = '') {
+    public function processUri($sometext = '')
+    {
         // TODO implement non-fixture process
         return json_decode($this->getStringFixtureData(), true);
     }
 
-    public function parseUri($uri) {
-        // The classifier is VERY slow to respond, use a port check instead.
-        // TODO Does this work with https
-        $parts = parse_url($uri);
-        $host = $parts['host'];
-        $port = 80;
-        if (isset($parts['port'])) {
-            $port = $parts['port'];
-        } elseif (isset($parts['scheme']) && $parts['scheme'] === 'https') {
-            $port = 443;
-        }
-
-        return array(
-            'host' => $host,
-            'port' => $port,
-        );
-    }
-
-    public function isAvailable() {
-        $uri = $this->getUri('xml');
-        $parsedUri = $this->parseUri($uri);
-
-        $host = $parsedUri['host'];
-        $port = $parsedUri['port'];
-
-        $connection = @fsockopen($host, $port);
-        return is_resource($connection);
-    }
-
-    public function getXMLFixtureData() {
-        $kernel = $this->getContainer()->get('kernel');
-        $path = $kernel->locateResource('@OagBundle/Resources/fixtures/before_enrichment_activities.classifier.json');
-        $contents = file_get_contents($path);
-        return $contents;
-    }
-
-    public function getStringFixtureData() {
+    public function getStringFixtureData()
+    {
         $kernel = $this->getContainer()->get('kernel');
         $path = $kernel->locateResource('@OagBundle/Resources/fixtures/text.classifier.json');
         $contents = file_get_contents($path);
         return $contents;
     }
 
-    public function processXML($contents) {
+    public function getXMLFixtureData()
+    {
+        $kernel = $this->getContainer()->get('kernel');
+        $path = $kernel->locateResource('@OagBundle/Resources/fixtures/before_enrichment_activities.classifier.json');
+        $contents = file_get_contents($path);
+        return $contents;
+    }
+
+    /**
+     * Classify an OagFile and attach the resulting SuggestedTag objects to it.
+     *
+     * @param OagFile $oagFile the file to classify
+     */
+    public function classifyOagFile(OagFile $oagFile)
+    {
+        $srvOagFile = $this->getContainer()->get(OagFileService::class);
+
+        // $oagFile->clearSuggestedTags();
+
+        // IATI xml document
+        $rawXml = $srvOagFile->getContents($oagFile);
+        $jsonResp = $this->processXML($rawXml);
+
+        if ($jsonResp['status']) {
+            throw new \Exception('Classifier service could not classify oag file');
+        }
+
+        foreach ($jsonResp['data'] as $block) {
+            foreach ($block as $part) {
+                foreach ($part as $activityId => $tags) {
+                    $this->persistTags($tags, $oagFile, $activityId);
+                }
+            }
+        }
+
+        $em = $this->getContainer()->get('doctrine')->getManager();
+        $em->persist($oagFile);
+        $em->flush();
+    }
+
+    public function processXML($contents)
+    {
         $classifier_parameters = $this->getContainer()->getParameter('classifier');
         $uri = $classifier_parameters['endpoint'];
 
@@ -70,7 +73,6 @@ class Classifier extends AbstractOagService {
         curl_setopt($request, CURLOPT_URL, $uri);
         curl_setopt($request, CURLOPT_POST, true);
         curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
-        $this->getContainer()->get('logger')->info('Accessing classifer at ' . $uri);
 
         $payload = array(
             'data' => $contents,
@@ -80,6 +82,7 @@ class Classifier extends AbstractOagService {
             'form' => 'json',
             'xml_input' => 'true',
         );
+        $this->getContainer()->get('logger')->info('Accessing classifer at ' . $uri);
 
         curl_setopt($request, CURLOPT_POSTFIELDS, json_encode($payload));
         curl_setopt($request, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
@@ -104,13 +107,12 @@ class Classifier extends AbstractOagService {
                     'confidence' => '',
                 ),
             );
-            $this->getContainer()->get('logger')->error('Classifier failed to return json');
+            $this->getContainer()->get('logger')->error('Classifier failed to return json. (' . $data . ')');
             $log = [
-                get_class() => [
-                    'uri' => $uri,
-                    'payload' => $payload,
-                    '$data' => $data,
-                ],
+                'class' => get_class(),
+                'uri' => $uri,
+                'payload' => $payload,
+                'data' => $data,
             ];
             $this->logData($log);
         }
@@ -118,7 +120,100 @@ class Classifier extends AbstractOagService {
         return array_merge($response, $json);
     }
 
-    public function processString($contents) {
+    /**
+     * Persists Oag tags from API response to database.
+     *
+     * @param array $tags an array of tags, as represented by the Classifier's JSON
+     * @param OagFile|EnhancementFile $file the OagFile or EnhancementFile to suggest the tags to
+     * @param string $activityId the activity ID the tags apply to, if they are specific
+     */
+    private function persistTags($tags, $file, $activityId = null)
+    {
+        $em = $this->getContainer()->get('doctrine')->getManager();
+        $tagRepo = $this->getContainer()->get('doctrine')->getRepository(Tag::class);
+
+        foreach ($tags as $row) {
+            $code = $row['code'];
+            if ($code === null) {
+                // We get a single array of nulls back if no match is found.
+                break;
+            }
+
+            $description = $row['description'];
+            $confidence = $row['confidence'];
+
+            $vocab = $this->getContainer()->getParameter('classifier')['vocabulary'];
+            $vocabUri = $this->getContainer()->getParameter('classifier')['vocabulary_uri'];
+
+            $findBy = array(
+                'code' => $code,
+                'vocabulary' => $vocab
+            );
+
+            // if there is a vocab uri in the config, use it, if not, don't
+            if (strlen($vocabUri) > 0) {
+                $findBy['vocabulary_uri'] = $vocabUri;
+            } else {
+                $vocabUri = null;
+            }
+
+            // Check that the code exists in the system
+            $tag = $tagRepo->findOneBy($findBy);
+            if (!$tag) {
+                $this->getContainer()->get('logger')
+                    ->info(sprintf('Creating new code %s (%s)', $code, $description));
+                $tag = new Tag();
+                $tag->setCode($code);
+                $tag->setDescription($description);
+                $tag->setVocabulary($vocab, $vocabUri);
+            }
+
+            $em->persist($tag);
+            $em->flush();
+
+            $this->getContainer()->get('logger')
+                ->debug(sprintf('Persisting %s (%s) at %s for %s', $code, $description, $confidence, $activityId));
+            $sugTag = new \OagBundle\Entity\SuggestedTag();
+            $sugTag->setTag($tag);
+            $sugTag->setConfidence($confidence);
+            if (!is_null($activityId)) {
+                $sugTag->setActivityId($activityId);
+            }
+            $em->persist($sugTag);
+            $em->flush();
+
+            $file->addSuggestedTag($sugTag);
+            $em->persist($file);
+            $em->flush();
+        }
+    }
+
+    /**
+     * Classify an OagFile from raw text associated with it and attach the
+     * resulting SuggestedTag objects to it.
+     *
+     * @param OagFile $oagFile
+     * @param string text
+     * @param string $activityId if the text is specific
+     */
+    public function classifyOagFileFromText(OagFile $file, $text, $activityId = null)
+    {
+        // $file->clearSuggestedTags();
+        $json = $this->processString($text);
+
+        if ($json['status']) {
+            throw new \Exception('Classifier service could not classify text');
+        }
+
+        $this->persistTags($json['data'], $file, $activityId);
+
+        $em = $this->getContainer()->get('doctrine')->getManager();
+        $em->persist($file);
+        $em->flush();
+    }
+
+    public function processString($contents)
+    {
         if (!$this->isAvailable()) {
             return json_decode($this->getStringFixtureData(), true);
         }
@@ -177,63 +272,36 @@ class Classifier extends AbstractOagService {
         return array_merge($response, $json);
     }
 
-    /**
-     * Classify an OagFile and attach the resulting SuggestedTag objects to it.
-     *
-     * @param OagFile $oagFile the file to classify
-     */
-    public function classifyOagFile(OagFile $oagFile) {
-        $srvClassifier = $this->getContainer()->get(Classifier::class);
-        $srvOagFile = $this->getContainer()->get(OagFileService::class);
+    public function isAvailable()
+    {
+        $uri = $this->getUri('xml');
+        $parsedUri = $this->parseUri($uri);
 
-        $oagFile->clearSuggestedTags();
+        $host = $parsedUri['host'];
+        $port = $parsedUri['port'];
 
-        // IATI xml document
-        $rawXml = $srvOagFile->getContents($oagFile);
-        $jsonResp = $this->processXML($rawXml);
-
-        if ($jsonResp['status']) {
-            throw new \Exception('Classifier service could not classify file');
-        }
-
-        foreach ($jsonResp['data'] as $block) {
-            foreach ($block as $part) {
-                foreach ($part as $activityId => $tags) {
-                    $this->persistTags($tags, $oagFile, $activityId);
-                }
-            }
-        }
-
-        $em = $this->getContainer()->get('doctrine')->getManager();
-        $em->persist($oagFile);
-        $em->flush();
+        $connection = @fsockopen($host, $port);
+        return is_resource($connection);
     }
 
-    /**
-     * Classify an OagFile from raw text associated with it and attach the
-     * resulting SuggestedTag objects to it.
-     *
-     * @param OagFile $oagFile
-     * @param string text
-     * @param string $activityId if the text is specific
-     */
-    public function classifyOagFileFromText(OagFile $file, $text, $activityId = null) {
-        $srvClassifier = $this->getContainer()->get(Classifier::class);
-
-        $file->clearSuggestedTags();
-        $json = $srvClassifier->processString($text);
-
-        if ($json['status']) {
-            throw new \Exception('Classifier service could not classify text');
+    public function parseUri($uri)
+    {
+        // The classifier is VERY slow to respond, use a port check instead.
+        // TODO Does this work with https
+        $parts = parse_url($uri);
+        $host = $parts['host'];
+        $port = 80;
+        if (isset($parts['port'])) {
+            $port = $parts['port'];
+        } elseif (isset($parts['scheme']) && $parts['scheme'] === 'https') {
+            $port = 443;
         }
 
-        $this->persistTags($json['data'], $file, $activityId);
-
-        $em = $this->getContainer()->get('doctrine')->getManager();
-        $em->persist($file);
-        $em->flush();
+        return array(
+            'host' => $host,
+            'port' => $port,
+        );
     }
-
 
     /**
      * Classify an EnhancementFile and attach the resulting SuggestedTag objects
@@ -241,11 +309,11 @@ class Classifier extends AbstractOagService {
      *
      * @param EnhancementFile $enhFile the file to classify
      */
-    public function classifyEnhancementFile(EnhancementFile $enhFile) {
-        $srvClassifier = $this->getContainer()->get(Classifier::class);
+    public function classifyEnhancementFile(EnhancementFile $enhFile, $activityId)
+    {
         $srvTextify = $this->getContainer()->get(TextifyService::class);
 
-        $enhFile->clearSuggestedTags();
+        // $enhFile->clearSuggestedTags();
 
         // enhancing/text document
         $rawText = $srvTextify->stripEnhancementFile($enhFile);
@@ -255,82 +323,26 @@ class Classifier extends AbstractOagService {
             throw new \RuntimeException('Unsupported file type to strip text from');
         }
 
-        $json = $srvClassifier->processString($rawText);
+        $json = $this->processString($rawText);
 
         if ($json['status']) {
-            throw new \Exception('Classifier service could not classify file');
+            throw new \Exception('Classifier service could not classify enhancement file');
         }
 
-        $this->persistTags($json['data'], $enhFile);
+        $this->persistTags($json['data'], $enhFile, $activityId);
 
         $em = $this->getContainer()->get('doctrine')->getManager();
         $em->persist($enhFile);
         $em->flush();
     }
 
-    /**
-     * Persists Oag tags from API response to database.
-     *
-     * @param array $tags an array of tags, as represented by the Classifier's JSON
-     * @param OagFile|EnhancementFile $file the OagFile or EnhancementFile to suggest the tags to
-     * @param string $activityId the activity ID the tags apply to, if they are specific
-     */
-    private function persistTags($tags, $file, $activityId = null) {
-        $em = $this->getContainer()->get('doctrine')->getManager();
-        $tagRepo = $this->getContainer()->get('doctrine')->getRepository(Tag::class);
-
-        foreach ($tags as $row) {
-            $code = $row['code'];
-            if ($code === null) {
-                // We get a single array of nulls back if no match is found.
-                break;
-            }
-
-            $description = $row['description'];
-            $confidence = $row['confidence'];
-
-            $vocab = $this->getContainer()->getParameter('classifier')['vocabulary'];
-            $vocabUri = $this->getContainer()->getParameter('classifier')['vocabulary_uri'];
-
-            $findBy = array(
-                'code' => $code,
-                'vocabulary' => $vocab
-            );
-
-            // if there is a vocab uri in the config, use it, if not, don't
-            if (strlen($vocabUri) > 0) {
-                $findBy['vocabulary_uri'] = $vocabUri;
-            } else {
-                $vocabUri = null;
-            }
-
-            // Check that the code exists in the system
-            $tag = $tagRepo->findOneBy($findBy);
-            if (!$tag) {
-                $this->getContainer()->get('logger')
-                    ->info(sprintf('Creating new code %s (%s)', $code, $description));
-                $tag = new Tag();
-                $tag->setCode($code);
-                $tag->setDescription($description);
-                $tag->setVocabulary($vocab, $vocabUri);
-            }
-
-            $sugTag = new \OagBundle\Entity\SuggestedTag();
-            $sugTag->setTag($tag);
-            $sugTag->setConfidence($confidence);
-            if (!is_null($activityId)) {
-                $sugTag->setActivityId($activityId);
-            }
-
-            $file->addSuggestedTag($sugTag);
-        }
-    }
-
-    public function getName() {
+    public function getName()
+    {
         return 'classifier';
     }
 
-    public function status() {
+    public function status()
+    {
         $cmd = 'ps -ef | grep bin/console';
         $output = [];
         $pipes = [];

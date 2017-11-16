@@ -3,6 +3,7 @@
 namespace OagBundle\Service;
 
 use OagBundle\Entity\Tag;
+use OagBundle\Entity\OagFile;
 
 /**
  * A service for manipulating and getting data from IATI Activity files after
@@ -14,10 +15,71 @@ use OagBundle\Entity\Tag;
  * Individual activities are represented by their \SimpleXMLElement.
  * All other data is processed as associative arrays.
  */
-class IATI extends AbstractService {
+class IATI extends AbstractService
+{
 
     const LIBXML_OPTIONS = LIBXML_BIGLINES & LIBXML_PARSEHUGE;
     const OPENAG_NAMESPACE = 'openag';
+
+    public function getData(OagFile $oagFile) {
+        $data = [];
+        // Get activites
+        $srvIATI = $this->getContainer()->get(IATI::class);
+        $root = $srvIATI->load($oagFile);
+
+        $activities = $this->getActivities($root);
+        foreach ($activities as $activity) {
+            // Count tags / activity
+            $tags = $this->getActivityTags($activity);
+            // Count gelocation / activity
+            $gelocations = $this->getActivityLocations($activity);
+            $data[$this->getActivityId($activity)] = [
+                'tags' => $tags,
+                'locs' => $gelocations,
+            ];
+        }
+
+        return $data;
+    }
+
+    public function getStats($data) {
+        $activitcount = count($data);
+        $activitiesWithNoTags = 0;
+        $activitiesWithNoLocs = 0;
+        $totalTags = 0;
+        $totalLocs = 0;
+        $averageTags = 0;
+        $averageLocs = 0;
+
+        foreach ($data as $activityId => $activityData) {
+            $tags = $activityData['tags'];
+            $locs = $activityData['locs'];
+            $totalTags += count($tags);
+            $totalLocs += count($locs);
+
+            if (count($tags) == 0) {
+                $activitiesWithNoTags++;
+            }
+            if (count($locs) == 0) {
+                $activitiesWithNoLocs++;
+            }
+        }
+
+        $averageTags = $activitcount > 0 ? $totalTags / $activitcount : 0;
+        $averageLocs = $activitcount > 0 ? $totalLocs / $activitcount : 0;
+
+        $stats = [
+            'count' => $activitcount,
+            'activitiesWithNoTags' => $activitiesWithNoTags,
+            'activitiesWithNoLocs' => $activitiesWithNoLocs,
+            'totalTags' => $totalTags,
+            'totalLocs' => $totalLocs,
+            'averageTags' => $averageTags,
+            'averageLocs' => $averageLocs,
+        ];
+
+        return $stats;
+    }
 
     /**
      * Load and parse an IATI OagFile into a SimpleXMLElement object.
@@ -25,7 +87,8 @@ class IATI extends AbstractService {
      * @param OagFile $oagFile
      * @return \SimpleXMLElement
      */
-    public function load($oagFile) {
+    public function load($oagFile)
+    {
         $srvOagFile = $this->getContainer()->get(OagFileService::class);
 
         $contents = $srvOagFile->getContents($oagFile);
@@ -36,36 +99,23 @@ class IATI extends AbstractService {
     }
 
     /**
-     * Perform an xpath but prioritising different localisations.
-     *
-     * @param \SimpleXMLElement $activity the activity to xpath within
-     * @param string $xpathQuery
-     * @param string $namespace
-     * @return \SimpleXMLElement[]
-     */
-    public function xpathNS(\SimpleXMLElement $activity, $xpathQuery, $namespace = 'openag') {
-        $namespaceUri =  $this->getContainer()->getParameter('classifier')['namespace_uri'];
-        $activity->registerXPathNamespace($namespace, $namespaceUri);
-        return $activity->xpath($xpathQuery);
-    }
-
-    /**
      * Parse a given string into a \SimpleXMLElement object.
      *
      * @param $string
      *
      * @return \SimpleXMLElement
      */
-    public function parseXML($string) {
+    public function parseXML($string)
+    {
         // helper function to allow for centralised changing of libxml options
         // where appropriate
         try {
             $root = new \SimpleXMLElement($string, self::LIBXML_OPTIONS);
             $activities = $this->getActivities($root);
-            $namespaceUri =  $this->getContainer()->getParameter('classifier')['namespace_uri'];
+            $namespaceUri = $this->getContainer()->getParameter('classifier')['namespace_uri'];
 
             // add the namespace URI to the root <iati-activities> element, if needed
-            if(!array_key_exists('openag', $root->getDocNamespaces(FALSE, FALSE))) {
+            if (!array_key_exists('openag', $root->getDocNamespaces(FALSE, FALSE))) {
                 $root->addAttribute('xmlns:xmlns:openag', $namespaceUri);
             }
 
@@ -77,12 +127,42 @@ class IATI extends AbstractService {
     }
 
     /**
+     * Get each activity in an IATI XML file.
+     *
+     * @param \SimpleXMLElement $root the base of the file once loaded
+     * @return \SimpleXMLElement[] one for each activity
+     */
+    public function getActivities($root)
+    {
+        return $root->xpath('/iati-activities/iati-activity');
+    }
+
+    /**
      * Convert a \SimpleXMLElement back into XML.
      *
      * @return string the XML
      */
-    public function toXML($root) {
+    public function toXML($root)
+    {
         return $root->asXML();
+    }
+
+    /**
+     * Return a simplified array representation of the IATI file.
+     *
+     * @see summariseActivityToArray
+     * @param \SimpleXMLElement $root
+     * @return array
+     */
+    public function summariseToArray($root)
+    {
+        // gets a simplified representation of the data that we can deserialise at the moment
+        $activities = array();
+        foreach ($this->getActivities($root) as $activity) {
+            $simpActivity = $this->summariseActivityToArray($activity);
+            $activities[] = $simpActivity;
+        }
+        return $activities;
     }
 
     /**
@@ -98,7 +178,8 @@ class IATI extends AbstractService {
      *   array['description'] Activity Description.
      *   array['tags'] Activity Tags.
      */
-    public function summariseActivityToArray(\SimpleXMLElement $activity) {
+    public function summariseActivityToArray(\SimpleXMLElement $activity)
+    {
         $simpActivity = array();
         $simpActivity['id'] = $this->getActivityId($activity);
         $simpActivity['name'] = $this->getActivityTitle($activity);
@@ -108,68 +189,14 @@ class IATI extends AbstractService {
     }
 
     /**
-     * Return a simplified array representation of the IATI file.
-     *
-     * @see summariseActivityToArray
-     * @param \SimpleXMLElement $root
-     * @return array
-     */
-    public function summariseToArray($root) {
-        // gets a simplified representation of the data that we can deserialise at the moment
-        $activities = array();
-        foreach ($this->getActivities($root) as $activity) {
-            $simpActivity = $this->summariseActivityToArray($activity);
-            $activities[] = $simpActivity;
-        }
-        return $activities;
-    }
-
-    /**
-     * Get XML fixture data to use - an example IATI file's contents.
-     *
-     * @return string
-     */
-    public function getFixtureData() {
-        $kernel = $this->getContainer()->get('kernel');
-        $file = $kernel->locateResource('@OagBundle/Resources/fixtures/before_enrichment_activities.xml');
-        $xml = file_get_contents($file);
-        return $xml;
-    }
-
-    /**
-     * Get each activity in an IATI XML file.
-     *
-     * @param \SimpleXMLElement $root the base of the file once loaded
-     * @return \SimpleXMLElement[] one for each activity
-     */
-    public function getActivities($root) {
-        return $root->xpath('/iati-activities/iati-activity');
-    }
-
-    /**
-     * Get an IATI activity from the file from its ID.
-     *
-     * @param \SimpleXMLElement $root
-     * @param string $id
-     * @return \SimpleXMLElement or NULL if missing
-     */
-    public function getActivityById($root, $id) {
-        foreach ($this->getActivities($root) as $activity) {
-            if ($this->getActivityId($activity) === $id) {
-                return $activity;
-            }
-        }
-        return NULL;
-    }
-
-    /**
      * Get the ID of an IATI activity.
      *
      * @param \SimpleXMLElement $activity
      * @return string
      */
-    public function getActivityId($activity) {
-        return (string) $activity->xpath('./iati-identifier')[0];
+    public function getActivityId($activity)
+    {
+        return (string)$activity->xpath('./iati-identifier')[0];
     }
 
     /**
@@ -185,8 +212,38 @@ class IATI extends AbstractService {
      * @param \SimpleXMLElement $activity
      * @return string|null
      */
-    public function getActivityTitle($activity) {
+    public function getActivityTitle($activity)
+    {
         return $this->getNarrative($activity, 'title');
+    }
+
+    /**
+     * Get the narrative of an XML element, holding preference to specific
+     * languages.
+     *
+     * @param \SimpleXMLElement $element
+     * @param string the element name to get the narrative of
+     * @return \SimpleXMLElement[]
+     */
+    public function getNarrative(\SimpleXMLElement $element, $elementName)
+    {
+        $preference = array(
+            "./$elementName/narrative[not(@xml:lang)]",
+            "./$elementName/narrative[@xml:lang=\"en\"]", // TODO make this configurable
+            "./$elementName/narrative"
+        );
+
+        foreach ($preference as $potential) {
+            $results = $element->xpath($potential);
+            foreach ($results as $found) {
+                $string = (string)$found;
+                if (strlen($string) > 0) {
+                    return $string;
+                }
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -201,7 +258,8 @@ class IATI extends AbstractService {
      * @param \SimpleXMLElement $activity
      * @return string|null
      */
-    public function getActivityDescription($activity) {
+    public function getActivityDescription($activity)
+    {
         $descPreference = array(
             'description[not(@type)]',
             'description[@type=1]',
@@ -226,17 +284,18 @@ class IATI extends AbstractService {
      * @param \SimpleXMLElement $activity
      * @return Tag[]
      */
-    public function getActivityTags($activity) {
+    public function getActivityTags($activity)
+    {
         $em = $this->getContainer()->get('doctrine')->getManager();
         $tagRepo = $this->getContainer()->get('doctrine')->getRepository(Tag::class);
 
         $currentTags = array();
         foreach ($this->xpathNS($activity, './openag:tag') as $currentTag) {
             // create the tag in the database if it doesn't exist
-            $code = (string) $currentTag['code'];
-            $desc = (string) $currentTag->xpath('./narrative[1]')[0];
-            $vocab = (string) $currentTag['vocabulary'];
-            $vocabUri = (string) $currentTag['vocabulary-uri'] ?: null;
+            $code = (string)$currentTag['code'];
+            $desc = (string)$currentTag->xpath('./narrative[1]')[0];
+            $vocab = (string)$currentTag['vocabulary'];
+            $vocabUri = (string)$currentTag['vocabulary-uri'] ?: null;
 
             // use the tag if it is already in the database
             $findBy = array(
@@ -267,20 +326,65 @@ class IATI extends AbstractService {
         return $currentTags;
     }
 
-    
+    /**
+     * Perform an xpath but prioritising different localisations.
+     *
+     * @param \SimpleXMLElement $activity the activity to xpath within
+     * @param string $xpathQuery
+     * @param string $namespace
+     * @return \SimpleXMLElement[]
+     */
+    public function xpathNS(\SimpleXMLElement $activity, $xpathQuery, $namespace = 'openag')
+    {
+        $namespaceUri = $this->getContainer()->getParameter('classifier')['namespace_uri'];
+        $activity->registerXPathNamespace($namespace, $namespaceUri);
+        return $activity->xpath($xpathQuery);
+    }
+
+    /**
+     * Get XML fixture data to use - an example IATI file's contents.
+     *
+     * @return string
+     */
+    public function getFixtureData()
+    {
+        $kernel = $this->getContainer()->get('kernel');
+        $file = $kernel->locateResource('@OagBundle/Resources/fixtures/before_enrichment_activities.xml');
+        $xml = file_get_contents($file);
+        return $xml;
+    }
+
+    /**
+     * Get an IATI activity from the file from its ID.
+     *
+     * @param \SimpleXMLElement $root
+     * @param string $id
+     * @return \SimpleXMLElement or NULL if missing
+     */
+    public function getActivityById($root, $id)
+    {
+        foreach ($this->getActivities($root) as $activity) {
+            if ($this->getActivityId($activity) === $id) {
+                return $activity;
+            }
+        }
+        return NULL;
+    }
+
     /**
      * Get the ID of an IATI activity.
      *
      * @param \SimpleXMLElement $activity
      * @return string
      */
-    public function getActivityCountryCode($activity) {
+    public function getActivityCountryCode($activity)
+    {
         $element = $activity->xpath('./recipient-country')[0];
-        $code = (string) $element->attributes()['code'];
-        
+        $code = (string)$element->attributes()['code'];
+
         return $code;
     }
-    
+
     /**
      * Add a tag to the activity, effectively classifying it in the XML.
      *
@@ -288,13 +392,14 @@ class IATI extends AbstractService {
      * @param Tag $tag the details of the tag to add
      * @param string $reason a human-readable origin provided in the XML of the tag
      */
-    public function addActivityTag($activity, $tag, $reason = null) {
+    public function addActivityTag($activity, $tag, $reason = null)
+    {
         if (in_array($tag, $this->getActivityTags($activity))) {
             // no duplicates
             return;
         }
 
-        $namespaceUri =  $this->getContainer()->getParameter('classifier')['namespace_uri'];
+        $namespaceUri = $this->getContainer()->getParameter('classifier')['namespace_uri'];
 
         $node = $activity->addChild('openag:tag', '', $namespaceUri);
         $node->addAttribute('code', $tag->getCode());
@@ -315,14 +420,14 @@ class IATI extends AbstractService {
         }
     }
 
-
     /**
      * Remove a tag to the activity, effectively un-classifying it in the XML.
      *
      * @param \SimpleXMLElement $activity
      * @param Tag $tag the details of the tag to remove
      */
-    public function removeActivityTag($activity, $tag) {
+    public function removeActivityTag($activity, $tag)
+    {
         $code = $tag->getCode();
         $vocabulary = $tag->getVocabulary();
         $vocabularyUri = $tag->getVocabularyUri();
@@ -346,11 +451,12 @@ class IATI extends AbstractService {
 
     /**
      * Add a location to an activity in the XML, effectively geocoding it.
-     * 
+     *
      * @param \SimpleXMLElement $activity
      * @param Geolocation $geoloc
      */
-    public function addActivityGeolocation($activity, $geoloc) {
+    public function addActivityGeolocation($activity, $geoloc)
+    {
         $location = $activity->addChild('location');
 
         $name = $location->addChild('name');
@@ -378,7 +484,8 @@ class IATI extends AbstractService {
      * @param \SimpleXMLElement $activity
      * @return array[]
      */
-    public function getActivityLocations($activity) {
+    public function getActivityLocations($activity)
+    {
         $locations = array();
 
         foreach ($activity->xpath('./location') as $location) {
@@ -396,7 +503,7 @@ class IATI extends AbstractService {
 
             // <point><pos>
             if (count($location->xpath('./point/pos')) > 0) {
-                $string = (string) $location->xpath('./point/pos')[0];
+                $string = (string)$location->xpath('./point/pos')[0];
                 $coords = array_map('floatval', explode(' ', $string));
                 $simple['point'] = array('pos' => $coords);
             }
@@ -405,12 +512,12 @@ class IATI extends AbstractService {
             $simple['administrative'] = array();
             foreach ($location->xpath('./administrative') as $admin) {
                 $adminArray = array(
-                    'code' => (string) $admin->attributes()['code'],
-                    'vocabulary' => (string) $admin->attributes()['vocabulary']
+                    'code' => (string)$admin->attributes()['code'],
+                    'vocabulary' => (string)$admin->attributes()['vocabulary']
                 );
 
                 if (array_key_exists('level', $admin->attributes())) {
-                    $adminArray['level'] = intval((string) $admin->attributes()['level']);
+                    $adminArray['level'] = intval((string)$admin->attributes()['level']);
                 }
 
                 $simple['administrative'][] = $adminArray;
@@ -418,49 +525,23 @@ class IATI extends AbstractService {
 
             // <location-class>
             if (count($location->xpath('./location-class/@code')) > 0) {
-                $simple['location-class'] = (string) $location->xpath('./location-class/@code')[0];
+                $simple['location-class'] = (string)$location->xpath('./location-class/@code')[0];
             }
 
             // <feature-designation>
             if (count($location->xpath('./feature-designation/@code')) > 0) {
-                $simple['feature-designation'] = (string) $location->xpath('./feature-designation/@code')[0];
+                $simple['feature-designation'] = (string)$location->xpath('./feature-designation/@code')[0];
             }
 
             // getNarrative may return null, remove these entries entirely
-            $simple = array_filter($simple, function ($val) { return !is_null($val); });
+            $simple = array_filter($simple, function ($val) {
+                return !is_null($val);
+            });
 
             $locations[] = $simple;
         }
 
         return $locations;
-    }
-
-    /**
-     * Get the narrative of an XML element, holding preference to specific
-     * languages.
-     *
-     * @param \SimpleXMLElement $element
-     * @param string the element name to get the narrative of
-     * @return \SimpleXMLElement[]
-     */
-    public function getNarrative(\SimpleXMLElement $element, $elementName) {
-        $preference = array(
-            "./$elementName/narrative[not(@xml:lang)]",
-            "./$elementName/narrative[@xml:lang=\"en\"]", // TODO make this configurable
-            "./$elementName/narrative"
-        );
-
-        foreach ($preference as $potential) {
-            $results = $element->xpath($potential);
-            foreach ($results as $found) {
-                $string = (string) $found;
-                if (strlen($string) > 0) {
-                    return $string;
-                }
-            }
-        }
-
-        return null;
     }
 
 }

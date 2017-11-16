@@ -2,7 +2,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link href="{{ asset('bundles/oag/jquery-filestyle-1.5.1/src/jquery-filestyle.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('bundles/oag/jquery-filestyle-1.5.1/src/jquery-filestyle.min.css') }}" rel="stylesheet"/>
 {% endblock %}
 
 {% block title %}Download your activity file{% endblock %}
@@ -24,18 +24,20 @@
                 </div>
 
                 <div class="content-block download">
-                  <div class="version">
-                      <p>This is the most recently uploaded version of your activity file.</p>
-                      <div class="options">
-                          <a href="{{ path('oag_wireframe_improveyourdata', { 'id': file.getId() }) }}" class="cta">Check and improve</a>
-                          <a href="{{ path('oag_wireframe_preview', { 'id': file.getId() }) }}" class="cta">Preview and visualise</a>
-                          <a href="{{ path('oag_wireframe_downloadfile', { 'id': file.getId() }) }}" class="cta">Download</a>
-                      </div>
-                  </div>
+                    <div class="version">
+                        <p>This is the most recently uploaded version of your activity file.</p>
+                        <div class="options">
+                            <a href="{{ path('oag_wireframe_improveyourdata', { 'id': file.getId() }) }}" class="cta">Check
+                                and improve</a>
+                            <a href="{{ path('oag_wireframe_preview', { 'id': file.getId() }) }}" class="cta">Preview
+                                and visualise</a>
+                            <a href="{{ path('oag_wireframe_downloadfile', { 'id': file.getId() }) }}" class="cta">Download</a>
+                        </div>
+                    </div>
                 </div>
 
                 {% if suggestRoute is defined %}
-                <div class="view-suggestions"><a href="{{ suggestRoute }}" class="cta">View Suggestions</a></div>
+                    <div class="view-suggestions"><a href="{{ suggestRoute }}" class="cta">View Suggestions</a></div>
                 {% endif %}
             </article>
 
@@ -48,9 +50,9 @@
                     <h2>Upload a new version of your activity file</h2>
                 </div>
                 <div class="content-block download">
-                  <div class="upload-form download">
-                      {{ form(uploadForm) }}
-                  </div>
+                    <div class="upload-form download">
+                        {{ form(uploadForm) }}
+                    </div>
                 </div>
             </article>
 
@@ -66,22 +68,25 @@
                     <!-- Table to show stored files -->
                     <table>
                         <thead>
-                            <tr>
-                                <th></th>
-                                <th>File</th>
-                                <th>Date</th>
-                                <th>Improved</th>
-                                <th>Download</th>
-                            </tr>
+                        <tr>
+                            <th></th>
+                            <th>File</th>
+                            <th>Date</th>
+                            <th>Improved</th>
+                            <th>Download</th>
+                        </tr>
                         </thead>
                         {% for otherFile in otherFiles %}
-                        <tr>
-                            <td><a href="{{ path('oag_wireframe_deletefile', { previous_id: file.getId(), to_delete_id: otherFile.getId() }) }}"><span class="delete"></span></a></td>
-                            <td>{{ otherFile.getDocumentName() }}</td>
-                            <td>{{ otherFile.getUploadDate|date }}</td>
-                            <td>{{ srvOagFile.hasBeenImproved(otherFile) ? 'Yes' : 'No' }}</td>
-                            <td><a href="{{ path('oag_wireframe_downloadfile', { id: otherFile.getId() }) }}"><span class="download-icon"></span></a></td>
-                        </tr>
+                            <tr>
+                                <td>
+                                    <a href="{{ path('oag_wireframe_deletefile', { previous_id: file.getId(), to_delete_id: otherFile.getId() }) }}"><span
+                                                class="delete"></span></a></td>
+                                <td>{{ otherFile.getDocumentName() }}</td>
+                                <td>{{ otherFile.getUploadDate|date }}</td>
+                                <td>{{ srvOagFile.hasBeenImproved(otherFile) ? 'Yes' : 'No' }}</td>
+                                <td><a href="{{ path('oag_wireframe_downloadfile', { id: otherFile.getId() }) }}"><span
+                                                class="download-icon"></span></a></td>
+                            </tr>
                         {% endfor %}
                     </table>
                 </div>
@@ -95,12 +100,14 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script type="text/javascript" src="{{ asset('bundles/oag/jquery-filestyle-1.5.1/src/jquery-filestyle.min.js') }}"></script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/oag/jquery-filestyle-1.5.1/src/jquery-filestyle.min.js') }}"></script>
     <script>
         $(function () {
             $(document).tooltip();
 
-            $("#oag_file_documentName").jfilestyle();;
+            $("#oag_file_documentName").jfilestyle();
+            ;
         });
     </script>
 {% endblock %}

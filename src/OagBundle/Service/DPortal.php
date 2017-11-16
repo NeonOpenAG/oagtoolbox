@@ -4,9 +4,11 @@
 
 namespace OagBundle\Service;
 
-class DPortal extends AbstractOagService {
+class DPortal extends AbstractOagService
+{
 
-    public function isAvailable() {
+    public function isAvailable()
+    {
         $name = $this->getName();
         $cmd = sprintf('docker images openagdata/%s |wc -l', $name);
         $output = array();
@@ -28,12 +30,18 @@ class DPortal extends AbstractOagService {
         }
     }
 
+    public function getName()
+    {
+        return 'dportal';
+    }
+
     /**
      * Export an OagFile to DPortal.
      *
      * @param OagFile $oagfile the OagFile to export
      */
-    public function visualise($oagfile) {
+    public function visualise($oagfile)
+    {
 
         $srvOagFile = $this->getContainer()->get(OagFileService::class);
 
@@ -58,13 +66,10 @@ class DPortal extends AbstractOagService {
         // $output = [];
         $import = exec("openag import dportal " . $xmlfile, $output, $return);
         $this->getContainer()->get('logger')->info(sprintf('Import dportal data: "%s" (%d)', $import, $return));
+
         foreach ($output as $line) {
             $this->getContainer()->get('logger')->debug($line);
         }
-    }
-
-    public function getName() {
-        return 'dportal';
     }
 
 }

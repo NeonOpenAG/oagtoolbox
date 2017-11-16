@@ -6,17 +6,106 @@ namespace OagBundle\Service;
 
 use OagBundle\Entity\OagFile;
 
-class Cove extends AbstractOagService {
+class Cove extends AbstractOagService
+{
 
     private $json;
 
-    public function processUri($uri) {
+    public function processUri($uri)
+    {
         // TODO - fetch file, cache it, check content type, decode and then pass to cove line at a time
         $data = file_get_contents($uri);
         return $this->autocodeXml($data);
     }
 
-    public function process($contents, $filename) {
+
+    /**
+     * Process on OagFile with CoVE.
+     *
+     * @param OagFile $file
+     */
+    public function validateOagFile(OagFile $file)
+    {
+        $srvOagFile = $this->getContainer()->get(OagFileService::class);
+        $srvIATI = $this->getContainer()->get(IATI::class);
+
+        $this->getContainer()->get('logger')->debug(sprintf('Processing %s using CoVE', $file->getDocumentName()));
+        // TODO - for bigger files we might need send as Uri
+        $contents = $srvOagFile->getContents($file);
+        $this->json = $this->process($contents, $file->getDocumentName());
+
+        $err = array_filter($this->json['err']);
+        $status = $this->json['status'];
+
+        if ($status === 0) {
+            // CoVE claims to have processed the XML successfully
+            $xml = $this->json['xml'];
+            if ($srvIATI->parseXML($xml)) {
+                // CoVE actually has returned valid XML
+                $xmldir = $this->getContainer()->getParameter('oagxml_directory');
+                if (!is_dir($xmldir)) {
+                    mkdir($xmldir, 0755, true);
+                }
+
+                $filename = $srvOagFile->getXMLFileName($file);
+                $xmlfile = $xmldir . '/' . $filename;
+                if (!file_put_contents($xmlfile, $xml)) {
+                    $this->get('session')->getFlashBag()->add('error', 'Unable to create XML file.');
+                    $this->get('logger')->debug(sprintf('Unable to create XML file: %s', $xmlfile));
+                    return $this->redirectToRoute('oag_wireframe_upload');
+                }
+                // else
+                if ($this->getContainer()->getParameter('unlink_files')) {
+                    unlink($srvOagFile->getPath($file));
+                }
+
+                $file->setDocumentName($filename);
+                $file->setCoved(true);
+                $em = $this->getContainer()->get('doctrine')->getManager();
+                $em->persist($file);
+                $em->flush();
+                $this->getContainer()->get('session')->getFlashBag()->add('info', 'IATI File created/Updated: ' . basename($xmlfile));
+
+                return true;
+            } else {
+                $this->getContainer()->get('session')->getFlashBag()->add('error', 'CoVE returned data that was not XML.');
+            }
+        } else {
+            // CoVE returned with an error, spit out stderr
+            if (isset($err['validation_errors'])) {
+                foreach ($err['validation_errors'] as $line) {
+                    $this->getContainer()->get('logger')->info(json_encode($line));
+                    $this->getContainer()->get('session')->getFlashBag()->add('error', $this->formatValidationError($line));
+                }
+            }
+            if (isset($err['ruleset_errors'])) {
+                foreach ($err['ruleset_errors'] as $line) {
+                    $this->getContainer()->get('session')->getFlashBag()->add('error', $this->formatRuleError($line));
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public function formatRuleError(array $error) {
+        return sprintf(
+            'Ruleset error in activity %s, %s',
+            $error['id'],
+            $error['message']
+        );
+    }
+
+    public function formatValidationError(array $error) {
+        return sprintf(
+            'Validation error, %s in the xml at %s',
+            $error['description'],
+            $error['path']
+        );
+    }
+
+    public function process($contents, $filename)
+    {
         $oag = $this->getContainer()->getParameter('oag');
         $cmd = str_replace('{FILENAME}', $filename, $oag['cove']['cmd']);
         $this->getContainer()->get('logger')->debug(
@@ -49,15 +138,19 @@ class Cove extends AbstractOagService {
             $this->getContainer()->get('logger')->info(sprintf('Got %d bytes of error', strlen($err)));
             fclose($pipes[2]);
 
-            $return_value = proc_close($process);
+            proc_close($process);
 
             $data = array(
                 'xml' => $xml,
-                'err' => $err,
-                'status' => $return_value,
+                'err' => json_decode($err, true),
             );
 
-            if (strlen($err)) {
+            $validationErrors = $data['err']['validation_errors'];
+            $rulesetErrors = $data['err']['ruleset_errors'];
+
+            $data['status'] = (count($validationErrors) + count($rulesetErrors));
+
+            if ( $data['status'] > 0) {
                 $this->getContainer()->get('logger')->error('Error: ' . $err);
             }
 
@@ -68,67 +161,13 @@ class Cove extends AbstractOagService {
         }
     }
 
-    /**
-     * Process on OagFile with CoVE.
-     *
-     * @param OagFile $file
-     */
-    public function validateOagFile(OagFile $file) {
-        $srvOagFile = $this->getContainer()->get(OagFileService::class);
-        $srvIATI = $this->getContainer()->get(IATI::class);
-
-        $this->getContainer()->get('logger')->debug(sprintf('Processing %s using CoVE', $file->getDocumentName()));
-        // TODO - for bigger files we might need send as Uri
-        $contents = $srvOagFile->getContents($file);
-        $this->json = $this->process($contents, $file->getDocumentName());
-
-        $err = array_filter(explode("\n", $this->json['err']) ?? array());
-        $status = $this->json['status'];
-
-        if ($status === 0) {
-            // CoVE claims to have processed the XML successfully
-            $xml = $this->json['xml'];
-            if ($srvIATI->parseXML($xml)) {
-                // CoVE actually has returned valid XML
-                $xmldir = $this->getContainer()->getParameter('oagxml_directory');
-                if (!is_dir($xmldir)) {
-                    mkdir($xmldir, 0755, true);
-                }
-
-                $filename = $srvOagFile->getXMLFileName($file);
-                $xmlfile = $xmldir . '/' . $filename;
-                if (!file_put_contents($xmlfile, $xml)) {
-                    $this->get('session')->getFlashBag()->add('error', 'Unable to create XML file.');
-                    $this->get('logger')->debug(sprintf('Unable to create XML file: %s', $xmlfile));
-                    return $this->redirectToRoute('oag_wireframe_upload');
-                }
-                // else
-                if ($this->getContainer()->getParameter('unlink_files')) {
-                    unlink($srvOagFile->getPath($file));
-                }
-
-                $file->setDocumentName($filename);
-                $file->setCoved(true);
-                $em = $this->getContainer()->get('doctrine')->getManager();
-                $em->persist($file);
-                $em->flush();
-                $this->getContainer()->get('session')->getFlashBag()->add('info', 'IATI File created/Updated\; ' . $xmlfile);
-
-                return true;
-            } else {
-                $this->getContainer()->get('session')->getFlashBag()->add('error', 'CoVE returned data that was not XML.');
-            }
-        } else {
-            // CoVE returned with an error, spit out stderr
-            foreach ($err as $line) {
-                $this->getContainer()->get('session')->getFlashBag()->add('error', $line);
-            }
-        }
-
-        return false;
+    public function getName()
+    {
+        return 'cove';
     }
 
-    public function getFixtureData() {
+    public function getFixtureData()
+    {
 
 
         // TODO - load from file, can we make this an asset?
@@ -146,12 +185,9 @@ class Cove extends AbstractOagService {
         return json_encode($json);
     }
 
-    public function getJson() {
+    public function getJson()
+    {
         return $this->json;
-    }
-
-    public function getName() {
-        return 'cove';
     }
 
 }

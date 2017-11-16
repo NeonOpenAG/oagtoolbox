@@ -10,7 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="suggestedtag")
  * @ORM\Entity(repositoryClass="OagBundle\Repository\SuggestedTagRepository")
  */
-class SuggestedTag {
+class SuggestedTag
+{
 
     /**
      * @var int
@@ -45,8 +46,37 @@ class SuggestedTag {
      *
      * @return int
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
+    }
+
+    public function toString()
+    {
+        return sprintf('%s, %s, %s', $this->getTag(), $this->getConfidence(), $this->getActivityId());
+    }
+
+    /**
+     * @return \OagBundle\Entity\Tag
+     */
+    public function getTag()
+    {
+        return $this->tag;
+    }
+
+    public function setTag(Tag $tag)
+    {
+        $this->tag = $tag;
+    }
+
+    /**
+     * Get confidence
+     *
+     * @return string
+     */
+    public function getConfidence()
+    {
+        return $this->confidence;
     }
 
     /**
@@ -56,42 +86,21 @@ class SuggestedTag {
      *
      * @return SuggestedTag
      */
-    public function setConfidence($confidence) {
+    public function setConfidence($confidence)
+    {
         $this->confidence = $confidence;
 
         return $this;
     }
 
-    /**
-     * Get confidence
-     *
-     * @return string
-     */
-    public function getConfidence() {
-        return $this->confidence;
-    }
-
-    /**
-     * @return \OagBundle\Entity\Tag
-     */
-    public function getTag() {
-        return $this->tag;
-    }
-
-    public function setTag(Tag $tag) {
-        $this->tag = $tag;
-    }
-
-    public function getActivityId() {
+    public function getActivityId()
+    {
         return $this->activityId;
     }
 
-    public function setActivityId($id) {
+    public function setActivityId($id)
+    {
         $this->activityId = $id;
-    }
-
-    public function toString() {
-        return sprintf('%s, %s, %s', $this->getTag(), $this->getConfidence(), $this->getActivityId());
     }
 
 }

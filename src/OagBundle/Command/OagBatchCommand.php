@@ -13,7 +13,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class OagBatchCommand extends ContainerAwareCommand {
+class OagBatchCommand extends ContainerAwareCommand
+{
 
     private $output;
     private $srvCove;
@@ -22,19 +23,44 @@ class OagBatchCommand extends ContainerAwareCommand {
     private $srvOagFile;
     private $em;
 
-    protected function configure() {
-        $this
-                ->setName('oag:batch')
-                ->setDescription("List files/URI's to process as IATI imports. ./bin/console oag:batch --env dev https://raw.githubusercontent.com/devgateway/geocoder-ie/master/example.xml
-")
-                ->addArgument('files', InputArgument::IS_ARRAY, 'Specify files/URIs!')
-                ->addOption('destination', '-d', InputOption::VALUE_NONE, 'Output festination')
-                ->addOption('skip-geo', '-g', InputOption::VALUE_NONE, 'Skip Geocoder')
-                ->addOption('skip-cla', '-c', InputOption::VALUE_NONE, 'Skip Classifier')
-        ;
+    /**
+     * @return OutputInterface
+     */
+    function getOutput()
+    {
+        return $this->output;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output) {
+    /**
+     * @return OagFileService
+     */
+    function getSrvOagFile()
+    {
+        return $this->srvOagFile;
+    }
+
+    /**
+     * @return \Doctrine\ORM\EntityManager
+     */
+    function getEm()
+    {
+        return $this->em;
+    }
+
+    protected function configure()
+    {
+        $this
+            ->setName('oag:batch')
+            ->setDescription("List files/URI's to process as IATI imports. ./bin/console oag:batch --env dev https://raw.githubusercontent.com/devgateway/geocoder-ie/master/example.xml
+")
+            ->addArgument('files', InputArgument::IS_ARRAY, 'Specify files/URIs!')
+            ->addOption('destination', '-d', InputOption::VALUE_NONE, 'Output festination')
+            ->addOption('skip-geo', '-g', InputOption::VALUE_NONE, 'Skip Geocoder')
+            ->addOption('skip-cla', '-c', InputOption::VALUE_NONE, 'Skip Classifier');
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
         $this->output = $output;
 
         $this->srvCove = $this->getContainer()->get(Cove::class);
@@ -140,7 +166,13 @@ class OagBatchCommand extends ContainerAwareCommand {
         $this->feedback("\nCommand result.");
     }
 
-    private function oagFile($oagFileName) {
+    private function feedback($msg)
+    {
+        $this->output->writeln($msg);
+    }
+
+    private function oagFile($oagFileName)
+    {
         $oagFullPath = $this->getContainer()->getParameter('oagfiles_directory') . '/' . basename($oagFileName);
         copy($oagFileName, $oagFullPath);
 
@@ -158,62 +190,43 @@ class OagBatchCommand extends ContainerAwareCommand {
         return $oagFile;
     }
 
-    private function cove(OagFile $file) {
+    private function cove(OagFile $file)
+    {
         return $this->getSrvCove()->validateOagFile($file);
-    }
-
-    private function geocode(OagFile $file) {
-        return $this->getSrvGeocoder()->geocodeOagFile($file);
-    }
-
-    private function classify(OagFile $file) {
-        return $this->getSrvClassifier()->classifyOagFile($file);
-    }
-
-    private function feedback($msg) {
-        $this->output->writeln($msg);
-    }
-
-    /**
-     * @return OutputInterface
-     */
-    function getOutput() {
-        return $this->output;
     }
 
     /**
      * @return Cove
      */
-    function getSrvCove() {
+    function getSrvCove()
+    {
         return $this->srvCove;
+    }
+
+    private function geocode(OagFile $file)
+    {
+        return $this->getSrvGeocoder()->geocodeOagFile($file);
     }
 
     /**
      * @return Geocoder
      */
-    function getSrvGeocoder() {
+    function getSrvGeocoder()
+    {
         return $this->srvGeocoder;
+    }
+
+    private function classify(OagFile $file)
+    {
+        return $this->getSrvClassifier()->classifyOagFile($file);
     }
 
     /**
      * @return Classifier
      */
-    function getSrvClassifier() {
+    function getSrvClassifier()
+    {
         return $this->srvClassifier;
-    }
-
-    /**
-     * @return OagFileService
-     */
-    function getSrvOagFile() {
-        return $this->srvOagFile;
-    }
-
-    /**
-     * @return \Doctrine\ORM\EntityManager
-     */
-    function getEm() {
-        return $this->em;
     }
 
 }
