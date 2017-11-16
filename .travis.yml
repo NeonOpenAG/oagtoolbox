@@ -17,6 +17,7 @@ before-install:
 install:
 - git submodule update --init --recursive
 - sudo apt install ruby-sass
+- sudo ln -s /usr/bin/sass /usr/local/bin/sass
 - composer install -n
 script:
 - "./vendor/bin/simple-phpunit -c phpunit.xml"
