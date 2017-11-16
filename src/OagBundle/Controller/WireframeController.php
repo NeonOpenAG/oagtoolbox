@@ -63,7 +63,8 @@ class WireframeController extends Controller
             $em->persist($oagfile);
             $em->flush();
 
-            if (!$srvCove->validateOagFile($oagfile)) {
+            $isValid = $srvCove->validateOagFile($oagfile);
+            if (!$isValid) {
                 return $this->redirect($this->generateUrl('oag_wireframe_upload'));
             }
 
@@ -83,6 +84,14 @@ class WireframeController extends Controller
         if (!is_null($srvOagFile->getMostRecent())) {
             $data['file'] = $srvOagFile->getMostRecent();
         }
+
+//        $flashbag = $this->get('session')->getFlashBag();
+//        $all = $flashbag->peekAll();
+//        $flashbag->clear();
+//
+//        $data['errors'] = $all;
+//        $data['errors']['error'] = [];
+//        $data['errors']['error'][] = '<p>Line one</p><p>Line two</p><p>Line three</p>';
 
         return $data;
     }
@@ -872,12 +881,15 @@ class WireframeController extends Controller
      */
     public function improveYourDataAction(OagFile $file) {
         $srvOagFile = $this->get(OagFileService::class);
+
         $srvGeocoder = $this->get(Geocoder::class);
         $srvClassifier = $this->get(Classifier::class);
         $srvIati = $this->get(IATI::class);
         $geocoderStatus = $srvGeocoder->status();
         $classifierStatus = $srvClassifier->status();
+
         $router = $this->get('router');
+
         $classifierUrl = $router->generate(
             'oag_async_classifystatus', array(), UrlGeneratorInterface::ABSOLUTE_URL // This guy right here
         );

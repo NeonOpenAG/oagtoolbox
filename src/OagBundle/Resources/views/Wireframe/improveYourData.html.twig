@@ -2,7 +2,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link href="{{ asset('bundles/oag/jquery-filestyle-1.5.1/src/jquery-filestyle.min.css') }}" rel="stylesheet"/>
+    <link href="{{ asset('bundles/oag/jquery-filestyle-1.5.1/src/jquery-filestyle.min.css') }}" rel="stylesheet" />
 {% endblock %}
 
 {% block title %}Check and improve your data{% endblock %}
@@ -21,20 +21,6 @@
                 <div class="heading summary">
                     <h2>Right now, your data...</h2>
                 </div>
-
-                {#
-                <div class="content-block summary complete">
-                    <ul>
-                        <li>Your file has {{  file_stats.count }} activities.</li>
-                        <li>Your file has {{  file_stats.totalTags }} tags.</li>
-                        <li>Your file has {{  file_stats.totalLocs }} locations.</li>
-                        <li>{{ file_stats.activitiesWithNoTags }} of your {{ file_stats.count }} activities have no tags.</li>
-                        <li>{{ file_stats.activitiesWithNoLocs }} of your {{ file_stats.count }} activities have no locations.</li>
-                        <li>There are an average of {{ file_stats.averageTags }} tags per activity.</li>
-                        <li>There are an average of {{ file_stats.averageLocs }} locations per activity.</li>
-                    </ul>
-                </div>
-                #}
 
                 <div class="content-block summary complete">
                     <ul>

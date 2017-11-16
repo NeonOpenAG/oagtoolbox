@@ -18,6 +18,7 @@ class Cove extends AbstractOagService
         return $this->autocodeXml($data);
     }
 
+
     /**
      * Process on OagFile with CoVE.
      *
@@ -33,7 +34,7 @@ class Cove extends AbstractOagService
         $contents = $srvOagFile->getContents($file);
         $this->json = $this->process($contents, $file->getDocumentName());
 
-        $err = array_filter(explode("\n", $this->json['err']) ?? array());
+        $err = array_filter($this->json['err']);
         $status = $this->json['status'];
 
         if ($status === 0) {
@@ -63,7 +64,7 @@ class Cove extends AbstractOagService
                 $em = $this->getContainer()->get('doctrine')->getManager();
                 $em->persist($file);
                 $em->flush();
-                $this->getContainer()->get('session')->getFlashBag()->add('info', 'IATI File created/Updated\; ' . $xmlfile);
+                $this->getContainer()->get('session')->getFlashBag()->add('info', 'IATI File created/Updated: ' . basename($xmlfile));
 
                 return true;
             } else {
@@ -71,12 +72,36 @@ class Cove extends AbstractOagService
             }
         } else {
             // CoVE returned with an error, spit out stderr
-            foreach ($err as $line) {
-                $this->getContainer()->get('session')->getFlashBag()->add('error', $line);
+            if (isset($err['validation_errors'])) {
+                foreach ($err['validation_errors'] as $line) {
+                    $this->getContainer()->get('logger')->info(json_encode($line));
+                    $this->getContainer()->get('session')->getFlashBag()->add('error', $this->formatValidationError($line));
+                }
+            }
+            if (isset($err['ruleset_errors'])) {
+                foreach ($err['ruleset_errors'] as $line) {
+                    $this->getContainer()->get('session')->getFlashBag()->add('error', $this->formatRuleError($line));
+                }
             }
         }
 
         return false;
+    }
+
+    public function formatRuleError(array $error) {
+        return sprintf(
+            'Ruleset error in activity %s, %s',
+            $error['id'],
+            $error['message']
+        );
+    }
+
+    public function formatValidationError(array $error) {
+        return sprintf(
+            'Validation error, %s in the xml at %s',
+            $error['description'],
+            $error['path']
+        );
     }
 
     public function process($contents, $filename)
@@ -113,15 +138,19 @@ class Cove extends AbstractOagService
             $this->getContainer()->get('logger')->info(sprintf('Got %d bytes of error', strlen($err)));
             fclose($pipes[2]);
 
-            $return_value = proc_close($process);
+            proc_close($process);
 
             $data = array(
                 'xml' => $xml,
-                'err' => $err,
-                'status' => $return_value,
+                'err' => json_decode($err, true),
             );
 
-            if (strlen($err)) {
+            $validationErrors = $data['err']['validation_errors'];
+            $rulesetErrors = $data['err']['ruleset_errors'];
+
+            $data['status'] = (count($validationErrors) + count($rulesetErrors));
+
+            if ( $data['status'] > 0) {
                 $this->getContainer()->get('logger')->error('Error: ' . $err);
             }
 

@@ -1,0 +1,19 @@
+{% if validation_errors is defined and validation_errors | length > 0 %}
+    <div class="ruleset-errors">
+        <table>
+            <tr>
+                <th colspan="2"><h2>VALIDATION ERRORS</h2></th>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <th>Path (value)</th>
+            </tr>
+            {% for error in validation_errors %}
+            <tr>
+                <td>{{ error.description }}</td>
+                <td>{{ error.path }}{% if error.value is not empty %} ({{ error.value }}){% endif %}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endif %}

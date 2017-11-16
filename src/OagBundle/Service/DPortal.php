@@ -66,6 +66,7 @@ class DPortal extends AbstractOagService
         // $output = [];
         $import = exec("openag import dportal " . $xmlfile, $output, $return);
         $this->getContainer()->get('logger')->info(sprintf('Import dportal data: "%s" (%d)', $import, $return));
+
         foreach ($output as $line) {
             $this->getContainer()->get('logger')->debug($line);
         }
