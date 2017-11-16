@@ -74,17 +74,34 @@ class Cove extends AbstractOagService
             // CoVE returned with an error, spit out stderr
             if (isset($err['validation_errors'])) {
                 foreach ($err['validation_errors'] as $line) {
-                    $this->getContainer()->get('session')->getFlashBag()->add('error', implode('<p>', $line));
+                    $this->getContainer()->get('logger')->info(json_encode($line));
+                    $this->getContainer()->get('session')->getFlashBag()->add('error', $this->formatValidationError($line));
                 }
             }
             if (isset($err['ruleset_errors'])) {
                 foreach ($err['ruleset_errors'] as $line) {
-                    $this->getContainer()->get('session')->getFlashBag()->add('error', implode('<p>', $line));
+                    $this->getContainer()->get('session')->getFlashBag()->add('error', $this->formatRuleError($line));
                 }
             }
         }
 
         return false;
+    }
+
+    public function formatRuleError(array $error) {
+        return sprintf(
+            'Ruleset error in activity %s, %s',
+            $error['id'],
+            $error['message']
+        );
+    }
+
+    public function formatValidationError(array $error) {
+        return sprintf(
+            'Validation error, %s in the xml at %s',
+            $error['description'],
+            $error['path']
+        );
     }
 
     public function process($contents, $filename)
