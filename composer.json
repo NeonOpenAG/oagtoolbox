@@ -64,12 +64,14 @@
             "php bin/console -n doctrine:fixtures:load --env=test --fixtures=src/OagBundle/Resources/Seed/LoadFileData.php",
             "php ./bin/console assets:install public --symlink --relative",
             "php ./bin/console assets:install public --symlink --relative --env=dev",
+            "php ./bin/console assetic:dump --env=prod --no-debug",
             "if [ -S '/var/run/docker.sock' ]; then php ./bin/console oag:fetchimages; fi"
         ],
         "post-update-cmd": [
             "@symfony-scripts",
             "php ./bin/console assets:install public --symlink --relative",
             "php ./bin/console assets:install public --symlink --relative --env=dev",
+            "php ./bin/console assetic:dump --env=prod --no-debug",
             "if [ -S '/var/run/docker.sock' ]; then php ./bin/console oag:fetchimages; fi"
         ]
     },
