@@ -42,8 +42,16 @@ class Classifier extends AbstractOagService {
     // Extract the narrative elements and check those
     $root = $srvIati->load($oagFile);
     $activities = $srvIati->getActivities($root);
+    $this->getContainer()->get('logger')->debug(sprintf('Found %d activities', count($activities)));
     foreach ($activities as $activity) {
-      $narrativies = $srvIati->getActivityNarratives($activity);
+        $activityId = $srvIati->getActivityId($activity);
+        $narrativies = $srvIati->getActivityNarratives($activity);
+        $tags = [];
+        foreach ($narrativies as $narrative) {
+            $data = $this->processString((string)$narrative);
+            $tags = $data['data'];
+            $this->persistTags($tags, $oagFile, $activityId);
+        }
     }
 
     // IATI xml document

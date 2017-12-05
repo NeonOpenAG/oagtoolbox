@@ -278,7 +278,8 @@ class IATI extends AbstractService
     }
 
     public function getActivityNarratives($activity) {
-        $this->getContainer()->get('logger')->info($activity);
+        $narratives = $activity->xpath('//narrative');
+        return $narratives;
     }
 
     /**
