@@ -277,6 +277,10 @@ class IATI extends AbstractService
         return null;
     }
 
+    public function getActivityNarratives($activity) {
+        $this->getContainer()->get('logger')->info($activity);
+    }
+
     /**
      * Get the information on the tags contained in an activity, from prior
      * classification.

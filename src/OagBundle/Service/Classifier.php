@@ -35,11 +35,16 @@ class Classifier extends AbstractOagService {
    */
   public function classifyOagFile(OagFile $oagFile) {
     $srvOagFile = $this->getContainer()->get(OagFileService::class);
+    $srvIati = $this->getContainer()->get(IATI::class);
 
     // $oagFile->clearSuggestedTags();
 
-
     // Extract the narrative elements and check those
+    $root = $srvIati->load($oagFile);
+    $activities = $srvIati->getActivities($root);
+    foreach ($activities as $activity) {
+      $narrativies = $srvIati->getActivityNarratives($activity);
+    }
 
     // IATI xml document
     $rawXml = $srvOagFile->getContents($oagFile);
