@@ -207,6 +207,13 @@ class WireframeController extends Controller
         $root = $srvIATI->load($file);
         $activities = $srvIATI->summariseToArray($root);
 
+        if (count($activities) == 1) {
+          return $this->redirectToRoute('oag_wireframe_classifiersuggestion', [
+            'id' => $file->getId(),
+            'activityId' => $activities[0]['id'],
+          ]);
+        }
+
         // work out which activities have suggested locations
         $haveSuggested = array();
         foreach ($activities as $activity) {
@@ -404,6 +411,13 @@ class WireframeController extends Controller
         $srvIATI = $this->get(IATI::class);
         $root = $srvIATI->load($file);
         $activities = $srvIATI->summariseToArray($root);
+
+        if (count($activities) == 1) {
+          return $this->redirectToRoute('oag_wireframe_geocodersuggestion', [
+            'id' => $file->getId(),
+            'activityId' => $activities[0]['id'],
+          ]);
+        }
 
         // work out which activities have suggested locations
         $haveSuggested = array();
