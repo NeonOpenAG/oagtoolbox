@@ -18,6 +18,9 @@ class OagFetchimagesCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        if (getenv('TRAVIS') == 'true') {
+          return;
+        }
         $reponame = $this->getContainer()->getParameter('docker_reponame');
         $dockernames = $this->getContainer()->getParameter('docker_names');
 
