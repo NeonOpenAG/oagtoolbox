@@ -7,6 +7,10 @@ services:
         calls:
             - [setContainer, ['@service_container']]
 
+    OagBundle\DataFixtures\:
+        resource: '../../../OagBundle/DataFixtures/*'
+        tags: [doctrine.fixture.orm]
+
     oag.twig_extension:
         class: OagBundle\Twig\OagExtension
         tags:

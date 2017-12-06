@@ -277,6 +277,11 @@ class IATI extends AbstractService
         return null;
     }
 
+    public function getActivityNarratives($activity) {
+        $narratives = $activity->xpath('//narrative');
+        return $narratives;
+    }
+
     /**
      * Get the information on the tags contained in an activity, from prior
      * classification.
