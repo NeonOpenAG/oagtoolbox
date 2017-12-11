@@ -16,10 +16,10 @@ services:
         tags:
             - { name: twig.extension }
       
-    oag.startup_listener:
-        class: OagBundle\EventListener\StartupListener
-        tags:
-            - { name: kernel.event_listener, event: kernel.request }
-        calls:
-            - [setContainer, ['@service_container']]
-            - [setRequest, ['@request_stack']]
+    #oag.startup_listener:
+    #    class: OagBundle\EventListener\StartupListener
+    #    tags:
+    #        - { name: kernel.event_listener, event: kernel.request }
+    #    calls:
+    #        - [setContainer, ['@service_container']]
+    #        - [setRequest, ['@request_stack']]

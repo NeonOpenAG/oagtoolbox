@@ -75,7 +75,11 @@ class Geocoder extends AbstractOagService
     public function process($contents, $filename, $country)
     {
         $oag = $this->getContainer()->getParameter('oag');
+        $openagnerserver = $oag['nerserver']['host'] ?? 'openag_nerserver';
+        $openagnerport = $oag['nerserver']['port'] ?? '9000';
         $cmd = str_replace('{COUNTRY}', $country, str_replace('{FILENAME}', $filename, $oag['geocoder']['cmd']));
+        $cmd = str_replace('{OPENAG_NERSERVER}', $openagnerserver, $cmd);
+        $cmd = str_replace('{OPENAG_PORT}', $openagnerport, $cmd);
         $this->getContainer()->get('logger')->debug(
             sprintf('Command: %s', $cmd)
         );
