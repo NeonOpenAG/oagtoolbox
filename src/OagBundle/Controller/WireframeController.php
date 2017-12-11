@@ -452,6 +452,39 @@ class WireframeController extends Controller
     }
 
     /**
+     * @Route("/geocoder2/{id}/{activityId}")
+     * @ParamConverter("file", class="OagBundle:OagFile")
+     */
+    public function geocoder2SuggestionAction(Request $request, OagFile $file, $activityId)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $srvGeocoder = $this->get(Geocoder::class);
+        $srvGeoJson = $this->get(GeoJson::class);
+        $srvIATI = $this->get(IATI::class);
+        $srvOagFile = $this->get(OagFileService::class);
+
+        $root = $srvIATI->load($file);
+        $activity = $srvIATI->getActivityById($root, $activityId);
+
+        $currentLocations = $srvIATI->getActivityLocations($activity);
+        $suggestedLocations = $file->getGeolocations()->toArray();
+
+        $data = [
+            "activityid" => $activityId,
+        ];
+
+        foreach ($currentLocations as $loc) {
+          $data['current'][] = print_r($loc, true);
+        }
+
+        foreach ($suggestedLocations as $loc) {
+          $data['suggested'][] = print_r($loc, true);
+        }
+
+        return $data;
+    }
+
+    /**
      * @Route("/geocoder/{id}/{activityId}")
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
@@ -943,3 +976,4 @@ class WireframeController extends Controller
     }
 
 }
+/* vim: set expandtab ts=4 sw=4: */
