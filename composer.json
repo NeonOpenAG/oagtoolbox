@@ -60,7 +60,6 @@
             "php bin/console doctrine:schema:create",
             "php bin/console doctrine:database:create --env=test",
             "php bin/console doctrine:schema:create --env=test",
-            "php bin/console doctrine:fixtures:load --env=test",
             "php ./bin/console assets:install public --symlink --relative",
             "php ./bin/console assets:install public --symlink --relative --env=dev",
             "php ./bin/console assetic:dump --env=prod --no-debug",
