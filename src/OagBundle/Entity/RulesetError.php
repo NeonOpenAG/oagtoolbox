@@ -45,6 +45,13 @@ class RulesetError
     /**
      * @var string
      *
+     * @ORM\Column(name="filename", type="string", length=255)
+     */
+    private $filename;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="activityId", type="string", length=255)
      */
     private $activityId;
@@ -115,8 +122,7 @@ class RulesetError
      *
      * @return RulesetError
      */
-    public function setMessage($message)
-    {
+    public function setMessage($message) {
         $this->message = $message;
 
         return $this;
@@ -127,9 +133,30 @@ class RulesetError
      *
      * @return string
      */
-    public function getMessage()
-    {
+    public function getMessage() {
         return $this->message;
+    }
+
+    /**
+     * Set filename
+     *
+     * @param string $filename
+     *
+     * @return RulesetError
+     */
+    public function setFilename($filename) {
+        $this->filename = $filename;
+
+        return $this;
+    }
+
+    /**
+     * Get filename
+     *
+     * @return string
+     */
+    public function getFilename() {
+        return $this->filename;
     }
 
     /**

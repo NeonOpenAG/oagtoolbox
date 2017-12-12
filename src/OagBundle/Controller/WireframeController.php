@@ -5,6 +5,7 @@ namespace OagBundle\Controller;
 use OagBundle\Entity\Change;
 use OagBundle\Entity\EnhancementFile;
 use OagBundle\Entity\OagFile;
+use OagBundle\Entity\RulesetError;
 use OagBundle\Form\EnhancementFileType;
 use OagBundle\Form\OagFileType;
 use OagBundle\Service\Classifier;
@@ -935,6 +936,10 @@ class WireframeController extends Controller
         $geocoderStatus = $srvGeocoder->status();
         $classifierStatus = $srvClassifier->status();
 
+        $filename = $file->getDocumentName();
+        $rulesetErrorRepo = $this->getDoctrine()->getRepository(RulesetError::class);
+        $rulesetErrors = $rulesetErrorRepo->findByFilename($filename);
+
         $router = $this->get('router');
 
         $classifierUrl = $router->generate(
@@ -972,6 +977,7 @@ class WireframeController extends Controller
             'reclassifyUrl' => $reclassifyUrl,
             'regeocodeUrl' => $regeocodeUrl,
             'file_stats' => $fileStats,
+            'ruleset_errors' => $rulesetErrors,
         );
     }
 
