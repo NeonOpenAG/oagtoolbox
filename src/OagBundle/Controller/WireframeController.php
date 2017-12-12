@@ -593,7 +593,7 @@ class WireframeController extends Controller
                 'choices' => $geocoderGeolocs,
                 'data' => array(),
                 'choice_label' => function ($value, $key, $index) {
-                    $name = $value->getName();
+                    $name = $value->getName() . '[' . $value->getFeatureDesignation() . ']';
                     return "$name";
                 },
                 'choice_attr' => function ($value, $key, $index) use ($srvGeoJson) {
