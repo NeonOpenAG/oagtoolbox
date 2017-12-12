@@ -17,12 +17,13 @@
                 <h1>Improve location information</h1>
                 <h2>This tool 'reads' your files and suggests geocodes codes it believes match each activity ID.</h2>
             </div>
-
+            
             {% for activity in activities %}
+                {% set activityid = activity.id %}
                 {{ include('OagBundle::widgets/activity.html.twig', {
                     'activity': activity,
                     'suggestRoute': path('oag_wireframe_geocodersuggestion', { 'id': file.getId(), 'activityId': activity.id }),
-                    'actionName': (activity.id in haveSuggested) ? 'Show suggestions' : 'Add more information'
+                    'count': haveSuggested[activityid]
                 }) }}
             {% endfor %}
 

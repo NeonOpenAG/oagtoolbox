@@ -440,9 +440,7 @@ class WireframeController extends Controller
             }
 
             // has at least one suggested location
-            if (count($geocoderGeolocs) > 0) {// has at least one suggested location
-                $haveSuggested[] = $activity['id'];
-            }
+            $haveSuggested[$activity['id']] = count($geocoderGeolocs);
         }
 
         return array(
@@ -593,7 +591,7 @@ class WireframeController extends Controller
                 'choices' => $geocoderGeolocs,
                 'data' => array(),
                 'choice_label' => function ($value, $key, $index) {
-                    $name = $value->getName() . '[' . $value->getFeatureDesignation() . ']';
+                    $name = $value->getName() . ' [' . $value->getFeatureDesignation() . ']';
                     return "$name";
                 },
                 'choice_attr' => function ($value, $key, $index) use ($srvGeoJson) {
