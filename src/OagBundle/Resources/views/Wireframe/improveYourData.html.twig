@@ -35,10 +35,10 @@
                             <h2 class="completed">Helps people identify agricultural projects</h2>
                             <div class="info">
                                 <p>The AGROVOC codes in your activity file help make your projects more discoverable by funders and others who may be interested in your work.
-                                    You have an average of {{ file_stats.averageTags }} tag{% if file_stats.averageTags | round != 1  %}s{% endif %} per activity.
+                                    You have an average of {{ file_stats.averageTags }} AGROVOC code{% if file_stats.averageTags | round != 1  %}s{% endif %} per activity.
                                     {# <button id="reclassify" data-url="{{ reclassifyUrl }}" class="trigger">&#x21bb; Re-Classify</button> #}</p>
                                 <a href="{{ path('oag_wireframe_classifier', { 'id': file.getId() }) }}">
-                                    <button type="button" id="class-button" disabled data-statusurl="{{ classifierUrl }}"><span class="fa fa-spinner fa-spin"></span>Further improve your tagging</button>
+                                    <button type="button" id="class-button" disabled data-statusurl="{{ classifierUrl }}"><span class="fa fa-spinner fa-spin"></span>Further improve your AGROVOC coding</button>
                                 </a>
                             </div>
                         </li>
@@ -119,7 +119,7 @@
                                     </strong>
                                     {# <button id="reclassify" data-url="{{ reclassifyUrl }}" class="trigger">&#x21bb; Re-Classify</button> #}
                                 </p>
-                                <a href="{{ path('oag_wireframe_classifier', { 'id': file.getId() }) }}"><button type="button" id="class-button" disabled data-statusurl="{{ classifierUrl }}"><span class="fa fa-spinner fa-spin"></span>Tag your data</button></a>
+                                <a href="{{ path('oag_wireframe_classifier', { 'id': file.getId() }) }}"><button type="button" id="class-button" disabled data-statusurl="{{ classifierUrl }}"><span class="fa fa-spinner fa-spin"></span>See suggested AGROVOC codes</button></a>
                             </div>
                         </li>
                         {% endif %}
@@ -137,7 +137,7 @@
                                     </strong>
                                     {# <button id="regeocode" data-url="{{ regeocodeUrl }}" class="trigger">&#x21bb; Re-Geocode</button> #}
                                 </p>
-                                <a href="{{ path('oag_wireframe_geocoder', { 'id': file.getId() }) }}"><button type="button" id="geo-button" disabled data-statusurl="{{ geocoderUrl }}"><span class="fa fa-spinner fa-spin"></span>Geocode your data</button></a>
+                                <a href="{{ path('oag_wireframe_geocoder', { 'id': file.getId() }) }}"><button type="button" id="geo-button" disabled data-statusurl="{{ geocoderUrl }}"><span class="fa fa-spinner fa-spin"></span>See suggested geocodes</button></a>
                             </div>
                         </li>
                         {% endif %}

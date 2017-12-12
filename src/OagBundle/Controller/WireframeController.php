@@ -302,9 +302,9 @@ class WireframeController extends Controller
         // paste text form
         $pasteTextForm = $this->createFormBuilder()
             ->add('text', TextareaType::class, array(
-                'attr' => array('placeholder' => 'Copy and paste text')
+                'attr' => array('placeholder' => 'Paste text here')
             ))
-            ->add('read', SubmitType::class)
+            ->add('Suggest more codes', SubmitType::class)
             ->getForm();
         $pasteTextForm->handleRequest($request);
         if ($pasteTextForm->isSubmitted() && $pasteTextForm->isValid()) {
