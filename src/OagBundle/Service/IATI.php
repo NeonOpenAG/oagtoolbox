@@ -185,6 +185,7 @@ class IATI extends AbstractService
         $simpActivity['name'] = $this->getActivityTitle($activity);
         $simpActivity['description'] = $this->getActivityDescription($activity);
         $simpActivity['tags'] = $this->getActivityTags($activity);
+        $simpActivity['locations'] = $this->getActivityLocations($activity);
         return $simpActivity;
     }
 

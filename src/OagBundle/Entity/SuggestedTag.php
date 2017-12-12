@@ -103,4 +103,7 @@ class SuggestedTag
         $this->activityId = $id;
     }
 
+    public function __toString() {
+        return sprintf('%s,  %s', $this->getTag(), $this->getActivityId());;
+    }
 }

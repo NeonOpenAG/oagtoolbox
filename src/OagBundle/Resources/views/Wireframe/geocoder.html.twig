@@ -23,7 +23,9 @@
                 {{ include('OagBundle::widgets/activity.html.twig', {
                     'activity': activity,
                     'suggestRoute': path('oag_wireframe_geocodersuggestion', { 'id': file.getId(), 'activityId': activity.id }),
-                    'count': haveSuggested[activityid]
+                    'suggestions': haveSuggested[activityid],
+                    'existing': existingTags[activityid],
+                    'detailname': 'location'
                 }) }}
             {% endfor %}
 

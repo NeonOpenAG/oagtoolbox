@@ -217,6 +217,7 @@ class WireframeController extends Controller
 
         // work out which activities have suggested locations
         $haveSuggested = array();
+        $existingTags = array();
         foreach ($activities as $activity) {
             $suggestedTags = array();
 
@@ -233,17 +234,19 @@ class WireframeController extends Controller
                 if ((!is_null($enhFile->getIatiActivityId())) && ($enhFile->getIatiActivityId() !== $activity['id'])) continue;
                 $suggestedTags = array_merge($suggestedTags, $enhFile->getSuggestedTags()->toArray());
             }
+            
+            $_suggestedTags = array_unique($suggestedTags);
 
-            // has at least one suggested location
-            if (count($suggestedTags) > 0) {
-                $haveSuggested[] = $activity['id'];
-            }
+            // has at least one suggested tag
+            $haveSuggested[$activity['id']] = count($_suggestedTags);
+            $existingTags[$activity['id']] = count($activity['tags']);
         }
 
         return array(
             'file' => $file,
             'activities' => $activities,
-            'haveSuggested' => $haveSuggested
+            'haveSuggested' => $haveSuggested,
+            'existingTags' => $existingTags,
         );
     }
 
@@ -422,6 +425,7 @@ class WireframeController extends Controller
 
         // work out which activities have suggested locations
         $haveSuggested = array();
+        $existingTags = array();
         foreach ($activities as $activity) {
             $geocoderGeolocs = array();
 
@@ -441,12 +445,14 @@ class WireframeController extends Controller
 
             // has at least one suggested location
             $haveSuggested[$activity['id']] = count($geocoderGeolocs);
+            $existingTags[$activity['id']] = count($activity['locations']);
         }
 
         return array(
             'file' => $file,
             'activities' => $activities,
-            'haveSuggested' => $haveSuggested
+            'haveSuggested' => $haveSuggested,
+            'existingTags' => $existingTags,
         );
     }
 

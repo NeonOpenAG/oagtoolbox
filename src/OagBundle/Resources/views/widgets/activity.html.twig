@@ -13,14 +13,14 @@
         
         {% if suggestRoute is defined %}
             <div class='suggestiontext'>
-                {% if count == 0 %}
+                {% if suggestions == 0 %}
                     We were unable to autodetect any suggestions.
                 {% else %}
-                    We found {{ count }} suggestion{% if count > 1 %}s{% endif %}.
+                    We found {{ existing }} exisiting {{ detailname }}{% if existing != 1 %}s{% endif %} and {{ suggestions }} suggestion{% if suggestions > 1 %}s{% endif %}.
                 {% endif %}
             </div>
             <div class="view-suggestions">
-                <a href="{{ suggestRoute }}" class="cta">{% if count == 0 %}Add more information{% else %}Show suggestions{% endif %}</a>
+                <a href="{{ suggestRoute }}" class="cta">{% if suggestions == 0 %}Add more information{% else %}Show suggestions{% endif %}</a>
             </div>
         {% endif %}
     </div>
