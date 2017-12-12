@@ -19,10 +19,13 @@
             </div>
 
             {% for activity in activities %}
+                {% set activityid = activity.id %}
                 {{ include('OagBundle::widgets/activity.html.twig', {
                     'activity': activity,
                     'suggestRoute': path('oag_wireframe_classifiersuggestion', { 'id': file.getId(), 'activityId': activity.id }),
-                    'actionName': (activity.id in haveSuggested) ? 'Show suggestions' : 'Add more information'
+                    'suggestions': haveSuggested[activityid],
+                    'existing': existingTags[activityid],
+                    'detailname': 'tag'
                 }) }}
             {% endfor %}
 

@@ -541,6 +541,18 @@ article {
     border-bottom-right-radius: 2px;
     padding: .5em 1.5em 1.5em 1.5em;
     &.summary {
+        table {
+            border: none;
+        }
+        th, td {
+            padding: 0.25em 0.25em;
+        }
+        .ruleset-details {
+            display: none;
+        }
+        #ruleset-toggle {
+            cursor: pointer;
+        }
       padding: 1.5em 2em;
       ul li {
         padding: 0.5em;
@@ -604,6 +616,14 @@ article {
       }
     }
   }
+}
+
+.suggestiontext {
+    font-weight: bold;
+    font-size: 105%;
+    float: left;
+    height: 50px;
+    padding-top: 14px;
 }
 
 .view-suggestions {
@@ -1026,6 +1046,14 @@ table {
     }
     .message:before {
       content: ' File upload successful. ';
+    }
+  }
+  &.warn {
+    .icon:before {
+          font-family: FontAwesome;
+          color: $oag_yellow;
+          content: "\f06a";
+          margin-right: 0.6em;
     }
   }
 }

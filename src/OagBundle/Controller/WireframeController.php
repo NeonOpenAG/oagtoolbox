@@ -5,6 +5,7 @@ namespace OagBundle\Controller;
 use OagBundle\Entity\Change;
 use OagBundle\Entity\EnhancementFile;
 use OagBundle\Entity\OagFile;
+use OagBundle\Entity\RulesetError;
 use OagBundle\Form\EnhancementFileType;
 use OagBundle\Form\OagFileType;
 use OagBundle\Service\Classifier;
@@ -216,6 +217,7 @@ class WireframeController extends Controller
 
         // work out which activities have suggested locations
         $haveSuggested = array();
+        $existingTags = array();
         foreach ($activities as $activity) {
             $suggestedTags = array();
 
@@ -232,17 +234,19 @@ class WireframeController extends Controller
                 if ((!is_null($enhFile->getIatiActivityId())) && ($enhFile->getIatiActivityId() !== $activity['id'])) continue;
                 $suggestedTags = array_merge($suggestedTags, $enhFile->getSuggestedTags()->toArray());
             }
+            
+            $_suggestedTags = array_unique($suggestedTags);
 
-            // has at least one suggested location
-            if (count($suggestedTags) > 0) {
-                $haveSuggested[] = $activity['id'];
-            }
+            // has at least one suggested tag
+            $haveSuggested[$activity['id']] = count($_suggestedTags);
+            $existingTags[$activity['id']] = count($activity['tags']);
         }
 
         return array(
             'file' => $file,
             'activities' => $activities,
-            'haveSuggested' => $haveSuggested
+            'haveSuggested' => $haveSuggested,
+            'existingTags' => $existingTags,
         );
     }
 
@@ -421,6 +425,7 @@ class WireframeController extends Controller
 
         // work out which activities have suggested locations
         $haveSuggested = array();
+        $existingTags = array();
         foreach ($activities as $activity) {
             $geocoderGeolocs = array();
 
@@ -439,16 +444,49 @@ class WireframeController extends Controller
             }
 
             // has at least one suggested location
-            if (count($geocoderGeolocs) > 0) {// has at least one suggested location
-                $haveSuggested[] = $activity['id'];
-            }
+            $haveSuggested[$activity['id']] = count($geocoderGeolocs);
+            $existingTags[$activity['id']] = count($activity['locations']);
         }
 
         return array(
             'file' => $file,
             'activities' => $activities,
-            'haveSuggested' => $haveSuggested
+            'haveSuggested' => $haveSuggested,
+            'existingTags' => $existingTags,
         );
+    }
+
+    /**
+     * @Route("/geocoder2/{id}/{activityId}")
+     * @ParamConverter("file", class="OagBundle:OagFile")
+     */
+    public function geocoder2SuggestionAction(Request $request, OagFile $file, $activityId)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $srvGeocoder = $this->get(Geocoder::class);
+        $srvGeoJson = $this->get(GeoJson::class);
+        $srvIATI = $this->get(IATI::class);
+        $srvOagFile = $this->get(OagFileService::class);
+
+        $root = $srvIATI->load($file);
+        $activity = $srvIATI->getActivityById($root, $activityId);
+
+        $currentLocations = $srvIATI->getActivityLocations($activity);
+        $suggestedLocations = $file->getGeolocations()->toArray();
+
+        $data = [
+            "activityid" => $activityId,
+        ];
+
+        foreach ($currentLocations as $loc) {
+          $data['current'][] = print_r($loc, true);
+        }
+
+        foreach ($suggestedLocations as $loc) {
+          $data['suggested'][] = print_r($loc, true);
+        }
+
+        return $data;
     }
 
     /**
@@ -559,7 +597,7 @@ class WireframeController extends Controller
                 'choices' => $geocoderGeolocs,
                 'data' => array(),
                 'choice_label' => function ($value, $key, $index) {
-                    $name = $value->getName();
+                    $name = $value->getName() . ' [' . $value->getFeatureDesignation() . ']';
                     return "$name";
                 },
                 'choice_attr' => function ($value, $key, $index) use ($srvGeoJson) {
@@ -902,6 +940,10 @@ class WireframeController extends Controller
         $geocoderStatus = $srvGeocoder->status();
         $classifierStatus = $srvClassifier->status();
 
+        $filename = $file->getDocumentName();
+        $rulesetErrorRepo = $this->getDoctrine()->getRepository(RulesetError::class);
+        $rulesetErrors = $rulesetErrorRepo->findByFilename($filename);
+
         $router = $this->get('router');
 
         $classifierUrl = $router->generate(
@@ -939,7 +981,9 @@ class WireframeController extends Controller
             'reclassifyUrl' => $reclassifyUrl,
             'regeocodeUrl' => $regeocodeUrl,
             'file_stats' => $fileStats,
+            'ruleset_errors' => $rulesetErrors,
         );
     }
 
 }
+/* vim: set expandtab ts=4 sw=4: */

@@ -95,13 +95,20 @@ class Docker extends AbstractOagService
 
     public function createGeocode()
     {
+        // TODO This should be an array that is json_encoded.
+
         $payload = '{ ' .
             '"Image": "openagdata/geocoder:live", ' .
             '"Tty": true, ' .
             '"ExposedPorts": { "8010/tcp": {} }, ' .
-            '"RestartPolicy": { "Name": "always" }, ' .
-            '"Links": ["/openag_nerserver", "/openag_geocoder/openag_nerserver"] ' .
-            '}';
+            '"RestartPolicy": { "Name": "always" } ';
+
+        $oag = $this->getContainer()->getParameter('oag');
+        if (!isset($oag['nerserver'])) {
+            $payload .= ',"Links": ["/openag_nerserver", "/openag_geocoder/openag_nerserver"] ';
+        }
+
+        $payload .= '}';
 
         $data = $this->apiPost("http:/v1.30/containers/create?name=openag_geocoder", $payload);
         $this->getContainer()->get('logger')->info('Started Geocoder');

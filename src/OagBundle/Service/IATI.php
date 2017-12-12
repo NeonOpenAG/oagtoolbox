@@ -185,6 +185,7 @@ class IATI extends AbstractService
         $simpActivity['name'] = $this->getActivityTitle($activity);
         $simpActivity['description'] = $this->getActivityDescription($activity);
         $simpActivity['tags'] = $this->getActivityTags($activity);
+        $simpActivity['locations'] = $this->getActivityLocations($activity);
         return $simpActivity;
     }
 
@@ -275,6 +276,11 @@ class IATI extends AbstractService
         }
 
         return null;
+    }
+
+    public function getActivityNarratives($activity) {
+        $narratives = $activity->xpath('//narrative');
+        return $narratives;
     }
 
     /**
@@ -496,6 +502,19 @@ class IATI extends AbstractService
              * The rest should be added here as required.
              */
 
+            /*
+             *  <location ref="Pyuthan">               
+             *    <location-id code="1282888" vocabulary="G1"/>                                   
+             *    <name>                               
+             *      <narrative>Pyuthan</narrative>     
+             *    </name>                              
+             *    <point srsName="http://www.opengis.net/def/crs/EPSG/0/4326">                    
+             *      <pos>28.08333 82.83333</pos>       
+             *    </point>                             
+             *    <feature-designation code="ADM3"/>   
+             *  </location>
+             */
+
             $simple = array();
             $simple['name'] = $this->getNarrative($location, 'name');
             $simple['description'] = $this->getNarrative($location, 'description');
@@ -531,6 +550,16 @@ class IATI extends AbstractService
             // <feature-designation>
             if (count($location->xpath('./feature-designation/@code')) > 0) {
                 $simple['feature-designation'] = (string)$location->xpath('./feature-designation/@code')[0];
+            }
+
+            // <location-id>
+            if (count($location->xpath('./location-id')) > 0) {
+                $locationId = [];
+                $code = (string)$location->xpath('./location-id/@code')[0];
+                $vocab = (string)$location->xpath('./location-id/@vocabulary')[0];
+                $locationId['code'] = $code;
+                $locationId['vocabulary'] = $vocab;
+                $simple['location-id'] = $locationId;
             }
 
             // getNarrative may return null, remove these entries entirely

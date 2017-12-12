@@ -8,6 +8,10 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
+/*
+ * DISABLED ATM
+ */
+
 class StartupListener
 {
 
@@ -55,6 +59,14 @@ class StartupListener
                 return;
             }
 
+            // If the nerserver is remote then skip starting the nerserver.
+            if ($container == 'openagdata/nerserver:live') {
+                $oag = $this->getContainer()->getParameter('oag');
+                if (isset($oag['nerserver'])) {
+                    continue;
+                }
+            }
+
             // Is the container running already?
             if (strpos($container, ':') !== false) {
                 $containerName = substr($container, 0, strpos($container, ':'));
@@ -67,7 +79,7 @@ class StartupListener
                     continue;
                 }
                 // If the container is created but not started, then note the ID.
-                $id = $containers['openag_' . $container]['container_id'];
+                $id = $containers[$name]['container_id'];
                 $this->getContainer()->get('logger')->debug($name . ' not started.');
             } else {
                 // Create the container if it's not created.
