@@ -3,16 +3,25 @@
         <h2>{{ activity.name }}</h2>
         <h3>Activity ID: {{ activity.id }}</h3>
     </div>
-
+    
     <div class="content-block">
         {% if activity.description %}
             <p class="more">Description: {{ activity.description }}</p>
         {% else %}
             <p>No description available.</p>
         {% endif %}
-
+        
         {% if suggestRoute is defined %}
-            <div class="view-suggestions"><a href="{{ suggestRoute }}" class="cta">{{ actionName }}</a></div>
+            <div class='suggestiontext'>
+                {% if suggestions == 0 %}
+                    We were unable to autodetect any suggestions.
+                {% else %}
+                    We found {{ existing }} exisiting {{ detailname }}{% if existing != 1 %}s{% endif %} and {{ suggestions }} suggestion{% if suggestions > 1 %}s{% endif %}.
+                {% endif %}
+            </div>
+            <div class="view-suggestions">
+                <a href="{{ suggestRoute }}" class="cta">{% if suggestions == 0 %}Add more information{% else %}Show suggestions{% endif %}</a>
+            </div>
         {% endif %}
     </div>
 </article>

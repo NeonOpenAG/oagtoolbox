@@ -1,0 +1,38 @@
+parameters:
+    docker_version: 1.30
+    oag:
+        cove:
+            cmd: docker exec -i --env FILENAME="{FILENAME}" openag_cove /usr/local/bin/process.sh
+        geocoder:
+            cmd: docker exec -i -e FILENAME="{FILENAME}" -e COUNTRY="{COUNTRY}" -e OPENAG_NERSERVER={OPENAG_NERSERVER} -e OPENAG_PORT={OPENAG_PORT} openag_geocoder /usr/local/bin/process.sh
+        dportal:
+            uri: http://SERVER_HOST:8011/ctrack.html?search&year_min=1960&year=1960&year_max=2019&year=2019#view=main
+        classifier:
+            xml: 'https://gis.foundationcenter.org/ag-classify/predict.php'
+            text: 'http://gis.foundationcenter.org/OpenAgCoder/extract_codes.php'
+        nerserver:
+            host: 192.168.51.4
+            port: 9000
+    oagfiles_directory: '%kernel.project_dir%/web/uploads/oagfiles'
+    oagxml_directory: '%kernel.project_dir%/web/xml/oagfiles'
+    classifier:
+        vocabulary: '99'
+        vocabulary_uri: 'http://aims.fao.org/standards/agrovoc'
+        namespace_uri: 'http://openagfunding.opendataservices.coop/en/latest/extensions/'
+        endpoint: 'https://gis.foundationcenter.org/ag-classify/predict.php'
+    geocoder:
+        id_vocabulary: 'G1'
+        admin_1_vocabulary: 'PLACEHOLDER'
+        admin_2_vocabulary: 'PLACEHOLDER'
+    unlink_files: true
+    populate_status: false
+    docker_reponame: openagdata
+    docker_names:
+        cove: openagdata/cove:live
+        geocoder: openagdata/geocoder:live
+        nerserver: openagdata/nerserver:live
+        dportal: openagdata/dportal:live
+
+twig:
+    globals:
+        show_traceability: false

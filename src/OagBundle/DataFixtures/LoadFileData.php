@@ -6,9 +6,9 @@
  * and open the template in the editor.
  */
 
-namespace OagBundle\Resources\Seed;
+namespace OagBundle\DataFixtures;
 
-use Doctrine\Common\DataFixtures\FixtureInterface;
+use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use OagBundle\Entity\EnhancementFile;
 use OagBundle\Entity\OagFile;
@@ -18,7 +18,7 @@ use OagBundle\Entity\OagFile;
  *
  * @author tobias
  */
-class LoadFileData implements FixtureInterface
+class LoadFileData extends Fixture
 {
 
     public function load(ObjectManager $em)

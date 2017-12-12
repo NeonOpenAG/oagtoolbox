@@ -7,15 +7,19 @@ services:
         calls:
             - [setContainer, ['@service_container']]
 
+    OagBundle\DataFixtures\:
+        resource: '../../../OagBundle/DataFixtures/*'
+        tags: [doctrine.fixture.orm]
+
     oag.twig_extension:
         class: OagBundle\Twig\OagExtension
         tags:
             - { name: twig.extension }
       
-    oag.startup_listener:
-        class: OagBundle\EventListener\StartupListener
-        tags:
-            - { name: kernel.event_listener, event: kernel.request }
-        calls:
-            - [setContainer, ['@service_container']]
-            - [setRequest, ['@request_stack']]
+    #oag.startup_listener:
+    #    class: OagBundle\EventListener\StartupListener
+    #    tags:
+    #        - { name: kernel.event_listener, event: kernel.request }
+    #    calls:
+    #        - [setContainer, ['@service_container']]
+    #        - [setRequest, ['@request_stack']]

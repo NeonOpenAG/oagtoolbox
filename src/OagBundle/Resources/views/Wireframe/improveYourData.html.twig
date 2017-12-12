@@ -35,10 +35,10 @@
                             <h2 class="completed">Helps people identify agricultural projects</h2>
                             <div class="info">
                                 <p>The AGROVOC codes in your activity file help make your projects more discoverable by funders and others who may be interested in your work.
-                                    You have an average of {{ file_stats.averageTags }} tag{% if file_stats.averageTags | round != 1  %}s{% endif %} per activity.
+                                    You have an average of {{ file_stats.averageTags }} AGROVOC code{% if file_stats.averageTags | round != 1  %}s{% endif %} per activity.
                                     {# <button id="reclassify" data-url="{{ reclassifyUrl }}" class="trigger">&#x21bb; Re-Classify</button> #}</p>
                                 <a href="{{ path('oag_wireframe_classifier', { 'id': file.getId() }) }}">
-                                    <button type="button" id="class-button" disabled data-statusurl="{{ classifierUrl }}"><span class="fa fa-spinner fa-spin"></span>Further improve your tagging</button>
+                                    <button type="button" id="class-button" disabled data-statusurl="{{ classifierUrl }}"><span class="fa fa-spinner fa-spin"></span>Further improve your AGROVOC coding</button>
                                 </a>
                             </div>
                         </li>
@@ -76,7 +76,35 @@
                     {# <img src="{{ asset('bundles/oag/images/arrow.svg') }}" /> #}
                 </div>
                 <div class="content-block summary improve">
-                    <ul>
+                    <ul>                        
+                        {% if ruleset_errors | length > 0 %}
+                        <li><h2><span class="tip">Imporove the quality of your activities</span></h2>
+                            <div>
+                                <p>
+                                    There {% if ruleset_errors | length > 1 %}are{%else%}is{% endif %} {{ ruleset_errors | length }} ruleset error {% if ruleset_errors | length > 1 %}s{% endif %} in the activity file. <a id='ruleset-toggle'>See ruleset errors...</a>
+                                </p>
+                                <div class="ruleset-details">
+                                    <table class='ruleset-errors'>
+                                        <tr>
+                                            <th>Activity Id</th>
+                                            <th>Path</th>
+                                            <th>Rule</th>
+                                            <th>Message</th>
+                                        </tr>
+                                        {% for error in ruleset_errors %}
+                                            <tr>
+                                                <td>{{ error.activityId }}</td>
+                                                <td>{{ error.path }}</td>
+                                                <td>{{ error.rule }}</td>
+                                                <td>{{ error.message }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </table>
+                                </div>
+                            </div>
+                        </li>
+                        {% endif %}
+                        
                         {% if not classified %}
                         <li><h2><span class="tip">Help people identify agricultural projects</span></h2>
                             <div class="improvements">
@@ -91,7 +119,7 @@
                                     </strong>
                                     {# <button id="reclassify" data-url="{{ reclassifyUrl }}" class="trigger">&#x21bb; Re-Classify</button> #}
                                 </p>
-                                <a href="{{ path('oag_wireframe_classifier', { 'id': file.getId() }) }}"><button type="button" id="class-button" disabled data-statusurl="{{ classifierUrl }}"><span class="fa fa-spinner fa-spin"></span>Tag your data</button></a>
+                                <a href="{{ path('oag_wireframe_classifier', { 'id': file.getId() }) }}"><button type="button" id="class-button" disabled data-statusurl="{{ classifierUrl }}"><span class="fa fa-spinner fa-spin"></span>See suggested AGROVOC codes</button></a>
                             </div>
                         </li>
                         {% endif %}
@@ -109,7 +137,7 @@
                                     </strong>
                                     {# <button id="regeocode" data-url="{{ regeocodeUrl }}" class="trigger">&#x21bb; Re-Geocode</button> #}
                                 </p>
-                                <a href="{{ path('oag_wireframe_geocoder', { 'id': file.getId() }) }}"><button type="button" id="geo-button" disabled data-statusurl="{{ geocoderUrl }}"><span class="fa fa-spinner fa-spin"></span>Geocode your data</button></a>
+                                <a href="{{ path('oag_wireframe_geocoder', { 'id': file.getId() }) }}"><button type="button" id="geo-button" disabled data-statusurl="{{ geocoderUrl }}"><span class="fa fa-spinner fa-spin"></span>See suggested geocodes</button></a>
                             </div>
                         </li>
                         {% endif %}
@@ -138,6 +166,8 @@
         $( document ).ready(function() {
             checkStatus('#class-button');
             checkStatus('#geo-button');
+            
+            $('#ruleset-toggle').on('click', function() { $('.ruleset-details').toggle(); $('#ruleset-toggle').toggle(); });
 
             function checkStatus(buttonId) {
                 var url = $(buttonId).data('statusurl');
@@ -190,7 +220,7 @@
                   $('#regeocode').removeAttr("disabled");
               }
             });
-
+            
         });
     </script>
 {% endblock %}
