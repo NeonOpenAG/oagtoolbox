@@ -1028,6 +1028,14 @@ table {
       content: ' File upload successful. ';
     }
   }
+  &.warn {
+    .icon:before {
+          font-family: FontAwesome;
+          color: $oag_yellow;
+          content: "\f06a";
+          margin-right: 0.6em;
+    }
+  }
 }
 
 .ui-tooltip {

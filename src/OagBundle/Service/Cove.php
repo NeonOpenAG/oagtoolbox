@@ -5,9 +5,10 @@
 namespace OagBundle\Service;
 
 use OagBundle\Entity\OagFile;
+use OagBundle\Entity\RulesetError;
+use RuntimeException;
 
-class Cove extends AbstractOagService
-{
+class Cove extends AbstractOagService {
 
     private $json;
 
@@ -29,6 +30,8 @@ class Cove extends AbstractOagService
         $srvOagFile = $this->getContainer()->get(OagFileService::class);
         $srvIATI = $this->getContainer()->get(IATI::class);
 
+        $em = $this->getContainer()->get('doctrine')->getManager();
+
         $this->getContainer()->get('logger')->debug(sprintf('Processing %s using CoVE', $file->getDocumentName()));
         // TODO - for bigger files we might need send as Uri
         $contents = $srvOagFile->getContents($file);
@@ -36,8 +39,9 @@ class Cove extends AbstractOagService
 
         $err = array_filter($this->json['err']);
         $status = $this->json['status'];
+        $this->getContainer()->get('logger')->debug('Cove exitied with status ' . $status);
 
-        if ($status === 0) {
+        if (!isset($err['validation_errors']) || count($err['validation_errors']) === 0) {
             // CoVE claims to have processed the XML successfully
             $xml = $this->json['xml'];
             if ($srvIATI->parseXML($xml)) {
@@ -61,10 +65,28 @@ class Cove extends AbstractOagService
 
                 $file->setDocumentName($filename);
                 $file->setCoved(true);
-                $em = $this->getContainer()->get('doctrine')->getManager();
                 $em->persist($file);
                 $em->flush();
                 $this->getContainer()->get('session')->getFlashBag()->add('info', 'IATI File created/Updated: ' . basename($xmlfile));
+
+                if (isset($err['ruleset_errors'])) {
+                    foreach ($err['ruleset_errors'] as $line) {
+                        $ruleseterror = new RulesetError();
+                        $ruleseterror->setActivityId($line['id']);
+                        $ruleseterror->setPath($line['path']);
+                        $ruleseterror->setMessage($line['message']);
+                        $ruleseterror->setRule($line['rule']);
+                        $em->persist($ruleseterror);
+                        // TODO This is currenlty loosley associated with an activity.
+                    }
+                    $em->flush();
+                    $rulsetErrorCount = count($err['ruleset_errors']);
+                    $this->getContainer()->get('session')->getFlashBag()->add(
+                            'warn', sprintf(
+                                    'CoVE found %d ruleset error%s in the file %s.', $rulsetErrorCount, $rulsetErrorCount > 1 ? 's' : '', $filename
+                            )
+                    );
+                }
 
                 return true;
             } else {
@@ -76,11 +98,6 @@ class Cove extends AbstractOagService
                 foreach ($err['validation_errors'] as $line) {
                     $this->getContainer()->get('logger')->info(json_encode($line));
                     $this->getContainer()->get('session')->getFlashBag()->add('error', $this->formatValidationError($line));
-                }
-            }
-            if (isset($err['ruleset_errors'])) {
-                foreach ($err['ruleset_errors'] as $line) {
-                    $this->getContainer()->get('session')->getFlashBag()->add('error', $this->formatRuleError($line));
                 }
             }
         }
@@ -157,7 +174,7 @@ class Cove extends AbstractOagService
             return $data;
         } else {
             // TODO Better exception handling.
-            throw new \RuntimeException('CoVE Failed to start');
+            throw new RuntimeException('CoVE Failed to start');
         }
     }
 
