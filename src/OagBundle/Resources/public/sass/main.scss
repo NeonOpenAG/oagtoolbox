@@ -618,6 +618,14 @@ article {
   }
 }
 
+.suggestiontext {
+    font-weight: bold;
+    font-size: 105%;
+    float: left;
+    height: 50px;
+    padding-top: 14px;
+}
+
 .view-suggestions {
   display: flex;
   justify-content: flex-end;
