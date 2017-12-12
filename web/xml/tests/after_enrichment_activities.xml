@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<iati-activities xmlns:openag="http://openagfunding.opendataservices.coop/en/latest/extensions/" version="2.01" generated-datetime="2016-12-05T10:28:00">
+<iati-activities version="2.02" generated-datetime="2016-12-05T10:28:00">
     <iati-activity xml:lang="en" default-currency="XDR" hierarchy="1" last-updated-datetime="2016-11-29T11:55:36">
         <iati-identifier>46002-P-TN-AAC-009</iati-identifier>
         <reporting-org ref="46002" type="40">
@@ -10,12 +9,12 @@
             <narrative xml:lang="fr">Tunisie - Projet d'investissement dans le secteur de l'eau - Phase II (PISEAU II)</narrative>
         </title>
         <description type="1">
-            <narrative xml:lang="fr">,,Dans une optique d'apport d'un appui financier aux budgets annuels d'investissements du Minist&#xFFFD;re de l'Agriculture pour les ann&#xFFFD;es 2001-2006 et d'une am&#xFFFD;lioration de l'impact &#xFFFD;conomique des d&#xFFFD;penses publiques par la
-                r&#xFFFD;alisation d'actions cl&#xFFFD;s d'accompagnement, le programme PISEAU vise &#xFFFD; augmenter les revenus du secteur rural par le d&#xFFFD;veloppement de l'infrastructure et une meilleure utilisation des ressources et a assurer une gestion durable des ressources en eau
-                par : - la gestion de la demande &#xFFFD; travers une plus grande participation des usagers - la gestion int&#xFFFD;gr&#xFFFD;e des ressources en eau (eaux souterraines et eaux de surface) - la pr&#xFFFD;servation de la ressource et la protection de l'environnement. Plus
-                sp&#xFFFD;cifiquement, le PISEAU vise &#xFFFD; : (a) promouvoir la gestion int&#xFFFD;gr&#xFFFD;e des ressources en eau par (i) l'&#xFFFD;tablissement et l'application d'un cadre institutionnel et la mise en #uvre de r&#xFFFD;formes sectorielles en vue d'adopter une strat&#xFFFD;gie de gestion de
-                la demande (&#xFFFD;volution de la politique tarifaire, nouvelles dispositions institutionnelles) ; (ii) l'am&#xFFFD;lioration de la capacit&#xFFFD; des groupements d'int&#xFFFD;r&#xFFFD;ts collectifs (GIC) et des op&#xFFFD;rateurs du secteur priv&#xFFFD; &#xFFFD; g&#xFFFD;rer les ressources de mani&#xFFFD;re efficace,
-                et (iii) une meilleure gestion en temps r&#xFFFD;el des eaux superficielles et souterraines (sources traditionnelles et non traditionnelles) ; et (b) promouvoir la conservation des ressources en eau et la protection de l'environnement..</narrative>
+            <narrative xml:lang="fr">,,Dans une optique d'apport d'un appui financier aux budgets annuels d'investissements du Minist�re de l'Agriculture pour les ann�es 2001-2006 et d'une am�lioration de l'impact �conomique des d�penses publiques par la
+                r�alisation d'actions cl�s d'accompagnement, le programme PISEAU vise � augmenter les revenus du secteur rural par le d�veloppement de l'infrastructure et une meilleure utilisation des ressources et a assurer une gestion durable des ressources en eau
+                par : - la gestion de la demande � travers une plus grande participation des usagers - la gestion int�gr�e des ressources en eau (eaux souterraines et eaux de surface) - la pr�servation de la ressource et la protection de l'environnement. Plus
+                sp�cifiquement, le PISEAU vise � : (a) promouvoir la gestion int�gr�e des ressources en eau par (i) l'�tablissement et l'application d'un cadre institutionnel et la mise en #uvre de r�formes sectorielles en vue d'adopter une strat�gie de gestion de
+                la demande (�volution de la politique tarifaire, nouvelles dispositions institutionnelles) ; (ii) l'am�lioration de la capacit� des groupements d'int�r�ts collectifs (GIC) et des op�rateurs du secteur priv� � g�rer les ressources de mani�re efficace,
+                et (iii) une meilleure gestion en temps r�el des eaux superficielles et souterraines (sources traditionnelles et non traditionnelles) ; et (b) promouvoir la conservation des ressources en eau et la protection de l'environnement..</narrative>
         </description>
         <participating-org role="1" ref="46002" type="40">
             <narrative>African Development Bank</narrative>
@@ -36,7 +35,7 @@
                 <narrative>African Development Bank Group</narrative>
             </organisation>
             <department>
-                <narrative>Agriculture and Agro Industry North, East and South Regions/ Agriculture et Agro Industrie, R&#xFFFD;gions de l'Afrique du Nord, de l'Est et du Sud</narrative>
+                <narrative>Agriculture and Agro Industry North, East and South Regions/ Agriculture et Agro Industrie, R�gions de l'Afrique du Nord, de l'Est et du Sud</narrative>
             </department>
             <person-name>
                 <narrative>KANE Mamadou</narrative>
@@ -48,7 +47,7 @@
             <email>m.a.kane@afdb.org</email>
             <website>www.afdb.org</website>
             <mailing-address>
-                <narrative>African Development Bank Group Headquarters Avenue Joseph Anoma 01 BP 1387 Abidjan 01, C&#xFFFD;te d'Ivoire</narrative>
+                <narrative>African Development Bank Group Headquarters Avenue Joseph Anoma 01 BP 1387 Abidjan 01, C�te d'Ivoire</narrative>
             </mailing-address>
         </contact-info>
         <activity-scope code="4"/>
@@ -168,7 +167,7 @@
         <location>
             <location-id vocabulary="G1" code="2468014"/>
             <name>
-                <narrative>Gouvernorat de K&#xFFFD;bili</narrative>
+                <narrative>Gouvernorat de K�bili</narrative>
             </name>
             <administrative code="3002.0" vocabulary="G1" level="1"/>
             <administrative code="0.0" vocabulary="G1" level="2"/>
@@ -196,7 +195,7 @@
         <location>
             <location-id vocabulary="G1" code="2468365"/>
             <name>
-                <narrative>Gouvernorat de Gab&#xFFFD;s</narrative>
+                <narrative>Gouvernorat de Gab�s</narrative>
             </name>
             <administrative code="2997.0" vocabulary="G1" level="1"/>
             <administrative code="0.0" vocabulary="G1" level="2"/>
@@ -224,7 +223,7 @@
         <location>
             <location-id vocabulary="G1" code="2469470"/>
             <name>
-                <narrative>Gouvernorat de M&#xFFFD;denine</narrative>
+                <narrative>Gouvernorat de M�denine</narrative>
             </name>
             <administrative code="3007.0" vocabulary="G1" level="1"/>
             <administrative code="0.0" vocabulary="G1" level="2"/>
@@ -280,7 +279,7 @@
         <location>
             <location-id vocabulary="G1" code="2472770"/>
             <name>
-                <narrative>Gouvernorat de B&#xFFFD;ja</narrative>
+                <narrative>Gouvernorat de B�ja</narrative>
             </name>
             <administrative code="2996.0" vocabulary="G1" level="1"/>
             <administrative code="0.0" vocabulary="G1" level="2"/>
@@ -391,6 +390,18 @@
         </location>
         <sector vocabulary="DAC" code="31140">
             <narrative>Irrigation And Drainage</narrative>
+        </sector>
+        <sector vocabulary="99" vocabulary-uri="http://aims.fao.org/aos/agrovoc/" code="c_10967">
+            <narrative xml:lang="en">food security</narrative>
+            <narrative xml:lang="en">Tagged based on http://oek1.fao.org/skosmos/agrovoc/en/page/c_10967</narrative>
+        </sector>
+        <sector vocabulary="99" vocabulary-uri="http://aims.fao.org/aos/agrovoc/" code="c_37836">
+            <narrative xml:lang="en">capacity building</narrative>
+            <narrative xml:lang="en">Tagged based on http://oek1.fao.org/skosmos/agrovoc/en/page/c_37836</narrative>
+        </sector>
+        <sector vocabulary="99" vocabulary-uri="http://aims.fao.org/aos/agrovoc/" code="c_24935">
+            <narrative xml:lang="en">off season cultivation</narrative>
+            <narrative xml:lang="en">Tagged based on http://oek1.fao.org/skosmos/agrovoc/en/page/c_24935</narrative>
         </sector>
         <collaboration-type code="2"/>
         <budget type="1">
@@ -740,7 +751,9 @@
             <category code="A08"/>
             <language code="fr"/>
         </document-link>
-        <document-link url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Procurement/Project-related-Procurement/EOI_%E2%80%93_Tunisie_-_Bureau_de_formation_pour_la_r%C3%A9alisation_de_sessions_de_formation_en_informatique_et_en_management_-_Projet_d%E2%80%99investissement_dans_le_secteur_de_l%E2%80%99EAU__PISEAU_II_.pdf" format="application/pdf">
+        <document-link
+            url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Procurement/Project-related-Procurement/EOI_%E2%80%93_Tunisie_-_Bureau_de_formation_pour_la_r%C3%A9alisation_de_sessions_de_formation_en_informatique_et_en_management_-_Projet_d%E2%80%99investissement_dans_le_secteur_de_l%E2%80%99EAU__PISEAU_II_.pdf"
+            format="application/pdf">
             <title>
                 <narrative>Tender</narrative>
             </title>
@@ -840,7 +853,7 @@
         </reporting-org>
         <title>
             <narrative xml:lang="en">Botswana - The Pandamatenga Agricultural Infrastructure Development Project</narrative>
-            <narrative xml:lang="fr">Botswana - Projet de d&#xFFFD;veloppement des infrastructures agricoles de Pandamatenga</narrative>
+            <narrative xml:lang="fr">Botswana - Projet de d�veloppement des infrastructures agricoles de Pandamatenga</narrative>
         </title>
         <description type="2">
             <narrative xml:lang="en">The specific objective is to increase cereal production of the 25,000 ha arable farms from the current level of 0.5 to 2.5 metric tonnes per ha for the traditional farmers; and 2 to 3.5 metric tonnes per ha for the large scale farmers</narrative>
@@ -864,7 +877,7 @@
                 <narrative>African Development Bank Group</narrative>
             </organisation>
             <department>
-                <narrative>Agriculture and Agro Industry North, East and South Regions/ Agriculture et Agro Industrie, R&#xFFFD;gions de l'Afrique du Nord, de l'Est et du Sud</narrative>
+                <narrative>Agriculture and Agro Industry North, East and South Regions/ Agriculture et Agro Industrie, R�gions de l'Afrique du Nord, de l'Est et du Sud</narrative>
             </department>
             <person-name>
                 <narrative>SOLIMAN Wael Mohamed Roshdy</narrative>
@@ -876,7 +889,7 @@
             <email>w.soliman@afdb.org</email>
             <website>www.afdb.org</website>
             <mailing-address>
-                <narrative>African Development Bank Group Headquarters Avenue Joseph Anoma 01 BP 1387 Abidjan 01, C&#xFFFD;te d'Ivoire</narrative>
+                <narrative>African Development Bank Group Headquarters Avenue Joseph Anoma 01 BP 1387 Abidjan 01, C�te d'Ivoire</narrative>
             </mailing-address>
         </contact-info>
         <activity-scope code="4"/>
@@ -897,6 +910,18 @@
         </location>
         <sector vocabulary="DAC" code="31140">
             <narrative>Irrigation And Drainage</narrative>
+        </sector>
+        <sector vocabulary="99" vocabulary-uri="http://aims.fao.org/aos/agrovoc/" code="c_6207">
+            <narrative xml:lang="en">production possibilities</narrative>
+            <narrative xml:lang="en">Tagged based on http://oek1.fao.org/skosmos/agrovoc/en/page/c_6207</narrative>
+        </sector>
+        <sector vocabulary="99" vocabulary-uri="http://aims.fao.org/aos/agrovoc/" code="c_25331">
+            <narrative xml:lang="en">drainage systems</narrative>
+            <narrative xml:lang="en">Tagged based on http://oek1.fao.org/skosmos/agrovoc/en/page/c_25331</narrative>
+        </sector>
+        <sector vocabulary="99" vocabulary-uri="http://aims.fao.org/aos/agrovoc/" code="c_1474">
+            <narrative xml:lang="en">cereals</narrative>
+            <narrative xml:lang="en">Tagged based on http://oek1.fao.org/skosmos/agrovoc/en/page/c_1474</narrative>
         </sector>
         <collaboration-type code="2"/>
         <budget type="1">
@@ -1417,7 +1442,9 @@
             <category code="A12"/>
             <language code="en"/>
         </document-link>
-        <document-link url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Procurement/Project-related-Procurement/Information_Notice_%E2%80%93_Botswana_-_Construction_of_Road_Network_and_Drainage_Systems_for_Eastern_Area_of_Pandamatenga_Farms.pdf" format="application/pdf">
+        <document-link
+            url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Procurement/Project-related-Procurement/Information_Notice_%E2%80%93_Botswana_-_Construction_of_Road_Network_and_Drainage_Systems_for_Eastern_Area_of_Pandamatenga_Farms.pdf"
+            format="application/pdf">
             <title>
                 <narrative>Contract</narrative>
             </title>
@@ -1502,11 +1529,11 @@
         </reporting-org>
         <title>
             <narrative xml:lang="en">Madagascar - Lower Mangoky Area Extension Project</narrative>
-            <narrative xml:lang="fr">Madagascar - Projet d'extension du p&#xFFFD;rim&#xFFFD;tre de Bas-Mangoky</narrative>
+            <narrative xml:lang="fr">Madagascar - Projet d'extension du p�rim�tre de Bas-Mangoky</narrative>
         </title>
         <description type="2">
-            <narrative xml:lang="fr">L'objectif du projet est de contribuer &#xFFFD; la r&#xFFFD;duction de la pauvret&#xFFFD; en milieu rural &#xFFFD; Madagascar. L'objectif sp&#xFFFD;cifique du Projet de R&#xFFFD;habilitation et d'Extension du P&#xFFFD;rim&#xFFFD;tre de Bas Mangoky - Phase II (PREPBM II) est
-                l'augmentation de la production agricole &#xFFFD; travers le d&#xFFFD;veloppement des infrastructures d'irrigation collectives et le renforcement des organisations des producteurs.</narrative>
+            <narrative xml:lang="fr">L'objectif du projet est de contribuer � la r�duction de la pauvret� en milieu rural � Madagascar. L'objectif sp�cifique du Projet de R�habilitation et d'Extension du P�rim�tre de Bas Mangoky - Phase II (PREPBM II) est
+                l'augmentation de la production agricole � travers le d�veloppement des infrastructures d'irrigation collectives et le renforcement des organisations des producteurs.</narrative>
         </description>
         <participating-org role="1" ref="46003" type="40">
             <narrative>African Development Fund</narrative>
@@ -1530,7 +1557,7 @@
                 <narrative>African Development Bank Group</narrative>
             </organisation>
             <department>
-                <narrative>Agriculture and Agro Industry North, East and South Regions/ Agriculture et Agro Industrie, R&#xFFFD;gions de l'Afrique du Nord, de l'Est et du Sud</narrative>
+                <narrative>Agriculture and Agro Industry North, East and South Regions/ Agriculture et Agro Industrie, R�gions de l'Afrique du Nord, de l'Est et du Sud</narrative>
             </department>
             <person-name>
                 <narrative>GUINEO Vaidjoua</narrative>
@@ -1542,7 +1569,7 @@
             <email>v.guineo@afdb.org</email>
             <website>www.afdb.org</website>
             <mailing-address>
-                <narrative>African Development Bank Group Headquarters Avenue Joseph Anoma 01 BP 1387 Abidjan 01, C&#xFFFD;te d'Ivoire</narrative>
+                <narrative>African Development Bank Group Headquarters Avenue Joseph Anoma 01 BP 1387 Abidjan 01, C�te d'Ivoire</narrative>
             </mailing-address>
         </contact-info>
         <activity-scope code="4"/>
@@ -1563,6 +1590,18 @@
         </location>
         <sector vocabulary="DAC" code="31161">
             <narrative>Food Crops</narrative>
+        </sector>
+        <sector vocabulary="99" vocabulary-uri="http://aims.fao.org/aos/agrovoc/" code="c_6207">
+            <narrative xml:lang="en">production possibilities</narrative>
+            <narrative xml:lang="en">Tagged based on http://oek1.fao.org/skosmos/agrovoc/en/page/c_6207</narrative>
+        </sector>
+        <sector vocabulary="99" vocabulary-uri="http://aims.fao.org/aos/agrovoc/" code="c_25331">
+            <narrative xml:lang="en">drainage systems</narrative>
+            <narrative xml:lang="en">Tagged based on http://oek1.fao.org/skosmos/agrovoc/en/page/c_25331</narrative>
+        </sector>
+        <sector vocabulary="99" vocabulary-uri="http://aims.fao.org/aos/agrovoc/" code="c_3954">
+            <narrative xml:lang="en">irrigation</narrative>
+            <narrative xml:lang="en">Tagged based on http://oek1.fao.org/skosmos/agrovoc/en/page/c_3954</narrative>
         </sector>
         <collaboration-type code="2"/>
         <transaction ref="2100150032193">
@@ -1679,7 +1718,9 @@
             <category code="A10"/>
             <language code="fr"/>
         </document-link>
-        <document-link url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Procurement/Project-related-Procurement/EOI_%E2%80%93_Madagascar_-_Contr%C3%B4le_et_la_surveillance_des_travaux_d%E2%80%99extension_du_P%C3%A9rim%C3%A8tre_du_Bas_Mangoky_compos%C3%A9s_de__deux_lots_.pdf" format="application/pdf">
+        <document-link
+            url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Procurement/Project-related-Procurement/EOI_%E2%80%93_Madagascar_-_Contr%C3%B4le_et_la_surveillance_des_travaux_d%E2%80%99extension_du_P%C3%A9rim%C3%A8tre_du_Bas_Mangoky_compos%C3%A9s_de__deux_lots_.pdf"
+            format="application/pdf">
             <title>
                 <narrative>Tender</narrative>
             </title>
@@ -1734,12 +1775,12 @@
         </reporting-org>
         <title>
             <narrative xml:lang="en">Madagascar - South-West Region Agricultural Infrastructure Rehabilitation Project (PRIASO)</narrative>
-            <narrative xml:lang="fr">Madagascar - Projet de r&#xFFFD;habilitation des infrastructures agricoles de la r&#xFFFD;gion sud-ouest (PRIASO)</narrative>
+            <narrative xml:lang="fr">Madagascar - Projet de r�habilitation des infrastructures agricoles de la r�gion sud-ouest (PRIASO)</narrative>
         </title>
         <description type="2">
-            <narrative xml:lang="fr">L'objectif du Projet est de contribuer &#xFFFD; la r&#xFFFD;duction de la pauvret&#xFFFD; et de l'ins&#xFFFD;curit&#xFFFD; alimentaire. Le PRIASO est align&#xFFFD; sur le premier pilier (Infrastructures Rurales) du DSP (2012-2013). Il va &#xFFFD;galement contribuer au
-                pilier N&#xFFFD;2 (Gouvernance) par des actions relatives au renforcement de la gouvernance locale (s&#xFFFD;curisation fonci&#xFFFD;re des agriculteurs, et contribution &#xFFFD; la mise en #uvre des plans communaux de d&#xFFFD;veloppement). Le projet est par ailleurs en conformit&#xFFFD;
-                avec la Strat&#xFFFD;gie de la Banque (2013-2022) ainsi qu'avec la strat&#xFFFD;gie de la Banque pour le secteur de l'agriculture (2010-2014), dont le premier pilier concerne l'am&#xFFFD;lioration des infrastructures rurales.</narrative>
+            <narrative xml:lang="fr">L'objectif du Projet est de contribuer � la r�duction de la pauvret� et de l'ins�curit� alimentaire. Le PRIASO est align� sur le premier pilier (Infrastructures Rurales) du DSP (2012-2013). Il va �galement contribuer au
+                pilier N�2 (Gouvernance) par des actions relatives au renforcement de la gouvernance locale (s�curisation fonci�re des agriculteurs, et contribution � la mise en #uvre des plans communaux de d�veloppement). Le projet est par ailleurs en conformit�
+                avec la Strat�gie de la Banque (2013-2022) ainsi qu'avec la strat�gie de la Banque pour le secteur de l'agriculture (2010-2014), dont le premier pilier concerne l'am�lioration des infrastructures rurales.</narrative>
         </description>
         <participating-org role="1" ref="46003" type="40">
             <narrative>African Development Fund</narrative>
@@ -1760,7 +1801,7 @@
                 <narrative>African Development Bank Group</narrative>
             </organisation>
             <department>
-                <narrative>Agriculture and Agro Industry North, East and South Regions/ Agriculture et Agro Industrie, R&#xFFFD;gions de l'Afrique du Nord, de l'Est et du Sud</narrative>
+                <narrative>Agriculture and Agro Industry North, East and South Regions/ Agriculture et Agro Industrie, R�gions de l'Afrique du Nord, de l'Est et du Sud</narrative>
             </department>
             <person-name>
                 <narrative>GUINEO Vaidjoua</narrative>
@@ -1772,7 +1813,7 @@
             <email>v.guineo@afdb.org</email>
             <website>www.afdb.org</website>
             <mailing-address>
-                <narrative>African Development Bank Group Headquarters Avenue Joseph Anoma 01 BP 1387 Abidjan 01, C&#xFFFD;te d'Ivoire</narrative>
+                <narrative>African Development Bank Group Headquarters Avenue Joseph Anoma 01 BP 1387 Abidjan 01, C�te d'Ivoire</narrative>
             </mailing-address>
         </contact-info>
         <activity-scope code="4"/>
@@ -1821,6 +1862,18 @@
         </location>
         <sector vocabulary="DAC" code="31161">
             <narrative>Food Crops</narrative>
+        </sector>
+        <sector vocabulary="99" vocabulary-uri="http://aims.fao.org/aos/agrovoc/" code="c_10967">
+            <narrative xml:lang="en">food security</narrative>
+            <narrative xml:lang="en">Tagged based on http://oek1.fao.org/skosmos/agrovoc/en/page/c_10967</narrative>
+        </sector>
+        <sector vocabulary="99" vocabulary-uri="http://aims.fao.org/aos/agrovoc/" code="c_15517">
+            <narrative xml:lang="en">rural poverty</narrative>
+            <narrative xml:lang="en">Tagged based on http://oek1.fao.org/skosmos/agrovoc/en/page/c_15517</narrative>
+        </sector>
+        <sector vocabulary="99" vocabulary-uri="http://aims.fao.org/aos/agrovoc/" code="c_26790">
+            <narrative xml:lang="en">infrastructure</narrative>
+            <narrative xml:lang="en">Tagged based on http://oek1.fao.org/skosmos/agrovoc/en/page/c_26790</narrative>
         </sector>
         <collaboration-type code="2"/>
         <transaction ref="2100150029294">
@@ -2124,7 +2177,9 @@
             <category code="A12"/>
             <language code="fr"/>
         </document-link>
-        <document-link url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Environmental-and-Social-Assessments/Madagascar_-_Projet_de_R%C3%A9habilitation_des_Infrastructures_Agricoles_dans_la_R%C3%A9gion_du_Sud-ouest__PRIASO__-_R%C3%A9sum%C3%A9_PGES.pdf" format="application/pdf">
+        <document-link
+            url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Environmental-and-Social-Assessments/Madagascar_-_Projet_de_R%C3%A9habilitation_des_Infrastructures_Agricoles_dans_la_R%C3%A9gion_du_Sud-ouest__PRIASO__-_R%C3%A9sum%C3%A9_PGES.pdf"
+            format="application/pdf">
             <title>
                 <narrative>Appraisal Report</narrative>
             </title>
@@ -2136,14 +2191,18 @@
             <category code="A08"/>
             <language code="fr"/>
         </document-link>
-        <document-link url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Procurement/Project-related-Procurement/AOI_%E2%80%93_Madagascar_-_Travaux_de_R%C3%A9habilitation_du_R%C3%A9seau_d%E2%80%99irrigation_et_Piste_Sur_le_P%C3%A9rim%C3%A8tre_de_Manombo_Ranozaza_-_PRIASO_-_01_2015.pdf" format="application/pdf">
+        <document-link
+            url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Procurement/Project-related-Procurement/AOI_%E2%80%93_Madagascar_-_Travaux_de_R%C3%A9habilitation_du_R%C3%A9seau_d%E2%80%99irrigation_et_Piste_Sur_le_P%C3%A9rim%C3%A8tre_de_Manombo_Ranozaza_-_PRIASO_-_01_2015.pdf"
+            format="application/pdf">
             <title>
                 <narrative>Tender</narrative>
             </title>
             <category code="A10"/>
             <language code="fr"/>
         </document-link>
-        <document-link url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Procurement/Project-related-Procurement/AOI_-_Madagascar-Travaux_de_R%C3%A9habilitation_du_R%C3%A9seau_rive_Droite_du_P%C3%A9rim%C3%A8tre_de_Taheza_-_Commune_Rurale_de_Bezaha_-_1_2015.pdf" format="application/pdf">
+        <document-link
+            url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Procurement/Project-related-Procurement/AOI_-_Madagascar-Travaux_de_R%C3%A9habilitation_du_R%C3%A9seau_rive_Droite_du_P%C3%A9rim%C3%A8tre_de_Taheza_-_Commune_Rurale_de_Bezaha_-_1_2015.pdf"
+            format="application/pdf">
             <title>
                 <narrative>Tender</narrative>
             </title>
@@ -2157,7 +2216,9 @@
             <category code="A10"/>
             <language code="fr"/>
         </document-link>
-        <document-link url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Madagascar%20-%20South-West%20Region%20Agricultural%20Infrastructure%20Rehabilitation%20Project%20%28PRIASO%29%20-%20Appraisal%20Report.pdf" format="application/pdf">
+        <document-link
+            url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Madagascar%20-%20South-West%20Region%20Agricultural%20Infrastructure%20Rehabilitation%20Project%20%28PRIASO%29%20-%20Appraisal%20Report.pdf"
+            format="application/pdf">
             <title>
                 <narrative>Appraisal report</narrative>
             </title>
@@ -2169,7 +2230,9 @@
             <category code="A08"/>
             <language code="en"/>
         </document-link>
-        <document-link url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Madagascar_-_Projet_de_r%C3%A9habilitation_des_infrastructures_agricoles_de_la_r%C3%A9gion_sud-ouest__PRIASO__-_Rapport_d%E2%80%99%C3%A9valuation.pdf" format="application/pdf">
+        <document-link
+            url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Madagascar_-_Projet_de_r%C3%A9habilitation_des_infrastructures_agricoles_de_la_r%C3%A9gion_sud-ouest__PRIASO__-_Rapport_d%E2%80%99%C3%A9valuation.pdf"
+            format="application/pdf">
             <title>
                 <narrative>Appraisal report</narrative>
             </title>
@@ -2294,10 +2357,10 @@
         </reporting-org>
         <title>
             <narrative xml:lang="en"/>
-            <narrative xml:lang="fr">Projet d'appui au d&#xFFFD;veloppement des productions animales en zone de Kayes Sud (PADEPA-KS)</narrative>
+            <narrative xml:lang="fr">Projet d'appui au d�veloppement des productions animales en zone de Kayes Sud (PADEPA-KS)</narrative>
         </title>
         <description type="2">
-            <narrative xml:lang="fr">L'objectif sp&#xFFFD;cifique du projet est de contribuer &#xFFFD; l'augmentation, de fa&#xFFFD;on durable, des productions animales et des revenus des agro-&#xFFFD;leveurs de la zone de Kayes-sud.</narrative>
+            <narrative xml:lang="fr">L'objectif sp�cifique du projet est de contribuer � l'augmentation, de fa�on durable, des productions animales et des revenus des agro-�leveurs de la zone de Kayes-sud.</narrative>
         </description>
         <participating-org role="1" ref="46003" type="40">
             <narrative>African Development Fund</narrative>
@@ -2330,7 +2393,7 @@
             <email>a.djiro@afdb.org</email>
             <website>www.afdb.org</website>
             <mailing-address>
-                <narrative>African Development Bank Group Headquarters Avenue Joseph Anoma 01 BP 1387 Abidjan 01, C&#xFFFD;te d'Ivoire</narrative>
+                <narrative>African Development Bank Group Headquarters Avenue Joseph Anoma 01 BP 1387 Abidjan 01, C�te d'Ivoire</narrative>
             </mailing-address>
         </contact-info>
         <activity-scope code="4"/>
@@ -2393,6 +2456,18 @@
         </location>
         <sector vocabulary="DAC" code="31163">
             <narrative>Livestock</narrative>
+        </sector>
+        <sector vocabulary="99" vocabulary-uri="http://aims.fao.org/aos/agrovoc/" code="c_6207">
+            <narrative xml:lang="en">production possibilities</narrative>
+            <narrative xml:lang="en">Tagged based on http://oek1.fao.org/skosmos/agrovoc/en/page/c_6207</narrative>
+        </sector>
+        <sector vocabulary="99" vocabulary-uri="http://aims.fao.org/aos/agrovoc/" code="c_4397">
+            <narrative xml:lang="en">livestock</narrative>
+            <narrative xml:lang="en">Tagged based on http://oek1.fao.org/skosmos/agrovoc/en/page/c_4397</narrative>
+        </sector>
+        <sector vocabulary="99" vocabulary-uri="http://aims.fao.org/aos/agrovoc/" code="c_9000080">
+            <narrative xml:lang="en">income generation</narrative>
+            <narrative xml:lang="en">Tagged based on http://oek1.fao.org/skosmos/agrovoc/en/page/c_9000080</narrative>
         </sector>
         <collaboration-type code="2"/>
         <transaction ref="2100150014193">
@@ -2993,7 +3068,7 @@
         </reporting-org>
         <title>
             <narrative xml:lang="en">Zambia - Livestock Infrastructure Support Project</narrative>
-            <narrative xml:lang="fr">Zambie - Projet d'appui aux infrastructures d'&#xFFFD;levage</narrative>
+            <narrative xml:lang="fr">Zambie - Projet d'appui aux infrastructures d'�levage</narrative>
         </title>
         <description type="2">
             <narrative xml:lang="en">The overall sector goal is to contribute to economic growth and food security. The specific Project objectives are to improve smallholder livestock production, productivity, market linkages and income of livestock farmers.</narrative>
@@ -3014,7 +3089,7 @@
                 <narrative>African Development Bank Group</narrative>
             </organisation>
             <department>
-                <narrative>Agriculture and Agro Industry North, East and South Regions/ Agriculture et Agro Industrie, R&#xFFFD;gions de l'Afrique du Nord, de l'Est et du Sud</narrative>
+                <narrative>Agriculture and Agro Industry North, East and South Regions/ Agriculture et Agro Industrie, R�gions de l'Afrique du Nord, de l'Est et du Sud</narrative>
             </department>
             <person-name>
                 <narrative>BOULANOUAR Bouchaib</narrative>
@@ -3026,7 +3101,7 @@
             <email>b.boulanouar@afdb.org</email>
             <website>www.afdb.org</website>
             <mailing-address>
-                <narrative>African Development Bank Group Headquarters Avenue Joseph Anoma 01 BP 1387 Abidjan 01, C&#xFFFD;te d'Ivoire</narrative>
+                <narrative>African Development Bank Group Headquarters Avenue Joseph Anoma 01 BP 1387 Abidjan 01, C�te d'Ivoire</narrative>
             </mailing-address>
         </contact-info>
         <activity-scope code="4"/>
@@ -3131,6 +3206,18 @@
         </location>
         <sector vocabulary="DAC" code="31163">
             <narrative>Livestock</narrative>
+        </sector>
+        <sector vocabulary="99" vocabulary-uri="http://aims.fao.org/aos/agrovoc/" code="c_4397">
+            <narrative xml:lang="en">livestock</narrative>
+            <narrative xml:lang="en">Tagged based on http://oek1.fao.org/skosmos/agrovoc/en/page/c_4397</narrative>
+        </sector>
+        <sector vocabulary="99" vocabulary-uri="http://aims.fao.org/aos/agrovoc/" code="c_6207">
+            <narrative xml:lang="en">production possibilities</narrative>
+            <narrative xml:lang="en">Tagged based on http://oek1.fao.org/skosmos/agrovoc/en/page/c_6207</narrative>
+        </sector>
+        <sector vocabulary="99" vocabulary-uri="http://aims.fao.org/aos/agrovoc/" code="c_331557">
+            <narrative xml:lang="en">livestock production</narrative>
+            <narrative xml:lang="en">Tagged based on http://oek1.fao.org/skosmos/agrovoc/en/page/c_331557</narrative>
         </sector>
         <collaboration-type code="2"/>
         <transaction ref="2100150029293">
@@ -3287,7 +3374,9 @@
             <category code="A12"/>
             <language code="en"/>
         </document-link>
-        <document-link url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Environmental-and-Social-Assessments/Cameroun%20-%20Programme%20d%E2%80%99assainissement%20de%20la%20ville%20de%20Yaound%C3%A9-Phase%202%20%28PADY%202%29%20-%20R%C3%A9sum%C3%A9%20PAR.pdf" format="application/pdf">
+        <document-link
+            url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Environmental-and-Social-Assessments/Cameroun%20-%20Programme%20d%E2%80%99assainissement%20de%20la%20ville%20de%20Yaound%C3%A9-Phase%202%20%28PADY%202%29%20-%20R%C3%A9sum%C3%A9%20PAR.pdf"
+            format="application/pdf">
             <title>
                 <narrative>Appraisal Report</narrative>
             </title>
@@ -3364,24 +3453,24 @@
                 </period>
             </indicator>
         </result>
-    <openag:tag xmlns:openag="http://openagfunding.opendataservices.coop/en/latest/extensions/" code="c_4397" vocabulary="99" vocabulary-uri="http://aims.fao.org/standards/agrovoc"><narrative xmlns="">Livestock</narrative></openag:tag></iati-activity>
+    </iati-activity>
     <iati-activity xml:lang="en" default-currency="XDR" hierarchy="1" last-updated-datetime="2016-11-29T12:02:42">
         <iati-identifier>46002-P-BJ-AA0-005</iati-identifier>
         <reporting-org ref="46002" type="40">
             <narrative>African Development Bank Group</narrative>
         </reporting-org>
         <title>
-            <narrative xml:lang="en">Benin - Ou&#xFFFD;m&#xFFFD; Valley Agricultural Infrastructure Support Project</narrative>
-            <narrative xml:lang="fr">Benin - Projet d'appui aux infrastructures agricoles dans la vall&#xFFFD;e de l'Ou&#xFFFD;m&#xFFFD;</narrative>
+            <narrative xml:lang="en">Benin - Ou�m� Valley Agricultural Infrastructure Support Project</narrative>
+            <narrative xml:lang="fr">Benin - Projet d'appui aux infrastructures agricoles dans la vall�e de l'Ou�m�</narrative>
         </title>
         <description type="2">
-            <narrative xml:lang="fr">L'objectif sp&#xFFFD;cifique est de contribuer &#xFFFD; l'accroissement durable de la productivit&#xFFFD; et des productions agricoles par la promotion des fili&#xFFFD;res porteuses dans la vall&#xFFFD;e de l'Ou&#xFFFD;m&#xFFFD;..</narrative>
+            <narrative xml:lang="fr">L'objectif sp�cifique est de contribuer � l'accroissement durable de la productivit� et des productions agricoles par la promotion des fili�res porteuses dans la vall�e de l'Ou�m�..</narrative>
         </description>
         <participating-org role="1" ref="46003" type="40">
             <narrative>African Development Fund</narrative>
         </participating-org>
         <participating-org role="4" ref="" type="10">
-            <narrative>Minist&#xFFFD;re de l'Agriculture, de l'&#xFFFD;levage et de la P&#xFFFD;che</narrative>
+            <narrative>Minist�re de l'Agriculture, de l'�levage et de la P�che</narrative>
         </participating-org>
         <activity-status code="2"/>
         <activity-date iso-date="2013-11-25" type="1"/>
@@ -3405,7 +3494,7 @@
             <email>e.attiogbevi-somado@afdb.org</email>
             <website>www.afdb.org</website>
             <mailing-address>
-                <narrative>African Development Bank Group Headquarters Avenue Joseph Anoma 01 BP 1387 Abidjan 01, C&#xFFFD;te d'Ivoire</narrative>
+                <narrative>African Development Bank Group Headquarters Avenue Joseph Anoma 01 BP 1387 Abidjan 01, C�te d'Ivoire</narrative>
             </mailing-address>
         </contact-info>
         <activity-scope code="4"/>
@@ -3427,7 +3516,7 @@
         <location>
             <location-id vocabulary="G1" code="2393552"/>
             <name>
-                <narrative>K&#xFFFD;tou</narrative>
+                <narrative>K�tou</narrative>
             </name>
             <administrative code="619.0" vocabulary="G1" level="1"/>
             <administrative code="5925.0" vocabulary="G1" level="2"/>
@@ -3553,7 +3642,7 @@
         <location>
             <location-id vocabulary="G1" code="7668940"/>
             <name>
-                <narrative>Agu&#xFFFD;gu&#xFFFD;s</narrative>
+                <narrative>Agu�gu�s</narrative>
             </name>
             <administrative code="618.0" vocabulary="G1" level="1"/>
             <administrative code="5917.0" vocabulary="G1" level="2"/>
@@ -3636,6 +3725,22 @@
         </location>
         <sector vocabulary="DAC" code="31110">
             <narrative>Agriculture</narrative>
+        </sector>
+        <sector vocabulary="99" vocabulary-uri="http://aims.fao.org/aos/agrovoc/" code="c_6207">
+            <narrative xml:lang="en">production possibilities</narrative>
+            <narrative xml:lang="en">Tagged based on http://oek1.fao.org/skosmos/agrovoc/en/page/c_6207</narrative>
+        </sector>
+        <sector vocabulary="99" vocabulary-uri="http://aims.fao.org/aos/agrovoc/" code="c_37836">
+            <narrative xml:lang="en">capacity building</narrative>
+            <narrative xml:lang="en">Tagged based on http://oek1.fao.org/skosmos/agrovoc/en/page/c_37836</narrative>
+        </sector>
+        <sector vocabulary="99" vocabulary-uri="http://aims.fao.org/aos/agrovoc/" code="c_9fbe9719">
+            <narrative xml:lang="en">supply chain</narrative>
+            <narrative xml:lang="en">Tagged based on http://oek1.fao.org/skosmos/agrovoc/en/page/c_9fbe9719</narrative>
+        </sector>
+        <sector vocabulary="99" vocabulary-uri="http://aims.fao.org/aos/agrovoc/" code="c_6210">
+            <narrative xml:lang="en">productivity</narrative>
+            <narrative xml:lang="en">Tagged based on http://oek1.fao.org/skosmos/agrovoc/en/page/c_6210</narrative>
         </sector>
         <collaboration-type code="2"/>
         <transaction ref="2100150029894">
@@ -3866,7 +3971,9 @@
             <category code="A12"/>
             <language code="fr"/>
         </document-link>
-        <document-link url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Environmental-and-Social-Assessments/B%C3%A9nin_-_Projet_d%E2%80%99Appui_aux_Infrastructures_Agricoles_dans_la_Vall%C3%A9e_de_l%E2%80%99Ou%C3%A9m%C3%A9__PAIA-VO__-_R%C3%A9sum%C3%A9_PGES.pdf" format="application/pdf">
+        <document-link
+            url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Environmental-and-Social-Assessments/B%C3%A9nin_-_Projet_d%E2%80%99Appui_aux_Infrastructures_Agricoles_dans_la_Vall%C3%A9e_de_l%E2%80%99Ou%C3%A9m%C3%A9__PAIA-VO__-_R%C3%A9sum%C3%A9_PGES.pdf"
+            format="application/pdf">
             <title>
                 <narrative>Appraisal Report</narrative>
             </title>
@@ -3878,35 +3985,45 @@
             <category code="A08"/>
             <language code="fr"/>
         </document-link>
-        <document-link url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Procurement/Project-related-Procurement/EOI_%E2%80%93__Benin-__mission_d%E2%80%99%C3%A9tudes_techniques__de_contr%C3%B4le_et_de_surveillance_%E2%80%93_11_2015.pdf" format="application/pdf">
+        <document-link
+            url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Procurement/Project-related-Procurement/EOI_%E2%80%93__Benin-__mission_d%E2%80%99%C3%A9tudes_techniques__de_contr%C3%B4le_et_de_surveillance_%E2%80%93_11_2015.pdf"
+            format="application/pdf">
             <title>
                 <narrative>Tender</narrative>
             </title>
             <category code="A10"/>
             <language code="fr"/>
         </document-link>
-        <document-link url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Procurement/Project-related-Procurement/EOI_%E2%80%93_Benin_-_Mission_d%E2%80%99%C3%A9tudes_techniques__de_contr%C3%B4le_et_de_surveillance_des_travaux_de_r%C3%A9habilitation_%E2%80%93_11_2015.pdf" format="application/pdf">
+        <document-link
+            url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Procurement/Project-related-Procurement/EOI_%E2%80%93_Benin_-_Mission_d%E2%80%99%C3%A9tudes_techniques__de_contr%C3%B4le_et_de_surveillance_des_travaux_de_r%C3%A9habilitation_%E2%80%93_11_2015.pdf"
+            format="application/pdf">
             <title>
                 <narrative>Tender</narrative>
             </title>
             <category code="A10"/>
             <language code="fr"/>
         </document-link>
-        <document-link url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Procurement/Project-related-Procurement/EOI_-_Benin_-_Mission_d%E2%80%99%C3%A9tudes_techniques__de_contr%C3%B4le_et_de_surveillance_des_travaux__%E2%80%93_11_2015.pdf" format="application/pdf">
+        <document-link
+            url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Procurement/Project-related-Procurement/EOI_-_Benin_-_Mission_d%E2%80%99%C3%A9tudes_techniques__de_contr%C3%B4le_et_de_surveillance_des_travaux__%E2%80%93_11_2015.pdf"
+            format="application/pdf">
             <title>
                 <narrative>Tender</narrative>
             </title>
             <category code="A10"/>
             <language code="fr"/>
         </document-link>
-        <document-link url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Procurement/Project-related-Procurement/EOI_-_Benin_-_Mission_d%E2%80%99%C3%A9tudes_techniques__de_contr%C3%B4le_et_de_surveillance_des_travaux_infrastructures_%E2%80%93_11_2015.pdf" format="application/pdf">
+        <document-link
+            url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Procurement/Project-related-Procurement/EOI_-_Benin_-_Mission_d%E2%80%99%C3%A9tudes_techniques__de_contr%C3%B4le_et_de_surveillance_des_travaux_infrastructures_%E2%80%93_11_2015.pdf"
+            format="application/pdf">
             <title>
                 <narrative>Tender</narrative>
             </title>
             <category code="A10"/>
             <language code="fr"/>
         </document-link>
-        <document-link url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/B%C3%A9nin_-_Projet_d_appui_aux_infrastructures_agricoles_dans_la_vall%C3%A9e_de_l_Ou%C3%A9m%C3%A9_-_Rapport_d_%C3%A9valuation.pdf" format="application/pdf">
+        <document-link
+            url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/B%C3%A9nin_-_Projet_d_appui_aux_infrastructures_agricoles_dans_la_vall%C3%A9e_de_l_Ou%C3%A9m%C3%A9_-_Rapport_d_%C3%A9valuation.pdf"
+            format="application/pdf">
             <title>
                 <narrative>Appraisal report</narrative>
             </title>
@@ -4083,7 +4200,7 @@
         </reporting-org>
         <title>
             <narrative xml:lang="en">Ghana - Engaging Local Communities in REDD+ / Enhancement of Carbon Stocks Project</narrative>
-            <narrative xml:lang="fr">Ghana - Projet d'association des communaut&#xFFFD;s locales au programme REDD+ / Renforcement des stocks de carbone</narrative>
+            <narrative xml:lang="fr">Ghana - Projet d'association des communaut�s locales au programme REDD+ / Renforcement des stocks de carbone</narrative>
         </title>
         <description>
             <narrative/>
@@ -4107,7 +4224,7 @@
                 <narrative>African Development Bank Group</narrative>
             </organisation>
             <department>
-                <narrative>Environment and Sustainable Development/ Environnement et D&#xFFFD;veloppement Durable</narrative>
+                <narrative>Environment and Sustainable Development/ Environnement et D�veloppement Durable</narrative>
             </department>
             <person-name>
                 <narrative>MOHAMEDAHMED Siham Abdel Rahman</narrative>
@@ -4119,7 +4236,7 @@
             <email>s.mohamedahmed@afdb.org</email>
             <website>www.afdb.org</website>
             <mailing-address>
-                <narrative>African Development Bank Group Headquarters Avenue Joseph Anoma 01 BP 1387 Abidjan 01, C&#xFFFD;te d'Ivoire</narrative>
+                <narrative>African Development Bank Group Headquarters Avenue Joseph Anoma 01 BP 1387 Abidjan 01, C�te d'Ivoire</narrative>
             </mailing-address>
         </contact-info>
         <activity-scope code="4"/>
@@ -4154,6 +4271,22 @@
         </location>
         <sector vocabulary="DAC" code="31220">
             <narrative>Forestry / Plantations</narrative>
+        </sector>
+        <sector vocabulary="99" vocabulary-uri="http://aims.fao.org/aos/agrovoc/" code="c_16532">
+            <narrative xml:lang="en">community forestry</narrative>
+            <narrative xml:lang="en">Tagged based on http://oek1.fao.org/skosmos/agrovoc/en/page/c_16532</narrative>
+        </sector>
+        <sector vocabulary="99" vocabulary-uri="http://aims.fao.org/aos/agrovoc/" code="c_34150">
+            <narrative xml:lang="en">wildfire</narrative>
+            <narrative xml:lang="en">Tagged based on http://oek1.fao.org/skosmos/agrovoc/en/page/c_34150</narrative>
+        </sector>
+        <sector vocabulary="99" vocabulary-uri="http://aims.fao.org/aos/agrovoc/" code="c_25548">
+            <narrative xml:lang="en">shade trees</narrative>
+            <narrative xml:lang="en">Tagged based on http://oek1.fao.org/skosmos/agrovoc/en/page/c_25548</narrative>
+        </sector>
+        <sector vocabulary="99" vocabulary-uri="http://aims.fao.org/aos/agrovoc/" code="c_1713">
+            <narrative xml:lang="en">cocoa industry</narrative>
+            <narrative xml:lang="en">Tagged based on http://oek1.fao.org/skosmos/agrovoc/en/page/c_1713</narrative>
         </sector>
         <collaboration-type code="2"/>
         <transaction ref="2100155026819">
@@ -4254,7 +4387,9 @@
             <category code="A08"/>
             <language code="en"/>
         </document-link>
-        <document-link url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Ghana_-_Projet_d_association_des_communaut%C3%A9s_locales_au_programme_REDD__-Renforcement_des_stocks_de_carbone_ELCIR__-_Rapport_d_%C3%A9valuation.pdf" format="application/pdf">
+        <document-link
+            url="http://www.afdb.org/fileadmin/uploads/afdb/Documents/Project-and-Operations/Ghana_-_Projet_d_association_des_communaut%C3%A9s_locales_au_programme_REDD__-Renforcement_des_stocks_de_carbone_ELCIR__-_Rapport_d_%C3%A9valuation.pdf"
+            format="application/pdf">
             <title>
                 <narrative>Appraisal Report</narrative>
             </title>
@@ -4279,7 +4414,7 @@
         </reporting-org>
         <title>
             <narrative xml:lang="en">Uganda - Farm Income Enhancement and Forestry Conservation Programme - Project 2</narrative>
-            <narrative xml:lang="fr">Ouganda - Programme d'am&#xFFFD;lioration du revenu agricole et de conservation des for&#xFFFD;ts : Projet 2</narrative>
+            <narrative xml:lang="fr">Ouganda - Programme d'am�lioration du revenu agricole et de conservation des for�ts : Projet 2</narrative>
         </title>
         <description type="2">
             <narrative xml:lang="en">The project objective is to improve household incomes, food security, and climate resilience through sustainable natural resources management and agricultural enterprise development</narrative>
@@ -4303,7 +4438,7 @@
                 <narrative>African Development Bank Group</narrative>
             </organisation>
             <department>
-                <narrative>Agriculture and Agro Industry North, East and South Regions/ Agriculture et Agro Industrie, R&#xFFFD;gions de l'Afrique du Nord, de l'Est et du Sud</narrative>
+                <narrative>Agriculture and Agro Industry North, East and South Regions/ Agriculture et Agro Industrie, R�gions de l'Afrique du Nord, de l'Est et du Sud</narrative>
             </department>
             <person-name>
                 <narrative>LOULSEGED Mekonnen Kifle</narrative>
@@ -4315,13 +4450,25 @@
             <email>m.loulseged@afdb.org</email>
             <website>www.afdb.org</website>
             <mailing-address>
-                <narrative>African Development Bank Group Headquarters Avenue Joseph Anoma 01 BP 1387 Abidjan 01, C&#xFFFD;te d'Ivoire</narrative>
+                <narrative>African Development Bank Group Headquarters Avenue Joseph Anoma 01 BP 1387 Abidjan 01, C�te d'Ivoire</narrative>
             </mailing-address>
         </contact-info>
         <activity-scope code="4"/>
         <recipient-country code="UG"/>
         <sector vocabulary="DAC" code="31220">
             <narrative>Forestry / Plantations</narrative>
+        </sector>
+        <sector vocabulary="99" vocabulary-uri="http://aims.fao.org/aos/agrovoc/" code="c_3954">
+            <narrative xml:lang="en">irrigation</narrative>
+            <narrative xml:lang="en">Tagged based on http://oek1.fao.org/skosmos/agrovoc/en/page/c_3954</narrative>
+        </sector>
+        <sector vocabulary="99" vocabulary-uri="http://aims.fao.org/aos/agrovoc/" code="c_7176">
+            <narrative xml:lang="en">soil management</narrative>
+            <narrative xml:lang="en">Tagged based on http://oek1.fao.org/skosmos/agrovoc/en/page/c_7176</narrative>
+        </sector>
+        <sector vocabulary="99" vocabulary-uri="http://aims.fao.org/aos/agrovoc/" code="c_1374158672853">
+            <narrative xml:lang="en">forest conservation</narrative>
+            <narrative xml:lang="en">Tagged based on http://oek1.fao.org/skosmos/agrovoc/en/page/c_1374158672853</narrative>
         </sector>
         <collaboration-type code="2"/>
         <transaction ref="2000130014931">
@@ -4439,7 +4586,7 @@
                 <narrative>African Development Bank Group</narrative>
             </organisation>
             <department>
-                <narrative>Agriculture and Agro Industry North, East and South Regions/ Agriculture et Agro Industrie, R&#xFFFD;gions de l'Afrique du Nord, de l'Est et du Sud</narrative>
+                <narrative>Agriculture and Agro Industry North, East and South Regions/ Agriculture et Agro Industrie, R�gions de l'Afrique du Nord, de l'Est et du Sud</narrative>
             </department>
             <person-name>
                 <narrative>BANGWE Lewis Mupeta</narrative>
@@ -4451,7 +4598,7 @@
             <email>l.bangwe@afdb.org</email>
             <website>www.afdb.org</website>
             <mailing-address>
-                <narrative>African Development Bank Group Headquarters Avenue Joseph Anoma 01 BP 1387 Abidjan 01, C&#xFFFD;te d'Ivoire</narrative>
+                <narrative>African Development Bank Group Headquarters Avenue Joseph Anoma 01 BP 1387 Abidjan 01, C�te d'Ivoire</narrative>
             </mailing-address>
         </contact-info>
         <activity-scope code="4"/>
@@ -4654,6 +4801,18 @@
         </location>
         <sector vocabulary="DAC" code="31110">
             <narrative>Agriculture</narrative>
+        </sector>
+        <sector vocabulary="99" vocabulary-uri="http://aims.fao.org/aos/agrovoc/" code="c_9647">
+            <narrative xml:lang="en">cashews</narrative>
+            <narrative xml:lang="en">Tagged based on http://oek1.fao.org/skosmos/agrovoc/en/page/c_9647</narrative>
+        </sector>
+        <sector vocabulary="99" vocabulary-uri="http://aims.fao.org/aos/agrovoc/" code="c_10967">
+            <narrative xml:lang="en">food security</narrative>
+            <narrative xml:lang="en">Tagged based on http://oek1.fao.org/skosmos/agrovoc/en/page/c_10967</narrative>
+        </sector>
+        <sector vocabulary="99" vocabulary-uri="http://aims.fao.org/aos/agrovoc/" code="c_6207">
+            <narrative>production possibilities</narrative>
+            <narrative>see http://oek1.fao.org/skosmos/agrovoc/en/page/c_6207</narrative>
         </sector>
         <collaboration-type code="2"/>
         <transaction ref="2000130014431">
