@@ -76,7 +76,35 @@
                     {# <img src="{{ asset('bundles/oag/images/arrow.svg') }}" /> #}
                 </div>
                 <div class="content-block summary improve">
-                    <ul>
+                    <ul>                        
+                        {% if ruleset_errors | length > 0 %}
+                        <li><h2><span class="tip">Imporove the quality of your activities</span></h2>
+                            <div>
+                                <p>
+                                    There {% if ruleset_errors | length > 1 %}are{%else%}is{% endif %} {{ ruleset_errors | length }} ruleset error {% if ruleset_errors | length > 1 %}s{% endif %} in the activity file. <a id='ruleset-toggle'>See ruleset errors...</a>
+                                </p>
+                                <div class="ruleset-details">
+                                    <table class='ruleset-errors'>
+                                        <tr>
+                                            <th>Activity Id</th>
+                                            <th>Path</th>
+                                            <th>Rule</th>
+                                            <th>Message</th>
+                                        </tr>
+                                        {% for error in ruleset_errors %}
+                                            <tr>
+                                                <td>{{ error.activityId }}</td>
+                                                <td>{{ error.path }}</td>
+                                                <td>{{ error.rule }}</td>
+                                                <td>{{ error.message }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </table>
+                                </div>
+                            </div>
+                        </li>
+                        {% endif %}
+                        
                         {% if not classified %}
                         <li><h2><span class="tip">Help people identify agricultural projects</span></h2>
                             <div class="improvements">
@@ -138,6 +166,8 @@
         $( document ).ready(function() {
             checkStatus('#class-button');
             checkStatus('#geo-button');
+            
+            $('#ruleset-toggle').on('click', function() { $('.ruleset-details').toggle(); $('#ruleset-toggle').toggle(); });
 
             function checkStatus(buttonId) {
                 var url = $(buttonId).data('statusurl');
@@ -190,7 +220,7 @@
                   $('#regeocode').removeAttr("disabled");
               }
             });
-
+            
         });
     </script>
 {% endblock %}

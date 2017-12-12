@@ -5,6 +5,7 @@ namespace OagBundle\Controller;
 use OagBundle\Entity\Change;
 use OagBundle\Entity\EnhancementFile;
 use OagBundle\Entity\OagFile;
+use OagBundle\Entity\RulesetError;
 use OagBundle\Form\EnhancementFileType;
 use OagBundle\Form\OagFileType;
 use OagBundle\Service\Classifier;
@@ -449,6 +450,39 @@ class WireframeController extends Controller
             'activities' => $activities,
             'haveSuggested' => $haveSuggested
         );
+    }
+
+    /**
+     * @Route("/geocoder2/{id}/{activityId}")
+     * @ParamConverter("file", class="OagBundle:OagFile")
+     */
+    public function geocoder2SuggestionAction(Request $request, OagFile $file, $activityId)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $srvGeocoder = $this->get(Geocoder::class);
+        $srvGeoJson = $this->get(GeoJson::class);
+        $srvIATI = $this->get(IATI::class);
+        $srvOagFile = $this->get(OagFileService::class);
+
+        $root = $srvIATI->load($file);
+        $activity = $srvIATI->getActivityById($root, $activityId);
+
+        $currentLocations = $srvIATI->getActivityLocations($activity);
+        $suggestedLocations = $file->getGeolocations()->toArray();
+
+        $data = [
+            "activityid" => $activityId,
+        ];
+
+        foreach ($currentLocations as $loc) {
+          $data['current'][] = print_r($loc, true);
+        }
+
+        foreach ($suggestedLocations as $loc) {
+          $data['suggested'][] = print_r($loc, true);
+        }
+
+        return $data;
     }
 
     /**
@@ -902,6 +936,10 @@ class WireframeController extends Controller
         $geocoderStatus = $srvGeocoder->status();
         $classifierStatus = $srvClassifier->status();
 
+        $filename = $file->getDocumentName();
+        $rulesetErrorRepo = $this->getDoctrine()->getRepository(RulesetError::class);
+        $rulesetErrors = $rulesetErrorRepo->findByFilename($filename);
+
         $router = $this->get('router');
 
         $classifierUrl = $router->generate(
@@ -939,7 +977,9 @@ class WireframeController extends Controller
             'reclassifyUrl' => $reclassifyUrl,
             'regeocodeUrl' => $regeocodeUrl,
             'file_stats' => $fileStats,
+            'ruleset_errors' => $rulesetErrors,
         );
     }
 
 }
+/* vim: set expandtab ts=4 sw=4: */
