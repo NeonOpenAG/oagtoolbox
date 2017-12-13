@@ -50,9 +50,9 @@ class Classifier extends AbstractOagService
         $this->getContainer()->get('logger')->debug(sprintf('Found %d activities', count($activities)));
         foreach ($activities as $activity) {
             $activityId = $srvIati->getActivityId($activity);
-            $narrativies = $srvIati->getActivityNarratives($activity);
+            $description = $srvIati->getActivityDescription($activity);
             $tags = [];
-            foreach ($narrativies as $narrative) {
+            foreach ($description as $narrative) {
                 $data = $this->processString((string)$narrative);
                 $tags = $data['data'];
                 $this->persistTags($tags, $oagFile, $activityId);
