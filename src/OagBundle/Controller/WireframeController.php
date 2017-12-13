@@ -241,6 +241,35 @@ class WireframeController extends Controller
             $haveSuggested[$activity['id']] = count($_suggestedTags);
             $existingTags[$activity['id']] = count($activity['tags']);
         }
+        
+        usort($activities, function ($one, $two) {
+            global $haveSuggested, $existingTags;
+            
+            $oneHs = $haveSuggested[$one['id']];
+            $oneEt = $existingTags[$one['id']];
+            $twoHs = $haveSuggested[$two['id']];
+            $twoEt = $existingTags[$two['id']];
+            if ($oneHs < $twoHs) {
+                dump("$oneHs < $twoHs");
+                return true;
+            }
+            elseif ($oneHs > $twoHs) {
+                dump("$oneHs > $twoHs");
+                return false;
+            }
+            // HS is the same
+            if ($oneEt < $twoEt) {
+                dump("$oneEt < $twoEt");
+                return true;
+            }
+            elseif ($oneEt > $twoEt) {
+                dump("$oneEt > $twoEt");
+                return false;
+            }
+            // everything is the same
+                dump($one['id'] . ' < ' . $two['id']);
+            return $one['id'] < $two['id'];
+        });
 
         return array(
             'file' => $file,
