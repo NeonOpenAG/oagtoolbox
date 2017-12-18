@@ -234,7 +234,7 @@ class WireframeController extends Controller
                 if ((!is_null($enhFile->getIatiActivityId())) && ($enhFile->getIatiActivityId() !== $activity['id'])) continue;
                 $suggestedTags = array_merge($suggestedTags, $enhFile->getSuggestedTags()->toArray());
             }
-            
+
             $_suggestedTags = array_unique($suggestedTags);
 
             // has at least one suggested tag
@@ -242,9 +242,30 @@ class WireframeController extends Controller
             $existingTags[$activity['id']] = count($activity['tags']);
         }
 
+        // TODO:  This should be built into the above code but for now we'll build a composite key and allow the str comapare do the sorting.
+        $order = [];
+        foreach ($haveSuggested as $key => $value) {
+            $suggested = $value;
+            $existing = $existingTags[$key];
+            $_key = sprintf("%'.09d_%'.09d_%s", $existing, $suggested, $key);
+            $order[$_key] = $key;
+        }
+        krsort($order);
+
+        // Use the new ordered array to build a sorted activity list
+        $_activities = [];
+        foreach ($order as $rank) {
+            foreach ($activities as $activity) {
+                if ($activity['id'] == $rank) {
+                    $_activities[$rank] = $activity;
+                    break;
+                }
+            }
+        }
+
         return array(
             'file' => $file,
-            'activities' => $activities,
+            'activities' => $_activities,
             'haveSuggested' => $haveSuggested,
             'existingTags' => $existingTags,
         );
@@ -448,9 +469,30 @@ class WireframeController extends Controller
             $existingTags[$activity['id']] = count($activity['locations']);
         }
 
+        // TODO:  This should be built into the above code but for now we'll build a composite key and allow the str comapare do the sorting.
+        $order = [];
+        foreach ($haveSuggested as $key => $value) {
+            $suggested = $value;
+            $existing = $existingTags[$key];
+            $_key = sprintf("%'.09d_%'.09d_%s", $existing, $suggested, $key);
+            $order[$_key] = $key;
+        }
+        krsort($order);
+
+        // Use the new ordered array to build a sorted activity list
+        $_activities = [];
+        foreach ($order as $rank) {
+            foreach ($activities as $activity) {
+                if ($activity['id'] == $rank) {
+                    $_activities[$rank] = $activity;
+                    break;
+                }
+            }
+        }
+
         return array(
             'file' => $file,
-            'activities' => $activities,
+            'activities' => $_activities,
             'haveSuggested' => $haveSuggested,
             'existingTags' => $existingTags,
         );

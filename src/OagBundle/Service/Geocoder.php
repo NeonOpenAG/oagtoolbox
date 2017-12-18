@@ -44,7 +44,7 @@ class Geocoder extends AbstractOagService
         $xml = $srvOagFile->getContents($file);
         $activities = $this->processXML($xml, $file->getDocumentName(), $country);
 
-        $file->clearGeolocations();
+        // $file->clearGeolocations();
 
         foreach ($activities as $activityId => $locations) {
             foreach ($locations as $location) {
