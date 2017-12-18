@@ -6,7 +6,11 @@ oagtoolbox
 Install
 -------
 
-Composer will set everything up for you assuming you have a working lamp stack.  We need a couple of extra packages, sqlite and compass:
+You will need php 7.1 at least.  Ubuntu 17.10 has it as default now, see here for updgrading on older machines:
+
+    https://www.vultr.com/docs/how-to-install-and-configure-php-70-or-php-71-on-ubuntu-16-04
+
+Composer will set everything up for you assuming you have a working lamp stack (7.1).  We need a couple of extra packages, sqlite and compass:
 
 ```bash
 sudo apt install php7.0-sqlite realpath ruby ruby-dev
