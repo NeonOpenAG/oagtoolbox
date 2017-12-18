@@ -38,8 +38,6 @@ class WireframeController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $srvCove = $this->get(Cove::class);
-        $srvClassifier = $this->get(Classifier::class);
-        $srvGeocoder = $this->get(Geocoder::class);
         $srvOagFile = $this->get(OagFileService::class);
 
         $oagfile = new OagFile();
@@ -141,7 +139,6 @@ class WireframeController extends Controller
             return $this->redirect($this->generateUrl('oag_wireframe_improveyourdata', array('id' => $oagfile->getId())));
         }
 
-        $otherFiles = [];
         $allFiles = $fileRepo->createQueryBuilder('f')
             ->where('f.documentName LIKE :xml')
             ->setParameter('xml', '%.xml')
@@ -231,7 +228,9 @@ class WireframeController extends Controller
             // suggested in an EnhancementFile for that activity
             foreach ($file->getEnhancingDocuments() as $enhFile) {
                 // if it is only relevant to another activity, ignore
-                if ((!is_null($enhFile->getIatiActivityId())) && ($enhFile->getIatiActivityId() !== $activity['id'])) continue;
+                if ((!is_null($enhFile->getIatiActivityId())) && ($enhFile->getIatiActivityId() !== $activity['id'])) {
+                    continue;
+                }
                 $suggestedTags = array_merge($suggestedTags, $enhFile->getSuggestedTags()->toArray());
             }
 
@@ -340,7 +339,9 @@ class WireframeController extends Controller
         $suggestedTags = $file->getSuggestedTags()->toArray();
         foreach ($file->getEnhancingDocuments() as $enhFile) {
             // if it is only relevant to another activity, ignore
-            if ((!is_null($enhFile->getIatiActivityId())) && ($enhFile->getIatiActivityId() !== $activityId)) continue;
+            if ((!is_null($enhFile->getIatiActivityId())) && ($enhFile->getIatiActivityId() !== $activityId)) {
+                continue;
+            }
             $suggestedTags = array_merge($suggestedTags, $enhFile->getSuggestedTags()->toArray());
         }
 
@@ -399,6 +400,7 @@ class WireframeController extends Controller
             foreach ($classifierTags as $suggestedTag) {
                 if (in_array($suggestedTag, $editedTags)) {
                     $srvIATI->addActivityTag($activity, $suggestedTag);
+                    $srvIATI->removeSuggestedTag($file, $activity, $suggestedTag);
                     $toAdd[] = $suggestedTag;
                 }
             }
@@ -460,7 +462,9 @@ class WireframeController extends Controller
             // suggested in an EnhancementFile for that activity
             foreach ($file->getEnhancingDocuments() as $enhFile) {
                 // if it is only relevant to another activity, ignore
-                if ((!is_null($enhFile->getIatiActivityId())) && ($enhFile->getIatiActivityId() !== $activity['id'])) continue;
+                if ((!is_null($enhFile->getIatiActivityId())) && ($enhFile->getIatiActivityId() !== $activity['id'])) {
+                    continue;
+                }
                 $geocoderGeolocs = array_merge($geocoderGeolocs, $enhFile->getGeolocations()->toArray());
             }
 
@@ -496,39 +500,6 @@ class WireframeController extends Controller
             'haveSuggested' => $haveSuggested,
             'existingTags' => $existingTags,
         );
-    }
-
-    /**
-     * @Route("/geocoder2/{id}/{activityId}")
-     * @ParamConverter("file", class="OagBundle:OagFile")
-     */
-    public function geocoder2SuggestionAction(Request $request, OagFile $file, $activityId)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $srvGeocoder = $this->get(Geocoder::class);
-        $srvGeoJson = $this->get(GeoJson::class);
-        $srvIATI = $this->get(IATI::class);
-        $srvOagFile = $this->get(OagFileService::class);
-
-        $root = $srvIATI->load($file);
-        $activity = $srvIATI->getActivityById($root, $activityId);
-
-        $currentLocations = $srvIATI->getActivityLocations($activity);
-        $suggestedLocations = $file->getGeolocations()->toArray();
-
-        $data = [
-            "activityid" => $activityId,
-        ];
-
-        foreach ($currentLocations as $loc) {
-          $data['current'][] = print_r($loc, true);
-        }
-
-        foreach ($suggestedLocations as $loc) {
-          $data['suggested'][] = print_r($loc, true);
-        }
-
-        return $data;
     }
 
     /**
@@ -575,7 +546,9 @@ class WireframeController extends Controller
         // suggested in an EnhancementFile for that activity
         foreach ($file->getEnhancingDocuments() as $enhFile) {
             // if it is only relevant to another activity, ignore
-            if ((!is_null($enhFile->getIatiActivityId())) && ($enhFile->getIatiActivityId() !== $activityId)) continue;
+            if ((!is_null($enhFile->getIatiActivityId())) && ($enhFile->getIatiActivityId() !== $activityId)) {
+                continue;
+            }
             $geocoderGeolocs = array_merge($geocoderGeolocs, $enhFile->getGeolocations()->toArray());
         }
 
@@ -667,6 +640,7 @@ class WireframeController extends Controller
             foreach ($geocoderGeolocs as $suggestedGeoloc) {
                 if (in_array($suggestedGeoloc, $editedTags)) {
                     $srvIATI->addActivityGeolocation($activity, $suggestedGeoloc);
+                    $this->getContainer()->get('session')->getFlashBag()->add("info", print_r($suggestedGeoloc, TRUE));
                     $toAdd[] = $suggestedGeoloc;
                 }
             }
@@ -974,8 +948,6 @@ class WireframeController extends Controller
      * @ParamConverter("file", class="OagBundle:OagFile")
      */
     public function improveYourDataAction(OagFile $file) {
-        $srvOagFile = $this->get(OagFileService::class);
-
         $srvGeocoder = $this->get(Geocoder::class);
         $srvClassifier = $this->get(Classifier::class);
         $srvIati = $this->get(IATI::class);

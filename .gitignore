@@ -30,3 +30,6 @@ src/OagBundle/Resources/public/stylesheets/main.css
 app/test.db
 output/
 xmlcache/
+.sass-cache/
+web/css/
+web/info.php
