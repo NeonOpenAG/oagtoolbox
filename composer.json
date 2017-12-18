@@ -72,6 +72,16 @@
             "php ./bin/console assets:install public --symlink --relative --env=dev",
             "php ./bin/console assetic:dump --env=prod --no-debug",
             "if [ -S '/var/run/docker.sock' ]; then php ./bin/console oag:fetchimages; fi"
+        ],
+        "start-dockers": [
+          "docker pull openagdata/cove:live",
+          "docker pull openagdata/dportal:live",
+          "docker pull openagdata/nerserver:live",
+          "docker pull openagdata/geocoder:live",
+          "docker inspect openag_cove      > /dev/null && docker start openag_cove      || docker run -td --name openag_cove                 openagdata/cove:live",
+          "docker inspect openag_dportal   > /dev/null && docker start openag_dportal   || docker run -td --name openag_dportal -p 8011:8011 openagdata/dportal:live",
+          "docker inspect openag_nerserver > /dev/null && docker start openag_nerserver || docker run -td --name openag_nerserver            openagdata/nerserver:live",
+          "docker inspect openag_geocoder  > /dev/null && docker start openag_geocoder  || docker run -td --name openag_geocoder --link openag_nerserver openagdata/geocoder:live"
         ]
     },
     "config": {
