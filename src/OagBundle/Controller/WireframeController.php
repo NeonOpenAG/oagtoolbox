@@ -267,7 +267,6 @@ class WireframeController extends Controller
                 return false;
             }
             // everything is the same
-                dump($one['id'] . ' < ' . $two['id']);
             return $one['id'] < $two['id'];
         });
 
