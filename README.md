@@ -6,24 +6,23 @@ oagtoolbox
 Install
 -------
 
-When you clone the repository you want to initialize any submodules. You can achieve this with a recursive flag:
-
-```bash
-git clone --recursive git://github.com/foo/bar.git
-```
-
-If you have a pre-existing repo without the submodules initialized you can achieve this with the following command:
-
-```bash
-git submodule update --init --recursive
-```
-
-To run a standard lamp stack, you'll need to enter a sudo password at the end of the composer install.  This is to fix the permissions on the cache, var and upload folder.
+Composer will set everything up for you assuming you have a working lamp stack.  We need a couple of extra packages, sqlite and compass:
 
 ```bash
 sudo apt install php7.0-sqlite realpath ruby ruby-dev
 sudo gem install sass --no-user-install
+```
+
+You may need to enter a sudo password at the end of the composer install.  This is to fix the permissions on the cache, var and upload folder.
+
+```bash
 composer install
+```
+
+The install script will pull the unerlying dockers for you but won't start them.
+
+```bash
+composer run start-dockers
 ```
 
 Tests
