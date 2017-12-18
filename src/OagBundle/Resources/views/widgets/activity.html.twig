@@ -13,10 +13,10 @@
         
         {% if suggestRoute is defined %}
             <div class='suggestiontext'>
-                {% if suggestions == 0 %}
-                    We were unable to autodetect any suggestions.
+                {% if suggestions == 0 and existing == 0 %}
+                    No existing tags were found and we were unable to autodetect any suggestions. Sorry.
                 {% else %}
-                    We found {{ existing }} exisiting {{ detailname }}{% if existing != 1 %}s{% endif %} and {{ suggestions }} suggestion{% if suggestions > 1 %}s{% endif %}.
+                    We found {{ existing }} exisiting {{ detailname }}{% if existing != 1 %}s{% endif %} and {{ suggestions }} suggestion{% if suggestions != 1 %}s{% endif %}.
                 {% endif %}
             </div>
             <div class="view-suggestions">

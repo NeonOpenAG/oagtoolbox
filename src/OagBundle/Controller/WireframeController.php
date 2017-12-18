@@ -234,45 +234,38 @@ class WireframeController extends Controller
                 if ((!is_null($enhFile->getIatiActivityId())) && ($enhFile->getIatiActivityId() !== $activity['id'])) continue;
                 $suggestedTags = array_merge($suggestedTags, $enhFile->getSuggestedTags()->toArray());
             }
-            
+
             $_suggestedTags = array_unique($suggestedTags);
 
             // has at least one suggested tag
             $haveSuggested[$activity['id']] = count($_suggestedTags);
             $existingTags[$activity['id']] = count($activity['tags']);
         }
-        
-        usort($activities, function ($one, $two) {
-            global $haveSuggested, $existingTags;
-            
-            $oneHs = $haveSuggested[$one['id']];
-            $oneEt = $existingTags[$one['id']];
-            $twoHs = $haveSuggested[$two['id']];
-            $twoEt = $existingTags[$two['id']];
-            if ($oneHs < $twoHs) {
-                dump("$oneHs < $twoHs");
-                return true;
+
+        // TODO:  This should be built into the above code but for now we'll build a composite key and allow the str comapare do the sorting.
+        $order = [];
+        foreach ($haveSuggested as $key => $value) {
+            $suggested = $value;
+            $existing = $existingTags[$key];
+            $_key = sprintf("%'.09d_%'.09d_%s", $existing, $suggested, $key);
+            $order[$_key] = $key;
+        }
+        krsort($order);
+
+        // Use the new ordered array to build a sorted activity list
+        $_activities = [];
+        foreach ($order as $rank) {
+            foreach ($activities as $activity) {
+                if ($activity['id'] == $rank) {
+                    $_activities[$rank] = $activity;
+                    break;
+                }
             }
-            elseif ($oneHs > $twoHs) {
-                dump("$oneHs > $twoHs");
-                return false;
-            }
-            // HS is the same
-            if ($oneEt < $twoEt) {
-                dump("$oneEt < $twoEt");
-                return true;
-            }
-            elseif ($oneEt > $twoEt) {
-                dump("$oneEt > $twoEt");
-                return false;
-            }
-            // everything is the same
-            return $one['id'] < $two['id'];
-        });
+        }
 
         return array(
             'file' => $file,
-            'activities' => $activities,
+            'activities' => $_activities,
             'haveSuggested' => $haveSuggested,
             'existingTags' => $existingTags,
         );
@@ -476,9 +469,30 @@ class WireframeController extends Controller
             $existingTags[$activity['id']] = count($activity['locations']);
         }
 
+        // TODO:  This should be built into the above code but for now we'll build a composite key and allow the str comapare do the sorting.
+        $order = [];
+        foreach ($haveSuggested as $key => $value) {
+            $suggested = $value;
+            $existing = $existingTags[$key];
+            $_key = sprintf("%'.09d_%'.09d_%s", $existing, $suggested, $key);
+            $order[$_key] = $key;
+        }
+        krsort($order);
+
+        // Use the new ordered array to build a sorted activity list
+        $_activities = [];
+        foreach ($order as $rank) {
+            foreach ($activities as $activity) {
+                if ($activity['id'] == $rank) {
+                    $_activities[$rank] = $activity;
+                    break;
+                }
+            }
+        }
+
         return array(
             'file' => $file,
-            'activities' => $activities,
+            'activities' => $_activities,
             'haveSuggested' => $haveSuggested,
             'existingTags' => $existingTags,
         );
