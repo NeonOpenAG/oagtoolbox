@@ -35,6 +35,7 @@
                     {{ form_start(form) }}
 
                     {% for location in currentLocations %}
+                        <div>{{ dump(location) }}</div>
                         <div class="tag-row">
                             {% if loop.index0 in currentLocationsMaps|keys %}
                                 <div class="suggested-map-block"
@@ -43,7 +44,7 @@
 
                             <div class="info">
                                 {% if location.name is defined %}
-                                    <div class="tag">{{ location.name }}</div>
+                                    <div class="tag">{{ location.name }}{% if attribute(location, 'feature-designation') %} [{{ attribute(location, 'feature-designation') }}]{% endif %}</div>
                                 {% endif %}
 
                                 {% if location.description is defined %}

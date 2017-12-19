@@ -655,7 +655,6 @@ class WireframeController extends Controller
             foreach ($geocoderGeolocs as $suggestedGeoloc) {
                 if (in_array($suggestedGeoloc, $editedTags)) {
                     $srvIATI->addActivityGeolocation($activity, $suggestedGeoloc);
-                    $this->getContainer()->get('session')->getFlashBag()->add("info", print_r($suggestedGeoloc, TRUE));
                     $toAdd[] = $suggestedGeoloc;
                 }
             }
