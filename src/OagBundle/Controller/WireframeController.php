@@ -216,6 +216,11 @@ class WireframeController extends Controller
         $haveSuggested = array();
         $existingTags = array();
         foreach ($activities as $activity) {
+            $existingTagCodes = [];
+            foreach ($activity['tags'] as $etag) {
+                $existingTagCodes[] = $etag->getCode();
+            }
+
             $suggestedTags = array();
 
             // suggested on the OagFile for that activity
@@ -235,6 +240,17 @@ class WireframeController extends Controller
             }
 
             $_suggestedTags = array_unique($suggestedTags);
+            // Plus we need to remove all suggested tags that are already on the activity
+            $suggestedTagCodes = [];
+            foreach ($_suggestedTags as $key => $tag) {
+                $suggestedTagCodes[$key] = $tag->getTag()->getCode();
+            }
+            foreach ($existingTagCodes as $key => $stag) {
+                $index = array_search($stag, $suggestedTagCodes);
+                if ($index !== FALSE) {
+                    unset($_suggestedTags[$index]);
+                }
+            }
 
             // has at least one suggested tag
             $haveSuggested[$activity['id']] = count($_suggestedTags);
@@ -400,7 +416,6 @@ class WireframeController extends Controller
             foreach ($classifierTags as $suggestedTag) {
                 if (in_array($suggestedTag, $editedTags)) {
                     $srvIATI->addActivityTag($activity, $suggestedTag);
-                    $srvIATI->removeSuggestedTag($file, $activity, $suggestedTag);
                     $toAdd[] = $suggestedTag;
                 }
             }
