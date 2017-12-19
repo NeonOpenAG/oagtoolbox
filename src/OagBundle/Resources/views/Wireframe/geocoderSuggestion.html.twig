@@ -35,7 +35,6 @@
                     {{ form_start(form) }}
 
                     {% for location in currentLocations %}
-                        <div>{{ dump(location) }}</div>
                         <div class="tag-row">
                             {% if loop.index0 in currentLocationsMaps|keys %}
                                 <div class="suggested-map-block"
@@ -100,7 +99,6 @@
 </script>
 <script type="text/javascript"
         src="{{ asset('bundles/oag/jquery-filestyle-1.5.1/src/jquery-filestyle.min.js') }}"></script>
-{{ parent() }}
 <script>
     $(function () {
         $(document).tooltip();
@@ -109,5 +107,4 @@
         ;
     });
 </script>
-<script>
     {% endblock %}
