@@ -386,8 +386,12 @@ class IATI extends AbstractService
      */
     public function getActivityCountryCode($activity)
     {
-        $element = $activity->xpath('./recipient-country')[0];
-        $code = (string)$element->attributes()['code'];
+        $element = $activity->xpath('./recipient-country');
+        $code = '';
+        if(is_array($element) && count($element)) {
+            $element = $element[0];
+            $code = (string)$element->attributes()['code'];
+        }
 
         return $code;
     }
