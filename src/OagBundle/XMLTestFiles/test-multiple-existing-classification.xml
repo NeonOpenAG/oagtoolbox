@@ -1,0 +1,41 @@
+<!--No Suggested Classifications-->
+<!--Multiple Pre-Existing Classification-->
+
+<!--No Suggested Locations-->
+<!--No Pre-Existing Locations-->
+
+<iati-activities version="2.02" xmlns:openag="http://openagfunding.readthedocs.io/en/latest/extensions/" generated-datetime="2016-12-05T10:28:00">
+    <iati-activity xml:lang="en" default-currency="GBP" hierarchy="1" last-updated-datetime="2016-11-29T11:55:36">
+        <iati-identifier>46002-P-TN-AAC-009</iati-identifier>
+
+        <reporting-org ref="00000" type="00">
+            <narrative>Test Organisation</narrative>
+        </reporting-org>
+
+        <title>
+            <narrative xml:lang="en">United Kingdom</narrative>
+        </title>
+        <description type="1">
+            <narrative xml:lang="en">Jupiter</narrative>
+        </description>
+
+
+        <participating-org role="1" ref="00000" type="00">
+            <narrative>Test Organisation</narrative>
+        </participating-org>
+
+        <activity-status code="3"/>
+
+        <activity-date iso-date="2017-01-01" type="1"/>
+
+        <recipient-country code="GB"/>
+
+        <openag:tag code="c_25475" vocabulary="99" vocabulary-uri="http://aims.fao.org/standards/agrovoc">
+            <narrative>dates</narrative>
+        </openag:tag>
+
+        <openag:tag vocabulary="DAC" code="31140">
+            <narrative>Irrigation And Drainage</narrative>
+        </openag:tag>
+    </iati-activity>
+</iati-activities>
