@@ -4,6 +4,7 @@ namespace OagBundle\Service;
 
 use OagBundle\Entity\Tag;
 use OagBundle\Entity\OagFile;
+use OagBundle\Entity\SuggestedTag;
 
 /**
  * A service for manipulating and getting data from IATI Activity files after
@@ -282,7 +283,7 @@ class IATI extends AbstractService
         $narratives = $activity->xpath('//narrative');
         return $narratives;
     }
-    
+
     /**
      * Get the information on the tags contained in an activity, from prior
      * classification.
@@ -503,15 +504,15 @@ class IATI extends AbstractService
              */
 
             /*
-             *  <location ref="Pyuthan">               
-             *    <location-id code="1282888" vocabulary="G1"/>                                   
-             *    <name>                               
-             *      <narrative>Pyuthan</narrative>     
-             *    </name>                              
-             *    <point srsName="http://www.opengis.net/def/crs/EPSG/0/4326">                    
-             *      <pos>28.08333 82.83333</pos>       
-             *    </point>                             
-             *    <feature-designation code="ADM3"/>   
+             *  <location ref="Pyuthan">
+             *    <location-id code="1282888" vocabulary="G1"/>
+             *    <name>
+             *      <narrative>Pyuthan</narrative>
+             *    </name>
+             *    <point srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+             *      <pos>28.08333 82.83333</pos>
+             *    </point>
+             *    <feature-designation code="ADM3"/>
              *  </location>
              */
 
