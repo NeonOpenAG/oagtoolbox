@@ -85,14 +85,6 @@ class WireframeController extends Controller
             $data['file'] = $srvOagFile->getMostRecent();
         }
 
-//        $flashbag = $this->get('session')->getFlashBag();
-//        $all = $flashbag->peekAll();
-//        $flashbag->clear();
-//
-//        $data['errors'] = $all;
-//        $data['errors']['error'] = [];
-//        $data['errors']['error'][] = '<p>Line one</p><p>Line two</p><p>Line three</p>';
-
         return $data;
     }
 
@@ -1052,6 +1044,17 @@ class WireframeController extends Controller
             'file_stats' => $fileStats,
             'ruleset_errors' => $rulesetErrors,
         );
+    }
+
+    /**
+     * @Route("/activate/{id}")
+     * @ParamConverter("file", class="OagBundle:OagFile")
+     */
+    public function activateFileAction(OagFile $file) {
+        $srvOagFile = $this->get(OagFileService::class);
+        $srvOagFile->setMostRecent($file);
+
+        return $this->redirect($this->generateUrl('oag_wireframe_improveyourdata', array('id' => $file->getId())));
     }
 
 }
