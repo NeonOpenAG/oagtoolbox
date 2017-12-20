@@ -578,20 +578,4 @@ class IATI extends AbstractService
         return $locations;
     }
 
-    public function removeSuggestedTag(OagFile $file, $activityId, Tag $tag) {
-        dump($activityId);
-        dump($tag);
-        $repository = $this->getContainer()->get('doctrine')
-                ->getManager()
-                ->getRepository('OagBundle:SuggestedTag');
-        $suggestedTags = $repository->findBy(array('activityId' => $activityId, 'tag' => $tag));
-        dump($suggestedTags);
-        foreach ($suggestedTags as $suggestedTag) {
-            $file->removeSuggestedTag($suggestedTag);
-        }
-        $em = $this->getContainer()->get('doctrine')->getManager();
-        $em->persist($file);
-        $em->flush();
-    }
-
 }

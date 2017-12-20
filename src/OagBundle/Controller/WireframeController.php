@@ -339,7 +339,10 @@ class WireframeController extends Controller
         $pasteTextForm->handleRequest($request);
         if ($pasteTextForm->isSubmitted() && $pasteTextForm->isValid()) {
             $data = $pasteTextForm->getData();
-            $srvClassifier->classifyOagFileFromText($file, $data['text'], $activityId);
+            $count = $srvClassifier->classifyOagFileFromText($file, $data['text'], $activityId);
+            if ($count == 0) {
+                $this->get('session')->getFlashBag()->add("warning", "We couldn't find any tags in the text you submitted.  Sorry.");
+            }
             return $this->redirect($this->generateUrl('oag_wireframe_classifiersuggestion', array('id' => $file->getId(), 'activityId' => $activityId)));
         }
 
@@ -640,7 +643,10 @@ class WireframeController extends Controller
         $pasteTextForm->handleRequest($request);
         if ($pasteTextForm->isSubmitted() && $pasteTextForm->isValid()) {
             $data = $pasteTextForm->getData();
-            $srvGeocoder->geocodeOagFileFromText($file, $data['text'], $activityId, $data['country']);
+            $count = $srvGeocoder->geocodeOagFileFromText($file, $data['text'], $activityId, $data['country']);
+            if ($count == 0) {
+                $this->get('session')->getFlashBag()->add("warning", "We couldn't find any locations in the text you submitted.  Sorry.");
+            }
             return $this->redirect($this->generateUrl('oag_wireframe_geocodersuggestion', array('id' => $file->getId(), 'activityId' => $activityId)));
         }
 
