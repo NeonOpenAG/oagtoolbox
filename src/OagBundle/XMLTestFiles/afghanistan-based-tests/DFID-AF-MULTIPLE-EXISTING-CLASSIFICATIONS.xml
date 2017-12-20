@@ -1,0 +1,85 @@
+<iati-activities version="2.01" xmlns:openag="http://openagfunding.readthedocs.io/en/latest/extensions/" generated-datetime="2017-11-29T18:30:53">
+	<!--
+		Includes multiple existing classifications.
+		One classification is suggested.
+		No locations.
+	-->
+	<iati-activity last-updated-datetime="2011-03-31T00:00:00" xml:lang="en" default-currency="GBP" hierarchy="1">
+		<iati-identifier>GB-1-107171</iati-identifier>
+		<reporting-org ref="GB-GOV-1" type="10">
+			<narrative>Department for International Development</narrative>
+		</reporting-org>
+		<title>
+			<narrative>Helmand Agriculture And Rural Development Programme (HARDP): MRRD</narrative>
+		</title>
+		<description>
+			<narrative>increase the economic opportunities of the rural poor in helmand, including those that make a living from growing poppy, through integrated support to improve their livelihood options</narrative>
+		</description>
+		<participating-org role="4">
+			<narrative>Name Withheld</narrative>
+		</participating-org>
+		<participating-org ref="GB" type="10" role="1">
+			<narrative>UNITED KINGDOM</narrative>
+		</participating-org>
+		<participating-org ref="GB-GOV-1" type="10" role="3">
+			<narrative>Department for International Development</narrative>
+		</participating-org>
+		<other-identifier ref="107171" type="A1">
+			<owner-org ref="GB-GOV-1">
+				<narrative>DFID</narrative>
+			</owner-org>
+		</other-identifier>
+		<other-identifier ref="GB-1" type="B1">
+			<owner-org ref="GB-GOV-1">
+				<narrative>DFID previous reporting-org identifier</narrative>
+			</owner-org>
+		</other-identifier>
+		<activity-status code="4" />
+		<activity-date type="1" iso-date="2006-11-09" />
+		<activity-date type="2" iso-date="2006-11-09" />
+		<activity-date type="3" iso-date="2011-03-31" />
+		<activity-date type="4" iso-date="2011-03-31" />
+		<contact-info type="1">
+			<organisation>
+				<narrative>Department for International Development</narrative>
+			</organisation>
+			<telephone>+44 (0) 1355 84 3132</telephone>
+			<email>enquiry@dfid.gov.uk</email>
+			<mailing-address>
+				<narrative>Public Enquiry Point, Abercrombie House, Eaglesham Road, East Kilbride, Glasgow G75 8EA</narrative>
+			</mailing-address>
+		</contact-info>
+		<recipient-country code="AF" percentage="100" />
+
+		<default-tied-status code="5" />
+		<document-link format="application/vnd.oasis.opendocument.text" url="http://iati.dfid.gov.uk/iati_documents/3606261.odt">
+			<title>
+				<narrative>Logical framework 107171 (July, 2012).odt</narrative>
+			</title>
+			<category code="A02" />
+			<category code="A08" />
+			<language code="en" />
+		</document-link>
+		<document-link format="application/vnd.ms-excel" url="http://iati.dfid.gov.uk/iati_documents/3606285.xls">
+			<title>
+				<narrative>Annual review 107171 (July, 2012).xls</narrative>
+			</title>
+			<category code="A08" />
+			<category code="A07" />
+			<language code="en" />
+		</document-link>
+		<related-activity ref="GB-1-107171-101" type="2" />
+		<conditions attached="false" />
+
+		<openag:tag code="43040" percentage="40">
+			<narrative>Rural development</narrative>
+		</openag:tag>
+		<openag:tag code="14030" percentage="30">
+			<narrative>Basic drinking water supply and basic sanitation</narrative>
+		</openag:tag>
+		<openag:tag code="21020" percentage="30">
+			<narrative>Road transport</narrative>
+		</openag:tag>
+
+	</iati-activity>
+</iati-activities>
