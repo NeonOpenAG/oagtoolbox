@@ -1,0 +1,48 @@
+<!--No Suggested Classification-->
+<!--No Pre-Existing Classification-->
+
+<!--No Suggested Locations-->
+<!--One Pre-Existing Location-->
+
+<iati-activities version="2.02" generated-datetime="2016-12-05T10:28:00">
+    <iati-activity xml:lang="en" default-currency="GBP" hierarchy="1" last-updated-datetime="2016-11-29T11:55:36">
+        <iati-identifier>46002-P-TN-AAC-009</iati-identifier>
+
+        <reporting-org ref="00000" type="00">
+            <narrative>Test Organisation</narrative>
+        </reporting-org>
+
+        <title>
+            <narrative xml:lang="en"></narrative>
+        </title>
+        <description type="1">
+            <narrative xml:lang="en"></narrative>
+        </description>
+
+
+        <participating-org role="1" ref="00000" type="00">
+            <narrative>Test Organisation</narrative>
+        </participating-org>
+
+        <activity-status code="3"/>
+
+        <activity-date iso-date="2017-01-01" type="1"/>
+
+        <recipient-country code="GB"/>
+
+        <location>
+            <location-id vocabulary="G1" code="2468351"/>
+            <name>
+                <narrative>Gafsa Governorate</narrative>
+            </name>
+            <administrative code="2998.0" vocabulary="G1" level="1"/>
+            <administrative code="0.0" vocabulary="G1" level="2"/>
+            <point srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+                <pos>34.5 9</pos>
+            </point>
+            <exactness code="2"/>
+            <location-class code="1"/>
+            <feature-designation code="Administrative Region"/>
+        </location>
+    </iati-activity>
+</iati-activities>
