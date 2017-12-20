@@ -4,6 +4,7 @@ namespace OagBundle\Controller;
 
 use OagBundle\Entity\Change;
 use OagBundle\Entity\EnhancementFile;
+use OagBundle\Entity\Geolocation;
 use OagBundle\Entity\OagFile;
 use OagBundle\Entity\RulesetError;
 use OagBundle\Form\EnhancementFileType;
@@ -139,6 +140,7 @@ class WireframeController extends Controller
             return $this->redirect($this->generateUrl('oag_wireframe_improveyourdata', array('id' => $oagfile->getId())));
         }
 
+        $otherFiles = [];
         $allFiles = $fileRepo->createQueryBuilder('f')
             ->where('f.documentName LIKE :xml')
             ->setParameter('xml', '%.xml')
@@ -216,6 +218,11 @@ class WireframeController extends Controller
         $haveSuggested = array();
         $existingTags = array();
         foreach ($activities as $activity) {
+            $existingTagCodes = [];
+            foreach ($activity['tags'] as $etag) {
+                $existingTagCodes[] = $etag->getCode();
+            }
+
             $suggestedTags = array();
 
             // suggested on the OagFile for that activity
@@ -235,6 +242,17 @@ class WireframeController extends Controller
             }
 
             $_suggestedTags = array_unique($suggestedTags);
+            // Plus we need to remove all suggested tags that are already on the activity
+            $suggestedTagCodes = [];
+            foreach ($_suggestedTags as $key => $tag) {
+                $suggestedTagCodes[$key] = $tag->getTag()->getCode();
+            }
+            foreach ($existingTagCodes as $key => $stag) {
+                $index = array_search($stag, $suggestedTagCodes);
+                if ($index !== FALSE) {
+                    unset($_suggestedTags[$index]);
+                }
+            }
 
             // has at least one suggested tag
             $haveSuggested[$activity['id']] = count($_suggestedTags);
@@ -400,7 +418,6 @@ class WireframeController extends Controller
             foreach ($classifierTags as $suggestedTag) {
                 if (in_array($suggestedTag, $editedTags)) {
                     $srvIATI->addActivityTag($activity, $suggestedTag);
-                    $srvIATI->removeSuggestedTag($file, $activity, $suggestedTag);
                     $toAdd[] = $suggestedTag;
                 }
             }
@@ -452,10 +469,17 @@ class WireframeController extends Controller
         foreach ($activities as $activity) {
             $geocoderGeolocs = array();
 
+            $existinglocationCodes = [];
+            foreach ($activity['locations'] as $existinglocation) {
+                $existinglocationCodes[] = $existinglocation['location-id']['code'];
+            }
+
             // suggested on the OagFile for that activity
             foreach ($file->getGeolocations()->toArray() as $generic) {
                 if (is_null($generic->getIatiActivityId()) || $generic->getIatiActivityId() === $activity['id']) {
-                    $geocoderGeolocs[] = $generic;
+                    if (!in_array($generic->getLocationIdCode(), $existinglocationCodes)) {
+                        $geocoderGeolocs[] = $generic;
+                    }
                 }
             }
 
@@ -467,6 +491,8 @@ class WireframeController extends Controller
                 }
                 $geocoderGeolocs = array_merge($geocoderGeolocs, $enhFile->getGeolocations()->toArray());
             }
+
+
 
             // has at least one suggested location
             $haveSuggested[$activity['id']] = count($geocoderGeolocs);
@@ -553,7 +579,29 @@ class WireframeController extends Controller
         }
 
         // no duplicates please
-        $geocoderGeolocs = array_unique($geocoderGeolocs, SORT_REGULAR);
+        $geocoderGeolocs = array_filter(array_unique($geocoderGeolocs, SORT_REGULAR));
+        $geolocationRepo = $this->getDoctrine()->getRepository(Geolocation::class);
+        foreach ($currentLocations as $loc) {
+            $lockey = $loc['name'] . ' ' . $loc['feature-designation'];
+            // $this->get('logger')->info("Cur loc: " . $lockey);
+            foreach ($geocoderGeolocs as $key => $suggest) {
+                $geokey = $suggest->getName() . ' ' . $suggest->getFeatureDesignation();
+                if ($lockey == $geokey) {
+                    // $this->get('logger')->debug("Unseeting geolocation: " . $geokey);
+                    // TODO Abstract this, it happens in 3 places
+                    $locations = $geolocationRepo->findBy([
+                        'iatiActivityId' => $activityId,
+                        'locationIdCode' => $suggest->getLocationIdCode(),
+                    ]);
+                    foreach ($locations as $delme) {
+                        $file->removeGeolocation($delme);
+                    }
+                    $em->flush();
+                    dump($locations);
+                    unset($geocoderGeolocs[$key]);
+                }
+            }
+        }
 
         // enhancement upload form
         $enhFile = new EnhancementFile();
@@ -640,7 +688,14 @@ class WireframeController extends Controller
             foreach ($geocoderGeolocs as $suggestedGeoloc) {
                 if (in_array($suggestedGeoloc, $editedTags)) {
                     $srvIATI->addActivityGeolocation($activity, $suggestedGeoloc);
-                    $this->getContainer()->get('session')->getFlashBag()->add("info", print_r($suggestedGeoloc, TRUE));
+                    // TODO Abstract this, it happens in 3 places
+                    $locations = $geolocationRepo->findBy([
+                        'iatiActivityId' => $activityId,
+                        'locationIdCode' => $suggestedGeoloc->getLocationIdCode(),
+                    ]);
+                    foreach ($locations as $delme) {
+                        $file->removeGeolocation($delme);
+                    }
                     $toAdd[] = $suggestedGeoloc;
                 }
             }

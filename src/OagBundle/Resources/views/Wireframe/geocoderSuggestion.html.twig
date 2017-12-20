@@ -43,7 +43,7 @@
 
                             <div class="info">
                                 {% if location.name is defined %}
-                                    <div class="tag">{{ location.name }}</div>
+                                    <div class="tag">{{ location.name }}{% if attribute(location, 'feature-designation') %} [{{ attribute(location, 'feature-designation') }}]{% endif %}</div>
                                 {% endif %}
 
                                 {% if location.description is defined %}
@@ -99,7 +99,6 @@
 </script>
 <script type="text/javascript"
         src="{{ asset('bundles/oag/jquery-filestyle-1.5.1/src/jquery-filestyle.min.js') }}"></script>
-{{ parent() }}
 <script>
     $(function () {
         $(document).tooltip();
@@ -108,5 +107,4 @@
         ;
     });
 </script>
-<script>
     {% endblock %}
