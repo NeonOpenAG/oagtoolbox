@@ -239,45 +239,41 @@ class Classifier extends AbstractOagService
             return json_decode($this->getStringFixtureData(), true);
         }
 
-        //        $cache = new FilesystemCache();
-        //        $cachename = 'OagClassifier.' . md5($contents);
-        //        if ($cache->has($cachename)) {
-        //            $data = $cache->get('$cachename');
-        //            $response = array('status' => 2);
-        //            $this->getContainer()->get('logger')->info('Returning cached data ' . $data);
-        //        } else {
         $oag = $this->getContainer()->getParameter('oag');
         $uri = $oag['classifier']['text'];
+
+        // /text/ag_classification
+        $key = $oag['classifier']['api_key'];
+        $headers = [
+            "Content-Type: application/json",
+            "x-fc-api-key: " . $key
+        ];
+
+        $payload = [
+            'text' => $contents,
+            'threshold' => $oag['classifier']['threshold'],
+            'chunk' => $oag['classifier']['chunk'],
+            'roll_up' => $oag['classifier']['roll_up'],
+            'form' => 'json',
+        ];
+
         $request = curl_init();
-        curl_setopt($request, CURLOPT_URL, $uri);
         curl_setopt($request, CURLOPT_POST, true);
         curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
-        //    curl_setopt($request, CURLOPT_VERBOSE, true);
-        //    curl_setopt($request, CURLOPT_HEADER, true);
-        $this->getContainer()->get('logger')->info('Accessing classifer at ' . $uri);
+        curl_setopt($request, CURLOPT_URL, $uri);
+        curl_setopt($request, CURLOPT_POSTFIELDS, json_encode($payload));
+        curl_setopt($request, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($request, CURLOPT_SSL_VERIFYPEER, false);
 
-        $payload = array(
-        'text1' => $contents,
-        'limit' => 0,
-        'anchor' => 0,
-        'ext' => 'fc',
-        'threshold' => 'low',
-        'rollup' => 'true',
-        'chunk' => 'True',
-        );
-
-        curl_setopt($request, CURLOPT_POSTFIELDS, http_build_query($payload));
-
+        $this->getContainer()->get('logger')->info('Accessing classifer at ' . $uri . ' (' . json_encode($headers) . ') ' . json_encode($payload));
         $data = curl_exec($request);
 
-        //            $cache->set($cachename, $data);
         $responseCode = curl_getinfo($request, CURLINFO_HTTP_CODE);
         curl_close($request);
 
         $response = array(
         'status' => ($responseCode >= 200 && $responseCode <= 209) ? 0 : 1,
         );
-        //        }
 
         $json = json_decode($data, true);
         if (!is_array($json)) {

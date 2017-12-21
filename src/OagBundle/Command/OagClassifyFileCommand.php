@@ -9,13 +9,12 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class OagClassifyCommand extends ContainerAwareCommand
-{
+class OagClassifyFileCommand extends ContainerAwareCommand {
     protected function configure()
     {
         $this
-            ->setName('oag:classify')
-            ->addArgument('fileid', InputArgument::REQUIRED, 'File ID to classify');
+            ->setName('oag:classify:file')
+                ->addArgument('fileid', InputArgument::REQUIRED, 'File ID to classify');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
