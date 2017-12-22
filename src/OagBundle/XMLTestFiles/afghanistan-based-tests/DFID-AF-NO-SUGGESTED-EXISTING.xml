@@ -1,0 +1,51 @@
+<iati-activities version="2.01" xmlns:openag="http://openagfunding.readthedocs.io/en/latest/extensions/" generated-datetime="2017-11-29T18:30:53">
+    <!--
+        Includes no suggestions or existing data.
+    -->
+    <iati-activity last-updated-datetime="2017-11-27T00:00:00" xml:lang="en" default-currency="GBP" hierarchy="1">
+        <iati-identifier>GB-1-2010999</iati-identifier>
+        <reporting-org ref="GB-GOV-1" type="10">
+            <narrative>Department for International Development</narrative>
+        </reporting-org>
+        <title>
+            <narrative></narrative>
+        </title>
+        <description>
+            <narrative></narrative>
+        </description>
+        <participating-org role="4">
+            <narrative>Name Withheld</narrative>
+        </participating-org>
+        <participating-org ref="GB" type="10" role="1">
+            <narrative>UNITED KINGDOM</narrative>
+        </participating-org>
+        <participating-org ref="GB-GOV-1" type="10" role="3">
+            <narrative>Department for International Development</narrative>
+        </participating-org>
+        <other-identifier ref="201000" type="A1">
+            <owner-org ref="GB-GOV-1">
+                <narrative>DFID</narrative>
+            </owner-org>
+        </other-identifier>
+        <other-identifier ref="GB-1" type="B1">
+            <owner-org ref="GB-GOV-1">
+                <narrative>DFID previous reporting-org identifier</narrative>
+            </owner-org>
+        </other-identifier>
+        <activity-status code="2" />
+        <activity-date type="1" iso-date="2011-08-01" />
+        <activity-date type="2" iso-date="2010-12-22" />
+        <activity-date type="3" iso-date="2017-12-31" />
+        <contact-info type="1">
+            <organisation>
+                <narrative>Department for International Development</narrative>
+            </organisation>
+            <telephone>+44 (0) 1355 84 3132</telephone>
+            <email>enquiry@dfid.gov.uk</email>
+            <mailing-address>
+                <narrative>Public Enquiry Point, Abercrombie House, Eaglesham Road, East Kilbride, Glasgow G75 8EA</narrative>
+            </mailing-address>
+        </contact-info>
+        <recipient-country code="AF" percentage="100" />
+    </iati-activity>
+</iati-activities>
