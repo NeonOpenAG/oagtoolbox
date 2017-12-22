@@ -466,7 +466,9 @@ class WireframeController extends Controller
 
             $existinglocationCodes = [];
             foreach ($activity['locations'] as $existinglocation) {
-                $existinglocationCodes[] = $existinglocation['location-id']['code'];
+                if(isset($existinglocation['location-id'])) {
+                    $existinglocationCodes[] = $existinglocation['location-id']['code'];
+                }
             }
 
             // suggested on the OagFile for that activity
