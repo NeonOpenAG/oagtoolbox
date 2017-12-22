@@ -62,4 +62,4 @@ Tests
 
 Sources
 -----
-http://iati.dfid.gov.uk/iati_files/Country/DFID-Afghanistan-AF.xml ~ UK Open Government Licence (OGL)  [Open Data]
+http://iati.dfid.gov.uk/iati_files/Country/DFID-Afghanistan-AF.xml published under the [UK Open Government Licence (OGL)]
