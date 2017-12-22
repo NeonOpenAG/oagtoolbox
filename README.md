@@ -57,3 +57,8 @@ Tests
 
 
     ./vendor/bin/simple-phpunit -c phpunit.xml --coverage-html web/test-coverage
+
+
+Sources
+-----
+http://iati.dfid.gov.uk/iati_files/Country/DFID-Afghanistan-AF.xml ~ UK Open Government Licence (OGL)  [Open Data]
