@@ -29,6 +29,19 @@ The install script will pull the unerlying dockers for you but won't start them.
 composer run start-dockers
 ```
 
+Permissions
+-----------
+
+The web interface for the toolkit needs to send data to and from the dockers so you will need to add the www-data user to the docker group and restart apache:
+
+1. Add the www-data user to the docker group, edit ```/etc/group```
+
+    docker:x:129:tobias,www-data
+
+1. Restart Apache
+
+    service apache2 restart
+
 Tests
 -----
 

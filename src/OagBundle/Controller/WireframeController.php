@@ -85,14 +85,6 @@ class WireframeController extends Controller
             $data['file'] = $srvOagFile->getMostRecent();
         }
 
-//        $flashbag = $this->get('session')->getFlashBag();
-//        $all = $flashbag->peekAll();
-//        $flashbag->clear();
-//
-//        $data['errors'] = $all;
-//        $data['errors']['error'] = [];
-//        $data['errors']['error'][] = '<p>Line one</p><p>Line two</p><p>Line three</p>';
-
         return $data;
     }
 
@@ -347,7 +339,10 @@ class WireframeController extends Controller
         $pasteTextForm->handleRequest($request);
         if ($pasteTextForm->isSubmitted() && $pasteTextForm->isValid()) {
             $data = $pasteTextForm->getData();
-            $srvClassifier->classifyOagFileFromText($file, $data['text'], $activityId);
+            $count = $srvClassifier->classifyOagFileFromText($file, $data['text'], $activityId);
+            if ($count == 0) {
+                $this->get('session')->getFlashBag()->add("warning", "We couldn't find any tags in the text you submitted.  Sorry.");
+            }
             return $this->redirect($this->generateUrl('oag_wireframe_classifiersuggestion', array('id' => $file->getId(), 'activityId' => $activityId)));
         }
 
@@ -471,7 +466,9 @@ class WireframeController extends Controller
 
             $existinglocationCodes = [];
             foreach ($activity['locations'] as $existinglocation) {
-                $existinglocationCodes[] = $existinglocation['location-id']['code'];
+                if(isset($existinglocation['location-id'])) {
+                    $existinglocationCodes[] = $existinglocation['location-id']['code'];
+                }
             }
 
             // suggested on the OagFile for that activity
@@ -648,7 +645,10 @@ class WireframeController extends Controller
         $pasteTextForm->handleRequest($request);
         if ($pasteTextForm->isSubmitted() && $pasteTextForm->isValid()) {
             $data = $pasteTextForm->getData();
-            $srvGeocoder->geocodeOagFileFromText($file, $data['text'], $activityId, $data['country']);
+            $count = $srvGeocoder->geocodeOagFileFromText($file, $data['text'], $activityId, $data['country']);
+            if ($count == 0) {
+                $this->get('session')->getFlashBag()->add("warning", "We couldn't find any locations in the text you submitted.  Sorry.");
+            }
             return $this->redirect($this->generateUrl('oag_wireframe_geocodersuggestion', array('id' => $file->getId(), 'activityId' => $activityId)));
         }
 
@@ -1052,6 +1052,17 @@ class WireframeController extends Controller
             'file_stats' => $fileStats,
             'ruleset_errors' => $rulesetErrors,
         );
+    }
+
+    /**
+     * @Route("/activate/{id}")
+     * @ParamConverter("file", class="OagBundle:OagFile")
+     */
+    public function activateFileAction(OagFile $file) {
+        $srvOagFile = $this->get(OagFileService::class);
+        $srvOagFile->setMostRecent($file);
+
+        return $this->redirect($this->generateUrl('oag_wireframe_improveyourdata', array('id' => $file->getId())));
     }
 
 }
