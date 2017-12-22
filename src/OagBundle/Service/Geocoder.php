@@ -191,6 +191,13 @@ class Geocoder extends AbstractOagService
 
         $em->persist($file);
         $em->flush();
+
+        $count = 0;
+        if (is_array($activities)) {
+            $count = count(array_pop($activities));
+        }
+
+        return $count;
     }
 
     public function processString($sometext, $filename, $country)

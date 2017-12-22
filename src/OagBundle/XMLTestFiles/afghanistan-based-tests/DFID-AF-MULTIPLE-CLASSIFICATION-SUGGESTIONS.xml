@@ -1,0 +1,184 @@
+<iati-activities version="2.01" xmlns:openag="http://openagfunding.readthedocs.io/en/latest/extensions/" generated-datetime="2017-11-29T18:30:53">
+    <!--
+        Includes multiple classification suggestions.
+    -->
+    <iati-activity last-updated-datetime="2017-11-27T00:00:00" xml:lang="en" default-currency="GBP" hierarchy="1">
+        <iati-identifier>GB-1-201000</iati-identifier>
+        <reporting-org ref="GB-GOV-1" type="10">
+            <narrative>Department for International Development</narrative>
+        </reporting-org>
+        <title>
+            <narrative>Strengthening Civil Society in Afghanistan (Tawanmandi)</narrative>
+        </title>
+        <description>
+            <narrative>Tawanmandi is a grant funding mechanism that supports civil society to advocate on improving governance in Afghanistan through greater accountability and responsiveness by the state to its citizens. It seeks to build an inclusive civil society able to engage effectively on issues of human rights, access to justice, anti-corruption, peace building, and conflict resolution and through the media. Gender, youth, disability and out-of-Kabul organisations are cross cutting themes. Wheat. Farming.</narrative>
+        </description>
+        <participating-org role="4">
+            <narrative>Name Withheld</narrative>
+        </participating-org>
+        <participating-org ref="GB" type="10" role="1">
+            <narrative>UNITED KINGDOM</narrative>
+        </participating-org>
+        <participating-org ref="GB-GOV-1" type="10" role="3">
+            <narrative>Department for International Development</narrative>
+        </participating-org>
+        <other-identifier ref="201000" type="A1">
+            <owner-org ref="GB-GOV-1">
+                <narrative>DFID</narrative>
+            </owner-org>
+        </other-identifier>
+        <other-identifier ref="GB-1" type="B1">
+            <owner-org ref="GB-GOV-1">
+                <narrative>DFID previous reporting-org identifier</narrative>
+            </owner-org>
+        </other-identifier>
+        <activity-status code="2" />
+        <activity-date type="1" iso-date="2011-08-01" />
+        <activity-date type="2" iso-date="2010-12-22" />
+        <activity-date type="3" iso-date="2017-12-31" />
+        <contact-info type="1">
+            <organisation>
+                <narrative>Department for International Development</narrative>
+            </organisation>
+            <telephone>+44 (0) 1355 84 3132</telephone>
+            <email>enquiry@dfid.gov.uk</email>
+            <mailing-address>
+                <narrative>Public Enquiry Point, Abercrombie House, Eaglesham Road, East Kilbride, Glasgow G75 8EA</narrative>
+            </mailing-address>
+        </contact-info>
+        <recipient-country code="AF" percentage="100" />
+        <sector code="15113" percentage="27.54">
+            <narrative>Anti-corruption organisations and institutions</narrative>
+        </sector>
+        <sector code="15110" percentage="23.61">
+            <narrative>Public sector policy and administrative management</narrative>
+        </sector>
+        <sector code="15130" percentage="19.67">
+            <narrative>Legal and judicial development</narrative>
+        </sector>
+        <sector code="43010" percentage="19.16">
+            <narrative>Multisector aid</narrative>
+        </sector>
+        <sector code="15150" percentage="10.01">
+            <narrative>Democratic participation and civil society</narrative>
+        </sector>
+        <default-tied-status code="5" />
+        <document-link format="application/vnd.oasis.opendocument.text" url="http://iati.dfid.gov.uk/iati_documents/3717458.odt">
+            <title>
+                <narrative>Business Case and Summary 201000 (January, 2013).odt</narrative>
+            </title>
+            <category code="A05" />
+            <category code="A04" />
+            <category code="A03" />
+            <category code="A02" />
+            <category code="A01" />
+            <language code="en" />
+        </document-link>
+        <document-link format="application/vnd.oasis.opendocument.text" url="http://iati.dfid.gov.uk/iati_documents/3793751.odt">
+            <title>
+                <narrative>Annual review (1) 201000 (July, 2014).odt</narrative>
+            </title>
+            <category code="A08" />
+            <category code="A07" />
+            <language code="en" />
+        </document-link>
+        <document-link format="application/vnd.oasis.opendocument.text" url="http://iati.dfid.gov.uk/iati_documents/3812489.odt">
+            <title>
+                <narrative>Annual review (2) 201000 (January, 2013).odt</narrative>
+            </title>
+            <category code="A08" />
+            <category code="A07" />
+            <language code="en" />
+        </document-link>
+        <document-link format="application/vnd.oasis.opendocument.text" url="http://iati.dfid.gov.uk/iati_documents/3862030.odt">
+            <title>
+                <narrative>Intervention Summary 201000 (July, 2014).odt</narrative>
+            </title>
+            <category code="A02" />
+            <language code="en" />
+        </document-link>
+        <document-link format="application/vnd.oasis.opendocument.text" url="http://iati.dfid.gov.uk/iati_documents/4388142.odt">
+            <title>
+                <narrative>Annual review (3) 201000 (March, 2014).odt</narrative>
+            </title>
+            <category code="A08" />
+            <category code="A07" />
+            <language code="en" />
+        </document-link>
+        <document-link format="application/vnd.oasis.opendocument.text" url="http://iati.dfid.gov.uk/iati_documents/4899958.odt">
+            <title>
+                <narrative>Annual review (4) 201000 (March, 2015).odt</narrative>
+            </title>
+            <category code="A08" />
+            <category code="A07" />
+            <language code="en" />
+        </document-link>
+        <document-link format="application/vnd.oasis.opendocument.text" url="http://iati.dfid.gov.uk/iati_documents/5162519.odt">
+            <title>
+                <narrative>Addendum to the Business Case (1) 201000 (June, 2016).odt</narrative>
+            </title>
+            <category code="A05" />
+            <category code="A04" />
+            <category code="A03" />
+            <category code="A02" />
+            <category code="A01" />
+            <language code="en" />
+        </document-link>
+        <document-link format="application/vnd.oasis.opendocument.text" url="http://iati.dfid.gov.uk/iati_documents/5380168.odt">
+            <title>
+                <narrative>Annual review (5) 201000 (March, 2016).odt</narrative>
+            </title>
+            <category code="A08" />
+            <category code="A07" />
+            <language code="en" />
+        </document-link>
+        <document-link format="application/vnd.oasis.opendocument.text" url="http://iati.dfid.gov.uk/iati_documents/5461069.odt">
+            <title>
+                <narrative>Addendum to the Business Case (2) 201000 (June, 2016).odt</narrative>
+            </title>
+            <category code="A05" />
+            <category code="A04" />
+            <category code="A03" />
+            <category code="A02" />
+            <category code="A01" />
+            <language code="en" />
+        </document-link>
+        <document-link format="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" url="http://iati.dfid.gov.uk/iati_documents/5612325.xlsx">
+            <title>
+                <narrative>Logical framework 201000 (October, 2016).xlsx</narrative>
+            </title>
+            <category code="A02" />
+            <category code="A08" />
+            <language code="en" />
+        </document-link>
+        <document-link format="text/html" url="https://www.contractsfinder.service.gov.uk/Notice/cadaf11c-ba96-42f7-bfc4-f1e1d707354b">
+            <title>
+                <narrative>Contract: DFID 7363 Independent Expenditure Verification and Financial Management Audit of Tawanmandi Legacy Grants, Afghanistan</narrative>
+            </title>
+            <category code="A11" />
+            <language code="en" />
+        </document-link>
+        <related-activity ref="GB-1-201000-101" type="2" />
+        <related-activity ref="GB-1-201000-102" type="2" />
+        <related-activity ref="GB-1-201000-103" type="2" />
+        <related-activity ref="GB-1-201000-105" type="2" />
+        <related-activity ref="GB-1-201000-106" type="2" />
+        <related-activity ref="GB-1-201000-107" type="2" />
+        <related-activity ref="GB-1-201000-108" type="2" />
+        <related-activity ref="GB-1-201000-109" type="2" />
+        <related-activity ref="GB-1-201000-110" type="2" />
+        <related-activity ref="GB-1-201000-111" type="2" />
+        <related-activity ref="GB-1-201000-112" type="2" />
+        <related-activity ref="GB-1-201000-113" type="2" />
+        <related-activity ref="GB-1-201000-114" type="2" />
+        <related-activity ref="GB-1-201000-115" type="2" />
+        <related-activity ref="GB-1-201000-116" type="2" />
+        <related-activity ref="GB-1-201000-117" type="2" />
+        <related-activity ref="GB-1-201000-118" type="2" />
+        <related-activity ref="GB-1-201000-119" type="2" />
+        <related-activity ref="GB-1-201000-120" type="2" />
+        <related-activity ref="GB-1-201000-121" type="2" />
+        <related-activity ref="GB-1-201000-122" type="2" />
+        <conditions attached="false" />
+    </iati-activity>
+</iati-activities>

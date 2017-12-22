@@ -1,0 +1,190 @@
+<iati-activities version="2.01" xmlns:openag="http://openagfunding.readthedocs.io/en/latest/extensions/" generated-datetime="2017-11-29T18:30:53">
+    <!--
+        Includes multiple existing Locations.
+        Includes multiple classification suggestions.
+    -->
+    <iati-activity last-updated-datetime="2015-11-19T03:01:54" xml:lang="en" default-currency="GBP" hierarchy="1">
+        <iati-identifier>GB-1-114488</iati-identifier>
+        <reporting-org ref="GB-GOV-1" type="10">
+            <narrative>Department for International Development</narrative>
+        </reporting-org>
+        <title>
+            <narrative>Afghanistan Comprehensive Agriculture and Rural Development Facility</narrative>
+        </title>
+        <description>
+            <narrative>The aim of CARD-F, the Comprehensive Agriculture and Rural Development Facility, is to increase legal rural employment and income opportunities through more efficient agricultural value chains and markets. It also aims to reduce the risk of resurgence in poppy cultivation by creating commercially viable and sustainable alternatives for farmers.  Further aims include the coordination and integration of government and donor support to agriculture and rural development, and the improvement of government capacity to lead and coordinate donor initiatives to deliver provincial and district-level programmes.</narrative>
+        </description>
+        <participating-org ref="GB" type="10" role="1">
+            <narrative>UNITED KINGDOM</narrative>
+        </participating-org>
+        <participating-org ref="GB-GOV-1" type="10" role="3">
+            <narrative>Department for International Development</narrative>
+        </participating-org>
+        <other-identifier ref="114488" type="A1">
+            <owner-org ref="GB-GOV-1">
+                <narrative>DFID</narrative>
+            </owner-org>
+        </other-identifier>
+        <other-identifier ref="GB-1" type="B1">
+            <owner-org ref="GB-GOV-1">
+                <narrative>DFID previous reporting-org identifier</narrative>
+            </owner-org>
+        </other-identifier>
+        <activity-status code="4" />
+        <activity-date type="1" iso-date="2009-05-01" />
+        <activity-date type="2" iso-date="2009-06-29" />
+        <activity-date type="3" iso-date="2015-03-31" />
+        <activity-date type="4" iso-date="2015-03-31" />
+        <contact-info type="1">
+            <organisation>
+                <narrative>Department for International Development</narrative>
+            </organisation>
+            <telephone>+44 (0) 1355 84 3132</telephone>
+            <email>enquiry@dfid.gov.uk</email>
+            <mailing-address>
+                <narrative>Public Enquiry Point, Abercrombie House, Eaglesham Road, East Kilbride, Glasgow G75 8EA</narrative>
+            </mailing-address>
+        </contact-info>
+        <location>
+            <location-reach code="1" />
+            <name>
+                <narrative>Balkh</narrative>
+            </name>
+            <description>
+                <narrative>Balkh,Afghanistan</narrative>
+            </description>
+            <point srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+                <pos>36.7525199999999970 66.8921500000000010</pos>
+            </point>
+            <exactness code="2" />
+            <location-class code="2" />
+            <feature-designation code="PPL" />
+        </location>
+        <location>
+            <location-reach code="1" />
+            <name>
+                <narrative>Helmand Province</narrative>
+            </name>
+            <description>
+                <narrative>Helmand Province,Afghanistan</narrative>
+            </description>
+            <point srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+                <pos>31.0000000000000000 64.0000000000000000</pos>
+            </point>
+            <exactness code="2" />
+            <location-class code="2" />
+            <feature-designation code="PPL" />
+        </location>
+        <location>
+            <location-reach code="1" />
+            <name>
+                <narrative>Wilayat-e Nangarhar</narrative>
+            </name>
+            <description>
+                <narrative>Wilayat-e Nangarhar,Afghanistan</narrative>
+            </description>
+            <point srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+                <pos>34.3333000000000010 70.4167000000000060</pos>
+            </point>
+            <exactness code="2" />
+            <location-class code="2" />
+            <feature-designation code="PPL" />
+        </location>
+        <location>
+            <location-reach code="1" />
+            <name>
+                <narrative>Badakhshan</narrative>
+            </name>
+            <description>
+                <narrative>Badakhshan,Afghanistan</narrative>
+            </description>
+            <point srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+                <pos>36.7500000000000000 72.0000000000000000</pos>
+            </point>
+            <exactness code="2" />
+            <location-class code="2" />
+            <feature-designation code="PPL" />
+        </location>
+        <location>
+            <location-reach code="1" />
+            <name>
+                <narrative>Balkh</narrative>
+            </name>
+            <description>
+                <narrative>Balkh,Afghanistan</narrative>
+            </description>
+            <point srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+                <pos>36.7525199999999970 66.8921500000000010</pos>
+            </point>
+            <exactness code="2" />
+            <location-class code="1" />
+            <feature-designation code="ADM1" />
+        </location>
+        <location>
+            <location-reach code="1" />
+            <name>
+                <narrative>Afghanistan</narrative>
+            </name>
+            <description>
+                <narrative>Afghanistan</narrative>
+            </description>
+            <point srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+                <pos>33.8332500000000000 66.0252799999999950</pos>
+            </point>
+            <exactness code="1" />
+            <location-class code="1" />
+            <feature-designation code="ADM2" />
+        </location>
+        <default-tied-status code="5" />
+        <document-link format="application/vnd.ms-excel" url="http://iati.dfid.gov.uk/iati_documents/3129893.xls">
+            <title>
+                <narrative>Annual review (1) 114488 (July, 2012).xls</narrative>
+            </title>
+            <category code="A08" />
+            <category code="A07" />
+            <language code="en" />
+        </document-link>
+        <document-link format="application/vnd.oasis.opendocument.text" url="http://iati.dfid.gov.uk/iati_documents/3773773.odt">
+            <title>
+                <narrative>Annual review (2) 114488 (December, 2012).odt</narrative>
+            </title>
+            <category code="A08" />
+            <category code="A07" />
+            <language code="en" />
+        </document-link>
+        <document-link format="application/vnd.oasis.opendocument.text" url="http://iati.dfid.gov.uk/iati_documents/3807558.odt">
+            <title>
+                <narrative>Intervention Summary 114488 (January, 2014).odt</narrative>
+            </title>
+            <category code="A02" />
+            <language code="en" />
+        </document-link>
+        <document-link format="application/vnd.oasis.opendocument.text" url="http://iati.dfid.gov.uk/iati_documents/4174983.odt">
+            <title>
+                <narrative>Annual review (3) 114488 (October, 2013).odt</narrative>
+            </title>
+            <category code="A08" />
+            <category code="A07" />
+            <language code="en" />
+        </document-link>
+        <document-link format="application/vnd.ms-excel" url="http://iati.dfid.gov.uk/iati_documents/4534431.xls">
+            <title>
+                <narrative>Logical Framework 114488 (June, 2014).xls</narrative>
+            </title>
+            <category code="A02" />
+            <category code="A08" />
+            <language code="en" />
+        </document-link>
+        <document-link format="application/vnd.oasis.opendocument.text" url="http://iati.dfid.gov.uk/iati_documents/5040456.odt">
+            <title>
+                <narrative>Project completion review 114488 (June, 2015).odt</narrative>
+            </title>
+            <category code="A01" />
+            <category code="A08" />
+            <category code="A07" />
+            <language code="en" />
+        </document-link>
+        <related-activity ref="GB-1-114488-101" type="2" />
+        <conditions attached="false" />
+    </iati-activity>
+</iati-activities>
