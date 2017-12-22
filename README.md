@@ -54,6 +54,7 @@ Tests
 | [DFID-AF-SINGLE-CLASSIFICATION-SUGGESTION.xml](https://raw.githubusercontent.com/NeonOpenAG/oagtoolbox/develop/src/OagBundle/XMLTestFiles/afghanistan-based-tests/DFID-AF-SINGLE-CLASSIFICATION-SUGGESTION.xml)    | Report contains a single suggested clarification.   |
 | [DFID-AF-SINGLE-EXISTING-LOCATION.xml](https://raw.githubusercontent.com/NeonOpenAG/oagtoolbox/develop/src/OagBundle/XMLTestFiles/afghanistan-based-tests/DFID-AF-SINGLE-EXISTING-LOCATION.xml)            | Report contains a single existing location.         |
 | [DFID-AF-SINGLE-LOCATION-SUGGESTION.xml](https://raw.githubusercontent.com/NeonOpenAG/oagtoolbox/develop/src/OagBundle/XMLTestFiles/afghanistan-based-tests/DFID-AF-SINGLE-LOCATION-SUGGESTION.xml)          | Report contains a single suggested location.        |
+| [DFID-AF-NO-SUGGESTED-EXISTING.xml](https://raw.githubusercontent.com/NeonOpenAG/oagtoolbox/develop/src/OagBundle/XMLTestFiles/afghanistan-based-tests/DFID-AF-NO-SUGGESTED-EXISTING.xml)          | Report includes no suggestions or existing data.         |
 
 
     ./vendor/bin/simple-phpunit -c phpunit.xml --coverage-html web/test-coverage
