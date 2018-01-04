@@ -722,7 +722,9 @@ class WireframeController extends Controller
             'currentLocations' => $currentLocations,
             'currentLocationsMaps' => $currentLocationsMaps,
             'enhancementUploadForm' => $enhUploadForm->createView(),
-            'pasteTextForm' => $pasteTextForm->createView()
+            'pasteTextForm' => $pasteTextForm->createView(),
+            'loc_count_existing' => count($currentLocations),
+            'loc_count_suggested' => count($geocoderGeolocs),
         );
     }
 

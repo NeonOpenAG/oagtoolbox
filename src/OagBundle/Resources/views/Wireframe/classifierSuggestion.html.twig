@@ -14,7 +14,7 @@
         <section class="block">
 
             <div class="intro margin">
-              <h1>AGROVOC Coding {{ tag_count_existing }} {{ tag_count_suggested }}</h1>
+              <h1>AGROVOC Coding</h1>
             </div>
 
             <article class="activity margin">
@@ -39,7 +39,7 @@
                         {# TODO: fix this splitting of foem to bew done in the controller #}
                         {% if loop.index <= tag_count_existing %}
                           <div class="tag-row">
-                            <div class="tag">{{ form_label(tag) }} {{ loop.index }}</div>
+                            <div class="tag">{{ form_label(tag) }}</div>
                               <label class="addremove">{{ form_widget(tag) }}<span></span></label>
                           </div>
                         {% endif %}
