@@ -374,6 +374,7 @@ class WireframeController extends Controller
             $classifierTags[] = $sugTag->getTag();
         }
         $allTags = array_merge($currentTags, $classifierTags);
+        dump($allTags);
 
         // tags add/remove form
         $form = $this->createFormBuilder()
@@ -437,7 +438,9 @@ class WireframeController extends Controller
             'activity' => $srvIATI->summariseActivityToArray($activity),
             'form' => $form->createView(),
             'enhancementUploadForm' => $enhUploadForm->createView(),
-            'pasteTextForm' => $pasteTextForm->createView()
+            'pasteTextForm' => $pasteTextForm->createView(),
+            'tag_count_existing' => $activity->count(),
+            'tag_count_suggested' => count($allTags) - $activity->count(),
         );
     }
 

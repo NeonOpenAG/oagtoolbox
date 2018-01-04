@@ -14,21 +14,40 @@
         <section class="block">
 
             <div class="intro margin">
-                <h1>Classifier suggestions</h1>
+                <h1>AGROVOC Coding</h1>
             </div>
 
             <article class="activity margin">
                 <div class="heading">
-                    <h2>Suggestions for {{ activity.name }} </h2>
+                    <h2>AGROVOC Codes for {{ activity.name }} </h2>
                     <h3>Activity ID: {{ activity.id }}</h3>
-                </div>
-
-                <div class="content-block">
                     {% if activity.description %}
                         <p class="more">Description: {{ activity.description }}</p>
                     {% else %}
                         <p>No description available.</p>
                     {% endif %}
+                </div>
+
+                <div class="content-block">
+                    <h3>We found the following exisiting codes</h3>
+                    <!-- TODO: Move this back out, but not to activity.html.twig -->
+                    {{ form_start(form) }}
+                    {% for tag in form['tags'] %}
+                        <div class="tag-row">
+                          <div class="tag">{{ form_label(tag) }} {{ loop.index }}</div>
+                            <label class="addremove">{{ form_widget(tag) }}<span></span></label>
+                        </div>
+                    {% endfor %}
+                    {% do form['tags'].setRendered %}
+                    <div class="bottom-page-nav">
+                        {{ form_row(form.back) }}{{ form_row(form.save) }}
+                    </div>
+                    {{ form_end(form) }}
+
+                </div>
+
+                <div class="content-block">
+                    <h3>We suggest the following codes</h3>
 
                     <!-- TODO: Move this back out, but not to activity.html.twig -->
                     {{ form_start(form) }}
@@ -44,8 +63,12 @@
                     </div>
                     {{ form_end(form) }}
 
+
+                </div>
+
+                <div class="content-block">
                     <div class="upload-info">
-                        <h3>Suggest more codes</h3>
+                        <h3>Help us suggest more.</h3>
                         {% if form['tags'] | length %}
                             <p>If the list of suggestions above is missing codes people might find useful, paste some descriptive text into the box below and press the "Suggest more codes" button.</p>
                         {% else %}
@@ -54,8 +77,7 @@
                         <hr>
                         <div>{{ form(pasteTextForm) }}</div>
                     </div>
-
-                </div>
+                    </div>
                 </acticle>
 
         </section>
