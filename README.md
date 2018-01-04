@@ -45,4 +45,21 @@ The web interface for the toolkit needs to send data to and from the dockers so 
 Tests
 -----
 
+| Test                                              | Description                                         |
+|---------------------------------------------------|-----------------------------------------------------|
+| [DFID-AF-MULTIPLE-CLASSIFICATION-SUGGESTIONS.xml](https://raw.githubusercontent.com/NeonOpenAG/oagtoolbox/develop/src/OagBundle/XMLTestFiles/afghanistan-based-tests/DFID-AF-MULTIPLE-CLASSIFICATION-SUGGESTIONS.xml) | Report contains multiple suggested classifications. |
+| [DFID-AF-MULTIPLE-EXISTING-CLASSIFICATIONS.xml](https://raw.githubusercontent.com/NeonOpenAG/oagtoolbox/develop/src/OagBundle/XMLTestFiles/afghanistan-based-tests/DFID-AF-MULTIPLE-EXISTING-CLASSIFICATIONS.xml)   | Report contains multiple existing classifications.  |
+| [DFID-AF-MULTIPLE-EXISTING-LOCATIONS.xml](https://raw.githubusercontent.com/NeonOpenAG/oagtoolbox/develop/src/OagBundle/XMLTestFiles/afghanistan-based-tests/DFID-AF-MULTIPLE-EXISTING-LOCATIONS.xml)         | Report contains multiple existing locations.        |
+| [DFID-AF-MULTIPLE-LOCATION-SUGGESTIONS.xml](https://raw.githubusercontent.com/NeonOpenAG/oagtoolbox/develop/src/OagBundle/XMLTestFiles/afghanistan-based-tests/DFID-AF-MULTIPLE-LOCATION-SUGGESTIONS.xml)       | Report contains multiple suggested locations.       |
+| [DFID-AF-SINGLE-CLASSIFICATION-SUGGESTION.xml](https://raw.githubusercontent.com/NeonOpenAG/oagtoolbox/develop/src/OagBundle/XMLTestFiles/afghanistan-based-tests/DFID-AF-SINGLE-CLASSIFICATION-SUGGESTION.xml)    | Report contains a single suggested clarification.   |
+| [DFID-AF-SINGLE-EXISTING-LOCATION.xml](https://raw.githubusercontent.com/NeonOpenAG/oagtoolbox/develop/src/OagBundle/XMLTestFiles/afghanistan-based-tests/DFID-AF-SINGLE-EXISTING-LOCATION.xml)            | Report contains a single existing location.         |
+| [DFID-AF-SINGLE-LOCATION-SUGGESTION.xml](https://raw.githubusercontent.com/NeonOpenAG/oagtoolbox/develop/src/OagBundle/XMLTestFiles/afghanistan-based-tests/DFID-AF-SINGLE-LOCATION-SUGGESTION.xml)          | Report contains a single suggested location.        |
+| [DFID-AF-NO-SUGGESTED-EXISTING.xml](https://raw.githubusercontent.com/NeonOpenAG/oagtoolbox/develop/src/OagBundle/XMLTestFiles/afghanistan-based-tests/DFID-AF-NO-SUGGESTED-EXISTING.xml)          | Report includes no suggestions or existing data.         |
+
+
     ./vendor/bin/simple-phpunit -c phpunit.xml --coverage-html web/test-coverage
+
+
+Sources
+-----
+http://iati.dfid.gov.uk/iati_files/Country/DFID-Afghanistan-AF.xml published under the [UK Open Government Licence (OGL)]
