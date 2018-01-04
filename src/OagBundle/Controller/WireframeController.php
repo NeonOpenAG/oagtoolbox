@@ -374,7 +374,6 @@ class WireframeController extends Controller
             $classifierTags[] = $sugTag->getTag();
         }
         $allTags = array_merge($currentTags, $classifierTags);
-        dump($allTags);
 
         // tags add/remove form
         $form = $this->createFormBuilder()
@@ -439,8 +438,8 @@ class WireframeController extends Controller
             'form' => $form->createView(),
             'enhancementUploadForm' => $enhUploadForm->createView(),
             'pasteTextForm' => $pasteTextForm->createView(),
-            'tag_count_existing' => $activity->count(),
-            'tag_count_suggested' => count($allTags) - $activity->count(),
+            'tag_count_existing' => count($currentTags),
+            'tag_count_suggested' => count($classifierTags),
         );
     }
 
@@ -597,7 +596,6 @@ class WireframeController extends Controller
                         $file->removeGeolocation($delme);
                     }
                     $em->flush();
-                    dump($locations);
                     unset($geocoderGeolocs[$key]);
                 }
             }
