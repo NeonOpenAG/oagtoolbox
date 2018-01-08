@@ -92,10 +92,6 @@ class WireframeController extends Controller
      * @Route("/download/{id}")
      */
     public function downloadAction(Request $request, OagFile $file = null) {
-        if (!$file) {
-            // redirect to
-            return $this->redirect($this->generateUrl('oag_error_download'));
-        }
 
         $em = $this->getDoctrine()->getManager();
         $fileRepo = $this->getDoctrine()->getRepository(OagFile::class);
@@ -185,10 +181,6 @@ class WireframeController extends Controller
      * @Route("/downloadFile/{id}")
      */
     public function downloadFileAction(Request $request, OagFile $file = null) {
-        if (!$file) {
-            // redirect to
-            return $this->redirect($this->generateUrl('oag_error_download'));
-        }
 
         $srvOagFile = $this->get(OagFileService::class);
 
@@ -199,10 +191,6 @@ class WireframeController extends Controller
      * @Route("/classifier/{id}")
      */
     public function classifierAction(OagFile $file = null) {
-        if (!$file) {
-            // redirect to
-            return $this->redirect($this->generateUrl('oag_error_classifier'));
-        }
 
         $srvIATI = $this->get(IATI::class);
         $root = $srvIATI->load($file);
@@ -293,10 +281,6 @@ class WireframeController extends Controller
      * @Route("/classifier/{id}/{activityId}")
      */
     public function classifierSuggestionAction(Request $request, OagFile $file = null, $activityId) {
-        if (!$file) {
-            // redirect to
-            return $this->redirect($this->generateUrl('oag_error_classifiersuggestion'));
-        }
 
         $em = $this->getDoctrine()->getManager();
         $srvClassifier = $this->get(Classifier::class);
@@ -459,10 +443,6 @@ class WireframeController extends Controller
      * @Route("/geocoder/{id}")
      */
     public function geocoderAction(OagFile $file = null) {
-        if (!$file) {
-            // redirect to
-            return $this->redirect($this->generateUrl('oag_error_geocoder'));
-        }
 
         $srvIATI = $this->get(IATI::class);
         $root = $srvIATI->load($file);
@@ -546,10 +526,6 @@ class WireframeController extends Controller
      * @Route("/geocoder/{id}/{activityId}")
      */
     public function geocoderSuggestionAction(Request $request, OagFile $file = null, $activityId) {
-        if (!$file) {
-            // redirect to
-            return $this->redirect($this->generateUrl('oag_error_geocodersuggestion'));
-        }
 
         $em = $this->getDoctrine()->getManager();
         $srvGeocoder = $this->get(Geocoder::class);
@@ -1004,10 +980,6 @@ class WireframeController extends Controller
      * @Route("/preview/{id}")
      */
     public function previewAction(OagFile $file = null) {
-        if (!$file) {
-            // redirect to
-            return $this->redirect($this->generateUrl('oag_error_preview'));
-        }
 
         $srvDPortal = $this->get(DPortal::class);
         $srvDPortal->visualise($file);
@@ -1026,10 +998,6 @@ class WireframeController extends Controller
      * @Route("/improveYourData/{id}")
      */
     public function improveYourDataAction(OagFile $file = null) {
-        if (!$file) {
-            // redirect to
-            return $this->redirect($this->generateUrl('oag_error_improveyourdata'));
-        }
 
         $srvGeocoder = $this->get(Geocoder::class);
         $srvClassifier = $this->get(Classifier::class);
@@ -1086,10 +1054,6 @@ class WireframeController extends Controller
      * @Route("/activate/{id}")
      */
     public function activateFileAction(OagFile $file = null) {
-        if (!$file) {
-            // redirect to
-            return $this->redirect($this->generateUrl('oag_error_activate'));
-        }
 
         $srvOagFile = $this->get(OagFileService::class);
         $srvOagFile->setMostRecent($file);
