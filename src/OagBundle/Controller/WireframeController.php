@@ -90,7 +90,6 @@ class WireframeController extends Controller
 
     /**
      * @Route("/download/{id}")
-     * @ParamConverter("file", class="OagBundle:OagFile")
      */
     public function downloadAction(Request $request, OagFile $file)
     {
@@ -180,7 +179,6 @@ class WireframeController extends Controller
      * Download an IATI file.
      *
      * @Route("/downloadFile/{id}")
-     * @ParamConverter("file", class="OagBundle:OagFile")
      */
     public function downloadFileAction(Request $request, OagFile $file)
     {
@@ -191,7 +189,6 @@ class WireframeController extends Controller
 
     /**
      * @Route("/classifier/{id}")
-     * @ParamConverter("file", class="OagBundle:OagFile")
      */
     public function classifierAction(OagFile $file)
     {
@@ -282,7 +279,6 @@ class WireframeController extends Controller
 
     /**
      * @Route("/classifier/{id}/{activityId}")
-     * @ParamConverter("file", class="OagBundle:OagFile")
      */
     public function classifierSuggestionAction(Request $request, OagFile $file, $activityId)
     {
@@ -445,7 +441,6 @@ class WireframeController extends Controller
 
     /**
      * @Route("/geocoder/{id}")
-     * @ParamConverter("file", class="OagBundle:OagFile")
      */
     public function geocoderAction(OagFile $file)
     {
@@ -529,7 +524,6 @@ class WireframeController extends Controller
 
     /**
      * @Route("/geocoder/{id}/{activityId}")
-     * @ParamConverter("file", class="OagBundle:OagFile")
      */
     public function geocoderSuggestionAction(Request $request, OagFile $file, $activityId)
     {
@@ -984,7 +978,6 @@ class WireframeController extends Controller
 
     /**
      * @Route("/preview/{id}")
-     * @ParamConverter("file", class="OagBundle:OagFile")
      */
     public function previewAction(OagFile $file)
     {
@@ -1003,7 +996,6 @@ class WireframeController extends Controller
 
     /**
      * @Route("/improveYourData/{id}")
-     * @ParamConverter("file", class="OagBundle:OagFile")
      */
     public function improveYourDataAction(OagFile $file) {
         $srvGeocoder = $this->get(Geocoder::class);
@@ -1059,7 +1051,6 @@ class WireframeController extends Controller
 
     /**
      * @Route("/activate/{id}")
-     * @ParamConverter("file", class="OagBundle:OagFile")
      */
     public function activateFileAction(OagFile $file) {
         $srvOagFile = $this->get(OagFileService::class);
