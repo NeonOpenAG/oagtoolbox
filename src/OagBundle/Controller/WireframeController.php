@@ -437,7 +437,9 @@ class WireframeController extends Controller
             'activity' => $srvIATI->summariseActivityToArray($activity),
             'form' => $form->createView(),
             'enhancementUploadForm' => $enhUploadForm->createView(),
-            'pasteTextForm' => $pasteTextForm->createView()
+            'pasteTextForm' => $pasteTextForm->createView(),
+            'tag_count_existing' => count($currentTags),
+            'tag_count_suggested' => count($classifierTags),
         );
     }
 
@@ -594,7 +596,6 @@ class WireframeController extends Controller
                         $file->removeGeolocation($delme);
                     }
                     $em->flush();
-                    dump($locations);
                     unset($geocoderGeolocs[$key]);
                 }
             }
@@ -721,7 +722,9 @@ class WireframeController extends Controller
             'currentLocations' => $currentLocations,
             'currentLocationsMaps' => $currentLocationsMaps,
             'enhancementUploadForm' => $enhUploadForm->createView(),
-            'pasteTextForm' => $pasteTextForm->createView()
+            'pasteTextForm' => $pasteTextForm->createView(),
+            'loc_count_existing' => count($currentLocations),
+            'loc_count_suggested' => count($geocoderGeolocs),
         );
     }
 
