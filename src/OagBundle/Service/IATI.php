@@ -393,9 +393,6 @@ class IATI extends AbstractService
             $code = (string)$element->attributes()['code'];
         }
 
-          return $code;
-        }
-
         return false;
     }
 
