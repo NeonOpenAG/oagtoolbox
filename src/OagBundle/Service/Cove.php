@@ -163,8 +163,8 @@ class Cove extends AbstractOagService {
                 'err' => json_decode($err, true),
             );
 
-            $validationErrors = $data['err']['validation_errors'];
-            $rulesetErrors = $data['err']['ruleset_errors'];
+            $validationErrors = $data['err']['validation_errors'] ?: [];
+            $rulesetErrors = $data['err']['ruleset_errors'] ?: [];
 
             $data['status'] = (count($validationErrors) + count($rulesetErrors));
 

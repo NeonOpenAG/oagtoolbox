@@ -244,6 +244,19 @@ nav {
     text-transform: uppercase;
     font-weight: bold;
   }
+  h3 {
+    margin: 0;
+    padding: 0;
+    text-align: right;
+    line-height: 2em;
+    margin-top: 1em;
+    &:before {
+      font-family: FontAwesome;
+      color: $oag_dark;
+      margin-right: 0.6em;
+      content: "\f15b";
+    }
+  }
   .nav-options {
     float: right;
     ul {
@@ -1131,6 +1144,9 @@ table {
         justify-content: center;
         float: none;
         padding-top: 0.5em;
+      }
+      h3 {
+        text-align: center;
       }
       .nav-options {
         float: none;

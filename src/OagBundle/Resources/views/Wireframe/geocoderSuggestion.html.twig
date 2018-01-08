@@ -22,15 +22,16 @@
                 <div class="heading">
                     <h2>Suggestions for {{ activity.name }} </h2>
                     <h3>Activity ID: {{ activity.id }}</h3>
-                </div>
-
-                <div class="content-block">
                     {% if activity.description %}
                         <p class="more">Description: {{ activity.description }}</p>
                     {% else %}
                         <p>No description available.</p>
                     {% endif %}
+                </div>
 
+                <div class="content-block">
+                    {% if loc_count_existing > 0 %}
+                        <h3>We found the following exisiting locations</h3>
                     <!-- TODO: Move this back out, but not to activity.html.twig -->
                     {{ form_start(form) }}
 
@@ -56,23 +57,34 @@
                             </div>
                         </div>
                     {% endfor %}
+                    {% else %}
+                        <h3>We didn't find any existing locations<h3>
+                    {% endif %}
 
-                    {% for tag in form['tags'] %}
-                        <div class="tag-row">
-                            <div class="suggested-map-block" data-geojson='{{ tag.vars.attr['data-geojson'] }}'></div>
+                    {% if loc_count_suggested > 0 %}
+                       {# TODO: move this padding to sass #}
+                       <h3 style="margin-top: 80px;">We suggest the following locations</h3>
 
-                            <div class="info">
-                                <div class="tag">{{ form_label(tag) }}</div>
-                                <label class="addremove">{{ form_widget(tag) }}<span></span></label>
+                        {% for tag in form['tags'] %}
+                            <div class="tag-row">
+                                <div class="suggested-map-block" data-geojson='{{ tag.vars.attr['data-geojson'] }}'></div>
+
+                                <div class="info">
+                                    <div class="tag">{{ form_label(tag) }}</div>
+                                    <label class="addremove">{{ form_widget(tag) }}<span></span></label>
+                                </div>
                             </div>
-                        </div>
-                    {% endfor %}
-                    {% do form['tags'].setRendered %}
+                        {% endfor %}
+                    {% else %}
+                        <h3>We didn't find any suggested locations<h3>
+                    {% endif %}
                     <div class="bottom-page-nav">
                         {{ form_row(form.back) }}{{ form_row(form.save) }}
                     </div>
                     {{ form_end(form) }}
+                </div>
 
+                 <div class="content-block">
                     <div class="upload-info">
                         <h3>Suggest more geocodes</h3>
                         {% if form['tags'] | length %}

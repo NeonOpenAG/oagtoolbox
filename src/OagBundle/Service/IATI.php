@@ -387,9 +387,11 @@ class IATI extends AbstractService
     public function getActivityCountryCode($activity)
     {
         $element = $activity->xpath('./recipient-country');
-        if (count($element)) {
-          $recipientCountry = $element[0];
-          $code = (string)$element->attributes()['code'];
+        $code = '';
+        if(is_array($element) && count($element)) {
+            $element = $element[0];
+            $code = (string)$element->attributes()['code'];
+        }
 
           return $code;
         }
@@ -577,22 +579,6 @@ class IATI extends AbstractService
         }
 
         return $locations;
-    }
-
-    public function removeSuggestedTag(OagFile $file, $activityId, Tag $tag) {
-        dump($activityId);
-        dump($tag);
-        $repository = $this->getContainer()->get('doctrine')
-                ->getManager()
-                ->getRepository('OagBundle:SuggestedTag');
-        $suggestedTags = $repository->findBy(array('activityId' => $activityId, 'tag' => $tag));
-        dump($suggestedTags);
-        foreach ($suggestedTags as $suggestedTag) {
-            $file->removeSuggestedTag($suggestedTag);
-        }
-        $em = $this->getContainer()->get('doctrine')->getManager();
-        $em->persist($file);
-        $em->flush();
     }
 
 }

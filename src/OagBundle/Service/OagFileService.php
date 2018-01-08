@@ -148,4 +148,17 @@ class OagFileService extends AbstractService
         return end($files);
     }
 
+
+    /**
+     * Set this file to be the most recently used.
+     *
+     * @param OagFile $file
+     */
+    public function setMostRecent(OagFile $file) {
+        $em = $this->getContainer()->get('doctrine')->getManager();
+        $file->setUploadDate(new \DateTime(date('Y-m-d H:i:s')));
+        $em->persist($file);
+        $em->flush();
+    }
+
 }

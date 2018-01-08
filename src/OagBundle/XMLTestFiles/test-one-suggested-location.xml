@@ -1,0 +1,28 @@
+<!--No Suggested Classifications-->
+<!--No Pre-Existing Classification-->
+
+<!--One Suggested Location-->
+<!--No Pre-Existing Locations-->
+<iati-activities version="2.01" generated-datetime="2016-12-05T10:28:00">
+    <iati-activity xml:lang="en" default-currency="XDR" hierarchy="1" last-updated-datetime="2016-11-29T11:55:36">
+        <iati-identifier>46002-P-BW-AAC-001</iati-identifier>
+        <reporting-org ref="46002" type="40">
+            <narrative>African Development Bank Group</narrative>
+        </reporting-org>
+        <title>
+            <narrative xml:lang="en">England - The Pandamatenga Agricultural Infrastructure Development Project</narrative>
+        </title>
+        <description>
+            <narrative xml:lang="en"></narrative>
+        </description>
+        <participating-org role="1" ref="46002" type="40">
+            <narrative>African Development Bank</narrative>
+        </participating-org>
+
+        <activity-status code="3"/>
+
+        <activity-date iso-date="2017-01-01" type="1"/>
+
+        <recipient-country code="GB"/>
+    </iati-activity>
+</iati-activities>
