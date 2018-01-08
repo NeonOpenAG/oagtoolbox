@@ -90,10 +90,9 @@ class WireframeController extends Controller
 
     /**
      * @Route("/download/{id}")
-     * @ParamConverter("file", class="OagBundle:OagFile")
      */
-    public function downloadAction(Request $request, OagFile $file)
-    {
+    public function downloadAction(Request $request, OagFile $file = null) {
+
         $em = $this->getDoctrine()->getManager();
         $fileRepo = $this->getDoctrine()->getRepository(OagFile::class);
         $srvClassifier = $this->get(Classifier::class);
@@ -180,10 +179,9 @@ class WireframeController extends Controller
      * Download an IATI file.
      *
      * @Route("/downloadFile/{id}")
-     * @ParamConverter("file", class="OagBundle:OagFile")
      */
-    public function downloadFileAction(Request $request, OagFile $file)
-    {
+    public function downloadFileAction(Request $request, OagFile $file = null) {
+
         $srvOagFile = $this->get(OagFileService::class);
 
         return $this->file($srvOagFile->getPath($file));
@@ -191,10 +189,9 @@ class WireframeController extends Controller
 
     /**
      * @Route("/classifier/{id}")
-     * @ParamConverter("file", class="OagBundle:OagFile")
      */
-    public function classifierAction(OagFile $file)
-    {
+    public function classifierAction(OagFile $file = null) {
+
         $srvIATI = $this->get(IATI::class);
         $root = $srvIATI->load($file);
         $activities = $srvIATI->summariseToArray($root);
@@ -282,10 +279,9 @@ class WireframeController extends Controller
 
     /**
      * @Route("/classifier/{id}/{activityId}")
-     * @ParamConverter("file", class="OagBundle:OagFile")
      */
-    public function classifierSuggestionAction(Request $request, OagFile $file, $activityId)
-    {
+    public function classifierSuggestionAction(Request $request, OagFile $file = null, $activityId) {
+
         $em = $this->getDoctrine()->getManager();
         $srvClassifier = $this->get(Classifier::class);
         $srvIATI = $this->get(IATI::class);
@@ -445,10 +441,9 @@ class WireframeController extends Controller
 
     /**
      * @Route("/geocoder/{id}")
-     * @ParamConverter("file", class="OagBundle:OagFile")
      */
-    public function geocoderAction(OagFile $file)
-    {
+    public function geocoderAction(OagFile $file = null) {
+
         $srvIATI = $this->get(IATI::class);
         $root = $srvIATI->load($file);
         $activities = $srvIATI->summariseToArray($root);
@@ -529,10 +524,9 @@ class WireframeController extends Controller
 
     /**
      * @Route("/geocoder/{id}/{activityId}")
-     * @ParamConverter("file", class="OagBundle:OagFile")
      */
-    public function geocoderSuggestionAction(Request $request, OagFile $file, $activityId)
-    {
+    public function geocoderSuggestionAction(Request $request, OagFile $file = null, $activityId) {
+
         $em = $this->getDoctrine()->getManager();
         $srvGeocoder = $this->get(Geocoder::class);
         $srvGeoJson = $this->get(GeoJson::class);
@@ -984,10 +978,9 @@ class WireframeController extends Controller
 
     /**
      * @Route("/preview/{id}")
-     * @ParamConverter("file", class="OagBundle:OagFile")
      */
-    public function previewAction(OagFile $file)
-    {
+    public function previewAction(OagFile $file = null) {
+
         $srvDPortal = $this->get(DPortal::class);
         $srvDPortal->visualise($file);
 
@@ -1003,9 +996,9 @@ class WireframeController extends Controller
 
     /**
      * @Route("/improveYourData/{id}")
-     * @ParamConverter("file", class="OagBundle:OagFile")
      */
-    public function improveYourDataAction(OagFile $file) {
+    public function improveYourDataAction(OagFile $file = null) {
+
         $srvGeocoder = $this->get(Geocoder::class);
         $srvClassifier = $this->get(Classifier::class);
         $srvIati = $this->get(IATI::class);
@@ -1059,9 +1052,9 @@ class WireframeController extends Controller
 
     /**
      * @Route("/activate/{id}")
-     * @ParamConverter("file", class="OagBundle:OagFile")
      */
-    public function activateFileAction(OagFile $file) {
+    public function activateFileAction(OagFile $file = null) {
+
         $srvOagFile = $this->get(OagFileService::class);
         $srvOagFile->setMostRecent($file);
 
