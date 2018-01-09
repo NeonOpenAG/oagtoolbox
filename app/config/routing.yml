@@ -2,3 +2,7 @@ oag:
     resource: "@OagBundle/Controller/"
     type:     annotation
     prefix:   /
+    
+_errors:
+    resource: "@TwigBundle/Resources/config/routing/errors.xml"
+    prefix:   /_error

@@ -4,6 +4,7 @@ namespace OagBundle\Service;
 
 use OagBundle\Entity\Tag;
 use OagBundle\Entity\OagFile;
+use OagBundle\Entity\SuggestedTag;
 
 /**
  * A service for manipulating and getting data from IATI Activity files after
@@ -385,10 +386,14 @@ class IATI extends AbstractService
      */
     public function getActivityCountryCode($activity)
     {
-        $element = $activity->xpath('./recipient-country')[0];
-        $code = (string)$element->attributes()['code'];
+        $element = $activity->xpath('./recipient-country');
+        $code = '';
+        if(is_array($element) && count($element)) {
+            $element = $element[0];
+            $code = (string)$element->attributes()['code'];
+        }
 
-        return $code;
+        return false;
     }
 
     /**
@@ -503,15 +508,15 @@ class IATI extends AbstractService
              */
 
             /*
-             *  <location ref="Pyuthan">               
-             *    <location-id code="1282888" vocabulary="G1"/>                                   
-             *    <name>                               
-             *      <narrative>Pyuthan</narrative>     
-             *    </name>                              
-             *    <point srsName="http://www.opengis.net/def/crs/EPSG/0/4326">                    
-             *      <pos>28.08333 82.83333</pos>       
-             *    </point>                             
-             *    <feature-designation code="ADM3"/>   
+             *  <location ref="Pyuthan">
+             *    <location-id code="1282888" vocabulary="G1"/>
+             *    <name>
+             *      <narrative>Pyuthan</narrative>
+             *    </name>
+             *    <point srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+             *      <pos>28.08333 82.83333</pos>
+             *    </point>
+             *    <feature-designation code="ADM3"/>
              *  </location>
              */
 

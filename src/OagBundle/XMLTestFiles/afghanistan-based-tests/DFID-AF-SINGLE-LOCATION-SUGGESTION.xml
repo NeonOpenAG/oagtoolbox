@@ -1,0 +1,69 @@
+<iati-activities version="2.01" xmlns:openag="http://openagfunding.readthedocs.io/en/latest/extensions/" generated-datetime="2017-11-29T18:30:53">
+    <!--
+        Includes multiple existing classifications.
+        Includes a single location suggestion.
+    -->
+
+    <iati-activity last-updated-datetime="2015-01-26T00:00:00" xml:lang="en" default-currency="GBP" hierarchy="1">
+        <iati-identifier>GB-1-114502</iati-identifier>
+        <reporting-org ref="GB-GOV-1" type="10">
+            <narrative>Department for International Development</narrative>
+        </reporting-org>
+        <title>
+            <narrative>DFID Helmand Representative</narrative>
+        </title>
+        <description>
+            <narrative>provide support to the governor of helmand and tot he civil-military mission in Helmand (CMMH) by engaging on their behalf with other donors and key line ministries to aid ANDS implementation in the area of economic development</narrative>
+        </description>
+        <participating-org ref="GB" type="10" role="1">
+            <narrative>UNITED KINGDOM</narrative>
+        </participating-org>
+        <participating-org ref="GB-GOV-1" type="10" role="3">
+            <narrative>Department for International Development</narrative>
+        </participating-org>
+        <other-identifier ref="114502" type="A1">
+            <owner-org ref="GB-GOV-1">
+                <narrative>DFID</narrative>
+            </owner-org>
+        </other-identifier>
+        <other-identifier ref="GB-1" type="B1">
+            <owner-org ref="GB-GOV-1">
+                <narrative>DFID previous reporting-org identifier</narrative>
+            </owner-org>
+        </other-identifier>
+        <activity-status code="4" />
+        <activity-date type="1" iso-date="2008-11-01" />
+        <activity-date type="2" iso-date="2009-04-30" />
+        <activity-date type="3" iso-date="2012-12-31" />
+        <activity-date type="4" iso-date="2012-12-31" />
+        <contact-info type="1">
+            <organisation>
+                <narrative>Department for International Development</narrative>
+            </organisation>
+            <telephone>+44 (0) 1355 84 3132</telephone>
+            <email>enquiry@dfid.gov.uk</email>
+            <mailing-address>
+                <narrative>Public Enquiry Point, Abercrombie House, Eaglesham Road, East Kilbride, Glasgow G75 8EA</narrative>
+            </mailing-address>
+        </contact-info>
+        <recipient-country code="AF" percentage="100" />
+        <default-tied-status code="5" />
+        <related-activity ref="GB-1-114502-101" type="2" />
+        <conditions attached="false" />
+        <openag:tag code="32130" percentage="21">
+            <narrative>Small and medium-sized enterprises (SME) development</narrative>
+        </openag:tag>
+        <openag:tag code="24040" percentage="20">
+            <narrative>Informal/semi-formal financial intermediaries</narrative>
+        </openag:tag>
+        <openag:tag code="25010" percentage="20">
+            <narrative>Business support services and institutions</narrative>
+        </openag:tag>
+        <openag:tag code="31120" percentage="20">
+            <narrative>Agricultural development</narrative>
+        </openag:tag>
+        <openag:tag code="43040" percentage="19">
+            <narrative>Rural development</narrative>
+        </openag:tag>
+    </iati-activity>
+</iati-activities>

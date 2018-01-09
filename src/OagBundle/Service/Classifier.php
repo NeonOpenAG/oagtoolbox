@@ -10,13 +10,13 @@ use OagBundle\Service\TextExtractor\TextifyService;
 class Classifier extends AbstractOagService
 {
 
-    public function processUri($sometext = '') 
+    public function processUri($sometext = '')
     {
         // TODO implement non-fixture process
         return json_decode($this->getStringFixtureData(), true);
     }
 
-    public function getStringFixtureData() 
+    public function getStringFixtureData()
     {
         $kernel = $this->getContainer()->get('kernel');
         $path = $kernel->locateResource('@OagBundle/Resources/fixtures/text.classifier.json');
@@ -24,7 +24,7 @@ class Classifier extends AbstractOagService
         return $contents;
     }
 
-    public function getXMLFixtureData() 
+    public function getXMLFixtureData()
     {
         $kernel = $this->getContainer()->get('kernel');
         $path = $kernel->locateResource('@OagBundle/Resources/fixtures/before_enrichment_activities.classifier.json');
@@ -37,7 +37,7 @@ class Classifier extends AbstractOagService
      *
      * @param OagFile $oagFile the file to classify
      */
-    public function classifyOagFile(OagFile $oagFile) 
+    public function classifyOagFile(OagFile $oagFile)
     {
         $srvOagFile = $this->getContainer()->get(OagFileService::class);
         $srvIati = $this->getContainer()->get(IATI::class);
@@ -50,13 +50,11 @@ class Classifier extends AbstractOagService
         $this->getContainer()->get('logger')->debug(sprintf('Found %d activities', count($activities)));
         foreach ($activities as $activity) {
             $activityId = $srvIati->getActivityId($activity);
-            $narrativies = $srvIati->getActivityNarratives($activity);
+            $description = $srvIati->getActivityDescription($activity);
             $tags = [];
-            foreach ($narrativies as $narrative) {
-                $data = $this->processString((string)$narrative);
-                $tags = $data['data'];
-                $this->persistTags($tags, $oagFile, $activityId);
-            }
+            $data = $this->processString((string)$description);
+            $tags = $data['data'];
+            $this->persistTags($tags, $oagFile, $activityId);
         }
 
         // IATI xml document
@@ -80,7 +78,7 @@ class Classifier extends AbstractOagService
         $em->flush();
     }
 
-    public function processXML($contents) 
+    public function processXML($contents)
     {
         $classifier_parameters = $this->getContainer()->getParameter('classifier');
         $uri = $classifier_parameters['endpoint'];
@@ -143,7 +141,7 @@ class Classifier extends AbstractOagService
      * @param OagFile|EnhancementFile $file       the OagFile or EnhancementFile to suggest the tags to
      * @param string                  $activityId the activity ID the tags apply to, if they are specific
      */
-    private function persistTags($tags, $file, $activityId = null) 
+    private function persistTags($tags, $file, $activityId = null)
     {
         $em = $this->getContainer()->get('doctrine')->getManager();
         $tagRepo = $this->getContainer()->get('doctrine')->getRepository(Tag::class);
@@ -212,7 +210,7 @@ class Classifier extends AbstractOagService
      * @param string text
      * @param string      $activityId if the text is specific
      */
-    public function classifyOagFileFromText(OagFile $file, $text, $activityId = null) 
+    public function classifyOagFileFromText(OagFile $file, $text, $activityId = null)
     {
         // $file->clearSuggestedTags();
         $json = $this->processString($text);
@@ -226,9 +224,16 @@ class Classifier extends AbstractOagService
         $em = $this->getContainer()->get('doctrine')->getManager();
         $em->persist($file);
         $em->flush();
+
+        $count = 0;
+        if (isset($json['data'][0]['code'])) {
+            $count = count($json['data']);
+        }
+
+        return $count;
     }
 
-    public function processString($contents) 
+    public function processString($contents)
     {
         if (!$this->isAvailable()) {
             return json_decode($this->getStringFixtureData(), true);
@@ -288,7 +293,7 @@ class Classifier extends AbstractOagService
         return array_merge($response, $json);
     }
 
-    public function isAvailable() 
+    public function isAvailable()
     {
         $uri = $this->getUri('xml');
         $parsedUri = $this->parseUri($uri);
@@ -300,7 +305,7 @@ class Classifier extends AbstractOagService
         return is_resource($connection);
     }
 
-    public function parseUri($uri) 
+    public function parseUri($uri)
     {
         // The classifier is VERY slow to respond, use a port check instead.
         // TODO Does this work with https
@@ -325,7 +330,7 @@ class Classifier extends AbstractOagService
      *
      * @param EnhancementFile $enhFile the file to classify
      */
-    public function classifyEnhancementFile(EnhancementFile $enhFile, $activityId) 
+    public function classifyEnhancementFile(EnhancementFile $enhFile, $activityId)
     {
         $srvTextify = $this->getContainer()->get(TextifyService::class);
 
@@ -352,12 +357,12 @@ class Classifier extends AbstractOagService
         $em->flush();
     }
 
-    public function getName() 
+    public function getName()
     {
         return 'classifier';
     }
 
-    public function status() 
+    public function status()
     {
         $cmd = 'ps -ef | grep bin/console';
         $output = [];

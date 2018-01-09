@@ -1,0 +1,856 @@
+<iati-activities version="2.01" xmlns:openag="http://openagfunding.readthedocs.io/en/latest/extensions/" generated-datetime="2017-11-29T18:30:53">
+
+    <!--
+        Includes multiple classification suggestions.
+    -->
+    <iati-activity last-updated-datetime="2017-11-27T00:00:00" xml:lang="en" default-currency="GBP" hierarchy="1">
+        <iati-identifier>GB-1-201555</iati-identifier>
+        <reporting-org ref="GB-GOV-1" type="10">
+            <narrative>Department for International Development</narrative>
+        </reporting-org>
+        <title>
+            <narrative>Strengthening Civil Society in Afghanistan (Tawanmandi)</narrative>
+        </title>
+        <description>
+            <narrative>Tawanmandi is a grant funding mechanism that supports civil society to advocate on improving governance in Afghanistan through greater accountability and responsiveness by the state to its citizens. It seeks to build an inclusive civil society able to engage effectively on issues of human rights, access to justice, anti-corruption, peace building, and conflict resolution and through the media. Gender, youth, disability and out-of-Kabul organisations are cross cutting themes. Wheat. Farming.</narrative>
+        </description>
+        <participating-org role="4">
+            <narrative>Name Withheld</narrative>
+        </participating-org>
+        <participating-org ref="GB" type="10" role="1">
+            <narrative>UNITED KINGDOM</narrative>
+        </participating-org>
+        <participating-org ref="GB-GOV-1" type="10" role="3">
+            <narrative>Department for International Development</narrative>
+        </participating-org>
+        <other-identifier ref="201000" type="A1">
+            <owner-org ref="GB-GOV-1">
+                <narrative>DFID</narrative>
+            </owner-org>
+        </other-identifier>
+        <other-identifier ref="GB-1" type="B1">
+            <owner-org ref="GB-GOV-1">
+                <narrative>DFID previous reporting-org identifier</narrative>
+            </owner-org>
+        </other-identifier>
+        <activity-status code="2" />
+        <activity-date type="1" iso-date="2011-08-01" />
+        <activity-date type="2" iso-date="2010-12-22" />
+        <activity-date type="3" iso-date="2017-12-31" />
+        <contact-info type="1">
+            <organisation>
+                <narrative>Department for International Development</narrative>
+            </organisation>
+            <telephone>+44 (0) 1355 84 3132</telephone>
+            <email>enquiry@dfid.gov.uk</email>
+            <mailing-address>
+                <narrative>Public Enquiry Point, Abercrombie House, Eaglesham Road, East Kilbride, Glasgow G75 8EA</narrative>
+            </mailing-address>
+        </contact-info>
+        <recipient-country code="AF" percentage="100" />
+        <sector code="15113" percentage="27.54">
+            <narrative>Anti-corruption organisations and institutions</narrative>
+        </sector>
+        <sector code="15110" percentage="23.61">
+            <narrative>Public sector policy and administrative management</narrative>
+        </sector>
+        <sector code="15130" percentage="19.67">
+            <narrative>Legal and judicial development</narrative>
+        </sector>
+        <sector code="43010" percentage="19.16">
+            <narrative>Multisector aid</narrative>
+        </sector>
+        <sector code="15150" percentage="10.01">
+            <narrative>Democratic participation and civil society</narrative>
+        </sector>
+        <default-tied-status code="5" />
+        <document-link format="application/vnd.oasis.opendocument.text" url="http://iati.dfid.gov.uk/iati_documents/3717458.odt">
+            <title>
+                <narrative>Business Case and Summary 201000 (January, 2013).odt</narrative>
+            </title>
+            <category code="A05" />
+            <category code="A04" />
+            <category code="A03" />
+            <category code="A02" />
+            <category code="A01" />
+            <language code="en" />
+        </document-link>
+        <document-link format="application/vnd.oasis.opendocument.text" url="http://iati.dfid.gov.uk/iati_documents/3793751.odt">
+            <title>
+                <narrative>Annual review (1) 201000 (July, 2014).odt</narrative>
+            </title>
+            <category code="A08" />
+            <category code="A07" />
+            <language code="en" />
+        </document-link>
+        <document-link format="application/vnd.oasis.opendocument.text" url="http://iati.dfid.gov.uk/iati_documents/3812489.odt">
+            <title>
+                <narrative>Annual review (2) 201000 (January, 2013).odt</narrative>
+            </title>
+            <category code="A08" />
+            <category code="A07" />
+            <language code="en" />
+        </document-link>
+        <document-link format="application/vnd.oasis.opendocument.text" url="http://iati.dfid.gov.uk/iati_documents/3862030.odt">
+            <title>
+                <narrative>Intervention Summary 201000 (July, 2014).odt</narrative>
+            </title>
+            <category code="A02" />
+            <language code="en" />
+        </document-link>
+        <document-link format="application/vnd.oasis.opendocument.text" url="http://iati.dfid.gov.uk/iati_documents/4388142.odt">
+            <title>
+                <narrative>Annual review (3) 201000 (March, 2014).odt</narrative>
+            </title>
+            <category code="A08" />
+            <category code="A07" />
+            <language code="en" />
+        </document-link>
+        <document-link format="application/vnd.oasis.opendocument.text" url="http://iati.dfid.gov.uk/iati_documents/4899958.odt">
+            <title>
+                <narrative>Annual review (4) 201000 (March, 2015).odt</narrative>
+            </title>
+            <category code="A08" />
+            <category code="A07" />
+            <language code="en" />
+        </document-link>
+        <document-link format="application/vnd.oasis.opendocument.text" url="http://iati.dfid.gov.uk/iati_documents/5162519.odt">
+            <title>
+                <narrative>Addendum to the Business Case (1) 201000 (June, 2016).odt</narrative>
+            </title>
+            <category code="A05" />
+            <category code="A04" />
+            <category code="A03" />
+            <category code="A02" />
+            <category code="A01" />
+            <language code="en" />
+        </document-link>
+        <document-link format="application/vnd.oasis.opendocument.text" url="http://iati.dfid.gov.uk/iati_documents/5380168.odt">
+            <title>
+                <narrative>Annual review (5) 201000 (March, 2016).odt</narrative>
+            </title>
+            <category code="A08" />
+            <category code="A07" />
+            <language code="en" />
+        </document-link>
+        <document-link format="application/vnd.oasis.opendocument.text" url="http://iati.dfid.gov.uk/iati_documents/5461069.odt">
+            <title>
+                <narrative>Addendum to the Business Case (2) 201000 (June, 2016).odt</narrative>
+            </title>
+            <category code="A05" />
+            <category code="A04" />
+            <category code="A03" />
+            <category code="A02" />
+            <category code="A01" />
+            <language code="en" />
+        </document-link>
+        <document-link format="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" url="http://iati.dfid.gov.uk/iati_documents/5612325.xlsx">
+            <title>
+                <narrative>Logical framework 201000 (October, 2016).xlsx</narrative>
+            </title>
+            <category code="A02" />
+            <category code="A08" />
+            <language code="en" />
+        </document-link>
+        <document-link format="text/html" url="https://www.contractsfinder.service.gov.uk/Notice/cadaf11c-ba96-42f7-bfc4-f1e1d707354b">
+            <title>
+                <narrative>Contract: DFID 7363 Independent Expenditure Verification and Financial Management Audit of Tawanmandi Legacy Grants, Afghanistan</narrative>
+            </title>
+            <category code="A11" />
+            <language code="en" />
+        </document-link>
+        <related-activity ref="GB-1-201000-101" type="2" />
+        <related-activity ref="GB-1-201000-102" type="2" />
+        <related-activity ref="GB-1-201000-103" type="2" />
+        <related-activity ref="GB-1-201000-105" type="2" />
+        <related-activity ref="GB-1-201000-106" type="2" />
+        <related-activity ref="GB-1-201000-107" type="2" />
+        <related-activity ref="GB-1-201000-108" type="2" />
+        <related-activity ref="GB-1-201000-109" type="2" />
+        <related-activity ref="GB-1-201000-110" type="2" />
+        <related-activity ref="GB-1-201000-111" type="2" />
+        <related-activity ref="GB-1-201000-112" type="2" />
+        <related-activity ref="GB-1-201000-113" type="2" />
+        <related-activity ref="GB-1-201000-114" type="2" />
+        <related-activity ref="GB-1-201000-115" type="2" />
+        <related-activity ref="GB-1-201000-116" type="2" />
+        <related-activity ref="GB-1-201000-117" type="2" />
+        <related-activity ref="GB-1-201000-118" type="2" />
+        <related-activity ref="GB-1-201000-119" type="2" />
+        <related-activity ref="GB-1-201000-120" type="2" />
+        <related-activity ref="GB-1-201000-121" type="2" />
+        <related-activity ref="GB-1-201000-122" type="2" />
+        <conditions attached="false" />
+    </iati-activity>
+
+    <!--
+		Includes multiple existing classifications.
+		One classification is suggested.
+		No locations.
+	-->
+	<iati-activity last-updated-datetime="2011-03-31T00:00:00" xml:lang="en" default-currency="GBP" hierarchy="1">
+		<iati-identifier>GB-1-107171</iati-identifier>
+		<reporting-org ref="GB-GOV-1" type="10">
+			<narrative>Department for International Development</narrative>
+		</reporting-org>
+		<title>
+			<narrative>Helmand Agriculture And Rural Development Programme (HARDP): MRRD</narrative>
+		</title>
+		<description>
+			<narrative>increase the economic opportunities of the rural poor in helmand, including those that make a living from growing poppy, through integrated support to improve their livelihood options</narrative>
+		</description>
+		<participating-org role="4">
+			<narrative>Name Withheld</narrative>
+		</participating-org>
+		<participating-org ref="GB" type="10" role="1">
+			<narrative>UNITED KINGDOM</narrative>
+		</participating-org>
+		<participating-org ref="GB-GOV-1" type="10" role="3">
+			<narrative>Department for International Development</narrative>
+		</participating-org>
+		<other-identifier ref="107171" type="A1">
+			<owner-org ref="GB-GOV-1">
+				<narrative>DFID</narrative>
+			</owner-org>
+		</other-identifier>
+		<other-identifier ref="GB-1" type="B1">
+			<owner-org ref="GB-GOV-1">
+				<narrative>DFID previous reporting-org identifier</narrative>
+			</owner-org>
+		</other-identifier>
+		<activity-status code="4" />
+		<activity-date type="1" iso-date="2006-11-09" />
+		<activity-date type="2" iso-date="2006-11-09" />
+		<activity-date type="3" iso-date="2011-03-31" />
+		<activity-date type="4" iso-date="2011-03-31" />
+		<contact-info type="1">
+			<organisation>
+				<narrative>Department for International Development</narrative>
+			</organisation>
+			<telephone>+44 (0) 1355 84 3132</telephone>
+			<email>enquiry@dfid.gov.uk</email>
+			<mailing-address>
+				<narrative>Public Enquiry Point, Abercrombie House, Eaglesham Road, East Kilbride, Glasgow G75 8EA</narrative>
+			</mailing-address>
+		</contact-info>
+		<recipient-country code="AF" percentage="100" />
+
+		<default-tied-status code="5" />
+		<document-link format="application/vnd.oasis.opendocument.text" url="http://iati.dfid.gov.uk/iati_documents/3606261.odt">
+			<title>
+				<narrative>Logical framework 107171 (July, 2012).odt</narrative>
+			</title>
+			<category code="A02" />
+			<category code="A08" />
+			<language code="en" />
+		</document-link>
+		<document-link format="application/vnd.ms-excel" url="http://iati.dfid.gov.uk/iati_documents/3606285.xls">
+			<title>
+				<narrative>Annual review 107171 (July, 2012).xls</narrative>
+			</title>
+			<category code="A08" />
+			<category code="A07" />
+			<language code="en" />
+		</document-link>
+		<related-activity ref="GB-1-107171-101" type="2" />
+		<conditions attached="false" />
+
+		<openag:tag code="43040" percentage="40">
+			<narrative>Rural development</narrative>
+		</openag:tag>
+		<openag:tag code="14030" percentage="30">
+			<narrative>Basic drinking water supply and basic sanitation</narrative>
+		</openag:tag>
+		<openag:tag code="21020" percentage="30">
+			<narrative>Road transport</narrative>
+		</openag:tag>
+
+	</iati-activity>
+
+    <!--
+        Includes multiple existing Locations.
+        Includes multiple classification suggestions.
+    -->
+    <iati-activity last-updated-datetime="2015-11-19T03:01:54" xml:lang="en" default-currency="GBP" hierarchy="1">
+        <iati-identifier>GB-1-114488</iati-identifier>
+        <reporting-org ref="GB-GOV-1" type="10">
+            <narrative>Department for International Development</narrative>
+        </reporting-org>
+        <title>
+            <narrative>Afghanistan Comprehensive Agriculture and Rural Development Facility</narrative>
+        </title>
+        <description>
+            <narrative>The aim of CARD-F, the Comprehensive Agriculture and Rural Development Facility, is to increase legal rural employment and income opportunities through more efficient agricultural value chains and markets. It also aims to reduce the risk of resurgence in poppy cultivation by creating commercially viable and sustainable alternatives for farmers.  Further aims include the coordination and integration of government and donor support to agriculture and rural development, and the improvement of government capacity to lead and coordinate donor initiatives to deliver provincial and district-level programmes.</narrative>
+        </description>
+        <participating-org ref="GB" type="10" role="1">
+            <narrative>UNITED KINGDOM</narrative>
+        </participating-org>
+        <participating-org ref="GB-GOV-1" type="10" role="3">
+            <narrative>Department for International Development</narrative>
+        </participating-org>
+        <other-identifier ref="114488" type="A1">
+            <owner-org ref="GB-GOV-1">
+                <narrative>DFID</narrative>
+            </owner-org>
+        </other-identifier>
+        <other-identifier ref="GB-1" type="B1">
+            <owner-org ref="GB-GOV-1">
+                <narrative>DFID previous reporting-org identifier</narrative>
+            </owner-org>
+        </other-identifier>
+        <activity-status code="4" />
+        <activity-date type="1" iso-date="2009-05-01" />
+        <activity-date type="2" iso-date="2009-06-29" />
+        <activity-date type="3" iso-date="2015-03-31" />
+        <activity-date type="4" iso-date="2015-03-31" />
+        <contact-info type="1">
+            <organisation>
+                <narrative>Department for International Development</narrative>
+            </organisation>
+            <telephone>+44 (0) 1355 84 3132</telephone>
+            <email>enquiry@dfid.gov.uk</email>
+            <mailing-address>
+                <narrative>Public Enquiry Point, Abercrombie House, Eaglesham Road, East Kilbride, Glasgow G75 8EA</narrative>
+            </mailing-address>
+        </contact-info>
+        <location>
+            <location-reach code="1" />
+            <name>
+                <narrative>Balkh</narrative>
+            </name>
+            <description>
+                <narrative>Balkh,Afghanistan</narrative>
+            </description>
+            <point srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+                <pos>36.7525199999999970 66.8921500000000010</pos>
+            </point>
+            <exactness code="2" />
+            <location-class code="2" />
+            <feature-designation code="PPL" />
+        </location>
+        <location>
+            <location-reach code="1" />
+            <name>
+                <narrative>Helmand Province</narrative>
+            </name>
+            <description>
+                <narrative>Helmand Province,Afghanistan</narrative>
+            </description>
+            <point srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+                <pos>31.0000000000000000 64.0000000000000000</pos>
+            </point>
+            <exactness code="2" />
+            <location-class code="2" />
+            <feature-designation code="PPL" />
+        </location>
+        <location>
+            <location-reach code="1" />
+            <name>
+                <narrative>Wilayat-e Nangarhar</narrative>
+            </name>
+            <description>
+                <narrative>Wilayat-e Nangarhar,Afghanistan</narrative>
+            </description>
+            <point srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+                <pos>34.3333000000000010 70.4167000000000060</pos>
+            </point>
+            <exactness code="2" />
+            <location-class code="2" />
+            <feature-designation code="PPL" />
+        </location>
+        <location>
+            <location-reach code="1" />
+            <name>
+                <narrative>Badakhshan</narrative>
+            </name>
+            <description>
+                <narrative>Badakhshan,Afghanistan</narrative>
+            </description>
+            <point srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+                <pos>36.7500000000000000 72.0000000000000000</pos>
+            </point>
+            <exactness code="2" />
+            <location-class code="2" />
+            <feature-designation code="PPL" />
+        </location>
+        <location>
+            <location-reach code="1" />
+            <name>
+                <narrative>Balkh</narrative>
+            </name>
+            <description>
+                <narrative>Balkh,Afghanistan</narrative>
+            </description>
+            <point srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+                <pos>36.7525199999999970 66.8921500000000010</pos>
+            </point>
+            <exactness code="2" />
+            <location-class code="1" />
+            <feature-designation code="ADM1" />
+        </location>
+        <location>
+            <location-reach code="1" />
+            <name>
+                <narrative>Afghanistan</narrative>
+            </name>
+            <description>
+                <narrative>Afghanistan</narrative>
+            </description>
+            <point srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+                <pos>33.8332500000000000 66.0252799999999950</pos>
+            </point>
+            <exactness code="1" />
+            <location-class code="1" />
+            <feature-designation code="ADM2" />
+        </location>
+        <default-tied-status code="5" />
+        <document-link format="application/vnd.ms-excel" url="http://iati.dfid.gov.uk/iati_documents/3129893.xls">
+            <title>
+                <narrative>Annual review (1) 114488 (July, 2012).xls</narrative>
+            </title>
+            <category code="A08" />
+            <category code="A07" />
+            <language code="en" />
+        </document-link>
+        <document-link format="application/vnd.oasis.opendocument.text" url="http://iati.dfid.gov.uk/iati_documents/3773773.odt">
+            <title>
+                <narrative>Annual review (2) 114488 (December, 2012).odt</narrative>
+            </title>
+            <category code="A08" />
+            <category code="A07" />
+            <language code="en" />
+        </document-link>
+        <document-link format="application/vnd.oasis.opendocument.text" url="http://iati.dfid.gov.uk/iati_documents/3807558.odt">
+            <title>
+                <narrative>Intervention Summary 114488 (January, 2014).odt</narrative>
+            </title>
+            <category code="A02" />
+            <language code="en" />
+        </document-link>
+        <document-link format="application/vnd.oasis.opendocument.text" url="http://iati.dfid.gov.uk/iati_documents/4174983.odt">
+            <title>
+                <narrative>Annual review (3) 114488 (October, 2013).odt</narrative>
+            </title>
+            <category code="A08" />
+            <category code="A07" />
+            <language code="en" />
+        </document-link>
+        <document-link format="application/vnd.ms-excel" url="http://iati.dfid.gov.uk/iati_documents/4534431.xls">
+            <title>
+                <narrative>Logical Framework 114488 (June, 2014).xls</narrative>
+            </title>
+            <category code="A02" />
+            <category code="A08" />
+            <language code="en" />
+        </document-link>
+        <document-link format="application/vnd.oasis.opendocument.text" url="http://iati.dfid.gov.uk/iati_documents/5040456.odt">
+            <title>
+                <narrative>Project completion review 114488 (June, 2015).odt</narrative>
+            </title>
+            <category code="A01" />
+            <category code="A08" />
+            <category code="A07" />
+            <language code="en" />
+        </document-link>
+        <related-activity ref="GB-1-114488-101" type="2" />
+        <conditions attached="false" />
+    </iati-activity>
+
+    <!--
+        Includes multiple location suggestions.
+    -->
+
+    <iati-activity last-updated-datetime="2017-11-27T00:00:00" xml:lang="en" default-currency="GBP" hierarchy="1">
+        <iati-identifier>GB-1-201000</iati-identifier>
+        <reporting-org ref="GB-GOV-1" type="10">
+            <narrative>Department for International Development</narrative>
+        </reporting-org>
+        <title>
+            <narrative>Strengthening Civil Society in Afghanistan (Tawanmandi)</narrative>
+        </title>
+        <description>
+            <narrative>Tawanmandi is a grant funding mechanism that supports civil society to advocate on improving governance in Afghanistan through greater accountability and responsiveness by the state to its citizens. It seeks to build an inclusive civil society able to engage effectively on issues of human rights, access to justice, anti-corruption, peace building, and conflict resolution and through the media. Gender, youth, disability and out-of-Kabul organisations are cross cutting themes. </narrative>
+        </description>
+        <participating-org role="4">
+            <narrative>Name Withheld</narrative>
+        </participating-org>
+        <participating-org ref="GB" type="10" role="1">
+            <narrative>UNITED KINGDOM</narrative>
+        </participating-org>
+        <participating-org ref="GB-GOV-1" type="10" role="3">
+            <narrative>Department for International Development</narrative>
+        </participating-org>
+        <other-identifier ref="201000" type="A1">
+            <owner-org ref="GB-GOV-1">
+                <narrative>DFID</narrative>
+            </owner-org>
+        </other-identifier>
+        <other-identifier ref="GB-1" type="B1">
+            <owner-org ref="GB-GOV-1">
+                <narrative>DFID previous reporting-org identifier</narrative>
+            </owner-org>
+        </other-identifier>
+        <activity-status code="2" />
+        <activity-date type="1" iso-date="2011-08-01" />
+        <activity-date type="2" iso-date="2010-12-22" />
+        <activity-date type="3" iso-date="2017-12-31" />
+        <contact-info type="1">
+            <organisation>
+                <narrative>Department for International Development</narrative>
+            </organisation>
+            <telephone>+44 (0) 1355 84 3132</telephone>
+            <email>enquiry@dfid.gov.uk</email>
+            <mailing-address>
+                <narrative>Public Enquiry Point, Abercrombie House, Eaglesham Road, East Kilbride, Glasgow G75 8EA</narrative>
+            </mailing-address>
+        </contact-info>
+        <recipient-country code="AF" percentage="100" />
+        <sector code="15113" percentage="27.54">
+            <narrative>Anti-corruption organisations and institutions</narrative>
+        </sector>
+        <sector code="15110" percentage="23.61">
+            <narrative>Public sector policy and administrative management</narrative>
+        </sector>
+        <sector code="15130" percentage="19.67">
+            <narrative>Legal and judicial development</narrative>
+        </sector>
+        <sector code="43010" percentage="19.16">
+            <narrative>Multisector aid</narrative>
+        </sector>
+        <sector code="15150" percentage="10.01">
+            <narrative>Democratic participation and civil society</narrative>
+        </sector>
+        <default-tied-status code="5" />
+        <document-link format="application/vnd.oasis.opendocument.text" url="http://iati.dfid.gov.uk/iati_documents/3717458.odt">
+            <title>
+                <narrative>Business Case and Summary 201000 (January, 2013).odt</narrative>
+            </title>
+            <category code="A05" />
+            <category code="A04" />
+            <category code="A03" />
+            <category code="A02" />
+            <category code="A01" />
+            <language code="en" />
+        </document-link>
+        <document-link format="application/vnd.oasis.opendocument.text" url="http://iati.dfid.gov.uk/iati_documents/3793751.odt">
+            <title>
+                <narrative>Annual review (1) 201000 (July, 2014).odt</narrative>
+            </title>
+            <category code="A08" />
+            <category code="A07" />
+            <language code="en" />
+        </document-link>
+        <document-link format="application/vnd.oasis.opendocument.text" url="http://iati.dfid.gov.uk/iati_documents/3812489.odt">
+            <title>
+                <narrative>Annual review (2) 201000 (January, 2013).odt</narrative>
+            </title>
+            <category code="A08" />
+            <category code="A07" />
+            <language code="en" />
+        </document-link>
+        <document-link format="application/vnd.oasis.opendocument.text" url="http://iati.dfid.gov.uk/iati_documents/3862030.odt">
+            <title>
+                <narrative>Intervention Summary 201000 (July, 2014).odt</narrative>
+            </title>
+            <category code="A02" />
+            <language code="en" />
+        </document-link>
+        <document-link format="application/vnd.oasis.opendocument.text" url="http://iati.dfid.gov.uk/iati_documents/4388142.odt">
+            <title>
+                <narrative>Annual review (3) 201000 (March, 2014).odt</narrative>
+            </title>
+            <category code="A08" />
+            <category code="A07" />
+            <language code="en" />
+        </document-link>
+        <document-link format="application/vnd.oasis.opendocument.text" url="http://iati.dfid.gov.uk/iati_documents/4899958.odt">
+            <title>
+                <narrative>Annual review (4) 201000 (March, 2015).odt</narrative>
+            </title>
+            <category code="A08" />
+            <category code="A07" />
+            <language code="en" />
+        </document-link>
+        <document-link format="application/vnd.oasis.opendocument.text" url="http://iati.dfid.gov.uk/iati_documents/5162519.odt">
+            <title>
+                <narrative>Addendum to the Business Case (1) 201000 (June, 2016).odt</narrative>
+            </title>
+            <category code="A05" />
+            <category code="A04" />
+            <category code="A03" />
+            <category code="A02" />
+            <category code="A01" />
+            <language code="en" />
+        </document-link>
+        <document-link format="application/vnd.oasis.opendocument.text" url="http://iati.dfid.gov.uk/iati_documents/5380168.odt">
+            <title>
+                <narrative>Annual review (5) 201000 (March, 2016).odt</narrative>
+            </title>
+            <category code="A08" />
+            <category code="A07" />
+            <language code="en" />
+        </document-link>
+        <document-link format="application/vnd.oasis.opendocument.text" url="http://iati.dfid.gov.uk/iati_documents/5461069.odt">
+            <title>
+                <narrative>Addendum to the Business Case (2) 201000 (June, 2016).odt</narrative>
+            </title>
+            <category code="A05" />
+            <category code="A04" />
+            <category code="A03" />
+            <category code="A02" />
+            <category code="A01" />
+            <language code="en" />
+        </document-link>
+        <document-link format="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" url="http://iati.dfid.gov.uk/iati_documents/5612325.xlsx">
+            <title>
+                <narrative>Logical framework 201000 (October, 2016).xlsx</narrative>
+            </title>
+            <category code="A02" />
+            <category code="A08" />
+            <language code="en" />
+        </document-link>
+        <document-link format="text/html" url="https://www.contractsfinder.service.gov.uk/Notice/cadaf11c-ba96-42f7-bfc4-f1e1d707354b">
+            <title>
+                <narrative>Contract: DFID 7363 Independent Expenditure Verification and Financial Management Audit of Tawanmandi Legacy Grants, Afghanistan</narrative>
+            </title>
+            <category code="A11" />
+            <language code="en" />
+        </document-link>
+        <related-activity ref="GB-1-201000-101" type="2" />
+        <related-activity ref="GB-1-201000-102" type="2" />
+        <related-activity ref="GB-1-201000-103" type="2" />
+        <related-activity ref="GB-1-201000-105" type="2" />
+        <related-activity ref="GB-1-201000-106" type="2" />
+        <related-activity ref="GB-1-201000-107" type="2" />
+        <related-activity ref="GB-1-201000-108" type="2" />
+        <related-activity ref="GB-1-201000-109" type="2" />
+        <related-activity ref="GB-1-201000-110" type="2" />
+        <related-activity ref="GB-1-201000-111" type="2" />
+        <related-activity ref="GB-1-201000-112" type="2" />
+        <related-activity ref="GB-1-201000-113" type="2" />
+        <related-activity ref="GB-1-201000-114" type="2" />
+        <related-activity ref="GB-1-201000-115" type="2" />
+        <related-activity ref="GB-1-201000-116" type="2" />
+        <related-activity ref="GB-1-201000-117" type="2" />
+        <related-activity ref="GB-1-201000-118" type="2" />
+        <related-activity ref="GB-1-201000-119" type="2" />
+        <related-activity ref="GB-1-201000-120" type="2" />
+        <related-activity ref="GB-1-201000-121" type="2" />
+        <related-activity ref="GB-1-201000-122" type="2" />
+        <conditions attached="false" />
+    </iati-activity>
+
+    <!--
+        Includes a single location suggestion.
+    -->
+    <iati-activity last-updated-datetime="2015-01-26T00:00:00" xml:lang="en" default-currency="GBP" hierarchy="1">
+        <iati-identifier>GB-1-114503</iati-identifier>
+        <reporting-org ref="GB-GOV-1" type="10">
+            <narrative>Department for International Development</narrative>
+        </reporting-org>
+        <title>
+            <narrative>DFID Helmand Representative</narrative>
+        </title>
+        <description>
+            <narrative>provide support to the governor of helmand and tot he civil-military mission in Helmand (CMMH) by engaging on their behalf with other donors and key line ministries to aid ANDS implementation in the area of economic development. Bees.</narrative>
+        </description>
+        <participating-org ref="GB" type="10" role="1">
+            <narrative>UNITED KINGDOM</narrative>
+        </participating-org>
+        <participating-org ref="GB-GOV-1" type="10" role="3">
+            <narrative>Department for International Development</narrative>
+        </participating-org>
+        <other-identifier ref="114502" type="A1">
+            <owner-org ref="GB-GOV-1">
+                <narrative>DFID</narrative>
+            </owner-org>
+        </other-identifier>
+        <other-identifier ref="GB-1" type="B1">
+            <owner-org ref="GB-GOV-1">
+                <narrative>DFID previous reporting-org identifier</narrative>
+            </owner-org>
+        </other-identifier>
+        <activity-status code="4" />
+        <activity-date type="1" iso-date="2008-11-01" />
+        <activity-date type="2" iso-date="2009-04-30" />
+        <activity-date type="3" iso-date="2012-12-31" />
+        <activity-date type="4" iso-date="2012-12-31" />
+        <contact-info type="1">
+            <organisation>
+                <narrative>Department for International Development</narrative>
+            </organisation>
+            <telephone>+44 (0) 1355 84 3132</telephone>
+            <email>enquiry@dfid.gov.uk</email>
+            <mailing-address>
+                <narrative>Public Enquiry Point, Abercrombie House, Eaglesham Road, East Kilbride, Glasgow G75 8EA</narrative>
+            </mailing-address>
+        </contact-info>
+        <recipient-country code="AF" percentage="100" />
+        <default-tied-status code="5" />
+        <related-activity ref="GB-1-114502-101" type="2" />
+        <conditions attached="false" />
+        <openag:tag code="32130" percentage="21">
+            <narrative>Small and medium-sized enterprises (SME) development</narrative>
+        </openag:tag>
+        <openag:tag code="24040" percentage="20">
+            <narrative>Informal/semi-formal financial intermediaries</narrative>
+        </openag:tag>
+        <openag:tag code="25010" percentage="20">
+            <narrative>Business support services and institutions</narrative>
+        </openag:tag>
+        <openag:tag code="31120" percentage="20">
+            <narrative>Agricultural development</narrative>
+        </openag:tag>
+        <openag:tag code="43040" percentage="19">
+            <narrative>Rural development</narrative>
+        </openag:tag>
+    </iati-activity>
+
+    <!--
+        Includes a single existing location.
+    -->
+    <iati-activity last-updated-datetime="2015-01-26T00:00:00" xml:lang="en" default-currency="GBP" hierarchy="1">
+        <iati-identifier>GB-1-114505</iati-identifier>
+        <reporting-org ref="GB-GOV-1" type="10">
+            <narrative>Department for International Development</narrative>
+        </reporting-org>
+        <title>
+            <narrative>DFID Helmand Representative</narrative>
+        </title>
+        <description>
+            <narrative>provide support to the governor of helmand and tot he civil-military mission in Helmand (CMMH) by engaging on their behalf with other donors and key line ministries to aid ANDS implementation in the area of economic development. Bees.</narrative>
+        </description>
+        <participating-org ref="GB" type="10" role="1">
+            <narrative>UNITED KINGDOM</narrative>
+        </participating-org>
+        <participating-org ref="GB-GOV-1" type="10" role="3">
+            <narrative>Department for International Development</narrative>
+        </participating-org>
+        <other-identifier ref="114502" type="A1">
+            <owner-org ref="GB-GOV-1">
+                <narrative>DFID</narrative>
+            </owner-org>
+        </other-identifier>
+        <other-identifier ref="GB-1" type="B1">
+            <owner-org ref="GB-GOV-1">
+                <narrative>DFID previous reporting-org identifier</narrative>
+            </owner-org>
+        </other-identifier>
+        <activity-status code="4" />
+        <activity-date type="1" iso-date="2008-11-01" />
+        <activity-date type="2" iso-date="2009-04-30" />
+        <activity-date type="3" iso-date="2012-12-31" />
+        <activity-date type="4" iso-date="2012-12-31" />
+        <contact-info type="1">
+            <organisation>
+                <narrative>Department for International Development</narrative>
+            </organisation>
+            <telephone>+44 (0) 1355 84 3132</telephone>
+            <email>enquiry@dfid.gov.uk</email>
+            <mailing-address>
+                <narrative>Public Enquiry Point, Abercrombie House, Eaglesham Road, East Kilbride, Glasgow G75 8EA</narrative>
+            </mailing-address>
+        </contact-info>
+        <recipient-country code="AF" percentage="100" />
+        <location>
+            <location-reach code="1" />
+            <name>
+                <narrative>Balkh</narrative>
+            </name>
+            <description>
+                <narrative>Balkh,Afghanistan</narrative>
+            </description>
+            <point srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+                <pos>36.7525199999999970 66.8921500000000010</pos>
+            </point>
+            <exactness code="2" />
+            <location-class code="2" />
+            <feature-designation code="PPL" />
+        </location>
+        <default-tied-status code="5" />
+        <related-activity ref="GB-1-114502-101" type="2" />
+        <conditions attached="false" />
+        <openag:tag code="32130" percentage="21">
+            <narrative>Small and medium-sized enterprises (SME) development</narrative>
+        </openag:tag>
+        <openag:tag code="24040" percentage="20">
+            <narrative>Informal/semi-formal financial intermediaries</narrative>
+        </openag:tag>
+        <openag:tag code="25010" percentage="20">
+            <narrative>Business support services and institutions</narrative>
+        </openag:tag>
+        <openag:tag code="31120" percentage="20">
+            <narrative>Agricultural development</narrative>
+        </openag:tag>
+        <openag:tag code="43040" percentage="19">
+            <narrative>Rural development</narrative>
+        </openag:tag>
+    </iati-activity>
+
+    <!--
+        Includes a single location suggestion.
+    -->
+
+    <iati-activity last-updated-datetime="2015-01-26T00:00:00" xml:lang="en" default-currency="GBP" hierarchy="1">
+        <iati-identifier>GB-1-114500</iati-identifier>
+        <reporting-org ref="GB-GOV-1" type="10">
+            <narrative>Department for International Development</narrative>
+        </reporting-org>
+        <title>
+            <narrative>DFID Helmand Representative</narrative>
+        </title>
+        <description>
+            <narrative>provide support to the governor of helmand and tot he civil-military mission in Helmand (CMMH) by engaging on their behalf with other donors and key line ministries to aid ANDS implementation in the area of economic development</narrative>
+        </description>
+        <participating-org ref="GB" type="10" role="1">
+            <narrative>UNITED KINGDOM</narrative>
+        </participating-org>
+        <participating-org ref="GB-GOV-1" type="10" role="3">
+            <narrative>Department for International Development</narrative>
+        </participating-org>
+        <other-identifier ref="114502" type="A1">
+            <owner-org ref="GB-GOV-1">
+                <narrative>DFID</narrative>
+            </owner-org>
+        </other-identifier>
+        <other-identifier ref="GB-1" type="B1">
+            <owner-org ref="GB-GOV-1">
+                <narrative>DFID previous reporting-org identifier</narrative>
+            </owner-org>
+        </other-identifier>
+        <activity-status code="4" />
+        <activity-date type="1" iso-date="2008-11-01" />
+        <activity-date type="2" iso-date="2009-04-30" />
+        <activity-date type="3" iso-date="2012-12-31" />
+        <activity-date type="4" iso-date="2012-12-31" />
+        <contact-info type="1">
+            <organisation>
+                <narrative>Department for International Development</narrative>
+            </organisation>
+            <telephone>+44 (0) 1355 84 3132</telephone>
+            <email>enquiry@dfid.gov.uk</email>
+            <mailing-address>
+                <narrative>Public Enquiry Point, Abercrombie House, Eaglesham Road, East Kilbride, Glasgow G75 8EA</narrative>
+            </mailing-address>
+        </contact-info>
+        <recipient-country code="AF" percentage="100" />
+        <default-tied-status code="5" />
+        <related-activity ref="GB-1-114502-101" type="2" />
+        <conditions attached="false" />
+        <openag:tag code="32130" percentage="21">
+            <narrative>Small and medium-sized enterprises (SME) development</narrative>
+        </openag:tag>
+        <openag:tag code="24040" percentage="20">
+            <narrative>Informal/semi-formal financial intermediaries</narrative>
+        </openag:tag>
+        <openag:tag code="25010" percentage="20">
+            <narrative>Business support services and institutions</narrative>
+        </openag:tag>
+        <openag:tag code="31120" percentage="20">
+            <narrative>Agricultural development</narrative>
+        </openag:tag>
+        <openag:tag code="43040" percentage="19">
+            <narrative>Rural development</narrative>
+        </openag:tag>
+    </iati-activity>
+</iati-activities>
