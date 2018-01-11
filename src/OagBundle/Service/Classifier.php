@@ -239,6 +239,10 @@ class Classifier extends AbstractOagService
             return json_decode($this->getStringFixtureData(), true);
         }
 
+        if (empty($contents)) {
+            return false;
+        }
+
         $oag = $this->getContainer()->getParameter('oag');
         $uri = $oag['classifier']['text'];
 
@@ -265,7 +269,8 @@ class Classifier extends AbstractOagService
         curl_setopt($request, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($request, CURLOPT_SSL_VERIFYPEER, false);
 
-        $this->getContainer()->get('logger')->info('Accessing classifer at ' . $uri . ' (' . json_encode($headers) . ') ' . json_encode($payload));
+        $this->getContainer()->get('logger')->info('Accessing classifer at ' . $uri);
+        $this->getContainer()->get('logger')->debug('Classifer sent data. Headers: (' . json_encode($headers) . '), Payload: ' . json_encode($payload));
         $data = curl_exec($request);
 
         $responseCode = curl_getinfo($request, CURLINFO_HTTP_CODE);
