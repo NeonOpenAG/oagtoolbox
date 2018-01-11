@@ -16,7 +16,7 @@
             <div class="intro margin">
                 <h1>Check and improve your data</h1>
             </div>
-
+            
             <article class="activity">
                 <div class="heading summary">
                     <h2>Right now, your data...</h2>
@@ -152,6 +152,20 @@
                     </ul>
                 </div>
             </article>
+            {% endif %}
+            
+            {% if app.environment == 'dev' %}
+                <article class="activity">
+                    <div class="heading summary improve">
+                        <h2>Refresh file</h2>
+                    </div>
+                    <div class="content-block summary improve">
+                        <button id="reclassify" data-url="{{ reclassifyUrl }}" class="trigger">&#x21bb; Re-Classify</button>
+                    </div>
+                    <div class="content-block summary improve">
+                        <button id="regeocode" data-url="{{ regeocodeUrl }}" class="trigger">&#x21bb; Re-Geocode</button>
+                    </div>
+                </article>
             {% endif %}
 
         </section>

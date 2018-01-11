@@ -14,8 +14,8 @@ class OagGeocodeCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('oag:geocode')
-            ->addArgument('fileid', InputArgument::REQUIRED, 'File ID to geocode');
+            ->setName('oag:geocode:file')
+                ->addArgument('fileid', InputArgument::REQUIRED, 'File ID to geocode');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
