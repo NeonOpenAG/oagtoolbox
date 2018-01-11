@@ -256,8 +256,8 @@ class Classifier extends AbstractOagService
         $payload = [
             'text' => $contents,
             'threshold' => $oag['classifier']['threshold'],
-            'chunk' => $oag['classifier']['chunk'],
-            'roll_up' => $oag['classifier']['roll_up'],
+            'chunk' => $oag['classifier']['chunk'] ? 'true' : 'false',
+            'roll_up' => $oag['classifier']['roll_up'] ? 'true' : 'false',
             'form' => 'json',
         ];
 
