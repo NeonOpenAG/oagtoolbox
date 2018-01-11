@@ -8,15 +8,18 @@ parameters:
         dportal:
             uri: http://SERVER_HOST:8011/ctrack.html?search&year_min=1960&year=1960&year_max=2019&year=2019#view=main
         classifier:
-            xml: 'https://gis.foundationcenter.org/ag-classify/predict.php'
-            text: 'http://gis.foundationcenter.org/OpenAgCoder/extract_codes.php'
+            xml: 'https://api.foundationcenter.org/v2.0/text/ag_classification/batch'
+            text: 'https://api.foundationcenter.org/v2.0/text/ag_classification'
+            api_key: gAAAAABaOIerhHq12B4-3OpTQaS4opAyEcqSe01xI20KGL6MDfxgJVjqaNU7YG2Vq0TFv_6lfPu1sr4cP4zazyEvTZg9RfaIDbmjcONL9emtwnVeZtznVfurI8-74_phGkI_QLUJujgjkKr2Vj3aH0PlAn346uK5Bw==
+            threshold: low
+            chunk: true
+            roll_up: true
     oagfiles_directory: '%kernel.project_dir%/web/uploads/oagfiles'
     oagxml_directory: '%kernel.project_dir%/web/xml/oagfiles'
     classifier:
         vocabulary: '99'
         vocabulary_uri: 'http://aims.fao.org/standards/agrovoc'
         namespace_uri: 'http://openagfunding.opendataservices.coop/en/latest/extensions/'
-        endpoint: 'https://gis.foundationcenter.org/ag-classify/predict.php'
     geocoder:
         id_vocabulary: 'G1'
         admin_1_vocabulary: 'PLACEHOLDER'
