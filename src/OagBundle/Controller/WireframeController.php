@@ -390,7 +390,14 @@ class WireframeController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('back')->isClicked()) {
-                return $this->redirect($this->generateUrl('oag_wireframe_classifier', array('id' => $file->getId())));
+                $activities = $srvIATI->getActivities($root);
+                if (count($activities) <= 1) {
+                    // redirect to chicken improve
+                    return $this->redirect($this->generateUrl('oag_wireframe_improveyourdata', array('id' => $file->getId())));
+                } else {
+                    // redirect to activity classifier selection page
+                    return $this->redirect($this->generateUrl('oag_wireframe_classifier', array('id' => $file->getId())));
+                }
             }
 
             $editedTags = $form->getData()['tags'];
@@ -673,7 +680,14 @@ class WireframeController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('back')->isClicked()) {
-                return $this->redirect($this->generateUrl('oag_wireframe_geocoder', array('id' => $file->getId())));
+                $activities = $srvIATI->getActivities($root);
+                if (count($activities) <= 1) {
+                    // redirect to chicken improve
+                    return $this->redirect($this->generateUrl('oag_wireframe_improveyourdata', array('id' => $file->getId())));
+                } else {
+                    // redirect to activity classifier selection page
+                    return $this->redirect($this->generateUrl('oag_wireframe_geocoder', array('id' => $file->getId())));
+                }
             }
 
             $editedTags = $form->getData()['tags'];
