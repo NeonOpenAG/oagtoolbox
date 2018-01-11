@@ -29,6 +29,10 @@ parameters:
         cove:
             cmd: "cat %kernel.project_dir%/tests/OagBundle/Resources/assets/activity-standard-example-annotated.xml"
         classifier:
-            xml: http://localhost:8011
             text: http://private-044dc3-openag.apiary-mock.com/classifier/plaintext
+            xml: 'https://api.foundationcenter.org/v2.0/text/ag_classification/batch'                                                                         
+            api_key: gAAAAABaOIerhHq12B4-3OpTQaS4opAyEcqSe01xI20KGL6MDfxgJVjqaNU7YG2Vq0TFv_6lfPu1sr4cP4zazyEvTZg9RfaIDbmjcONL9emtwnVeZtznVfurI8-74_phGkI_QLUJujgjkKr2Vj3aH0PlAn346uK5Bw==            
+            threshold: low             
+            chunk: true                
+            roll_up: true     
     unlink_files: false

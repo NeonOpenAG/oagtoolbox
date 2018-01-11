@@ -80,8 +80,8 @@ class Classifier extends AbstractOagService
 
     public function processXML($contents)
     {
-        $classifier_parameters = $this->getContainer()->getParameter('classifier');
-        $uri = $classifier_parameters['endpoint'];
+        $classifier_parameters = $this->getContainer()->getParameter('oag');
+        $uri = $classifier_parameters['classifier']['xml'];
 
         $request = curl_init();
         curl_setopt($request, CURLOPT_URL, $uri);
