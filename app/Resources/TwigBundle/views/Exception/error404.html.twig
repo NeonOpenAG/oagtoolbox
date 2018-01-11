@@ -1,0 +1,28 @@
+{% extends "OagBundle::base.html.twig" %}
+
+{% block title %} {{ status_code }} | An Error Occured: {{ status_text }} {% endblock %}
+
+{% block body %}
+
+<div class="center" id="error">
+    <section class="content">
+        <article class="activity">
+            <div class="heading summary">
+                <h1>{{ status_code }} - {{ status_text }}.</h1>
+            </div>
+            <div class="content-block summary complete margin">
+                <ul>
+                    <li>
+                        <h2 class="error">We couldn't find that document.</h2>
+                        <div class="info">
+                            <p>The document you requested could not be found. Sorry for any inconvenience caused.</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </article>
+        <a class="cta back" onclick="window.history.back()">Back</a>
+    </section>
+</div>
+
+{% endblock %}
