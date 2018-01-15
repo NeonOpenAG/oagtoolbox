@@ -1,0 +1,21 @@
+default:
+    suites:
+        default:
+            type: symfony_bundle
+            bundle: OagBundle
+            mink_session: selenium2
+            contexts:
+                - OagBundle\Features\Context\FeatureContext:
+                  # session:   '@session'
+    extensions:
+        Behat\Symfony2Extension: ~
+        Behat\MinkExtension:
+            base_url: 'http://www.openag.org.uk/'
+            sessions:
+                default:
+                    symfony2: ~
+                goutte:
+                    goutte: ~
+                selenium2:
+                    selenium2:
+                        browser: chrome
