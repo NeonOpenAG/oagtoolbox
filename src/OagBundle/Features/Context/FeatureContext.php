@@ -34,7 +34,6 @@ class FeatureContext extends MinkContext implements KernelAwareContext {
         $user = get_current_user();
         $cmd = sprintf('id -Gn "tobias"|grep -c "docker"', $user);
         $ingroup = exec($cmd);
-        echo $ingroup . "\n";
         if ($ingroup == "0") {
             throw new Exception(sprintf("Command %s returned %s\n", $cmd, $ingroup));
         }
@@ -44,18 +43,18 @@ class FeatureContext extends MinkContext implements KernelAwareContext {
      * @When I run :command
      */
     public function iRun($command) {
-        echo "\n\n$command\n\n";
         exec($command, $output);
         $this->output = trim(implode("\n", $output));
     }
 
     /**
-     * @When I run :arg1 with the following:
+     * @When check if the docker is running with the following:
      */
-    public function iRunWithTheFollowing($arg1, TableNode $table) {
+    public function checkIfTheDockerIsRunningWithTheFollowing(TableNode $table) {
         $rows = $table->getRows();
         foreach ($rows as $row) {
-            $this->iRun(str_replace("<DOCKER>", $row[0], $arg1));
+            $cmd = "docker inspect -f '{{.State.Running}}' " . $row[0];
+            $this->iRun($cmd);
         }
     }
 
@@ -67,6 +66,18 @@ class FeatureContext extends MinkContext implements KernelAwareContext {
             throw new Exception(
             "Actual output is:\n" . $this->output
             );
+        }
+    }
+
+    /**
+     * @When I pass the cove docker the following:
+     */
+    public function iPassTheCoveDockerTheFollowing(TableNode $table)
+    {
+        $rows = $table->getRows();
+        foreach ($rows as $row) {
+            $cmd = sprintf("cat %s | docker exec -i --env FILENAME='%s' openag_cove /usr/local/bin/process.sh | tail -n1", $row[0], basename($row[0]));
+            $this->iRun($cmd);
         }
     }
 
