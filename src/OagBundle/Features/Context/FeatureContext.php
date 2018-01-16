@@ -44,7 +44,7 @@ class FeatureContext extends MinkContext implements KernelAwareContext {
      */
     public function iRun($command) {
         exec($command, $output);
-        $this->output = trim(implode("\n", $output));
+        $this->output = trim(array_pop($output));
     }
 
     /**
@@ -76,7 +76,7 @@ class FeatureContext extends MinkContext implements KernelAwareContext {
     {
         $rows = $table->getRows();
         foreach ($rows as $row) {
-            $cmd = sprintf("cat %s | docker exec -i --env FILENAME='%s' openag_cove /usr/local/bin/process.sh | tail -n1", $row[0], basename($row[0]));
+            $cmd = sprintf("cat %s | docker exec -i --env FILENAME='%s' openag_cove /usr/local/bin/process.sh", $row[0], basename($row[0]));
             $this->iRun($cmd);
         }
     }
