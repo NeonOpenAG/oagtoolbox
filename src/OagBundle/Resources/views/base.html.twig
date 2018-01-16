@@ -26,7 +26,7 @@
 
         {% if file is defined %}
             <div class="nav-options">
-                <h3><a href="{{ path('oag_wireframe_improveyourdata', { 'id': file.getId() }) }}">{{ file.getDocumentName() }}</a></h3>
+                <h3><a id="current-file" href="{{ path('oag_wireframe_improveyourdata', { 'id': file.getId() }) }}">{{ file.getDocumentName() }}</a></h3>
                 <ul>
                     <li><a href="{{ path('oag_wireframe_improveyourdata', { 'id': file.getId() }) }}"></a></li>
                     <li><a href="{{ path('oag_wireframe_preview', { 'id': file.getId() }) }}"></a></li>

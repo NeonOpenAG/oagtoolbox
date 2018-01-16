@@ -3,19 +3,17 @@ default:
         default:
             type: symfony_bundle
             bundle: OagBundle
-            mink_session: selenium2
+            # mink_session: selenium2
             contexts:
                 - OagBundle\Features\Context\FeatureContext:
                   # session:   '@session'
     extensions:
-        Behat\Symfony2Extension: ~
+        Behat\Symfony2Extension:
         Behat\MinkExtension:
-            base_url: 'http://www.openag.org.uk/'
-            sessions:
-                default:
-                    symfony2: ~
-                goutte:
-                    goutte: ~
-                selenium2:
-                    selenium2:
-                        browser: chrome
+            goutte: {  }
+            #selenium2:
+            #    browser: chrome
+            # base_url: 'http://develop.openag.org.uk/'
+            base_url: 'http://localhost/workspace/oag/oagtoolbox/web'
+
+# vim: set expandtab tabstop=4 shiftwidth=4 autoindent smartindent:
