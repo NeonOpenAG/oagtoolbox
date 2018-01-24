@@ -28,9 +28,9 @@
             <div class="nav-options">
                 <h3><a id="current-file" href="{{ path('oag_wireframe_improveyourdata', { 'id': file.getId() }) }}">{{ file.getDocumentName() }}</a></h3>
                 <ul>
-                    <li><a href="{{ path('oag_wireframe_improveyourdata', { 'id': file.getId() }) }}"></a></li>
-                    <li><a href="{{ path('oag_wireframe_preview', { 'id': file.getId() }) }}"></a></li>
-                    <li><a href="{{ path('oag_wireframe_download', { 'id': file.getId() }) }}"></a></li>
+                    <li><a id="checkandimprove" href="{{ path('oag_wireframe_improveyourdata', { 'id': file.getId() }) }}"></a></li>
+                    <li><a id="dportal" href="{{ path('oag_wireframe_preview', { 'id': file.getId() }) }}"></a></li>
+                    <li><a id="download" href="{{ path('oag_wireframe_download', { 'id': file.getId() }) }}"></a></li>
                 </ul>
             </div>
         {% endif %}

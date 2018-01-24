@@ -76,11 +76,27 @@ class FeatureContext extends MinkContext implements KernelAwareContext {
     {
         $rows = $table->getRows();
         foreach ($rows as $row) {
-            $cmd = sprintf("cat %s | docker exec -i --env FILENAME='%s' openag_cove /usr/local/bin/process.sh", $row[0], basename($row[0]));
+            $cmd = sprintf("cat %s | docker exec -i --env FILENAME='%s' openag_cove /usr/local/bin/process.sh 2>/dev/null", $row[0], basename($row[0]));
             $this->iRun($cmd);
         }
     }
 
+    /**
+     * Click on the element with the provided CSS Selector
+     *
+     * @When /^I click on the element with css selector "([^"]*)"$/
+     */
+    public function iClickOnTheElementWithCSSSelector($cssSelector)
+    {
+        $session = $this->getSession();
+        $element = $session->getPage()->find('css', $cssSelector);
+ if (null === $element) {
+            throw new \InvalidArgumentException(sprintf('Could not evaluate CSS Selector: "%s"', $cssSelector));
+        }
+ 
+        $element->click();
+ 
+    }
 }
 
 # vim: set expandtab tabstop=4 shiftwidth=4 autoindent smartindent:

@@ -3,16 +3,26 @@ default:
         default:
             type: symfony_bundle
             bundle: OagBundle
-            # mink_session: selenium2
+            mink_session: goutte
+            #mink_session: selenium2
             contexts:
                 - OagBundle\Features\Context\FeatureContext:
                   # session:   '@session'
     extensions:
         Behat\Symfony2Extension:
         Behat\MinkExtension:
+            browser_name: firefox
             goutte: {  }
-            #selenium2:
-            #    browser: chrome
+            selenium2:
+                wd_host: "http://127.0.0.1:4444/wd/hub"
+                browser: firefox
+                capabilities:
+                    # required by mink-extension 2.3
+                    marionette: null
+                    browserName: firefox
+                    browser: firefox
+                    version: 63
+                    # browser: firefox
             # base_url: 'http://develop.openag.org.uk/'
             base_url: 'http://localhost/workspace/oag/oagtoolbox/web'
 
