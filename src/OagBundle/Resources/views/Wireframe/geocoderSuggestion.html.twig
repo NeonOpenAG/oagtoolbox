@@ -29,12 +29,11 @@
                     {% endif %}
                 </div>
 
-                {{ form_start(form) }}
-
                 <div class="content-block">
                     {% if loc_count_existing > 0 %}
                         <h3>We found the following exisiting locations</h3>
                     <!-- TODO: Move this back out, but not to activity.html.twig -->
+                    {{ form_start(form) }}
 
                     {% for location in currentLocations %}
                         <div class="tag-row">
@@ -79,13 +78,11 @@
                     {% else %}
                         <h3>We didn't find any suggested locations<h3>
                     {% endif %}
+                    <div class="bottom-page-nav">
+                        {{ form_row(form.back) }}{{ form_row(form.save) }}
+                    </div>
+                    {{ form_end(form) }}
                 </div>
-
-                {% do form['tags'].setRendered %}
-                <div class="bottom-page-nav">
-                    {{ form_row(form.back) }}{{ form_row(form.save) }}
-                </div>
-                {{ form_end(form) }}
 
                  <div class="content-block">
                     <div class="upload-info">

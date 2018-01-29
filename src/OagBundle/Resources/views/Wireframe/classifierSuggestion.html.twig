@@ -45,6 +45,9 @@
                         {% endif %}
                     {% endfor %}
                     {# % do form['tags'].setRendered % #}
+                    <div class="bottom-page-nav">
+                        {{ form_row(form.back) }}{{ form_row(form.save) }}
+                    </div>
                 {% else %}
                     <h3>We didn't find any existing codes<h3>
                 {% endif %}
@@ -62,15 +65,15 @@
                           </div>
                         {% endif %}
                     {% endfor %}
+                    {# % do form['tags'].setRendered % #}
+                    <div class="bottom-page-nav">
+                        {{ form_row(form.back) }}{{ form_row(form.save) }}
+                    </div>
                 {% else %}
                     <h3>We didn't find any suggested codes<h3>
                 {% endif %}
                 </div>
 
-                {% do form['tags'].setRendered %}
-                <div class="bottom-page-nav">
-                    {{ form_row(form.back) }}{{ form_row(form.save) }}
-                </div>
                 {{ form_end(form) }}
 
                 <div class="content-block">
