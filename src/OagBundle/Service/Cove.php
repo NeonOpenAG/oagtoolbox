@@ -102,6 +102,8 @@ class Cove extends AbstractOagService {
                 }
             }
         }
+        $em->remove($file);
+        $em->flush();
 
         return false;
     }
