@@ -147,9 +147,9 @@ class Classifier extends AbstractOagService
         $tagRepo = $this->getContainer()->get('doctrine')->getRepository(Tag::class);
 
         foreach ($tags as $row) {
-            $code = $row['code'];
-            if ($code === null) {
+            if (!isset($row['code']) || $row['code'] === null) {
                 // We get a single array of nulls back if no match is found.
+                $this->getContainer()->get('logger')->debug('Classifier found no matches: ' . json_encode($row));
                 break;
             }
 
@@ -272,6 +272,7 @@ class Classifier extends AbstractOagService
         $this->getContainer()->get('logger')->info('Accessing classifer at ' . $uri);
         $this->getContainer()->get('logger')->debug('Classifer sent data. Headers: (' . json_encode($headers) . '), Payload: ' . json_encode($payload));
         $data = curl_exec($request);
+        $this->getContainer()->get('logger')->debug('Classifer returned: ' . json_encode($data));
 
         $responseCode = curl_getinfo($request, CURLINFO_HTTP_CODE);
         curl_close($request);

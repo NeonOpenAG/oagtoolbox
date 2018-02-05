@@ -72,7 +72,7 @@ class WireframeController extends Controller
             $root = $this->get('kernel')->getRootDir();
             $console = $root . '/../bin/console ';
             exec($console . 'oag:classify:file ' . $oagfile->getId() . ' > /dev/null &');
-            exec($console . 'oag:geocode:file ' . $oagfile->getId() . ' > /dev/null &');
+            // exec($console . 'oag:geocode:file ' . $oagfile->getId() . ' > /dev/null &');
 
             return $this->redirect($this->generateUrl('oag_wireframe_improveyourdata', array('id' => $oagfile->getId())));
         }
