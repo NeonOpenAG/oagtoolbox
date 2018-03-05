@@ -236,10 +236,12 @@ class Classifier extends AbstractOagService
     public function processString($contents)
     {
         if (!$this->isAvailable()) {
+            $this->getContainer()->get('logger')->warn('Classifier using ficture data.');
             return json_decode($this->getStringFixtureData(), true);
         }
 
         if (empty($contents)) {
+            $this->getContainer()->get('logger')->warn('Classifier accessed with no content');
             return false;
         }
 
