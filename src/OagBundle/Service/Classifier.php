@@ -52,9 +52,14 @@ class Classifier extends AbstractOagService
             $activityId = $srvIati->getActivityId($activity);
             $description = $srvIati->getActivityDescription($activity);
             $tags = [];
-            $data = $this->processString((string)$description);
-            $tags = $data['data'];
-            $this->persistTags($tags, $oagFile, $activityId);
+            if ($description) {
+                $data = $this->processString((string)$description);
+                $tags = $data['data'];
+                $this->persistTags($tags, $oagFile, $activityId);
+            }
+            else {
+                $this->getContainer()->get('logger')->warn(sprintf('Activity %d has no description.', $activityId));
+            }
         }
 
         // IATI xml document
