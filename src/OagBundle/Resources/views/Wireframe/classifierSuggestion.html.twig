@@ -70,11 +70,14 @@
                         {{ form_row(form.back) }}{{ form_row(form.save) }}
                     </div>
                 {% else %}
-                    <h3>We didn't find any suggested codes<h3>
+                    <h3 style='margin-bottom: 20px'>We didn't find any suggested codes<h3>
+                    {% do form.save.setRendered %}
+                    {% do form.tags.setRendered %}
+                    {{ form_widget(form.back) }}
                 {% endif %}
+                {{ form_end(form) }}
                 </div>
 
-                {{ form_end(form) }}
 
                 <div class="content-block">
                     <div class="upload-info">
