@@ -74,7 +74,7 @@ class Cove extends AbstractOagService {
                         $ruleseterror = new RulesetError();
                         $ruleseterror->setActivityId($line['id']);
                         $ruleseterror->setPath($line['path']);
-                        $ruleseterror->setMessage($line['message']);
+                        $ruleseterror->setMessage($line['explanation']);
                         $ruleseterror->setRule($line['rule']);
                         $ruleseterror->setFilename($filename);
                         $em->persist($ruleseterror);

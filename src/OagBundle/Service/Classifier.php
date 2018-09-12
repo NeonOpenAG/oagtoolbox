@@ -52,9 +52,14 @@ class Classifier extends AbstractOagService
             $activityId = $srvIati->getActivityId($activity);
             $description = $srvIati->getActivityDescription($activity);
             $tags = [];
-            $data = $this->processString((string)$description);
-            $tags = $data['data'];
-            $this->persistTags($tags, $oagFile, $activityId);
+            if ($description) {
+                $data = $this->processString((string)$description);
+                $tags = $data['data'];
+                $this->persistTags($tags, $oagFile, $activityId);
+            }
+            else {
+                $this->getContainer()->get('logger')->warn(sprintf('Activity %d has no description.', $activityId));
+            }
         }
 
         // IATI xml document
@@ -62,10 +67,13 @@ class Classifier extends AbstractOagService
         $jsonResp = $this->processXML($rawXml);
 
         if ($jsonResp['status']) {
+            $this->getContainer()->get('logger')->warn(sprintf('Classifier service could not classify oag file'));
+            $this->getContainer()->get('logger')->debug(json_encode($jsonResp));
             throw new \Exception('Classifier service could not classify oag file');
         }
 
-        foreach ($jsonResp['data'] as $block) {
+        $resultsData = $jsonResp['data']['results']['data'];
+        foreach ($resultsData as $block) {
             foreach ($block as $part) {
                 foreach ($part as $activityId => $tags) {
                     $this->persistTags($tags, $oagFile, $activityId);
@@ -88,45 +96,52 @@ class Classifier extends AbstractOagService
         curl_setopt($request, CURLOPT_POST, true);
         curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
 
+        $oag = $this->getContainer()->getParameter('oag');
+        $key = $oag['classifier']['api_key'];
+        $headers = [
+            "Content-Type: application/json",
+            "x-fc-api-key: " . $key
+        ];
+
         $payload = array(
-        'data' => $contents,
-        'chunk' => 'true',
-        'threshold' => 'low',
-        'rollup' => 'false',
-        'form' => 'json',
-        'xml_input' => 'true',
+            'data' => $contents,
+            'chunk' => 'true',
+            'threshold' => 'low',
+            'form' => 'json',
+            'xml_input' => 'true',
         );
-        $this->getContainer()->get('logger')->info('Accessing classifer at ' . $uri);
+        $this->getContainer()->get('logger')->info('Accessing XML classifer at ' . $uri);
 
         curl_setopt($request, CURLOPT_POSTFIELDS, json_encode($payload));
-        curl_setopt($request, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+        curl_setopt($request, CURLOPT_HTTPHEADER, $headers);
         $data = curl_exec($request);
         $responseCode = curl_getinfo($request, CURLINFO_HTTP_CODE);
         curl_close($request);
 
         $response = array(
-        'status' => ($responseCode >= 200 && $responseCode <= 209) ? 0 : 1,
+            'status' => ($responseCode >= 200 && $responseCode <= 209) ? 0 : 1,
         );
 
         if (!$response['status']) {
-            $this->getContainer()->get('logger')->error(sprintf('Classifier response: %d (%d)', $responseCode, $response['status']));
+            $this->getContainer()->get('logger')->error(sprintf('Classifier response: %d (%d)', $responseCode, $data));
         }
+        $this->getContainer()->get('logger')->debug($data);
 
         $json = json_decode($data, true);
         if (!is_array($json)) {
             $json = array(
-            'data' => array(
-            'code' => '',
-            'description' => '',
-            'confidence' => '',
-            ),
+                'data' => array(
+                    'code' => '',
+                    'description' => '',
+                    'confidence' => '',
+                ),
             );
             $this->getContainer()->get('logger')->error('Classifier failed to return json. (' . $data . ')');
             $log = [
-            'class' => get_class(),
-            'uri' => $uri,
-            'payload' => $payload,
-            'data' => $data,
+                'class' => get_class(),
+                'uri' => $uri,
+                'payload' => $payload,
+                'data' => $data,
             ];
             $this->logData($log);
         }
@@ -147,9 +162,9 @@ class Classifier extends AbstractOagService
         $tagRepo = $this->getContainer()->get('doctrine')->getRepository(Tag::class);
 
         foreach ($tags as $row) {
-            $code = $row['code'];
-            if ($code === null) {
+            if (!isset($row['code']) || $row['code'] === null) {
                 // We get a single array of nulls back if no match is found.
+                $this->getContainer()->get('logger')->debug('Classifier found no matches: ' . json_encode($row));
                 break;
             }
 
@@ -236,10 +251,12 @@ class Classifier extends AbstractOagService
     public function processString($contents)
     {
         if (!$this->isAvailable()) {
+            $this->getContainer()->get('logger')->warn('Classifier using ficture data.');
             return json_decode($this->getStringFixtureData(), true);
         }
 
         if (empty($contents)) {
+            $this->getContainer()->get('logger')->warn('Classifier accessed with no content');
             return false;
         }
 
@@ -272,6 +289,7 @@ class Classifier extends AbstractOagService
         $this->getContainer()->get('logger')->info('Accessing classifer at ' . $uri);
         $this->getContainer()->get('logger')->debug('Classifer sent data. Headers: (' . json_encode($headers) . '), Payload: ' . json_encode($payload));
         $data = curl_exec($request);
+        $this->getContainer()->get('logger')->debug('Classifer returned: ' . json_encode($data));
 
         $responseCode = curl_getinfo($request, CURLINFO_HTTP_CODE);
         curl_close($request);
