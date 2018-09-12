@@ -77,7 +77,7 @@ class Geocoder extends AbstractOagService
         $oag = $this->getContainer()->getParameter('oag');
         $openagnerserver = $oag['nerserver']['host'] ?? 'openag_nerserver';
         $openagnerport = $oag['nerserver']['port'] ?? '9000';
-        $cmd = str_replace('{COUNTRY}', $country, str_replace('{FILENAME}', $filename, $oag['geocoder']['cmd']));
+        $cmd = str_replace('{COUNTRY}', $country, str_replace('{FILENAME}', '/tmp/' . $filename, $oag['geocoder']['cmd']));
         $cmd = str_replace('{OPENAG_NERSERVER}', $openagnerserver, $cmd);
         $cmd = str_replace('{OPENAG_PORT}', $openagnerport, $cmd);
         $this->getContainer()->get('logger')->debug(
@@ -98,16 +98,16 @@ class Geocoder extends AbstractOagService
         $process = proc_open($cmd, $descriptorspec, $pipes);
 
         if (is_resource($process)) {
-            $this->getContainer()->get('logger')->info(sprintf('Writting %d bytes of data', strlen($contents)));
+            $this->getContainer()->get('logger')->info(sprintf('Writting %d bytes of data to the geocoder', strlen($contents)));
             fwrite($pipes[0], $contents);
             fclose($pipes[0]);
 
             $xml = stream_get_contents($pipes[1]);
-            $this->getContainer()->get('logger')->info(sprintf('Got %d bytes of data', strlen($xml)));
+            $this->getContainer()->get('logger')->info(sprintf('Got %d bytes of data from the geocoder', strlen($xml)));
             fclose($pipes[1]);
 
             $err = stream_get_contents($pipes[2]);
-            $this->getContainer()->get('logger')->info(sprintf('Got %d bytes of error', strlen($err)));
+            $this->getContainer()->get('logger')->info(sprintf('Got %d bytes of error from the geocoder', strlen($err)));
             fclose($pipes[2]);
 
             $return_value = proc_close($process);
